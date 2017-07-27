@@ -68,9 +68,17 @@ function mapStateToProps(state) {
     };
 }
 
-AppProvider = connect(mapStateToProps)(AppProvider);
+function mapDispatchToProps(dispatch){
+  return {
+    setAllActions: function(actions){
+      dispatch({type: 'SET_ACTIONS', actions: actions});
+    }
+  }
+}
+
+AppProvider = connect(mapStateToProps, mapDispatchToProps)(AppProvider);
+
 //console.log(App);
-ReactDOM.render(
 export default () => (
   <Provider store={appStore}>
       <AppProvider>
@@ -78,4 +86,6 @@ export default () => (
       </AppProvider>
   </Provider>
 );
+
+
 //App = connect()(App);
