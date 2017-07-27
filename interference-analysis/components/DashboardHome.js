@@ -140,3 +140,4 @@ export default class DashboardHome extends Component {
     </div>;
   }
 }
+module.exports = DashboardHome;
