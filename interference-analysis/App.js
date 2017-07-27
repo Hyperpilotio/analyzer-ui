@@ -88,7 +88,7 @@ function mapDispatchToProps(dispatch){
   };
 }
 
-//AppProvider = connect(mapStateToProps, mapDispatchToProps)(AppProvider);
+AppProvider = connect(mapStateToProps, mapDispatchToProps)(AppProvider);
 //console.log(App);
 export default () => (
   <Provider store={appStore}>
