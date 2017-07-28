@@ -1,6 +1,6 @@
 import React from "react";
 import _ from "lodash";
-import redisLogo from "../assets/images/asset_redis_logo.svg";
+import redisLogo from "../../assets/images/asset_redis_logo.svg";
 
 const Node = ({ id, instanceType, services }) => (
   <section>

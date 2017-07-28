@@ -15,20 +15,25 @@ const extractSass = new ExtractTextPlugin({
 
 const gitRevisionPlugin = new GitRevisionPlugin()
 
+const buildEntryPoint = entryJs => _.filter([
+  "whatwg-fetch",
+  "babel-polyfill",
+  IS_PROD ? null : "webpack-dev-server/client?http://localhost:3000",
+  IS_PROD ? null : "webpack/hot/only-dev-server",
+  IS_PROD ? null : "react-hot-loader/patch",
+  entryJs,
+  "./styles/index.sass"
+]);
+
 
 let config = module.exports = {
-  entry: _.filter([
-    "whatwg-fetch",
-    "babel-polyfill",
-    IS_PROD ? null : "webpack-dev-server/client?http://localhost:3000",
-    IS_PROD ? null : "webpack/hot/only-dev-server",
-    IS_PROD ? null : "react-hot-loader/patch",
-    "./index.js",
-    "./styles/index.sass"
-  ]),
+  entry: {
+    interference: buildEntryPoint("./interference-analysis/index.js"),
+    // sizing: buildJs("sizing-analysis/index.js")
+  },
   output: {
     path: __dirname + "/dist",
-    filename: "[hash].bundle.js",
+    filename: "[name].[hash].bundle.js",
     publicPath: "/"
   },
   devtool: IS_PROD ? "source-map" : "eval",
@@ -76,7 +81,8 @@ let config = module.exports = {
   plugins: _.filter([
     new WebpackCleanupPlugin(),
     new HtmlWebpackPlugin({
-      template: "index.html"
+      chunks: ["interference"],
+      template: "interference-analysis/index.html"
     }),
     new webpack.DefinePlugin({
       "process.env": {
@@ -90,31 +96,31 @@ let config = module.exports = {
     IS_PROD ? null : new webpack.NamedModulesPlugin(),
     IS_PROD ? null : new webpack.NoEmitOnErrorsPlugin(),
     !IS_PROD ? null : new webpack.optimize.UglifyJsPlugin({ comments: false }),
-    function() {
-      this.plugin("done", stats => {
-        const data = stats.toJson();
-        let outputStats;
-        if (IS_PROD) {
-          outputStats = {
-            main: data.assetsByChunkName.main[0],
-            css: data.assetsByChunkName.main[1]
-          };
-        } else {
-          if (typeof data.assetsByChunkName.main === "string") {
-            outputStats = { main: data.assetsByChunkName.main };
-          } else {
-            outputStats = { main: data.assetsByChunkName.main[0] };
-          }
-        }
-        if (!fs.existsSync(__dirname + "/dist")) {
-          fs.mkdirSync(__dirname + "/dist");
-        }
-        fs.writeFileSync(
-          __dirname + "/dist/stats.json",
-          JSON.stringify(outputStats)
-        );
-      });
-    }
+    // function() {
+    //   this.plugin("done", stats => {
+    //     const data = stats.toJson();
+    //     let outputStats;
+    //     if (IS_PROD) {
+    //       outputStats = {
+    //         main: data.assetsByChunkName.main[0],
+    //         css: data.assetsByChunkName.main[1]
+    //       };
+    //     } else {
+    //       if (typeof data.assetsByChunkName.main === "string") {
+    //         outputStats = { main: data.assetsByChunkName.main };
+    //       } else {
+    //         outputStats = { main: data.assetsByChunkName.main[0] };
+    //       }
+    //     }
+    //     if (!fs.existsSync(__dirname + "/dist")) {
+    //       fs.mkdirSync(__dirname + "/dist");
+    //     }
+    //     fs.writeFileSync(
+    //       __dirname + "/dist/stats.json",
+    //       JSON.stringify(outputStats)
+    //     );
+    //   });
+    // }
   ]),
   devServer: {
     hot: true,

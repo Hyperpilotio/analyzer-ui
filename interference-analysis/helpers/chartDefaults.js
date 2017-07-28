@@ -1,7 +1,7 @@
 import { Chart } from "react-chartjs-2";
 import _ from "lodash";
 // Importing styles to ensure the font is loaded
-import "../styles/index.sass";
+import "../../styles/index.sass";
 
 
 Chart.defaults.global.animation.duration = 500;

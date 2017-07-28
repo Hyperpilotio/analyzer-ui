@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router";
 import { NavLink, Link } from "react-router-dom";
 import KeyInfo from "./KeyInfo";
-import redisLogo from "../assets/images/asset_redis_logo.svg";
+import redisLogo from "../../assets/images/asset_redis_logo.svg";
 import CalibrationChart from "../containers/CalibrationChart";
 import ProfilingChart from "../containers/ProfilingChart";
 import InterferenceChart from "../containers/InterferenceChart";

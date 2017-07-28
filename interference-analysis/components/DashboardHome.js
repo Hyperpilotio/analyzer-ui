@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import KeyInfo from "./KeyInfo";
-import redisLogo from "../assets/images/asset_redis_logo.svg";
-import mongoLogo from "../assets/images/asset_mongoDB_logo.svg";
-import kafkaLogo from "../assets/images/asset_kafka_logo.svg";
-import gridIcon from "../assets/images/icon_grid_view.svg";
-import listIcon from "../assets/images/icon_list_view.svg";
+import redisLogo from "../../assets/images/asset_redis_logo.svg";
+import mongoLogo from "../../assets/images/asset_mongoDB_logo.svg";
+import kafkaLogo from "../../assets/images/asset_kafka_logo.svg";
+import gridIcon from "../../assets/images/icon_grid_view.svg";
+import listIcon from "../../assets/images/icon_list_view.svg";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
