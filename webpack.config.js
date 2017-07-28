@@ -1,7 +1,8 @@
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
+const GitRevisionPlugin = require("git-revision-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fs = require("fs");
 const _ = require("lodash");
 
@@ -28,7 +29,7 @@ let config = module.exports = {
   output: {
     path: __dirname + "/dist",
     filename: "[hash].bundle.js",
-    publicPath: "/dist/"
+    publicPath: "/"
   },
   devtool: IS_PROD ? "source-map" : "eval",
   module: {
@@ -74,6 +75,9 @@ let config = module.exports = {
   },
   plugins: _.filter([
     new WebpackCleanupPlugin(),
+    new HtmlWebpackPlugin({
+      template: "index.html"
+    }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
@@ -115,7 +119,7 @@ let config = module.exports = {
   devServer: {
     hot: true,
     historyApiFallback: true,
-    contentBase: "./dist/",
+    contentBase: "./",
     host: "localhost",
     port: 3000,
     proxy: {
