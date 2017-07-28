@@ -9,7 +9,7 @@ const _ = require("lodash");
 const IS_PROD = process.env.NODE_ENV === "production";
 
 const extractSass = new ExtractTextPlugin({
-  filename: "[hash].bundle.css",
+  filename: "static/[hash].bundle.css",
   disable: !IS_PROD
 });
 
@@ -33,7 +33,7 @@ let config = module.exports = {
   },
   output: {
     path: __dirname + "/dist",
-    filename: "[name].[hash].bundle.js",
+    filename: "static/[name].[hash].bundle.js",
     publicPath: "/"
   },
   devtool: IS_PROD ? "source-map" : "eval",
@@ -74,7 +74,10 @@ let config = module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg|ttf|woff|woff2)$/i,
-        loader: "file-loader"
+        loader: "file-loader",
+        query: {
+          outputPath: "static/"
+        }
       }
     ]
   },
@@ -95,37 +98,12 @@ let config = module.exports = {
     IS_PROD ? null : new webpack.HotModuleReplacementPlugin(),
     IS_PROD ? null : new webpack.NamedModulesPlugin(),
     IS_PROD ? null : new webpack.NoEmitOnErrorsPlugin(),
-    !IS_PROD ? null : new webpack.optimize.UglifyJsPlugin({ comments: false }),
-    // function() {
-    //   this.plugin("done", stats => {
-    //     const data = stats.toJson();
-    //     let outputStats;
-    //     if (IS_PROD) {
-    //       outputStats = {
-    //         main: data.assetsByChunkName.main[0],
-    //         css: data.assetsByChunkName.main[1]
-    //       };
-    //     } else {
-    //       if (typeof data.assetsByChunkName.main === "string") {
-    //         outputStats = { main: data.assetsByChunkName.main };
-    //       } else {
-    //         outputStats = { main: data.assetsByChunkName.main[0] };
-    //       }
-    //     }
-    //     if (!fs.existsSync(__dirname + "/dist")) {
-    //       fs.mkdirSync(__dirname + "/dist");
-    //     }
-    //     fs.writeFileSync(
-    //       __dirname + "/dist/stats.json",
-    //       JSON.stringify(outputStats)
-    //     );
-    //   });
-    // }
+    !IS_PROD ? null : new webpack.optimize.UglifyJsPlugin({ comments: false })
   ]),
   devServer: {
     hot: true,
     historyApiFallback: true,
-    contentBase: "./",
+    contentBase: "./dist/",
     host: "localhost",
     port: 3000,
     proxy: {
