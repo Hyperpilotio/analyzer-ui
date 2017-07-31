@@ -4,7 +4,12 @@
   "repository": "https://github.com/Hyperpilotio/analyzer",
   "scripts": {
     "build": "NODE_ENV=production webpack --progress",
-    "develop": "webpack-dev-server"
+    "dev-interference": "ANALYSIS_APP=interference-analysis webpack-dev-server",
+    "dev-sizing": "ANALYSIS_APP=sizing-analysis webpack-dev-server",
+    "dev": "npm run dev-sizing",
+    "serve-interference": "ANALYSIS_APP=interference-analysis node server.js",
+    "serve-sizing": "ANALYSIS_APP=sizing-analysis node server.js",
+    "serve": "npm run serve-sizing"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

@@ -112,7 +112,7 @@ let webpackConfig = module.exports = {
   devServer: {
     hot: true,
     historyApiFallback: {
-      index: `${ANALYSIS_APP}.html`
+      index: `/${ANALYSIS_APP}.html`
     },
     contentBase: "./dist/",
     host: "localhost",
