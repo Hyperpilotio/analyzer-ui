@@ -1,5 +1,6 @@
 const express = require("express");
 const proxy = require("express-http-proxy");
+const morgan = require("morgan");
 const path = require("path");
 const config = require("./config.json");
 
@@ -7,6 +8,8 @@ const config = require("./config.json");
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
 
 const server = express();
+
+server.use(morgan("dev"));
 
 server.use("/static", express.static(path.join(__dirname, "dist/static")));
 
