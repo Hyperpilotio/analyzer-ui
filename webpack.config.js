@@ -29,7 +29,7 @@ const buildEntryPoint = entryJs => _.filter([
 let config = module.exports = {
   entry: {
     interference: buildEntryPoint("./interference-analysis/index.js"),
-    // sizing: buildJs("sizing-analysis/index.js")
+    sizing: buildEntryPoint("./sizing-analysis/index.js")
   },
   output: {
     path: __dirname + "/dist",
@@ -85,7 +85,13 @@ let config = module.exports = {
     new WebpackCleanupPlugin(),
     new HtmlWebpackPlugin({
       chunks: ["interference"],
-      template: "interference-analysis/index.html"
+      template: "interference-analysis/index.html",
+      filename: "interference-analysis.html"
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["sizing"],
+      template: "sizing-analysis/index.html",
+      filename: "sizing-analysis.html"
     }),
     new webpack.DefinePlugin({
       "process.env": {
