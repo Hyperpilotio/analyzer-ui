@@ -1,6 +1,16 @@
 import React from "react";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import HeaderNav from "../commons/components/HeaderNav";
 
 
 export default () => (
-  <h1>Sizing demo</h1>
+  <Router>
+    <Switch>
+      <Route path="/" children={({ history }) => (
+        <div>
+          <HeaderNav history={history} />
+        </div>
+      )} />
+    </Switch>
+  </Router>
 )
