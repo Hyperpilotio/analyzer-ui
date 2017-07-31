@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import HeaderNav from "./components/HeaderNav";
+import HeaderNav from "../commons/components/HeaderNav";
 import DashboardHome from "./components/DashboardHome";
 import AutopilotPage from "./components/AutopilotPage";
 import AppPage from "./containers/AppPage";
