@@ -5,8 +5,10 @@ const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fs = require("fs");
 const _ = require("lodash");
+const config = require("./config.json");
 
 const IS_PROD = process.env.NODE_ENV === "production";
+const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
 
 const extractSass = new ExtractTextPlugin({
   filename: "static/[hash].bundle.css",
@@ -26,7 +28,7 @@ const buildEntryPoint = entryJs => _.filter([
 ]);
 
 
-let config = module.exports = {
+let webpackConfig = module.exports = {
   entry: {
     interference: buildEntryPoint("./interference-analysis/index.js"),
     sizing: buildEntryPoint("./sizing-analysis/index.js")
@@ -83,6 +85,7 @@ let config = module.exports = {
   },
   plugins: _.filter([
     new WebpackCleanupPlugin(),
+    new webpack.ProgressPlugin({ profile: false }),
     new HtmlWebpackPlugin({
       chunks: ["interference"],
       template: "interference-analysis/index.html",
@@ -108,12 +111,14 @@ let config = module.exports = {
   ]),
   devServer: {
     hot: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: `${ANALYSIS_APP}.html`
+    },
     contentBase: "./dist/",
     host: "localhost",
     port: 3000,
     proxy: {
-      "*": "http://localhost:5000"
+      "/api/*": config.analyzer.url
     }
   }
 };
