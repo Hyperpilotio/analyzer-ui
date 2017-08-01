@@ -1,0 +1,10 @@
+@import "../../../styles/variables.sass";
+
+.TestStagesJumbotron {
+  background: $color-white;
+  border-bottom: 1px solid $color-light;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
