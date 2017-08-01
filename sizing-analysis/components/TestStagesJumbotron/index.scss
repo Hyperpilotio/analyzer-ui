@@ -4,7 +4,26 @@
   background: $color-white;
   border-bottom: 1px solid $color-light;
   height: 160px;
+}
+
+.Container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 100%;
+}
+
+.Intro {
+  max-width: 340px;
+
+  h3 {
+    font-weight: lighter;
+    font-size: 18px;
+    color: $color-dark-grey;
+  }
+
+  p {
+    font-size: 16px;
+    color: $color-grey;
+  }
 }
