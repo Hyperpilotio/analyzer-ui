@@ -1,0 +1,20 @@
+@import "styles/variables.sass";
+
+.BenchmarkStageIndicator {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  > .element + .element {
+    margin-left: 15px;
+  }
+
+  .content {
+    color: $color-muted;
+    font-size: 16px;
+
+    > * {
+      margin: 0.4rem 0;
+    }
+  }
+}
