@@ -1,0 +1,24 @@
+@import "../../../styles/variables.sass";
+
+.NavItemLink {
+  height: 100%;
+  color: $color-grey;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 3px solid transparent;
+
+  &:not(:first-child) {
+    margin-left: 15px;
+  }
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  &.selected {
+    border-bottom: 3px solid $color-blue;
+    color: $color-blue;
+  }
+
+}

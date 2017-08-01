@@ -6,7 +6,7 @@ import { NavLink, Link } from "react-router-dom";
 
 
 
-export default ({ history }) => (
+export default ({ history, children }) => (
   <div>
     <nav className="navbar">
       <div className="container">
@@ -51,18 +51,7 @@ export default ({ history }) => (
     {/* Subnav */}
     <nav className="subnav">
       <div className="container">
-        <NavLink to="/dashboard" className="nav-item" activeClassName="selected">
-          Dashboard
-        </NavLink>
-        <NavLink to="/autopilot" className="nav-item" activeClassName="selected">
-          Autopilot
-        </NavLink>
-        <NavLink to="/apps" className="nav-item" activeClassName="selected">
-          Apps
-        </NavLink>
-        <NavLink to="/services" className="nav-item" activeClassName="selected">
-          Services
-        </NavLink>
+        { children }
       </div>
     </nav>
   </div>
