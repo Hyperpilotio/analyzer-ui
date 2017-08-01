@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import HeaderNav from "../commons/components/HeaderNav";
+import NavItemLink from "../commons/components/NavItemLink";
 import DashboardHome from "./components/DashboardHome";
 import AutopilotPage from "./components/AutopilotPage";
 import AppPage from "./containers/AppPage";
@@ -30,7 +31,12 @@ class App extends Component {
           <Route path="/login" component={UserAuth} />
           <Route path="/" children={({ history }) => (
             <div>
-              <HeaderNav history={history} />
+              <HeaderNav history={history}>
+                <NavItemLink to="/dashboard" text="Dashboard" />
+                <NavItemLink to="/autopilot" text="Autopilot" />
+                <NavItemLink to="/apps" text="Apps" />
+                <NavItemLink to="/services" text="Services" />
+              </HeaderNav>
               <Switch>
                 <Route path="/dashboard" component={DashboardHome} />
                 <Route path="/autopilot" component={AutopilotPage} />
