@@ -4,6 +4,7 @@ const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fs = require("fs");
+const path = require("path");
 const _ = require("lodash");
 const config = require("./config.json");
 
@@ -55,12 +56,38 @@ let webpackConfig = module.exports = {
       },
       {
         test: /\.s[ca]ss|css$/,
+        include: [path.resolve(__dirname, "styles")],
         use: extractSass.extract({
           fallback: "style-loader",
           use: [
             {
               loader: "css-loader",
               query: {
+                modules: false,
+                minimize: IS_PROD
+              }
+            },
+            "sass-loader",
+            {
+              loader: "resolve-url-loader",
+              query: {
+                silent: true
+              }
+            }
+          ]
+        })
+      },
+      {
+        test: /\.s[ca]ss|css$/,
+        exclude: ["styles", "node_modules"].map(dir => path.resolve(__dirname, dir)),
+        use: extractSass.extract({
+          fallback: "style-loader",
+          use: [
+            {
+              loader: "css-loader",
+              query: {
+                modules: true,
+                localIdentName: "[local]__[hash:base64:5]",
                 minimize: IS_PROD
               }
             },
