@@ -1,0 +1,14 @@
+@import "styles/variables.sass";
+
+.BenchmarkRunnerPage main {
+  margin: 2rem 0;
+  border-bottom: 1px solid $color-divider;
+}
+
+.cluster-info {
+  margin: 1.5rem 0;
+  p, h3 {
+    margin: 0.3rem 0;
+    font-size: 16px;
+  }
+}
