@@ -1,4 +1,4 @@
-@import "../../../styles/variables.sass";
+@import "styles/variables.sass";
 
 .TestStagesJumbotron {
   background: $color-white;
@@ -37,7 +37,7 @@
 
   .arrow-icon {
     width: 50px;
-    background-image: url(../../../assets/images/asset_hyperpilot_nav_logo.svg);
+    background-image: url(assets/images/asset_hyperpilot_nav_logo.svg);
     background-repeat: no-repeat;
     background-position: center;
   }

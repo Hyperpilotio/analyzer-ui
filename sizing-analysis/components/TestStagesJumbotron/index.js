@@ -1,9 +1,9 @@
 import React from "react";
-import Container from "../../../commons/components/Container";
+import Container from "commons/components/Container";
 import BenchmarkStageIndicator from "../BenchmarkStageIndicator";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
-import hyperpilotNavLogo from "../../../assets/images/asset_hyperpilot_nav_logo.svg";
+import hyperpilotNavLogo from "assets/images/asset_hyperpilot_nav_logo.svg";
 
 const TestStagesJumbotron = ({ stage = STAGE_CONFIG }) => (
   <div className={styles.TestStagesJumbotron}>

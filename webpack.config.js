@@ -39,6 +39,9 @@ let webpackConfig = module.exports = {
     filename: "static/[name].[hash].bundle.js",
     publicPath: "/"
   },
+  resolve: {
+    modules: [__dirname, path.resolve(__dirname, "node_modules")]
+  },
   devtool: IS_PROD ? "source-map" : "eval",
   module: {
     rules: [
