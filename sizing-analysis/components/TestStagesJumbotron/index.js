@@ -1,10 +1,11 @@
 import React from "react";
 import Container from "../../../commons/components/Container";
 import BenchmarkStageIndicator from "../BenchmarkStageIndicator";
+import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
 import hyperpilotNavLogo from "../../../assets/images/asset_hyperpilot_nav_logo.svg";
 
-const TestStagesJumbotron = () => (
+const TestStagesJumbotron = ({ stage = STAGE_CONFIG }) => (
   <div className={styles.TestStagesJumbotron}>
     <Container className={styles.Container}>
       <div className={styles.intro}>
@@ -13,11 +14,13 @@ const TestStagesJumbotron = () => (
       </div>
       <div className={styles.stages}>
         <BenchmarkStageIndicator
+          active={stage > STAGE_CONFIG}
           title="Benchmark Test"
           description="all your instances"
           icon={hyperpilotNavLogo} />
         <span className={styles["arrow-icon"]} />
         <BenchmarkStageIndicator
+          active={stage > STAGE_TEST}
           title="Recommend"
           description="instances for apps"
           icon={hyperpilotNavLogo} />

@@ -16,5 +16,13 @@
     > * {
       margin: 0.4rem 0;
     }
+
+    &.active {
+      color: $color-dark-grey;
+    }
+  }
+
+  .icon {
+    /* TODO: Apply difference colors for different stages */
   }
 }
