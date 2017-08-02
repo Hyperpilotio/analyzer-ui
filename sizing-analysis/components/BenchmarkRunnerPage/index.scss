@@ -3,6 +3,12 @@
 .BenchmarkRunnerPage main {
   margin: 2rem 0;
   border-bottom: 1px solid $color-divider;
+
+  .Container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 .cluster-info {
