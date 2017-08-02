@@ -12,7 +12,7 @@ const IS_PROD = process.env.NODE_ENV === "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
 
 const extractSass = new ExtractTextPlugin({
-  filename: "static/[hash].bundle.css",
+  filename: "static/[name].bundle.css",
   disable: !IS_PROD
 });
 
@@ -36,7 +36,7 @@ let webpackConfig = module.exports = {
   },
   output: {
     path: __dirname + "/dist",
-    filename: "static/[name].[hash].bundle.js",
+    filename: "static/[name].bundle.js",
     publicPath: "/"
   },
   resolve: {
@@ -116,15 +116,21 @@ let webpackConfig = module.exports = {
   plugins: _.filter([
     new WebpackCleanupPlugin(),
     new webpack.ProgressPlugin({ profile: false }),
-    new HtmlWebpackPlugin({
-      chunks: ["interference"],
-      template: "interference-analysis/index.html",
-      filename: "interference-analysis.html"
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "commons",
+      minChunks: 2
     }),
     new HtmlWebpackPlugin({
-      chunks: ["sizing"],
+      chunks: ["commons", "interference"],
+      template: "interference-analysis/index.html",
+      filename: "interference-analysis.html",
+      hash: true
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["commons", "sizing"],
       template: "sizing-analysis/index.html",
-      filename: "sizing-analysis.html"
+      filename: "sizing-analysis.html",
+      hash: true
     }),
     new webpack.DefinePlugin({
       "process.env": {
