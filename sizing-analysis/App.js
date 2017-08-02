@@ -11,11 +11,11 @@ export default () => (
       <Route path="/" children={({ history }) => (
         <div>
           <HeaderNav history={history}>
-            <NavItemLink to="/configuration" text="Configuration" />
             <NavItemLink to="/benchmark-test" text="Benchmark Test" />
           </HeaderNav>
           <Switch>
-            <Route path="/configuration" component={BenchmarkRunnerPage} />
+            <Route path="/benchmark-test" component={BenchmarkRunnerPage} />
+            <Redirect from="/" to="/benchmark-test" />
           </Switch>
         </div>
       )} />
