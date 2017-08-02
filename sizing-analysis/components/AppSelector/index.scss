@@ -36,6 +36,11 @@
     justify-content: space-around;
     align-items: center;
 
+    &:hover {
+    background-color: $color-white;
+    border-color: $color-primary;
+    }
+
     img {
       width: 20px;
       vertical-align: middle;

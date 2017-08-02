@@ -21,8 +21,8 @@ const SizingRunnerPage = () => (
             <h3>TBD info</h3>
           </div>
           <div className={styles["cluster-info"]}>
-            <p>Total apps running</p>
-            <h3>6</h3>
+            <p>TBD Info</p>
+            <h3>TBD</h3>
           </div>
         </div>
         <div>
