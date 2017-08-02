@@ -9,17 +9,13 @@
     margin-left: 15px;
   }
 
-  .content {
+  .content > * {
+    margin: 0.4rem 0;
     color: $color-muted;
-    font-size: 16px;
+  }
 
-    > * {
-      margin: 0.4rem 0;
-    }
-
-    &.active {
-      color: $color-dark-grey;
-    }
+  .content.active {
+    color: $color-dark-grey;
   }
 
   .icon {
