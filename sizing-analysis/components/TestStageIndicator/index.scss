@@ -14,7 +14,7 @@
     color: $color-muted;
   }
 
-  .content.active {
+  .content.active > * {
     color: $color-dark-grey;
   }
 
