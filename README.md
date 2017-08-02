@@ -34,5 +34,9 @@ These apps will have to be connected with analyzer service, you can configure th
 - `interference-analysis/`: The app for interference analysis UI (entry point `index.js`)
 - `sizing-analysis/`: The app for sizing analysis UI (entry point `index.js`)
 - `assets/`: App's static assets such as images and fonts
-- `styles/`: Sass stylesheets
+
 - (`commons/`): The shared components, currently not existing yet
+
+### Stylesheet / Styleguide
+- `styles/`: master stylesheets => Sizing + Interference (Sass or Scss)
+- `commons/components`: UI components w/component based sass 
