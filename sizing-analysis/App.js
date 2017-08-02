@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import HeaderNav from "../commons/components/HeaderNav";
 import NavItemLink from "../commons/components/NavItemLink";
-import BenchmarkRunnerPage from "./components/BenchmarkRunnerPage";
+import SizingRunnerPage from "./components/SizingRunnerPage";
 
 
 export default () => (
@@ -11,11 +11,11 @@ export default () => (
       <Route path="/" children={({ history }) => (
         <div>
           <HeaderNav history={history}>
-            <NavItemLink to="/benchmark-test" text="Benchmark Test" />
+            <NavItemLink to="/sizing-test" text="Sizing Analysis" />
           </HeaderNav>
           <Switch>
-            <Route path="/benchmark-test" component={BenchmarkRunnerPage} />
-            <Redirect from="/" to="/benchmark-test" />
+            <Route path="/sizing-test" component={SizingRunnerPage} />
+            <Redirect from="/" to="/sizing-test" />
           </Switch>
         </div>
       )} />
