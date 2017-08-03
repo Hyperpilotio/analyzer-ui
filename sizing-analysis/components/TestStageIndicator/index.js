@@ -13,3 +13,4 @@ const TestStageIndicator = ({ title, description, icon, active = false }) => {
 }
 
 export default TestStageIndicator;
+<AppSelection selected name="Redis" />
