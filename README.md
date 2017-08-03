@@ -38,5 +38,6 @@ These apps will have to be connected with analyzer service, you can configure th
 - (`commons/`): The shared components, currently not existing yet
 
 ### Stylesheet / Styleguide
+- `npm run styleguide`: Run styleguide server to see all UI componennets at localhost:6060
 - `styles/`: master stylesheets => Sizing + Interference (Sass or Scss)
-- `commons/components`: UI components w/component based sass 
+- `commons/components`: UI components w/component based sass
