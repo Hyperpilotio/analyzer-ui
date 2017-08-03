@@ -22,4 +22,3 @@ const TestStageIndicator = ({
 }
 
 export default TestStageIndicator;
-<AppSelection selected name="Redis" />
