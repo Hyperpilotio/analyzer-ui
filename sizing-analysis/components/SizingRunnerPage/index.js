@@ -7,7 +7,7 @@ import styles from "./index.scss";
 
 const SizingRunnerPage = () => (
   <div className={styles.SizingRunnerPage}>
-    <TestStagesJumbotron stage={STAGE_TEST} />
+    <TestStagesJumbotron stage={STAGE_CONFIG} />
     <main>
       <Container className={styles.Container}>
         <div>

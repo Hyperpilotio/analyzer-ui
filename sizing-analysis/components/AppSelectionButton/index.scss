@@ -1,0 +1,25 @@
+@import "styles/variables.sass";
+
+.AppSelectionButton {
+  width: 160px;
+  border: 1px solid #e5e6e8;
+  color: $color-dark-grey;
+  font-size: 16px;
+  font-weight: normal;
+  padding: 1rem;
+  margin-right: 2rem;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  img {
+    width: 20px;
+    vertical-align: middle;
+  }
+
+  &.selected {
+    border: 1px solid $color-blue;
+  }
+}
