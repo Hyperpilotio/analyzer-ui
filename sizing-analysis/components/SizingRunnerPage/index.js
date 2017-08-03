@@ -1,13 +1,18 @@
 import React from "react";
 import TestStagesJumbotron from "../TestStagesJumbotron";
 import AppSelector from "../AppSelector";
+import RunnerModal from "../RunnerModal";
 import Container from "commons/components/Container";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
 
-const SizingRunnerPage = () => (
-  <div className={styles.SizingRunnerPage}>
-    <TestStagesJumbotron stage={STAGE_CONFIG} />
+const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
+  let modalElement = stage !== STAGE_TEST ? "" : (
+    <RunnerModal />
+  );
+
+  return <div className={styles.SizingRunnerPage}>
+    <TestStagesJumbotron stage={stage} />
     <main>
       <Container className={styles.Container}>
         <div>
@@ -30,7 +35,8 @@ const SizingRunnerPage = () => (
         </div>
       </Container>
     </main>
+    { modalElement }
   </div>
-);
+};
 
 export default SizingRunnerPage;
