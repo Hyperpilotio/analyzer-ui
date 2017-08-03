@@ -1,0 +1,17 @@
+@import "styles/variables.sass";
+
+.ProgressBar {
+  border-radius: 15px;
+  width: 100%;
+  position: relative;
+  background: $color-divider;
+  height: 30px;
+  line-height: inherit;
+
+  .filling-area {
+    border-radius: 15px;
+    position: absolute;
+    background: $color-primary;
+    height: 100%;
+  }
+}

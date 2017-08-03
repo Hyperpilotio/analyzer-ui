@@ -9,28 +9,11 @@
   padding: 1rem 2rem;
 }
 
-.progressbar-area p {
+.progressbar p {
   margin-top: 10px;
   font-size: 14px;
   color: $color-dark-grey;
   float: right;
-}
-
-.progressbar {
-  border-radius: 15px;
-  width: 50%;
-  position: absolute;
-  background: $color-primary;
-  height: 100%;
-}
-
-.progressbar-container {
-  border-radius: 15px;
-  width: 100%;
-  position: relative;
-  background: $color-divider;
-  height: 30px;
-  line-height: inherit;
 }
 
 .completion-status-group {

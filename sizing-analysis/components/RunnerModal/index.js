@@ -1,6 +1,7 @@
 import React from "react";
 import FaCheck from "react-icons/lib/fa/check";
 import FaRefresh from "react-icons/lib/fa/refresh";
+import ProgressBar from "commons/components/ProgressBar";
 import styles from "./index.scss";
 
 const sampleProgress = [
@@ -13,10 +14,8 @@ const sampleProgress = [
 const RunnerModal = () => (
   <div className={styles.RunnerModal}>
     <h3>Running sizing analysis...</h3>
-    <div className={styles["progressbar-area"]}>
-      <div className={styles["progressbar-container"]}>
-        <div className={styles["progressbar"]} />
-      </div>
+    <div className={styles.progressbar}>
+      <ProgressBar percent={50} />
       <p>20mins left</p>
     </div>
     <ul className={styles["completion-status-group"]}>
