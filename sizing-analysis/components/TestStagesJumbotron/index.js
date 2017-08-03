@@ -3,8 +3,10 @@ import Container from "commons/components/Container";
 import TestStageIndicator from "../TestStageIndicator";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
-import SizingStageLogo from "assets/images/icon_state_sizing_analysis.svg";
-import ResultStageLogo from "assets/images/icon_state_sizing_analysis_result.svg";
+import testStageIcon from "assets/images/icon_state_sizing_analysis.svg";
+import testStageActiveIcon from "assets/images/icon_state_sizing_analysis_active.svg";
+import resultStageIcon from "assets/images/icon_state_sizing_analysis_result.svg";
+import resultStageActiveIcon from "assets/images/icon_state_sizing_analysis_result_done.svg";
 
 const TestStagesJumbotron = ({ stage = STAGE_CONFIG }) => (
   <div className={styles.TestStagesJumbotron}>
@@ -18,13 +20,15 @@ const TestStagesJumbotron = ({ stage = STAGE_CONFIG }) => (
           active={stage > STAGE_CONFIG}
           title="Sizing Analysis"
           description="all your instances"
-          icon={SizingStageLogo} />
+          icon={testStageIcon}
+          activeIcon={testStageActiveIcon} />
 
         <TestStageIndicator
           active={stage > STAGE_TEST}
           title="Recommend"
           description="instances for apps"
-          icon={ResultStageLogo} />
+          icon={resultStageIcon}
+          activeIcon={resultStageActiveIcon} />
       </div>
     </Container>
   </div>
