@@ -8,7 +8,9 @@ import styles from "./index.scss";
 
 const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
   let modalElement = stage !== STAGE_TEST ? "" : (
-    <RunnerModal />
+    <div className={styles["modal-container"]}>
+      <RunnerModal />
+    </div>
   );
 
   return <div className={styles.SizingRunnerPage}>
@@ -34,8 +36,8 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
           <AppSelector />
         </div>
       </Container>
+      { modalElement }
     </main>
-    { modalElement }
   </div>
 };
 

@@ -1,8 +1,9 @@
 @import "styles/variables.sass";
 
 .SizingRunnerPage main {
-  margin: 2rem 0;
+  padding: 2rem 0;
   border-bottom: 1px solid $color-divider;
+  position: relative;
 
   .Container {
     display: flex;
@@ -17,4 +18,16 @@
     margin: 0.3rem 0;
     font-size: 16px;
   }
+}
+
+.modal-container {
+  position: absolute;
+  padding: 2rem 0;
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  height: min-content;
+  top: 0;
+  background: rgba(43, 44, 70, 0.5);
 }

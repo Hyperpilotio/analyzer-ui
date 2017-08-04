@@ -14,8 +14,8 @@ const sampleProgress = [
   { status: "running", instance: "G3.xlarge", time: 20 }
 ];
 
-const RunnerModal = () => (
-  <div className={styles.RunnerModal}>
+const RunnerModal = ({ className = "" }) => (
+  <div className={`${styles.RunnerModal} ${className}`}>
     <h3>Running sizing analysis...</h3>
     <div className={styles.progressbar}>
       <ProgressBar percent={50} />
