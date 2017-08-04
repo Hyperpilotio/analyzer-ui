@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect, hasHistory, Link } from "react-router-dom";
-import HeaderNav from "./components/HeaderNav";
+import HeaderNav from "commons/components/HeaderNav";
+import NavItemLink from "commons/components/NavItemLink";
 import AutopilotPage from "./components/AutopilotPage";
 import UserAuth from "./components/UserAuth";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { Provider, connect } from 'react-redux';
 import { appStore, mapStateToProps, mapDispatchToProps } from './containers/AppReducer';
-import { CSSTransitionGroup } from 'react-transition-group';
 
 //can not use import because it will be set as const variable
 let AppProvider = require("./containers/AppProvider");
@@ -27,28 +27,27 @@ class App extends Component {
       this.props.actions.getApps();
     }
   }
-  click(page){
-  }
 
   render() {
     return (
-      <Router key="router" history={hasHistory}>
+      <Router>
+
         <Switch>
-          <Route key="route_user_auth" path="/login" component={UserAuth} />
-          <Route key="route_root" path="/" children={({ location }) => (
+          <Route path="/login" component={UserAuth} />
+          <Route path="/" children={({ history }) => (
             <div>
-              <HeaderNav key="header_nav" onClick={this.click}/>
-              <CSSTransitionGroup key="route_css_transition" 
-                 transitionName="upper"
-                 transitionEnterTimeout={500}
-                 transitionLeaveTimeout={500}>
-                <Switch key={location.key} location={location} >
-                  <Route location={location} key={location.key + "_1"} path="/dashboard" component={DashboardHome}  />
-                  <Route location={location} key={location.key + "_2"} path="/autopilot" component={AutopilotPage} />
-                  <Route location={location} key={location.key + "_0"} path="/apps/:appId" component={AppPage} />
-                  <Redirect from="/" to="/dashboard" />
-                </Switch>
-              </CSSTransitionGroup>
+              <HeaderNav history={history}>
+                <NavItemLink to="/dashboard" text="Dashboard" />
+                <NavItemLink to="/autopilot" text="Autopilot" />
+                <NavItemLink to="/apps" text="Apps" />
+                <NavItemLink to="/services" text="Services" />
+              </HeaderNav>
+              <Switch>
+                <Route path="/dashboard" component={DashboardHome} />
+                <Route path="/autopilot" component={AutopilotPage} />
+                <Route path="/apps/:appId" component={AppPage} />
+                <Redirect from="/" to="/dashboard" />
+              </Switch>
             </div>
           )} />
         </Switch>
