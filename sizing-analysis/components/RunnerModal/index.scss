@@ -1,4 +1,5 @@
 @import "styles/variables.sass";
+@import "commons/components/Button/index.scss";
 
 .RunnerModal {
   border: 1px solid $color-divider;
@@ -20,4 +21,9 @@
 .completion-status-group {
   list-style: none;
   clear: both;
+}
+
+.button-to-result {
+  display: flex;
+  justify-content: center;
 }
