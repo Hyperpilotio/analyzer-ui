@@ -37,20 +37,6 @@ class App extends Component {
           <Route key="route_user_auth" path="/login" component={UserAuth} />
           <Route key="route_root" path="/" children={({ location }) => (
             <div>
-<<<<<<< HEAD
-              <HeaderNav history={history}>
-                <NavItemLink to="/dashboard" text="Dashboard" />
-                <NavItemLink to="/autopilot" text="Autopilot" />
-                <NavItemLink to="/apps" text="Apps" />
-                <NavItemLink to="/services" text="Services" />
-              </HeaderNav>
-              <Switch>
-                <Route path="/dashboard" component={DashboardHome} />
-                <Route path="/autopilot" component={AutopilotPage} />
-                <Route path="/apps/:appId" component={AppPage} />
-                <Redirect from="/" to="/dashboard" />
-              </Switch>
-=======
               <HeaderNav key="header_nav" onClick={this.click}/>
               <CSSTransitionGroup key="route_css_transition" 
                  transitionName="upper"
@@ -63,7 +49,6 @@ class App extends Component {
                   <Redirect from="/" to="/dashboard" />
                 </Switch>
               </CSSTransitionGroup>
->>>>>>> reset and push again
             </div>
           )} />
         </Switch>
