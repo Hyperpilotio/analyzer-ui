@@ -31,7 +31,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.tranNm);
     return (
       <Router key="router" history={hasHistory}>
         <Switch>
@@ -77,7 +76,6 @@ class App extends Component {
 
 AppProvider = connect(mapStateToProps, mapDispatchToProps)(AppProvider);
 App = connect(mapStateToProps, mapDispatchToProps)(App);
-//console.log(App);
 export default () => (
   <Provider store={appStore}>
       <AppProvider>
@@ -86,5 +84,3 @@ export default () => (
   </Provider>
 );
 
-
-//App = connect()(App);
