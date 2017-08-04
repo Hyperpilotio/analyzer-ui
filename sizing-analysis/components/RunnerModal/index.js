@@ -2,13 +2,16 @@ import React from "react";
 import FaCheck from "react-icons/lib/fa/check";
 import FaRefresh from "react-icons/lib/fa/refresh";
 import ProgressBar from "commons/components/ProgressBar";
+import ProgressItem from "../ProgressItem";
 import styles from "./index.scss";
 
 const sampleProgress = [
   { status: "completed", instance: "C3.large", time: 25 },
   { status: "completed", instance: "C3.xlarge", time: 21 },
   { status: "completed", instance: "M2.xlarge", time: 10 },
-  { status: "pending", instance: "M2.large", time: 5 }
+  { status: "running", instance: "M3.large", time: 15 },
+  { status: "running", instance: "G4.large", time: 9 },
+  { status: "running", instance: "G3.xlarge", time: 20 }
 ];
 
 const RunnerModal = () => (
@@ -20,20 +23,7 @@ const RunnerModal = () => (
     </div>
     <ul className={styles["completion-status-group"]}>
       { sampleProgress.map( ({ status, instance, time }) => (
-        <li className={styles["completion-status"]}>
-          <div className={styles["instance-name"]}>
-            { status === "completed"
-              ? <FaCheck className={`${styles.checkmark} ${styles.completed}`} size={18} />
-              : <FaRefresh className={`${styles.checkmark} ${styles.running}`} size={18} /> }
-            
-            <p className={styles[status]}>
-              <span className={styles["instance-type"]}>{ instance }</span> instance
-            </p>
-          </div>
-          <div className={styles["running-time"]}>
-            <p className={styles[status]}>{ time } mins</p>
-          </div>
-        </li>
+        <ProgressItem status={status} instance={instance} runningTime={time} />
       ) ) }
     </ul>
   </div>

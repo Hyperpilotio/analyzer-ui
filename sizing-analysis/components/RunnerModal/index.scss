@@ -1,12 +1,12 @@
 @import "styles/variables.sass";
 
 .RunnerModal {
-  backround-color: $color-white;
   border: 1px solid $color-divider;
   border-radius: 4px;
   width: 700px;
   height: 400px;
   padding: 1rem 2rem;
+  overflow: scroll;
 }
 
 .progressbar p {
@@ -19,46 +19,4 @@
 .completion-status-group {
   list-style: none;
   clear: both;
-}
-
-.completion-status {
-  display: flex;
-  flex-direction: row;
-  .instance-name {
-    width: 60%;
-  }
-  .running-time {
-    width: 40%;
-  }
-
-  p {
-    font-size: 16px;
-    font-weight: lighter;
-    letter-spacing: 0.4px;
-  }
-  p.completed {
-    color: $color-dark-grey;
-    span {
-      color: $color-primary;
-    }
-  }
-  p.pending {
-    color: #e5e6e8;
-    span {
-      color: $color-blue;
-    }
-  }
-
-}
-
-.checkmark {
-  margin: 1rem 1rem 1rem 0;
-  float: left;
-
-  &.completed {
-    color: #b8e986;
-  }
-  &.running {
-    color: #e5e6e8;
-  }
 }
