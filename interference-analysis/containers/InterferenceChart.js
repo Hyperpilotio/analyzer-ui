@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import InterferenceChartComponent from "../components/InterferenceChart";
 
 
-export default class InterferenceChart extends Component {
+class InterferenceChart extends Component {
 
   state = { data: null, loading: true };
 
@@ -34,4 +36,9 @@ export default class InterferenceChart extends Component {
   }
 
 }
-module.exports = InterferenceChart;
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InterferenceChart)

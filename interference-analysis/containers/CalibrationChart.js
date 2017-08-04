@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import CalibrationChartComponent from "../components/CalibrationChart";
 
 
-export default class CalibrationChart extends Component {
+class CalibrationChart extends Component {
 
   state = { data: null, loading: true }
 
@@ -33,4 +35,9 @@ export default class CalibrationChart extends Component {
     return <CalibrationChartComponent {...this.state} />
   }
 }
-module.exports = CalibrationChart;
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CalibrationChart)

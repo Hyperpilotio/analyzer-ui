@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import ServicePlacementComponent from "../components/ServicePlacement";
 
 
-export default class ServicePlacement extends Component {
+class ServicePlacement extends Component {
 
   state = { placement: null, loading: true }
 
@@ -37,4 +39,9 @@ export default class ServicePlacement extends Component {
   }
 
 }
-module.exports = ServicePlacement;
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ServicePlacement)

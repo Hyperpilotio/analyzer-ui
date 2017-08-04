@@ -4,18 +4,15 @@ import HeaderNav from "commons/components/HeaderNav";
 import NavItemLink from "commons/components/NavItemLink";
 import DashboardHome from "./components/DashboardHome";
 import AutopilotPage from "./components/AutopilotPage";
+import AppPage from "./containers/AppPage";
 import UserAuth from "./components/UserAuth";
+import AppProvider from "./containers/AppProvider";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { Provider, connect } from 'react-redux';
 import { appStore, mapStateToProps, mapDispatchToProps } from './containers/AppReducer';
 
-//can not use import because it will be set as const variable
-let AppProvider = require("./containers/AppProvider");
-let AppPage = require("./containers/AppPage");
 
-
-AppPage = connect(mapStateToProps, mapDispatchToProps)(AppPage);
 class App extends Component {
   constructor(props) {
      super(props);
@@ -57,8 +54,8 @@ class App extends Component {
 }
 
 
-AppProvider = connect(mapStateToProps, mapDispatchToProps)(AppProvider);
 App = connect(mapStateToProps, mapDispatchToProps)(App);
+
 export default () => (
   <Provider store={appStore}>
       <AppProvider>

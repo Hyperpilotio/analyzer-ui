@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import ProfilingChartComponent from "../components/ProfilingChart";
 
 
-export default class ProfilingChart extends Component {
+class ProfilingChart extends Component {
 
   state = { data: null, loading: true };
 
@@ -34,4 +36,9 @@ export default class ProfilingChart extends Component {
   }
 
 }
-module.exports = ProfilingChart;
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfilingChart)

@@ -1,10 +1,12 @@
 import React, { Component, Children } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import _ from "lodash";
 
 
-export default class AppProvider extends Component {
+class AppProvider extends Component {
   constructor(props) {
         super(props);
   }
@@ -155,4 +157,9 @@ export default class AppProvider extends Component {
   }
 
 }
-module.exports = AppProvider;
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppProvider)

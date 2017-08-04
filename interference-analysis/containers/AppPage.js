@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import AppPageComponent from "../components/AppPage";
 
 
-export default class AppPage extends Component {
+class AppPage extends Component {
 
 
   constructor(props) {
@@ -42,4 +44,9 @@ export default class AppPage extends Component {
   }
 
 }
-module.exports = AppPage;
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppPage)
