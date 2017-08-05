@@ -41,7 +41,7 @@ export default ({ history, children }) => (
     {/* Header */}
     <div className="header">
       <div className="container">
-        <div className="current-location">Organization name</div>
+        <div className="current-location">Walmart</div>
         <a href="#" className="badge info settings-button">
           <span className="placehold-settings-icon" /> Settings
         </a>
