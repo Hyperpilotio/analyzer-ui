@@ -1,10 +1,12 @@
 import React, { Component, Children } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import _ from "lodash";
 
 
-export default class AppProvider extends Component {
+class AppProvider extends Component {
 
   state = {
     cluster: {},
@@ -15,14 +17,9 @@ export default class AppProvider extends Component {
     recommendations: {}
   }
 
-  static childContextTypes = {
-    store: PropTypes.object,
-    actions: PropTypes.object
-  }
-
-  getChildContext() {
+  getStateContext() {
     return {
-      store: this.state,
+      myStore: this.state,
       actions: {
         getApps: ::this.getApps,
         fetchServicePlacement: ::this.fetchServicePlacement,
@@ -33,7 +30,7 @@ export default class AppProvider extends Component {
       }
     };
   }
-
+    
   async getApps() {
     let res = await fetch(`/api/apps`);
     if (!res.ok) {
@@ -44,6 +41,7 @@ export default class AppProvider extends Component {
     this.setState({
       apps: _.mapValues(data, (app, _id) => _.assign({}, this.state.apps[_id], app))
     });
+    this.props.setApps(_.mapValues(data, (app, _id) => _.assign({}, this.state.apps[_id], app)));
   }
 
   async fetchServicePlacement(recommended = false) {
@@ -57,8 +55,10 @@ export default class AppProvider extends Component {
       this.setState({
         recommendations: update(this.state.recommendations, { placement: { $set: data } })
       });
+      this.props.setRecommendations(update(this.state.recommendations, { placement: { $set: data } }));
     } else {
       this.setState({ cluster: data });
+      this.props.setCluster(data);        
     }
   }
 
@@ -75,6 +75,9 @@ export default class AppProvider extends Component {
         _.fromPairs([[ appId, { $set: data } ]])
       )
     });
+    this.props.setApps(update(
+      this.state.apps, _.fromPairs([[ appId, { $set: data } ]])
+    ));
   }
 
   async fetchCalibration(appId) {
@@ -90,6 +93,10 @@ export default class AppProvider extends Component {
         _.fromPairs([[appId, {$set: data}]])
       )
     });
+    this.props.setCalibrations(update(
+      this.state.calibrations,
+      _.fromPairs([[appId, {$set: data}]])
+    ));
   }
 
   async fetchProfiling(appId, serviceName) {
@@ -105,6 +112,10 @@ export default class AppProvider extends Component {
         _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
       )
     });
+    this.props.setProfilings(update(
+      this.state.profilings,
+      _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
+    ));
   }
 
   async fetchInterference(appId, serviceName) {
@@ -120,10 +131,28 @@ export default class AppProvider extends Component {
         _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
       )
     });
+    this.props.setInterferences(update(
+      this.state.interferences,
+      _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
+    ));
   }
+  
+  //must set state well before component mount      
+  componentWillMount() {
+    let actions = this.getStateContext().actions;
+    this.props.setAllActions(actions);
+    this.props.setMyState(this.getStateContext().myStore);
+  }
+
 
   render() {
     return Children.only(this.props.children);
   }
 
 }
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppProvider)

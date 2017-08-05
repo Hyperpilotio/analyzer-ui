@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import AppPageComponent from "../components/AppPage";
 
 
-export default class AppPage extends Component {
-
-  static contextTypes = {
-    store: PropTypes.object,
-    actions: PropTypes.object
-  }
+class AppPage extends Component {
 
   constructor(props) {
     super(props);
@@ -19,17 +16,17 @@ export default class AppPage extends Component {
   state = { data: null, loading: true }
 
   async fetchData(appId) {
-    if (!_.has(this.context.store.apps[appId], "type")) {
-      await this.context.actions.fetchAppInfo(appId)
+    if (!_.has(this.props.apps[appId], "type")) {
+      await this.props.actions.fetchAppInfo(appId)
     }
     this.setState({
-      data: this.context.store.apps[appId],
+      data: this.props.apps[appId],
       loading: false
     });
   }
 
   componentDidMount() {
-    this.setState({ data: this.context.store.apps[this.appId] });
+    this.setState({ data: this.props.apps[this.appId] });
     this.fetchData(this.appId);
   }
 
@@ -46,3 +43,9 @@ export default class AppPage extends Component {
   }
 
 }
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppPage)

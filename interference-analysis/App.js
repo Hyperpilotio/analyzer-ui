@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import HeaderNav from "../commons/components/HeaderNav";
-import NavItemLink from "../commons/components/NavItemLink";
+import HeaderNav from "commons/components/HeaderNav";
+import NavItemLink from "commons/components/NavItemLink";
 import DashboardHome from "./components/DashboardHome";
 import AutopilotPage from "./components/AutopilotPage";
 import AppPage from "./containers/AppPage";
@@ -9,18 +9,16 @@ import UserAuth from "./components/UserAuth";
 import AppProvider from "./containers/AppProvider";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { Provider, connect } from 'react-redux';
+import { appStore, mapStateToProps, mapDispatchToProps } from './containers/AppReducer';
 
 
 class App extends Component {
 
-  static contextTypes = {
-    actions: PropTypes.object,
-    store: PropTypes.object
-  }
-
   componentDidMount() {
-    if (_.keys(this.context.store.apps).length === 0)
-      this.context.actions.getApps();
+    if (_.keys(this.props.apps).length === 0){
+      this.props.actions.getApps();
+    }
   }
 
   render() {
@@ -53,8 +51,13 @@ class App extends Component {
 }
 
 
+App = connect(mapStateToProps, mapDispatchToProps)(App);
+
 export default () => (
-  <AppProvider>
-    <App />
-  </AppProvider>
-)
+  <Provider store={appStore}>
+    <AppProvider>
+      <App />
+    </AppProvider>
+  </Provider>
+);
+

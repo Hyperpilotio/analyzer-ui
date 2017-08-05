@@ -1,24 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import ProfilingChartComponent from "../components/ProfilingChart";
 
 
-export default class ProfilingChart extends Component {
-
-  static contextTypes = {
-    store: PropTypes.object,
-    actions: PropTypes.object
-  }
+class ProfilingChart extends Component {
 
   state = { data: null, loading: true };
 
   async fetchData(appId, serviceName) {
-    if (!_.has(this.context.store.profilings, `${appId}-${serviceName}`)) {
-      await this.context.actions.fetchProfiling(appId, serviceName)
+    if (!_.has(this.props.profilings, `${appId}-${serviceName}`)) {
+      await this.props.actions.fetchProfiling(appId, serviceName)
     }
     this.setState({
-      data: this.context.store.profilings[`${appId}-${serviceName}`],
+      data: this.props.profilings[`${appId}-${serviceName}`],
       loading: false
     });
   }
@@ -39,3 +36,9 @@ export default class ProfilingChart extends Component {
   }
 
 }
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfilingChart)

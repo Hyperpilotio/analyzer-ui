@@ -1,24 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import InterferenceChartComponent from "../components/InterferenceChart";
 
 
-export default class InterferenceChart extends Component {
-
-  static contextTypes = {
-    store: PropTypes.object,
-    actions: PropTypes.object
-  }
+class InterferenceChart extends Component {
 
   state = { data: null, loading: true };
 
   async fetchData(appId, serviceName) {
-    if (!_.has(this.context.store.interferences, `${appId}-${serviceName}`)) {
-      await this.context.actions.fetchInterference(appId, serviceName);
+    if (!_.has(this.props.interferences, `${appId}-${serviceName}`)) {
+      await this.props.actions.fetchInterference(appId, serviceName);
     }
     this.setState({
-      data: this.context.store.interferences[`${appId}-${serviceName}`],
+      data: this.props.interferences[`${appId}-${serviceName}`],
       loading: false
     });
   }
@@ -39,3 +36,9 @@ export default class InterferenceChart extends Component {
   }
 
 }
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InterferenceChart)

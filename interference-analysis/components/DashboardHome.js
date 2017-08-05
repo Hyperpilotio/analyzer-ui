@@ -8,6 +8,8 @@ import gridIcon from "../../assets/images/icon_grid_view.svg";
 import listIcon from "../../assets/images/icon_list_view.svg";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from 'react-redux';
+import { mapStateToProps, mapDispatchToProps } from "../containers/AppReducer";
 
 
 const ApplicationItem = ({ _id, name, serviceNames }) => (
@@ -23,88 +25,85 @@ const ApplicationItem = ({ _id, name, serviceNames }) => (
     </section>
     <mark className="right"><div className="danger badge" /></mark>
   </article>
-)
+);
 
 
-export default class DashboardHome extends Component {
+const DashboardHome = ({ apps }) => (
+  <div className="dashboard">
 
-  static contextTypes = {
-    store: PropTypes.object,
-    actions: PropTypes.object
-  };
-
-  render() {
-    const { apps } = this.context.store;
-    return <div className="dashboard">
-
-      <KeyInfo>
-        <div className="left columns with-divider">
-          <div className="column info-list">
-            <div className="info-section">
-              <span className="info-key">Cluster manager</span>
-              <span className="info-value">Kubernetes</span>
-            </div>
-            <div className="info-section">
-              <span className="info-key">Service</span>
-              <span className="info-value">Walmart Chatbot</span>
-            </div>
+    <KeyInfo>
+      <div className="left columns with-divider">
+        <div className="column info-list">
+          <div className="info-section">
+            <span className="info-key">Cluster manager</span>
+            <span className="info-value">Kubernetes</span>
           </div>
-          <div className="column info-list with-divider">
-            <div className="info-section">
-              <div className="info-key">Current Status</div>
-              <div className="info-value status-indicator-list">
-                <div className="columns">
-                  <div className="column status-indicator">
-                    <div>
-                      <div className="key-stat">35</div>
-                      <div className="key-stat-label">apps</div>
-                    </div>
-                    <span className="badge success">Healthy</span>
+          <div className="info-section">
+            <span className="info-key">Service</span>
+            <span className="info-value">Walmart Chatbot</span>
+          </div>
+        </div>
+        <div className="column info-list with-divider">
+          <div className="info-section">
+            <div className="info-key">Current Status</div>
+            <div className="info-value status-indicator-list">
+              <div className="columns">
+                <div className="column status-indicator">
+                  <div>
+                    <div className="key-stat">35</div>
+                    <div className="key-stat-label">apps</div>
                   </div>
-                  <div className="column status-indicator">
-                    <div>
-                      <div className="key-stat">12</div>
-                      <div className="key-stat-label">Interfering</div>
-                    </div>
-                    <span className="badge danger">High</span>
+                  <span className="badge success">Healthy</span>
+                </div>
+                <div className="column status-indicator">
+                  <div>
+                    <div className="key-stat">12</div>
+                    <div className="key-stat-label">Interfering</div>
                   </div>
-                  <div className="column status-indicator">
-                    <div>
-                      <div className="key-stat">36.5%</div>
-                      <div className="key-stat-label">average QoS rate</div>
-                    </div>
+                  <span className="badge danger">High</span>
+                </div>
+                <div className="column status-indicator">
+                  <div>
+                    <div className="key-stat">36.5%</div>
+                    <div className="key-stat-label">average QoS rate</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="right columns">
-          <Link to="/autopilot" className="primary-button">See Recommendation</Link>
-        </div>
-      </KeyInfo>
+      </div>
+      <div className="right columns">
+        <Link to="/autopilot" className="primary-button">See Recommendation</Link>
+      </div>
+    </KeyInfo>
 
-      <div className="container">
-        <div className="display-controls">
-          <span className="list-view">
-            <img height="30" src={listIcon} />
-          </span>
-          <span className="grid-view">
-            <img height="30" src={gridIcon} />
-          </span>
-        </div>
+    <div className="container">
+      <div className="display-controls">
+        <span className="list-view">
+          <img height="30" src={listIcon} />
+        </span>
+        <span className="grid-view">
+          <img height="30" src={gridIcon} />
+        </span>
+      </div>
 
-        <div className="apps-display">
-          <h3>Apps</h3>
-          <div className="apps-container">
+      <div className="apps-display">
+        <h3>Apps</h3>
+        <div className="apps-container">
 
-            { _.map( apps, (doc, _id) => (
-              <ApplicationItem key={_id} _id={_id} {...doc} />
-            ) ) }
+          { _.map( apps, (doc, _id) => {
+           return (
+            <ApplicationItem key={_id} _id={_id} {...doc}  />
+          )} ) }
 
-          </div>
         </div>
       </div>
-    </div>;
-  }
-}
+    </div>
+  </div>
+);
+
+
+export default connect(
+  mapStateToProps, mapDispatchToProps
+)(DashboardHome);

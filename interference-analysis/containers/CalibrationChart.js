@@ -1,24 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { mapStateToProps, mapDispatchToProps } from "./AppReducer";
 import CalibrationChartComponent from "../components/CalibrationChart";
 
 
-export default class CalibrationChart extends Component {
-
-  static contextTypes = {
-    store: PropTypes.object,
-    actions: PropTypes.object
-  }
+class CalibrationChart extends Component {
 
   state = { data: null, loading: true }
 
   async fetchData(appId) {
-    if (_.isUndefined(_.get(this.context.store.calibrations, appId))) {
-      await this.context.actions.fetchCalibration(appId)
+    if (_.isUndefined(_.get(this.props.calibrations, appId))) {
+      await this.props.actions.fetchCalibration(appId)
     }
     this.setState({
-      data: this.context.store.calibrations[appId],
+      data: this.props.calibrations[appId],
       loading: false
     });
   }
@@ -37,5 +34,10 @@ export default class CalibrationChart extends Component {
   render() {
     return <CalibrationChartComponent {...this.state} />
   }
-
 }
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CalibrationChart)
