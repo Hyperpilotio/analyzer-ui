@@ -13,7 +13,7 @@ const AppSelector = () => (
         className={`${styles.Button} ${styles.invert}`}>
         Analyze All
       </Link>
-      <Button>Select</Button>
+      <Button>Analyze Selected</Button>
     </div>
     <div className={styles["apps-area"]}>
       { ["Redis", "Kafka", "mongoDB", "MySQL", "Nginx"].map(app => (

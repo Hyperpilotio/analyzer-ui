@@ -34,7 +34,7 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
           <h3>Apps</h3>
           <div className={styles["cluster-info"]}>
             <p>Current cluster manager</p>
-            <h3>Kubernuets</h3>
+            <h3>Kubernetes</h3>
           </div>
           <div className={styles["cluster-info"]}>
             <p>TBD</p>
