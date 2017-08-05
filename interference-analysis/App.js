@@ -14,9 +14,6 @@ import { appStore, mapStateToProps, mapDispatchToProps } from './containers/AppR
 
 
 class App extends Component {
-  constructor(props) {
-     super(props);
-  }
 
   componentDidMount() {
     if (_.keys(this.props.apps).length === 0){
@@ -58,9 +55,9 @@ App = connect(mapStateToProps, mapDispatchToProps)(App);
 
 export default () => (
   <Provider store={appStore}>
-      <AppProvider>
-          <App />
-      </AppProvider>
+    <AppProvider>
+      <App />
+    </AppProvider>
   </Provider>
 );
 

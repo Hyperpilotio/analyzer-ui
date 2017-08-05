@@ -8,7 +8,6 @@ import AppPageComponent from "../components/AppPage";
 
 class AppPage extends Component {
 
-
   constructor(props) {
     super(props);
     this.appId = props.match.params.appId;

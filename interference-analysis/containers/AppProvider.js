@@ -7,9 +7,6 @@ import _ from "lodash";
 
 
 class AppProvider extends Component {
-  constructor(props) {
-        super(props);
-  }
 
   state = {
     cluster: {},
@@ -19,11 +16,6 @@ class AppProvider extends Component {
     interferences: {},
     recommendations: {}
   }
-
-  // static childContextTypes = {
-  //   myStore: PropTypes.object,
-  //   actions: PropTypes.object
-  // }
 
   getStateContext() {
     return {
@@ -84,8 +76,8 @@ class AppProvider extends Component {
       )
     });
     this.props.setApps(update(
-        this.state.apps, _.fromPairs([[ appId, { $set: data } ]])
-      ));
+      this.state.apps, _.fromPairs([[ appId, { $set: data } ]])
+    ));
   }
 
   async fetchCalibration(appId) {
@@ -101,9 +93,10 @@ class AppProvider extends Component {
         _.fromPairs([[appId, {$set: data}]])
       )
     });
-    this.props.setCalibrations(update(this.state.calibrations,
-        _.fromPairs([[appId, {$set: data}]])
-      ));
+    this.props.setCalibrations(update(
+      this.state.calibrations,
+      _.fromPairs([[appId, {$set: data}]])
+    ));
   }
 
   async fetchProfiling(appId, serviceName) {
@@ -120,9 +113,9 @@ class AppProvider extends Component {
       )
     });
     this.props.setProfilings(update(
-        this.state.profilings,
-        _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
-      ));
+      this.state.profilings,
+      _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
+    ));
   }
 
   async fetchInterference(appId, serviceName) {
@@ -139,21 +132,21 @@ class AppProvider extends Component {
       )
     });
     this.props.setInterferences(update(
-        this.state.interferences,
-        _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
-      ));
+      this.state.interferences,
+      _.fromPairs([[`${appId}-${serviceName}`, {$set: data}]])
+    ));
   }
   
   //must set state well before component mount      
   componentWillMount() {
-      let actions = this.getStateContext().actions;
-      this.props.setAllActions(actions);
-      this.props.setMyState(this.getStateContext().myStore);
+    let actions = this.getStateContext().actions;
+    this.props.setAllActions(actions);
+    this.props.setMyState(this.getStateContext().myStore);
   }
 
 
   render() {
-      return Children.only(this.props.children);
+    return Children.only(this.props.children);
   }
 
 }
