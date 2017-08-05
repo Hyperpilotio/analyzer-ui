@@ -3,13 +3,9 @@
 .TestStagesJumbotron {
   background: $color-white;
   border-bottom: 1px solid $color-divider;
-  height: 160px;
 
   .Container {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    height: 100%;
   }
 }
 

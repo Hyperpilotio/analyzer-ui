@@ -1,0 +1,12 @@
+@import "styles/variables.sass";
+
+.Jumbotron {
+  height: 160px;
+  background: $color-light;
+}
+
+.Container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
