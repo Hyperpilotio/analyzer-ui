@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import HeaderNav from "../commons/components/HeaderNav";
 import NavItemLink from "../commons/components/NavItemLink";
 import SizingRunnerPage from "./components/SizingRunnerPage";
+import SizingResultsPage from "./components/SizingResultsPage";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "./constants";
 
 
@@ -18,7 +19,7 @@ export default () => (
             <Route path="/sizing-test">
               <Switch>
                 <Route path="/sizing-test/run-test" render={() => <SizingRunnerPage stage={STAGE_TEST} />} />
-                <Route path="/sizing-test/result" render={() => <SizingRunnerPage stage={STAGE_RESULT} />} />
+                <Route path="/sizing-test/result" component={SizingResultsPage} />
                 <Route render={() => <SizingRunnerPage stage={STAGE_CONFIG} />} />
               </Switch>
             </Route>
