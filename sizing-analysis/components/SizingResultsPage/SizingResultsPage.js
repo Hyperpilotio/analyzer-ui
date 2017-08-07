@@ -2,7 +2,7 @@ import React from "react";
 import Jumbotron from "commons/components/Jumbotron";
 import Navbar from "commons/components/Navbar";
 import NavItemLink from "commons/components/NavItemLink";
-import Benchresult from "../Benchresult";
+import ResultTable from "../ResultTable";
 import KeySummary from "../KeySummary";
 import styles from "./index.scss";
 import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
@@ -51,7 +51,7 @@ const SizingResultsPage = () => (
         <img src={kafkaLogo} /> Kafka
       </NavItemLink>
     </Navbar>
-    <Benchresult>
+    <ResultTable>
       <div className={styles["bench-grid"]}>
         <table>
           <tr className={styles["grid-tr"]}>
@@ -86,7 +86,7 @@ const SizingResultsPage = () => (
           <h3></h3>
         </div>
       </div>    
-    </Benchresult>
+    </ResultTable>
   </div>
 );
 
