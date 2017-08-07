@@ -1,3 +1,3 @@
 module.exports = {
-  components: 'src/commons/components/**/*.js'
+  components: 'commons/components/**/*.js'
 };
