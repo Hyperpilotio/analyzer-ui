@@ -1,0 +1,12 @@
+@import "styles/variables.sass";
+
+.Benchresult {
+	background-color: #ffffff;
+	border: solid 1px #eef0fa;
+}
+
+.Container {
+  display: flex;
+  align-items: center;
+  height: 78%;
+}
