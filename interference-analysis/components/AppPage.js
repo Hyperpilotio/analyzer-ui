@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router";
+import Navbar from "commons/components/Navbar";
+import NavItemLink from "commons/components/NavItemLink";
 import { NavLink, Link } from "react-router-dom";
 import KeyInfo from "./KeyInfo";
 import redisLogo from "../../assets/images/asset_redis_logo.svg";
@@ -58,25 +60,18 @@ export default ({ appId, data, loading }) => (
       </div>
     </KeyInfo>
 
-    <nav className="subnav">
-      <div className="container">
-        <NavLink to={`/apps/${appId}/calibration`} className="nav-item" activeClassName="selected">
-          Calibration
-        </NavLink>
-        { loading
-          ? <a className="nav-item">Loading...</a>
-          : data.serviceNames.map(serviceName => (
-            <NavLink
-              key={serviceName}
-              to={`/apps/${appId}/services/${serviceName}/profiling`}
-              className="nav-item"
-              activeClassName="selected">
-              Profiling of { serviceName }
-            </NavLink>
-            ))
-        }
-      </div>
-    </nav>
+    <Navbar className="results-subnav">
+      <NavItemLink to={`/apps/${appId}/calibration`} text="Calibration" />
+      { loading
+        ? <NavItemLink to="#" text="Loading..." />
+        : data.serviceNames.map(serviceName => (
+          <NavItemLink
+            key={serviceName}
+            to={`/apps/${appId}/services/${serviceName}/profiling`}
+            text={`Profiling of ${ serviceName }`} />
+          ))
+      }
+    </Navbar>
 
     <div className="container">
       <Switch>
