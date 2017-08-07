@@ -1,0 +1,14 @@
+@import "styles/variables.sass";
+
+.Navbar {
+  height: 45px;
+  margin-top: 5px;
+  border-bottom: 1px solid $color-divider;
+}
+
+.Container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+}
