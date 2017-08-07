@@ -25,3 +25,14 @@
     margin-right: 1rem;
   }
 }
+
+.NavItemLink {
+  img {
+    height: 30px;
+    margin-right: 0.5rem;
+  }
+
+  &.selected {
+    color: $color-dark-grey;
+  }
+}
