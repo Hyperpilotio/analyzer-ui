@@ -40,7 +40,7 @@ export default ({ appId, data, loading }) => (
         <div className="column info-list">
           <div className="info-section">
             <span className="info-key">Service</span>
-            <span className="info-value">Walmart Chatbot</span>
+            <span className="info-value">Organization Name Chatbot</span>
           </div>
           <div className="info-section">
             <span className="info-key">App type</span>

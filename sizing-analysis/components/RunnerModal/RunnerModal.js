@@ -18,13 +18,15 @@ const RunnerModal = ({
     <h3>Running sizing analysis...</h3>
     <div className={styles.progressbar}>
       <ProgressBar percent={progress} />
-      <p>{ finished ? "Done!" : `${remainingTime}mins left` }</p>
+      <p>{ finished ? "42 mins left" : `${remainingTime}mins left` }</p>
     </div>
+    <div className={styles["completion-status-group-canvas"]}>
     <ul className={styles["completion-status-group"]}>
       { tasksProgress.map( ({ status, instance, time }) => (
         <ProgressItem status={status} instance={instance} runningTime={time} />
       ) ) }
     </ul>
+    </div>
     { finished ? (
       <div className={styles["button-to-result"]}>
         <Link to="/sizing-test/result" className={styles.Button}>

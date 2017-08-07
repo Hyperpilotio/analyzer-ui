@@ -7,7 +7,7 @@
   width: 700px;
   height: 400px;
   padding: 1rem 2rem;
-  overflow: scroll;
+  height: auto;
   background: $color-white;
 }
 
@@ -18,8 +18,16 @@
   float: right;
 }
 
+.completion-status-group-canvas {
+  margin-top: 60px;
+  margin-bottom: 30px;
+  overflow-y: auto;
+  height: 180px;
+}
+
 .completion-status-group {
   list-style: none;
+  overflow-y: auto;
   clear: both;
 }
 
