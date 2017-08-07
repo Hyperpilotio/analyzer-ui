@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "../Container";
-import styles from "./index.scss";
+import styles from "./Jumbotron.scss";
 
 const Jumbotron = ({ className = "", containerClassName = "", children }) => (
   <div className={`${styles.Jumbotron} ${className}`}>

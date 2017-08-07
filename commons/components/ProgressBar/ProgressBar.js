@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./index.scss";
+import styles from "./ProgressBar.scss";
 
 const ProgressBar = ({ className = "", containerClass = "", percent = 100 }) => (
   <div className={`${styles.ProgressBar} ${containerClass}`}>

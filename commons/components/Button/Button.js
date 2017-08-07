@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./index.scss";
+import styles from "./Button.scss";
 
 const Button = ({ invert = false, className = "", onClick = () => {}, children }) => {
   let invertClass = invert ? styles.invert : "";

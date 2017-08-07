@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "../Container";
-import styles from "./index.scss";
+import styles from "./Navbar.scss";
 
 const Navbar = ({ className = "", children }) => (
   <nav className={`${styles.Navbar} ${className}`}>

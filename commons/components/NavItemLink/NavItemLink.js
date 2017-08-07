@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import _ from "lodash";
-import styles from "./index.scss";
+import styles from "./NavItemLink.scss";
 
 
 export default ({ className = "", activeClassName = "", to, text, children }) => (
