@@ -37,6 +37,12 @@
 }
 
 .results-content > * {
-  width: 50%;
+  width: 48%;
+  float: left;
   margin-top: 2rem;
+  margin-bottom: 3rem;
+
+  &:first-child {
+    margin-right: 1rem;
+  }
 }

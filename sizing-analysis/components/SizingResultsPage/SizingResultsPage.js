@@ -53,7 +53,14 @@ const SizingResultsPage = () => (
       </NavItemLink>
     </Navbar>
     <Container className={styles["results-content"]}>
-      <ResultTable />
+      <div>
+        <p>&nbsp;</p>
+        <ResultTable />
+      </div>
+      <div>
+        <p>Performance</p>
+        <div style={{ height: "400px", border: "1px solid black" }} />
+      </div>
     </Container>
   </div>
 );
