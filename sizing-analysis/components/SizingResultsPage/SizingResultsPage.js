@@ -55,7 +55,7 @@ const SizingResultsPage = () => (
     <Container className={styles["results-content"]}>
       <div>
         <p>&nbsp;</p>
-        <ResultTable />
+        <ResultTable className={styles.ResultTable} />
       </div>
       <div>
         <p>Performance</p>
