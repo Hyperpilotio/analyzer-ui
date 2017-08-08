@@ -1,43 +1,53 @@
 import React from "react";
+import FaChevronDown from "react-icons/lib/fa/chevron-down";
 import styles from "./ResultTable.scss";
 
 const ResultTable = ({ className = "" }) => (
-  <div className={`${styles.ResultTable} ${className}`}>
-    <div className={styles["bench-grid"]}>
-      <table>
-        <tr className={styles["grid-tr"]}>
-          <th className={styles["grid-th"]}></th>
-          <th className={styles["grid-th"]}>Instance Type</th>
-          <th className={styles["grid-th"]}>Perf</th>
-          <th className={styles["grid-th"]}>Cost</th>
-        </tr>
-        <tr className={styles["grid-tr"]}>
-          <td className={styles["grid-td"]}><div className={styles["oval-2"]}></div>Optimal Perf/Cost</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>c4.large</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>600</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>$230.78</td>
-        </tr>
-        <tr className={styles["grid-tr"]}>
-          <td className={styles["grid-td"] }><div className={styles["oval-3"]}></div>High performance</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>c3.X-large</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>680</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>$250.43</td>
-        </tr>
-        <tr className={styles["grid-tr"]}>
-          <td className={styles["grid-td"] + " " + styles["left"]}><div className={styles["oval-4"]}></div>Low cost</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>m2.medium</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>270</td>
-          <td className={styles["grid-td"] + " " + styles["center"]}>$60.25</td>
-        </tr>
-
-      </table>
-    </div>
-    <div >
-      <div>
-        <h3></h3>
-      </div>
-    </div>
-  </div>
+  <table className={`${styles.ResultTable} ${className}`}>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Instance Type</th>
+        <th>Perf</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className={styles["single-result"]}>
+        <td>
+          <i className={styles["optimal-perf-cost"]} />
+          Optimal Perf/Cost
+        </td>
+        <td>c4.large</td>
+        <td>600</td>
+        <td>$230.78</td>
+      </tr>
+      <tr className={styles["single-result"]}>
+        <td>
+          <i className={styles["optimal-perf"]} />
+          High performance
+        </td>
+        <td>c3.X-large</td>
+        <td>680</td>
+        <td>$250.43</td>
+      </tr>
+      <tr className={styles["single-result"]}>
+        <td>
+          <i className={styles["optimal-cost"]} />
+          Low cost
+        </td>
+        <td>m2.medium</td>
+        <td>270</td>
+        <td>$60.25</td>
+      </tr>
+      <tr className={styles["see-all"]}>
+        <td colSpan="4">
+          See all tested instances
+          <FaChevronDown className={styles["down-icon"]}size={16} />
+        </td>
+      </tr>
+    </tbody>
+  </table>
 );
 
 export default ResultTable;

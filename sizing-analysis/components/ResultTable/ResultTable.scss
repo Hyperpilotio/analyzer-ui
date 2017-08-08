@@ -1,83 +1,74 @@
 @import "styles/variables.sass";
 
 .ResultTable {
-  background-color: $color-white;
-  border: 1px solid $color-divider;
+  border-collapse: collapse;
+  height: 400px;
+
+  /* Taken from https://stackoverflow.com/a/2586780 */
   border-radius: 4px;
+  border-style: hidden;
+  box-shadow: 0 0 0 1px $color-divider;
+  background-color: $color-white;
+
+  thead {
+    border-bottom: 1px solid $color-divider;
+    color: $color-light-grey;
+  }
+
+  tbody {
+    color: $color-dark-grey;
+  }
+
+  td, th {
+    min-width: 60px;
+    padding: 1rem 0;
+    font-weight: normal;
+    text-align: left;
+  }
+
+  td:first-child {
+    padding-left: 2rem;
+  }
+  td:last-child {
+    padding-right: 2rem;
+  }
+
+  i {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 1rem;
+
+    border-width: 2px;
+    border-style: solid;
+
+    &.optimal-perf-cost {
+      background-color: $color-primary;
+      border-color: $color-white;
+    }
+    &.optimal-perf {
+      background-color: $color-divider;
+      border-color: $color-primary;
+    }
+    &.optimal-cost {
+      background-color: $background-success;
+      border-color: #b8e986;
+    }
+  }
 }
 
-.bench-grid {
-  display: flex;
-  align-items:flex-start;
-  justify-content: center;
+tr.single-result:hover {
+  background: $color-light;
 }
 
-.grid-tr{
-  height: 50px;
-  margin: 1px;
-}
-.bench-grid tr:nth-child(2n) {
-  background-color: #f7f9fc;
-}
+tr.see-all {
+  height: 100%;
+  vertical-align: top;
+  color: #78c1f9;
 
-.grid-th{
-  min-width: 5em;
-  height: 19px;
-  font-family: WorkSans;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: center;
-  letter-spacing: 0.4px;
-  margin: 5px;
-  color: #b9bacb;
-}
-.left{
-  text-align: left;
-}
-.center{
-  text-align: center;
-}
-
-.grid-td{
-  height: 19px;
-  font-family: WorkSans;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
-  color: #606175;
-  vertical-align: middle;
-  margin: 1px;
-}
-
-.oval-2 {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-color: #5677fa;
-  border: solid 2px #ffffff;
-  border-radius: 50%;
-  margin-right: 9px;
-  margin-bottom: -5px;
-}
-
-.oval-3 {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-color: #eef0fa;
-  border: solid 2px #5677fa;
-  border-radius: 50%;
-  margin-right: 9px;
-  margin-bottom: -5px;
-}
-
-.oval-4 {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-color: #daf9b8;
-  border: solid 2px #b8e986;
-  border-radius: 50%;
-  margin-right: 9px;
-  margin-bottom: -5px;
+  .down-icon {
+    margin-left: 1rem;
+  }
 }
