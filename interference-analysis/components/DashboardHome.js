@@ -40,7 +40,7 @@ const DashboardHome = ({ apps }) => (
           </div>
           <div className="info-section">
             <span className="info-key">Service</span>
-            <span className="info-value">Walmart Chatbot</span>
+            <span className="info-value">Organization Name Chatbot</span>
           </div>
         </div>
         <div className="column info-list with-divider">

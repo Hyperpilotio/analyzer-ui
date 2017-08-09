@@ -9,7 +9,9 @@
     "dev": "webpack-dev-server",
     "serve-interference": "ANALYSIS_APP=interference-analysis node server.js",
     "serve-sizing": "ANALYSIS_APP=sizing-analysis node server.js",
-    "serve": "node server.js"
+    "serve": "node server.js",
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -19,6 +21,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.4",
+    "es6-promise": "^4.1.1",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
     "git-revision-webpack-plugin": "^2.5.1",
@@ -26,6 +29,7 @@
     "loglevel": "^1.4.1",
     "node-sass": "^4.5.3",
     "react-hot-loader": "next",
+    "react-styleguidist": "^6.0.8",
     "resolve-url-loader": "^2.1.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
