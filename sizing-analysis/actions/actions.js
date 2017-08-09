@@ -4,8 +4,8 @@ function mapStateToProps(state) {
   return state;
 }
 
-export const addAll = () => ({ type: ADD_ALL });
-export const toggleSelected = (selected_app) => ({ type: TOGGLE_SELECTED, selected_app: selected_app });
+const addAll = () => ({ type: ADD_ALL });
+const toggleSelected = (selected_app) => ({ type: TOGGLE_SELECTED, selected_app: selected_app });
 
 function mapDispatchToProps(dispatch){
   return {
@@ -18,3 +18,4 @@ function mapDispatchToProps(dispatch){
     
   };
 }
+export { mapDispatchToProps, mapStateToProps, addAll, toggleSelected };

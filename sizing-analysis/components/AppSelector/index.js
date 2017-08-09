@@ -4,8 +4,11 @@ import Button from "commons/components/Button";
 import AppSelectionButton from "../AppSelectionButton";
 import styles from "./index.scss";
 import redisLogo from "assets/images/asset_redis_logo.svg";
+import { connect } from 'react-redux';
+import { mapStateToProps } from "../../actions";
 
-const AppSelector = () => (
+
+const AppSelector = (props) =>  (
   <div className={styles.AppSelector}>
     <div className={styles["select-buttons"]}>
       <Link
@@ -16,11 +19,11 @@ const AppSelector = () => (
       <Button>Analyze Selected</Button>
     </div>
     <div className={styles["apps-area"]}>
-      { ["Redis", "Kafka", "mongoDB", "MySQL", "Nginx"].map(app => (
-        <AppSelectionButton app={app} iconUrl={redisLogo} selected={Math.random() > 0.5} />
+      { props.reducer[0].apps.map(app => (
+        <AppSelectionButton key={app.id} id={app.id} app={app} iconUrl={redisLogo}  />
       )) }
     </div>
   </div>
 );
 
-export default AppSelector;
+export default connect(mapStateToProps)(AppSelector);
