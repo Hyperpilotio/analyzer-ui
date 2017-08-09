@@ -109,6 +109,8 @@ export default function reducer(state = initialState, action) {
            cloneState[0].selected_apps.push(action.selected_app);       
       }
       return cloneState;
+    case 'persist/REHYDRATE':
+        return Object.assign({}, action.payload.reducer);
 
     default:
       return state
