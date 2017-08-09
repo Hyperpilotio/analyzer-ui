@@ -20,7 +20,7 @@ const AppSelector = (props) =>  (
     </div>
     <div className={styles["apps-area"]}>
       { props.reducer[0].apps.map(app => (
-        <AppSelectionButton key={app.id} id={app.id} app={app} iconUrl={redisLogo}  />
+        <AppSelectionButton key={app.appId} id={app.appId} app={app} iconUrl={redisLogo}  />
       )) }
     </div>
   </div>
