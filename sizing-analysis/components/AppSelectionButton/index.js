@@ -9,7 +9,7 @@ const AppSelectionButton = (props) => {
   let selected_apps = props.reducer[0].selected_apps;
   let selected = false;
   for(let selected_app of selected_apps){
-     if(selected_app.id === props.id){
+     if(selected_app.appId === props.id){
        selected = true;
        break;
      }
@@ -20,7 +20,7 @@ const AppSelectionButton = (props) => {
     <Button className={`${styles.AppSelectionButton} ${selectedClass}`} 
         onClick={function(){props.toggleSelected(props.app)}}>
       <img src={props.iconUrl} />
-      { props.app.name }
+      { props.app.appName }
     </Button>
   );
 };
