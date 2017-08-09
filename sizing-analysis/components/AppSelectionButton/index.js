@@ -1,15 +1,28 @@
 import React from "react";
 import Button from "commons/components/Button";
 import styles from "./index.scss";
+import { connect } from 'react-redux';
+import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const AppSelectionButton = ({ app, iconUrl, selected = false }) => {
+
+const AppSelectionButton = (props) => {
+  let selected_apps = props.reducer[0].selected_apps;
+  let selected = false;
+  for(let selected_app of selected_apps){
+     if(selected_app.id === props.id){
+       selected = true;
+       break;
+     }
+  }
   let selectedClass = selected ? styles.selected : "";
+  
   return (
-    <Button className={`${styles.AppSelectionButton} ${selectedClass}`}>
-      <img src={iconUrl} />
-      { app }
+    <Button className={`${styles.AppSelectionButton} ${selectedClass}`} 
+        onClick={function(){props.toggleSelected(props.app)}}>
+      <img src={props.iconUrl} />
+      { props.app.name }
     </Button>
   );
 };
 
-export default AppSelectionButton;
+export default connect(mapStateToProps, mapDispatchToProps)(AppSelectionButton);

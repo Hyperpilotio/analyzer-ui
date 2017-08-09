@@ -19,10 +19,9 @@
     vertical-align: middle;
   }
 
-  &:hover {
+  .AppSelectionButton:hover {
     background-color: $color-white;
     color: $color-dark-grey;
-    border-color: $color-blue;
   }
 
   &.selected {

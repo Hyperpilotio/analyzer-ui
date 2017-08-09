@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import reducer from './reducers';
+import reducers from './reducers';
 import "./index.scss";
 
-const store = createStore(reducer);
+const store = createStore(reducers);
 const rootEl = document.getElementById("react-root");
 const render = Component =>
   ReactDOM.render(
