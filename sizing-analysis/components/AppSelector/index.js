@@ -5,14 +5,14 @@ import AppSelectionButton from "../AppSelectionButton";
 import styles from "./index.scss";
 import redisLogo from "assets/images/asset_redis_logo.svg";
 import { connect } from 'react-redux';
-import { mapStateToProps } from "../../actions";
+import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
 const AppSelector = (props) =>  (
   <div className={styles.AppSelector}>
     <div className={styles["select-buttons"]}>
       <Link
-        to="/sizing-test/run-test"
+        to="/sizing-test/run-test" onClick={props.addAll}
         className={`${styles.Button} ${styles.invert}`}>
         Analyze All
       </Link>
@@ -26,4 +26,4 @@ const AppSelector = (props) =>  (
   </div>
 );
 
-export default connect(mapStateToProps)(AppSelector);
+export default connect(mapStateToProps, mapDispatchToProps)(AppSelector);
