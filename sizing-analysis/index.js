@@ -9,7 +9,7 @@ import "./index.scss";
 import { autoRehydrate, persistStore } from 'redux-persist';
 
 let store = createStore(reducers);
-//persistStore(store);
+persistStore(store);
 const rootEl = document.getElementById("react-root");
 const render = Component =>
   ReactDOM.render(
