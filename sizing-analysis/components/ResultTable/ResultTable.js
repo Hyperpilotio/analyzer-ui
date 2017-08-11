@@ -1,9 +1,40 @@
 import React from "react";
 import FaChevronDown from "react-icons/lib/fa/chevron-down";
 import styles from "./ResultTable.scss";
+import { connect } from 'react-redux';
+import { mapStateToProps } from "../../actions";
 
-const ResultTable = ({ className = "" }) => (
-  <table className={`${styles.ResultTable} ${className}`}>
+
+const ResultTable = (props) => {
+  let selected_app;
+  for(let app of props.reducer[0].selected_apps){
+    if(props.id === app.appId){
+       selected_app = app;
+       break;
+    }
+  }
+  let optimal;
+  let highPerf;
+  let lowCost;
+  if(!!selected_app && !!selected_app.recommendations){
+    for(let result of selected_app.recommendations){
+       switch(result.objective){
+         case "MaxPerfOverCost":
+            highPerf = result;
+            break;
+         case "MinCostWithPerfLimit":
+            lowCost = result;
+            break;
+         case "MaxPerfWithCostLimit":
+            optimal = result;
+            break;
+
+       }
+
+    }
+  }
+  return (
+  <table className={`${styles.ResultTable} ${props.className}`}>
     <thead>
       <tr>
         <th></th>
@@ -18,27 +49,28 @@ const ResultTable = ({ className = "" }) => (
           <i className={styles["optimal-perf-cost"]} />
           Optimal Perf/Cost
         </td>
-        <td>c4.large</td>
-        <td>600</td>
-        <td>$230.78</td>
+        <td>{optimal.nodetype}</td>
+        <td>{optimal.performance}</td>
+        <td>{"$" + optimal.cost}</td>
       </tr>
       <tr className={styles["single-result"]}>
         <td>
           <i className={styles["optimal-perf"]} />
           High performance
         </td>
-        <td>c3.X-large</td>
-        <td>680</td>
-        <td>$250.43</td>
+        <td>{highPerf.nodetype}</td>
+        <td>{highPerf.performance}</td>
+        <td>{"$" + highPerf.cost}</td>
       </tr>
       <tr className={styles["single-result"]}>
         <td>
           <i className={styles["optimal-cost"]} />
           Low cost
         </td>
-        <td>m2.medium</td>
-        <td>270</td>
-        <td>$60.25</td>
+        <td>{lowCost.nodetype}</td>
+        <td>{lowCost.performance}</td>
+        <td>{"$" + lowCost.cost}</td>
+
       </tr>
       <tr className={styles["see-all"]}>
         <td colSpan="4">
@@ -48,6 +80,6 @@ const ResultTable = ({ className = "" }) => (
       </tr>
     </tbody>
   </table>
-);
+)};
 
-export default ResultTable;
+export default connect(mapStateToProps)(ResultTable);

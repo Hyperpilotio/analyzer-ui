@@ -1,4 +1,8 @@
 import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
+import mongoDBLogo from "assets/images/asset_mongoDB_logo.svg";
+import kafkaLogo from "assets/images/asset_kafka_logo.svg";
+import redisLogo from "assets/images/asset_redis_logo.svg";
+
 //set default values
 const initialState = 
   [{
@@ -61,23 +65,72 @@ const initialState =
       "recommendations": [
         {
           "nodetype": "c4.4xlarge",
-          "objective": "MaxPerfOverCost"
+          "objective": "MaxPerfOverCost",
+          "performance": 680,
+          "cost": 250
         },
         {
           "nodetype": "m3.large",
-          "objective": "MinCostWithPerfLimit"
+          "objective": "MinCostWithPerfLimit",
+          "performance": 270,
+          "cost": 60.25
         },
         {
           "nodetype": "r4.xlarge",
-          "objective": "MaxPerfWithCostLimit"
+          "objective": "MaxPerfWithCostLimit",
+          "performance": 600,
+          "cost": 230.78
         }
       ]
     },
-    { appId: "59671042e3fd9e5094df9812", appName: "mongoDB" },
-    { appId: "59633e42e3fd9e5094dec25e", appName: "Redis" },
-    { appId: "5970eda9ee7da9040499ddaf", appName: "MySQL" },
-    { appId: "5988990dafdabc92347fddf9", appName: "Nginx" },],
-    selected_apps:[]
+    { "appId": "59671042e3fd9e5094df9812", "appName": "mongoDB",
+        "recommendations": [
+        {
+          "nodetype": "c4.3xlarge",
+          "objective": "MaxPerfOverCost",
+          "performance": 450,
+          "cost": 230
+        },
+        {
+          "nodetype": "m3.large",
+          "objective": "MinCostWithPerfLimit",
+          "performance": 200,
+          "cost": 50.3
+        },
+        {
+          "nodetype": "r4.xlarge",
+          "objective": "MaxPerfWithCostLimit",
+          "performance": 4000,
+          "cost": 180.32
+        }
+      ]
+    },
+    { "appId": "59633e42e3fd9e5094dec25e", "appName": "Redis",
+        "recommendations": [
+        {
+          "nodetype": "c4.4xlarge",
+          "objective": "MaxPerfOverCost",
+          "performance": 290,
+          "cost": 245
+        },
+        {
+          "nodetype": "m3.large",
+          "objective": "MinCostWithPerfLimit",
+          "performance": 180,
+          "cost": 58.23
+        },
+        {
+          "nodetype": "r4.xlarge",
+          "objective": "MaxPerfWithCostLimit",
+          "performance": 270,
+          "cost": 190
+        }
+      ] },
+    { "appId": "5970eda9ee7da9040499ddaf", "appName": "MySQL" },
+    { "appId": "5988990dafdabc92347fddf9", "appName": "Nginx" },],
+    selected_apps:[], 
+    current_appId: null,
+    logoMap: {"mongodb": mongoDBLogo, "kafka": kafkaLogo, "redis":redisLogo}
   }
 ]
 
