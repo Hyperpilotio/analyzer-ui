@@ -16,7 +16,7 @@ import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 
 
 const ProgressIndicator = ({ stage = STAGE_CONFIG }) => (
-  <div className={styles.ProgrssIndicator}>
+  <div className={styles.ProgressIndicator}>
   <TestStageIndicator
     active={stage > STAGE_CONFIG}
     title="Sizing Analysis"
