@@ -2,10 +2,9 @@
 
 .cluster-infos {
   display: flex;
-  flex-direction: column;
   justify-content: space-around;
 
-  padding-right: 4rem;
+  padding-right: 2rem;
   border-right: 1px solid $color-divider;
 
   p, h3 {
