@@ -18,7 +18,7 @@ import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import ProgressIndicator from "../ProgressIndicator";
 
 
-const SizingResultsPage = ({ stage = STAGE_CONFIG }) => (
+const SizingResultsPage = ({ stage = STAGE_RESULT }) => (
   <div>
     <Jumbotron>
       <div className={styles["cluster-infos"]}>

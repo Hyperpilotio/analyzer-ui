@@ -1,5 +1,5 @@
 import React from "react";
-import TestStagesJumbotron from "../TestStagesJumbotron";
+import Jumbotron from "commons/components/Jumbotron";
 import AppSelector from "../AppSelector";
 import RunnerModal from "../RunnerModal";
 import Container from "commons/components/Container";
@@ -28,7 +28,9 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
   );
 
   return <div className={styles.SizingRunnerPage}>
-    <TestStagesJumbotron stage={stage} />
+    <Jumbotron>
+      <ProgressIndicator stage={stage} />
+    </Jumbotron>
     <main>
       <Container className={styles.Container}>
         <div>
