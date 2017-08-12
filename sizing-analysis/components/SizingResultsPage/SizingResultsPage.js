@@ -4,26 +4,21 @@ import Container from "commons/components/Container";
 import Navbar from "commons/components/Navbar";
 import NavItemLink from "commons/components/NavItemLink";
 import ResultTable from "../ResultTable";
-import TestStageIndicator from "../TestStageIndicator";
 import KeySummary from "../KeySummary";
-import styles from "./index.scss";
+import ProgressIndicator from "../ProgressIndicator";
 import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "assets/images/asset_kafka_logo.svg";
 import redisLogo from "assets/images/asset_redis_logo.svg";
-import testStageIcon from "assets/images/icon_state_sizing_analysis.svg";
-import testStageActiveIcon from "assets/images/icon_state_sizing_analysis_active.svg";
-import resultStageIcon from "assets/images/icon_state_sizing_analysis_result.svg";
-import resultStageActiveIcon from "assets/images/icon_state_sizing_analysis_result_done.svg";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
-import ProgressIndicator from "../ProgressIndicator";
+import styles from "./index.scss";
 
 
-const SizingResultsPage = ({ stage = STAGE_RESULT }) => (
+const SizingResultsPage = () => (
   <div>
     <Jumbotron>
-      <div className={styles["cluster-infos"]}>
-      <ProgressIndicator stage={stage} />
-      </div>
+      <ProgressIndicator
+        className={styles.ProgressIndicator}
+        stage={STAGE_RESULT} />
       <div className={styles["testing-summary"]}>
         <p>Testing summary</p>
         <main>
