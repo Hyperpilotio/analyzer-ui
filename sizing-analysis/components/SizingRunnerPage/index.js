@@ -1,10 +1,11 @@
 import React from "react";
-import TestStagesJumbotron from "../TestStagesJumbotron";
+import Jumbotron from "commons/components/Jumbotron";
 import AppSelector from "../AppSelector";
 import RunnerModal from "../RunnerModal";
 import Container from "commons/components/Container";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
+import ProgressIndicator from "../ProgressIndicator"
 
 const sampleProgress = [
   { status: "completed", instance: "C3.large", time: 25 },
@@ -27,7 +28,9 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
   );
 
   return <div className={styles.SizingRunnerPage}>
-    <TestStagesJumbotron stage={stage} />
+    <Jumbotron>
+      <ProgressIndicator stage={stage} />
+    </Jumbotron>
     <main>
       <Container className={styles.Container}>
         <div>

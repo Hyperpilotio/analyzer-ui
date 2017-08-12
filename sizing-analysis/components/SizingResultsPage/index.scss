@@ -1,17 +1,10 @@
 @import "styles/variables.sass";
 
-.cluster-infos {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-
-  padding-right: 4rem;
+.ProgressIndicator {
+  padding-right: 2rem;
   border-right: 1px solid $color-divider;
-
-  p, h3 {
-    margin: 0.5rem 0;
-  }
 }
+
 .testing-summary {
   margin-left: 2rem;
 

@@ -5,24 +5,20 @@ import Navbar from "commons/components/Navbar";
 import NavItemLink from "commons/components/NavItemLink";
 import ResultTable from "../ResultTable";
 import KeySummary from "../KeySummary";
-import styles from "./index.scss";
+import ProgressIndicator from "../ProgressIndicator";
 import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "assets/images/asset_kafka_logo.svg";
 import redisLogo from "assets/images/asset_redis_logo.svg";
+import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
+import styles from "./index.scss";
+
 
 const SizingResultsPage = () => (
   <div>
     <Jumbotron>
-      <div className={styles["cluster-infos"]}>
-        <div>
-          <p>Cluster manager</p>
-          <h3>Kubernetes</h3>
-        </div>
-        <div>
-          <p>Last update</p>
-          <h3>25/07/14</h3>
-        </div>
-      </div>
+      <ProgressIndicator
+        className={styles.ProgressIndicator}
+        stage={STAGE_RESULT} />
       <div className={styles["testing-summary"]}>
         <p>Testing summary</p>
         <main>
