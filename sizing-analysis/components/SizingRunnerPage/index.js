@@ -5,6 +5,7 @@ import RunnerModal from "../RunnerModal";
 import Container from "commons/components/Container";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
+import ProgressIndicator from "../ProgressIndicator"
 
 const sampleProgress = [
   { status: "completed", instance: "C3.large", time: 25 },
