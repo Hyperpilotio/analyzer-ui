@@ -3,7 +3,8 @@ import {
   VictoryChart,
   VictoryScatter,
   VictoryAxis,
-  VictoryLine
+  VictoryLine,
+  VictoryZoomContainer
 } from "victory";
 import styles from "./ResultFigure.scss";
 
@@ -13,6 +14,7 @@ const HEIGHT = 400;
 const ResultFigure = ({ className }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
+      containerComponent={ <VictoryZoomContainer /> }
       padding={0}
       width={WIDTH}
       height={HEIGHT}
