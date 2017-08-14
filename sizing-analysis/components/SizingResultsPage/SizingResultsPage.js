@@ -4,6 +4,7 @@ import Container from "commons/components/Container";
 import Navbar from "commons/components/Navbar";
 import NavItemLink from "commons/components/NavItemLink";
 import ResultTable from "../ResultTable";
+import ResultFigure from "../ResultFigure";
 import KeySummary from "../KeySummary";
 import ProgressIndicator from "../ProgressIndicator";
 import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
@@ -55,7 +56,7 @@ const SizingResultsPage = () => (
       </div>
       <div>
         <p>Performance</p>
-        <div style={{ height: "400px", border: "1px solid black" }} />
+        <ResultFigure className={styles.ResultFigure} />
       </div>
     </Container>
   </div>
