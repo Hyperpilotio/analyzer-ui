@@ -13,6 +13,7 @@ const ResultTable = (props) => {
        break;
     }
   }
+  let returnTable;
   let optimal;
   let highPerf;
   let lowCost;
@@ -28,13 +29,60 @@ const ResultTable = (props) => {
          case "MaxPerfWithCostLimit":
             optimal = result;
             break;
-
        }
 
     }
-  }
-  return (
-  <table className={`${styles.ResultTable} ${props.className}`}>
+    returnTable = (
+      <table className={`${styles.ResultTable} ${props.className}`}>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Instance Type</th>
+            <th>Perf</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className={styles["single-result"]}>
+            <td>
+              <i className={styles["optimal-perf-cost"]} />
+              Optimal Perf/Cost
+        </td>
+            <td>{optimal.nodetype}</td>
+            <td>{optimal.performance}</td>
+            <td>{"$" + optimal.cost}</td>
+          </tr>
+          <tr className={styles["single-result"]}>
+            <td>
+              <i className={styles["optimal-perf"]} />
+              High performance
+        </td>
+            <td>{highPerf.nodetype}</td>
+            <td>{highPerf.performance}</td>
+            <td>{"$" + highPerf.cost}</td>
+          </tr>
+          <tr className={styles["single-result"]}>
+            <td>
+              <i className={styles["optimal-cost"]} />
+              Low cost
+        </td>
+            <td>{lowCost.nodetype}</td>
+            <td>{lowCost.performance}</td>
+            <td>{"$" + lowCost.cost}</td>
+
+          </tr>
+          <tr className={styles["see-all"]}>
+            <td colSpan="4">
+              See all tested instances
+          <FaChevronDown className={styles["down-icon"]} size={16} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }else{
+    console.log("not result");
+    returnTable = (  <table className={`${styles.ResultTable} ${props.className}`}>
     <thead>
       <tr>
         <th></th>
@@ -44,42 +92,15 @@ const ResultTable = (props) => {
       </tr>
     </thead>
     <tbody>
-      <tr className={styles["single-result"]}>
-        <td>
-          <i className={styles["optimal-perf-cost"]} />
-          Optimal Perf/Cost
-        </td>
-        <td>{optimal.nodetype}</td>
-        <td>{optimal.performance}</td>
-        <td>{"$" + optimal.cost}</td>
-      </tr>
-      <tr className={styles["single-result"]}>
-        <td>
-          <i className={styles["optimal-perf"]} />
-          High performance
-        </td>
-        <td>{highPerf.nodetype}</td>
-        <td>{highPerf.performance}</td>
-        <td>{"$" + highPerf.cost}</td>
-      </tr>
-      <tr className={styles["single-result"]}>
-        <td>
-          <i className={styles["optimal-cost"]} />
-          Low cost
-        </td>
-        <td>{lowCost.nodetype}</td>
-        <td>{lowCost.performance}</td>
-        <td>{"$" + lowCost.cost}</td>
-
-      </tr>
-      <tr className={styles["see-all"]}>
-        <td colSpan="4">
-          See all tested instances
-          <FaChevronDown className={styles["down-icon"]}size={16} />
-        </td>
+      <tr>
+          <td colspan="4">
+            Not yet tested. No result.
+          </td>
       </tr>
     </tbody>
-  </table>
-)};
+    </table>);
+  }
+  return returnTable;
+};
 
 export default connect(mapStateToProps)(ResultTable);

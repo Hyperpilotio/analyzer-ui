@@ -100,7 +100,7 @@ const initialState =
         {
           "nodetype": "r4.xlarge",
           "objective": "MaxPerfWithCostLimit",
-          "performance": 4000,
+          "performance": 400,
           "cost": 180.32
         }
       ]
@@ -130,7 +130,8 @@ const initialState =
     { "appId": "5988990dafdabc92347fddf9", "appName": "Nginx" },],
     selected_apps:[], 
     current_appId: null,
-    logoMap: {"mongodb": mongoDBLogo, "kafka": kafkaLogo, "redis":redisLogo}
+    logoMap: {"mongodb": mongoDBLogo, "kafka": kafkaLogo, "redis":redisLogo},
+    version: "0.0.0.1"
   }
 ]
 
@@ -164,7 +165,8 @@ export default function reducer(state = initialState, action) {
       return cloneState;
 
     case 'persist/REHYDRATE':
-        if(!!action.payload.reducer){
+        if(!!action.payload.reducer && !!action.payload.reducer[0] && !!action.payload.reducer[0].version
+           && action.payload.reducer[0].version === "0.0.0.1"){
            return Object.assign({}, action.payload.reducer);
         }
 

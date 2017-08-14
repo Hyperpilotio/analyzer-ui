@@ -16,7 +16,10 @@ const AppSelector = (props) =>  (
         className={`${styles.Button} ${styles.invert}`}>
         Analyze All
       </Link>
-      <Button>Analyze Selected</Button>
+      <Link
+        to="/sizing-test/run-test" className={`${styles.Button}`}>
+        Analyze Selected
+      </Link>
     </div>
     <div className={styles["apps-area"]}>
       { props.reducer[0].apps.map(app => (
