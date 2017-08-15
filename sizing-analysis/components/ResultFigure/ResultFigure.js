@@ -23,9 +23,11 @@ const pointStyles = {
   notSelected: { fill: "#b9bacb", stroke: "#ffffff" }
 };
 
+
 class VictoryLineWithoutPoints extends VictoryLine {
   static getData = () => null;
 }
+
 
 class ResultFigureFlyout extends Component {
   constructor(props) {
@@ -63,13 +65,15 @@ class ResultFigureFlyout extends Component {
 
   render() {
     const { x, y, datum } = this.props;
-    // console.log(this.props);
     const placement = this.getPlacement();
+    const tooltipX = this.getTooltipXPosition();
+    const tooltipY = this.getTooltipYPosition();
+
     return (
       <g>
         <rect
-          x={ this.getTooltipXPosition() }
-          y={ this.getTooltipYPosition() }
+          x={ tooltipX }
+          y={ tooltipY }
           rx={4}
           ry={4}
           width={150} height={300}
@@ -78,6 +82,18 @@ class ResultFigureFlyout extends Component {
             fill: "rgba(140, 177, 250, 0.05)"
           }}
         />
+        <g className={styles["tooltip-text-content"]} transform={`translate(${tooltipX + 15}, ${tooltipY + 20})`}>
+          <text className={styles["tooltip-title"]}>C4.large</text>
+          <text y={40} className={styles["tooltip-subtitle"]}>Configuration</text>
+          <text y={65} className={styles["tooltip-config-value"]}>2</text>
+          <text y={90} className={styles["tooltip-config-label"]}>CPU</text>
+          <text y={115} className={styles["tooltip-config-value"]}>8GB</text>
+          <text y={140} className={styles["tooltip-config-label"]}>Memory</text>
+          <text y={165} className={styles["tooltip-config-value"]}>SSD 2x7</text>
+          <text y={190} className={styles["tooltip-config-label"]}>Storage</text>
+          <text y={215} className={styles["tooltip-config-value"]}>Moderate</text>
+          <text y={240} className={styles["tooltip-config-label"]}>Network</text>
+        </g>
         <line
           x1={ placement === "left" ? x - 10 : x + 10 }
           x2={ placement === "left" ? x - 30 : x + 30 }
@@ -91,6 +107,7 @@ class ResultFigureFlyout extends Component {
     );
   }
 }
+
 
 const ResultFigure = ({ className }) => (
   <div className={`${styles.ResultFigure} ${className}`}>

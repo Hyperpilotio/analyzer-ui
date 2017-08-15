@@ -5,3 +5,28 @@
   border: 1px solid $color-divider;
   border-radius: 4px;
 }
+
+.tooltip-text-content text {
+  alignment-baseline: hanging;
+}
+
+.tooltip-title {
+  stroke: $color-primary;
+  font-size: 16px;
+  font-weight: lighter;
+}
+
+.tooltip-subtitle {
+  stroke: $color-dark-grey;
+  font-size: 12px;
+}
+
+.tooltip-config-value {
+  stroke: #8cb1fa;
+  font-size: 18px;
+}
+
+.tooltip-config-label {
+  stroke: $color-dark-grey;
+  font-size: 12px;
+}
