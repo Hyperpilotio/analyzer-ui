@@ -93,7 +93,7 @@ const ResultTable = (props) => {
     </thead>
     <tbody>
       <tr>
-          <td colspan="4">
+          <td colSpan="4">
             Not yet tested. No result.
           </td>
       </tr>
