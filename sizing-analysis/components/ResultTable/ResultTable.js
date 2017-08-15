@@ -81,7 +81,6 @@ const ResultTable = (props) => {
       </table>
     );
   }else{
-    console.log("not result");
     returnTable = (  <table className={`${styles.ResultTable} ${props.className}`}>
     <thead>
       <tr>

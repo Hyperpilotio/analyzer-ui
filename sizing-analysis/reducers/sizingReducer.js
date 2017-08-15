@@ -2,7 +2,6 @@ import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
 import mongoDBLogo from "assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "assets/images/asset_kafka_logo.svg";
 import redisLogo from "assets/images/asset_redis_logo.svg";
-import shallowEqual from 'react-redux/lib/utils/shallowEqual';
 
 //set default values
 const initialState = 
@@ -162,8 +161,6 @@ export default function reducer(state = initialState, action) {
       if(selected){
            cloneState[0].selected_apps.push(action.selected_app);       
       }
-      // console.log(1, shallowEqual(state, cloneState));
-      // console.log(2, shallowEqual(state[0].selected_apps, cloneState[0].selected_apps));
       return cloneState;
 
     case 'persist/REHYDRATE':
