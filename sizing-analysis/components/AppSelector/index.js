@@ -22,7 +22,7 @@ const AppSelector = (props) =>  (
       </Link>
     </div>
     <div className={styles["apps-area"]}>
-      { props.reducer[0].apps.map(app => (
+      { props.apps.map(app => (
         <AppSelectionButton key={app.appId} id={app.appId} app={app} iconUrl={redisLogo}  />
       )) }
     </div>

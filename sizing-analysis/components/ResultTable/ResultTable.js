@@ -7,7 +7,7 @@ import { mapStateToProps } from "../../actions";
 
 const ResultTable = (props) => {
   let selected_app;
-  for(let app of props.reducer[0].selected_apps){
+  for(let app of props.selected_apps){
     if(props.id === app.appId){
        selected_app = app;
        break;

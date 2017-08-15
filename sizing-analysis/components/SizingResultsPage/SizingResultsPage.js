@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 const SizingResultsPage = (props) => {
-  let logoMap = props.reducer[0].logoMap;
+  let logoMap = props.logoMap;
   let pathSplit = props.location.pathname.split("/");
   let id = pathSplit[pathSplit.length -1];
   let resultTable = "";
@@ -36,7 +36,7 @@ const SizingResultsPage = (props) => {
         </div>
       </Jumbotron>
       <Navbar>
-        {props.reducer[0].selected_apps.map(app => (
+        {props.selected_apps.map(app => (
           <NavItemLink key={"sub_link_" + app.appId} id={"sub_link_" + app.appId} app={app}
             className={styles.NavItemLink}
             activeClassName={styles.selected}

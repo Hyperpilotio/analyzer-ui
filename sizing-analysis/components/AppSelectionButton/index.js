@@ -6,7 +6,7 @@ import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
 const AppSelectionButton = (props) => {
-  let selected_apps = props.reducer[0].selected_apps;
+  let selected_apps = props.selected_apps;
   let selected = false;
   for(let selected_app of selected_apps){
      if(selected_app.appId === props.id){
