@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   VictoryChart,
   VictoryScatter,
@@ -7,8 +7,8 @@ import {
   VictoryTooltip,
   createContainer
 } from "victory";
+import _ from "lodash";
 import styles from "./ResultFigure.scss";
-import { mapStateToProps } from "../../actions";
 
 
 const WIDTH = 540;
@@ -27,10 +27,78 @@ class VictoryLineWithoutPoints extends VictoryLine {
   static getData = () => null;
 }
 
+class ResultFigureFlyout extends Component {
+  constructor(props) {
+    super(props);
+    this.width = 150;
+    this.height = 300;
+  }
+
+  getPlacement() {
+    const { x } = this.props;
+    return ( x > WIDTH / 2 ) ? "left" : "right";
+  }
+
+  getTooltipXPosition() {
+    const { x } = this.props;
+    // Show the tooltip on the left side if the point is on the right part
+    if ( this.getPlacement() === "left" ) {
+      return x - this.width - 30;
+    } else {
+      return x + 30;
+    }
+  }
+
+  getTooltipYPosition() {
+    const { y } = this.props;
+    const orderedYPoses = _.sortBy([
+      10, // Highest y point a tooltip can be
+      y - this.height / 2, // The y point where the tooltip should be
+      HEIGHT - this.height - 10 // Lowest y point a tooltip can be
+    ]);
+
+    // Find the middle one of the above, to avoid getting tooltips that overflows the chart area
+    return orderedYPoses[1];
+  }
+
+  render() {
+    const { x, y, datum } = this.props;
+    // console.log(this.props);
+    const placement = this.getPlacement();
+    return (
+      <g>
+        <rect
+          x={ this.getTooltipXPosition() }
+          y={ this.getTooltipYPosition() }
+          rx={4}
+          ry={4}
+          width={150} height={300}
+          style={{
+            stroke: "#5677fa",
+            fill: "rgba(140, 177, 250, 0.05)"
+          }}
+        />
+        <line
+          x1={ placement === "left" ? x - 10 : x + 10 }
+          x2={ placement === "left" ? x - 30 : x + 30 }
+          y1={ y }
+          y2={ y }
+          style={{
+            stroke: "#5677fa"
+          }}
+        />
+      </g>
+    );
+  }
+}
+
 const ResultFigure = ({ className }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
-      containerComponent={ <VictoryZoomVoronoiContainer /> }
+      containerComponent={ <VictoryZoomVoronoiContainer
+        labels={d => `${d.x}, ${d.y}`}
+        labelComponent={ <VictoryTooltip flyoutComponent={ <ResultFigureFlyout /> } /> }
+      /> }
       padding={0}
       width={WIDTH}
       height={HEIGHT}
@@ -93,7 +161,10 @@ const ResultFigure = ({ className }) => (
           { x: 725.76, y: 2160000, ...pointStyles.maxPerfOverCost },
         ]}
         size={10}
-        style={{ data: { strokeWidth: 2 } }}
+        style={{
+          data: { strokeWidth: 2 },
+          labels: { fill: "none" }
+        }}
       />
     </VictoryChart>
   </div>
