@@ -5,7 +5,7 @@ import redisLogo from "assets/images/asset_redis_logo.svg";
 
 //set default values
 const initialState = 
-  [{
+  {
     apps: [{
       "appId": "59306145e3fd9e5094db04e5",
       "appName": "Kafka",
@@ -132,41 +132,40 @@ const initialState =
     current_appId: null,
     logoMap: {"mongodb": mongoDBLogo, "kafka": kafkaLogo, "redis":redisLogo},
     version: "0.0.0.1"
-  }
-]
+  };
 
 export default function reducer(state = initialState, action) {
   //clone state first, avoid mutate original state
   let cloneState = JSON.parse(JSON.stringify(state));
   switch (action.type) {
     case ADD_ALL:
-      cloneState[0].selected_apps = [];
-      for(let app of cloneState[0].apps){
-        cloneState[0].selected_apps.push(Object.assign({}, app));
+      cloneState.selected_apps = [];
+      for(let app of cloneState.apps){
+        cloneState.selected_apps.push(Object.assign({}, app));
       }
       return cloneState;
 
     case TOGGLE_SELECTED:
       //decide push or splice it
       let selected = true;
-      for(let i = 0; i <  cloneState[0].selected_apps.length; i++){
-        let app = cloneState[0].selected_apps[i];
+      for(let i = 0; i <  cloneState.selected_apps.length; i++){
+        let app = cloneState.selected_apps[i];
         if(app.appId === action.selected_app.appId){
-          cloneState[0].selected_apps.splice(i, 1);
+          cloneState.selected_apps.splice(i, 1);
           selected = false;
           break;  
         }
       }
       //If it is not exist in the selected_apps, push it into selected array
       if(selected){
-           cloneState[0].selected_apps.push(action.selected_app);       
+           cloneState.selected_apps.push(action.selected_app);       
       }
       return cloneState;
 
     case 'persist/REHYDRATE':
-        if(!!action.payload.reducer && !!action.payload.reducer[0] && !!action.payload.reducer[0].version
-           && action.payload.reducer[0].version === "0.0.0.1"){
-           return Object.assign({}, action.payload.reducer);
+        if(!!action.payload  && !!action.payload.version
+           && action.payload.version === "0.0.0.1"){
+           return Object.assign({}, action.payload);
         }
 
     default:

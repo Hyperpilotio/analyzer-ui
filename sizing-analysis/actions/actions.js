@@ -1,7 +1,7 @@
 import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
 
 function mapStateToProps(state) {
-  return state.reducer[0];
+  return state;
 }
 
 const addAll = () => ({ type: ADD_ALL });
