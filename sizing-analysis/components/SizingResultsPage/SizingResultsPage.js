@@ -12,9 +12,8 @@ import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const SizingResultsPage = (props) => {
-  let logoMap = props.logoMap;
-  let pathSplit = props.location.pathname.split("/");
+const SizingResultsPage = ({ logoMap, location, selected_apps}) => {
+  let pathSplit = location.pathname.split("/");
   let id = pathSplit[pathSplit.length -1];
   let resultTable = "";
   if(id !== "result"){
@@ -36,7 +35,7 @@ const SizingResultsPage = (props) => {
         </div>
       </Jumbotron>
       <Navbar>
-        {props.selected_apps.map(app => (
+        {selected_apps.map(app => (
           <NavItemLink key={"sub_link_" + app.appId} id={"sub_link_" + app.appId} app={app}
             className={styles.NavItemLink}
             activeClassName={styles.selected}

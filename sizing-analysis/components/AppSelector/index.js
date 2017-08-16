@@ -8,11 +8,11 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
-const AppSelector = (props) =>  (
+const AppSelector = ({addAll, apps}) =>  (
   <div className={styles.AppSelector}>
     <div className={styles["select-buttons"]}>
       <Link
-        to="/sizing-test/run-test" onClick={props.addAll}
+        to="/sizing-test/run-test" onClick={ addAll }
         className={`${styles.Button} ${styles.invert}`}>
         Analyze All
       </Link>
@@ -22,7 +22,7 @@ const AppSelector = (props) =>  (
       </Link>
     </div>
     <div className={styles["apps-area"]}>
-      { props.apps.map(app => (
+      { apps.map(app => (
         <AppSelectionButton key={app.appId} id={app.appId} app={app} iconUrl={redisLogo}  />
       )) }
     </div>
