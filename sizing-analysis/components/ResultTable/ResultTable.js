@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { mapStateToProps } from "../../actions";
 
 
-const ResultTable = (props) => {
+const ResultTable = ({ selected_apps, id, className}) => {
   let selected_app;
-  for(let app of props.selected_apps){
-    if(props.id === app.appId){
+  for(let app of selected_apps){
+    if(id === app.appId){
        selected_app = app;
        break;
     }
@@ -33,7 +33,7 @@ const ResultTable = (props) => {
 
     }
     returnTable = (
-      <table className={`${styles.ResultTable} ${props.className}`}>
+      <table className={`${styles.ResultTable} ${className}`}>
         <thead>
           <tr>
             <th></th>
@@ -81,7 +81,7 @@ const ResultTable = (props) => {
       </table>
     );
   }else{
-    returnTable = (  <table className={`${styles.ResultTable} ${props.className}`}>
+    returnTable = (  <table className={`${styles.ResultTable} ${className}`}>
     <thead>
       <tr>
         <th></th>
