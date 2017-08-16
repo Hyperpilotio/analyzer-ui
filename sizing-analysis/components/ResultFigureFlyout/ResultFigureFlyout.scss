@@ -1,0 +1,39 @@
+@import "styles/variables.sass";
+
+.ResultFigureFlyout {
+  rect {
+    stroke: $color-primary;
+    fill: rgba(140, 177, 250, 0.05);
+  }
+
+  text {
+    alignment-baseline: hanging;
+  }
+
+  .title {
+    stroke: transparent;
+    fill: $color-primary;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    stroke: transparent;
+    fill: $color-dark-grey;
+    font-weight: bold;
+  }
+
+  .property-value {
+    stroke: transparent;
+    fill: #8cb1fa;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .property-label {
+    stroke: transparent;
+    fill: $color-dark-grey;
+    font-size: 12px;
+  }
+}
