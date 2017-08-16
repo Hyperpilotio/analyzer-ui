@@ -4,20 +4,17 @@ import kafkaLogo from "assets/images/asset_kafka_logo.svg";
 import redisLogo from "assets/images/asset_redis_logo.svg";
 
 //set default values
-const initialState = 
-  {
-    apps: [{
+const initialState = {
+  apps: [{
       "appId": "59306145e3fd9e5094db04e5",
       "appName": "Kafka",
       "sloType": "throughput",
       "sloValue": 57085,
       "budget": 300,
-      "sizingRuns": [
-        {
+      "sizingRuns": [{
           "run": 1,
           "samples": 3,
-          "results": [
-            {
+          "results": [{
               "nodetype": "c3.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
@@ -43,8 +40,7 @@ const initialState =
         {
           "run": 2,
           "samples": 2,
-          "results": [
-            {
+          "results": [{
               "nodetype": "p2.16xlarge",
               "status": "done",
               "qosValue": 1920000.0,
@@ -62,8 +58,7 @@ const initialState =
         }
       ],
       "status": "complete",
-      "recommendations": [
-        {
+      "recommendations": [{
           "nodetype": "c4.4xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 680,
@@ -83,9 +78,10 @@ const initialState =
         }
       ]
     },
-    { "appId": "59671042e3fd9e5094df9812", "appName": "mongoDB",
-        "recommendations": [
-        {
+    {
+      "appId": "59671042e3fd9e5094df9812",
+      "appName": "mongoDB",
+      "recommendations": [{
           "nodetype": "c4.3xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 450,
@@ -105,9 +101,10 @@ const initialState =
         }
       ]
     },
-    { "appId": "59633e42e3fd9e5094dec25e", "appName": "Redis",
-        "recommendations": [
-        {
+    {
+      "appId": "59633e42e3fd9e5094dec25e",
+      "appName": "Redis",
+      "recommendations": [{
           "nodetype": "c4.4xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 290,
@@ -125,14 +122,26 @@ const initialState =
           "performance": 270,
           "cost": 190
         }
-      ] },
-    { "appId": "5970eda9ee7da9040499ddaf", "appName": "MySQL" },
-    { "appId": "5988990dafdabc92347fddf9", "appName": "Nginx" },],
-    selected_apps:[], 
-    current_appId: null,
-    logoMap: {"mongodb": mongoDBLogo, "kafka": kafkaLogo, "redis":redisLogo},
-    version: "0.0.0.1"
-  };
+      ]
+    },
+    {
+      "appId": "5970eda9ee7da9040499ddaf",
+      "appName": "MySQL"
+    },
+    {
+      "appId": "5988990dafdabc92347fddf9",
+      "appName": "Nginx"
+    },
+  ],
+  selected_apps: [],
+  current_appId: null,
+  logoMap: {
+    "mongodb": mongoDBLogo,
+    "kafka": kafkaLogo,
+    "redis": redisLogo
+  },
+  version: "0.0.0.1"
+};
 
 export default function reducer(state = initialState, action) {
   //clone state first, avoid mutate original state
@@ -140,7 +149,7 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_ALL:
       cloneState.selected_apps = [];
-      for(let app of cloneState.apps){
+      for (let app of cloneState.apps) {
         cloneState.selected_apps.push(Object.assign({}, app));
       }
       return cloneState;
@@ -148,25 +157,25 @@ export default function reducer(state = initialState, action) {
     case TOGGLE_SELECTED:
       //decide push or splice it
       let selected = true;
-      for(let i = 0; i <  cloneState.selected_apps.length; i++){
+      for (let i = 0; i < cloneState.selected_apps.length; i++) {
         let app = cloneState.selected_apps[i];
-        if(app.appId === action.selected_app.appId){
+        if (app.appId === action.selected_app.appId) {
           cloneState.selected_apps.splice(i, 1);
           selected = false;
-          break;  
+          break;
         }
       }
       //If it is not exist in the selected_apps, push it into selected array
-      if(selected){
-           cloneState.selected_apps.push(action.selected_app);       
+      if (selected) {
+        cloneState.selected_apps.push(action.selected_app);
       }
       return cloneState;
 
     case 'persist/REHYDRATE':
-        if(!!action.payload  && !!action.payload.version
-           && action.payload.version === "0.0.0.1"){
-           return Object.assign({}, action.payload);
-        }
+      if (!!action.payload && !!action.payload.version &&
+        action.payload.version === "0.0.0.1") {
+        return Object.assign({}, action.payload);
+      }
 
     default:
       return state
