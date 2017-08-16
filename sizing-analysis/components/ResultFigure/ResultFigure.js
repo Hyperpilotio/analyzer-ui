@@ -70,38 +70,36 @@ class ResultFigureFlyout extends Component {
     const tooltipY = this.getTooltipYPosition();
 
     return (
-      <g>
-        <rect
-          x={ tooltipX }
-          y={ tooltipY }
-          rx={4}
-          ry={4}
-          width={150} height={300}
-          style={{
-            stroke: "#5677fa",
-            fill: "rgba(140, 177, 250, 0.05)"
-          }}
-        />
-        <g className={styles["tooltip-text-content"]} transform={`translate(${tooltipX + 15}, ${tooltipY + 20})`}>
-          <text className={styles["tooltip-title"]}>C4.large</text>
-          <text y={40} className={styles["tooltip-subtitle"]}>Configuration</text>
-          <text y={65} className={styles["tooltip-config-value"]}>2</text>
-          <text y={90} className={styles["tooltip-config-label"]}>CPU</text>
-          <text y={115} className={styles["tooltip-config-value"]}>8GB</text>
-          <text y={140} className={styles["tooltip-config-label"]}>Memory</text>
-          <text y={165} className={styles["tooltip-config-value"]}>SSD 2x7</text>
-          <text y={190} className={styles["tooltip-config-label"]}>Storage</text>
-          <text y={215} className={styles["tooltip-config-value"]}>Moderate</text>
-          <text y={240} className={styles["tooltip-config-label"]}>Network</text>
+      <g className={styles.ResultFigureFlyout}>
+        <g transform={`translate(${tooltipX},${tooltipY})`}>
+          <rect rx={4} ry={4} width={150} height={300} />
+          <g transform={`translate(15, 20)`}>
+            <text className={styles.title}>C4.large</text>
+            <text y={40} className={styles.subtitle}>Configuration</text>
+            <g transform="translate(0, 65)">
+              <text className={styles["property-value"]}>2</text>
+              <text y={25} className={styles["property-label"]}>CPU</text>
+            </g>
+            <g transform="translate(0, 115)">
+              <text className={styles["property-value"]}>8GB</text>
+              <text y={25} className={styles["property-label"]}>Memory</text>
+            </g>
+            <g transform="translate(0, 165)">
+              <text className={styles["property-value"]}>SSD 2x7</text>
+              <text y={25} className={styles["property-label"]}>Storage</text>
+            </g>
+            <g transform="translate(0, 215)">
+              <text className={styles["property-value"]}>Moderate</text>
+              <text y={25} className={styles["property-label"]}>Network</text>
+            </g>
+          </g>
         </g>
         <line
           x1={ placement === "left" ? x - 10 : x + 10 }
           x2={ placement === "left" ? x - 30 : x + 30 }
           y1={ y }
           y2={ y }
-          style={{
-            stroke: "#5677fa"
-          }}
+          style={{ stroke: "#5677fa" }}
         />
       </g>
     );
@@ -113,8 +111,10 @@ const ResultFigure = ({ className }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
       containerComponent={ <VictoryZoomVoronoiContainer
-        labels={d => `${d.x}, ${d.y}`}
-        labelComponent={ <VictoryTooltip flyoutComponent={ <ResultFigureFlyout /> } /> }
+        labels={d => ""}
+        labelComponent={
+          <VictoryTooltip flyoutComponent={ <ResultFigureFlyout /> } />
+        }
       /> }
       padding={0}
       width={WIDTH}
@@ -179,8 +179,7 @@ const ResultFigure = ({ className }) => (
         ]}
         size={10}
         style={{
-          data: { strokeWidth: 2 },
-          labels: { fill: "none" }
+          data: { strokeWidth: 2 }
         }}
       />
     </VictoryChart>
