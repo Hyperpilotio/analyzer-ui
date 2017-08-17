@@ -48,7 +48,8 @@ class ResultFigureFlyout extends Component {
     return (
       <g className={styles.ResultFigureFlyout}>
         <g transform={`translate(${tooltipX},${tooltipY})`}>
-          <rect rx={4} ry={4} width={150} height={300} />
+          <rect className={styles.background} rx={4} ry={4} width={150} height={300} />
+          <rect className={styles.box} rx={4} ry={4} width={150} height={300} />
           <g transform={`translate(15, 20)`}>
             <text className={styles.title}>C4.large</text>
             <text y={40} className={styles.subtitle}>Configuration</text>
