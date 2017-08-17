@@ -1,0 +1,74 @@
+@import "styles/variables.sass";
+
+.ResultTable {
+  border-collapse: collapse;
+  height: 400px;
+
+  /* Taken from https://stackoverflow.com/a/2586780 */
+  border-radius: 4px;
+  border-style: hidden;
+  box-shadow: 0 0 0 1px $color-divider;
+  background-color: $color-white;
+
+  thead {
+    border-bottom: 1px solid $color-divider;
+    color: $color-light-grey;
+  }
+
+  tbody {
+    color: $color-dark-grey;
+  }
+
+  td, th {
+    min-width: 60px;
+    padding: 1rem 0;
+    font-weight: normal;
+    text-align: left;
+  }
+
+  td:first-child {
+    padding-left: 2rem;
+  }
+  td:last-child {
+    padding-right: 2rem;
+  }
+
+  i {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 1rem;
+
+    border-width: 2px;
+    border-style: solid;
+
+    &.optimal-perf-cost {
+      background-color: $color-primary;
+      border-color: $color-white;
+    }
+    &.optimal-perf {
+      background-color: $color-divider;
+      border-color: $color-primary;
+    }
+    &.optimal-cost {
+      background-color: $background-success;
+      border-color: #b8e986;
+    }
+  }
+}
+
+tr.single-result:hover {
+  background: $color-light;
+}
+
+tr.see-all {
+  height: 100%;
+  vertical-align: top;
+  color: #78c1f9;
+
+  .down-icon {
+    margin-left: 1rem;
+  }
+}

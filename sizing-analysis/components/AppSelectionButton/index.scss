@@ -22,7 +22,7 @@
   &:hover {
     background-color: $color-white;
     color: $color-dark-grey;
-    border-color: $color-blue;
+    border: 1px solid $color-blue;
   }
 
   &.selected {

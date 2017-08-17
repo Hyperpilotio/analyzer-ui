@@ -1,15 +1,28 @@
 import { AppContainer } from 'react-hot-loader';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import reducers from './reducers';
 import "./index.scss";
+import { autoRehydrate, persistStore } from 'redux-persist';
 
-
+let store = createStore(
+  reducers,
+  // Activate redux devtools in development mode
+  process.env.NODE_ENV === "production"
+    ? undefined
+    : window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+persistStore(store);
 const rootEl = document.getElementById("react-root");
 const render = Component =>
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <Provider store={store}>
+         <Component />
+      </Provider>
     </AppContainer>,
     rootEl
   );

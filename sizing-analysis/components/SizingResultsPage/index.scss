@@ -1,15 +1,15 @@
 @import "styles/variables.sass";
 
+<<<<<<< HEAD
 .cluster-infos {
   display: flex;
   justify-content: space-around;
 
+=======
+.ProgressIndicator {
+>>>>>>> 6ea26994fb6b0bc7741148b7d1ce8c4089163002
   padding-right: 2rem;
   border-right: 1px solid $color-divider;
-
-  p, h3 {
-    margin: 0.5rem 0;
-  }
 }
 
 .testing-summary {
@@ -34,4 +34,19 @@
   &.selected {
     color: $color-dark-grey;
   }
+}
+
+.results-content > * {
+  width: 48%;
+  float: left;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+
+  &:first-child {
+    margin-right: 1rem;
+  }
+}
+
+.ResultTable {
+  width: 100%;
 }
