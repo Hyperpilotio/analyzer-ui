@@ -7,11 +7,54 @@ import {
   VictoryZoomContainer
 } from "victory";
 import styles from "./ResultFigure.scss";
+import { connect } from 'react-redux';
+import { mapStateToProps } from "../../actions";
+
 
 const WIDTH = 540;
 const HEIGHT = 400;
 
-const ResultFigure = ({ className }) => (
+const ResultFigure = ({ selected_apps, className, id }) => {
+  let selected_app;
+
+  for(let app of selected_apps){
+    if(id === app.appId){
+       selected_app = app;
+       break;
+    }
+  }
+  let optimal;
+  let highPerf;
+  let lowCost;
+  let budget;
+  let otherTests = [];
+
+  if(!!selected_app){
+    budget = selected_app.budget;
+    if(!!selected_app.sizingRuns){
+      for(let sizingRun of selected_app.sizingRuns){
+        for(let test of sizingRun.results){
+          otherTests.push(test);
+        }
+      }
+    }
+  if(!!selected_app.recommendations){
+    for(let result of selected_app.recommendations){
+       switch(result.objective){
+         case "MaxPerfOverCost":
+            highPerf = result;
+            break;
+         case "MinCostWithPerfLimit":
+            lowCost = result;
+            break;
+         case "MaxPerfWithCostLimit":
+            optimal = result;
+            break;
+       }
+    }
+  }
+  }
+  return (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
       containerComponent={ <VictoryZoomContainer /> }
@@ -72,14 +115,15 @@ const ResultFigure = ({ className }) => (
           { x: 892.08, y: 2400000, fill: "#b9bacb", stroke: "#ffffff" },
           { x: 2959.2, y: 3840000, fill: "#b9bacb", stroke: "#ffffff" },
           { x: 289.44, y: 240000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 273.6, y: 480000, fill: "#eef0fa", stroke: "#5677fa" },
-          { x: 241.92, y: 480000, fill: "#daf9b8", stroke: "#b8e986" },
-          { x: 725.76, y: 2160000, fill: "#5677fa", stroke: "#ffffff" },
+          { x: 273.6, y: 480000, fill: "#eef0fa", stroke: "#5677fa" }, //high performance
+          { x: 241.92, y: 480000, fill: "#daf9b8", stroke: "#b8e986" }, //low cost
+          { x: 725.76, y: 2160000, fill: "#5677fa", stroke: "#ffffff" }, //optimal
         ]}
         size={10}
         style={{ data: { strokeWidth: 2 } }}
       />
     </VictoryChart>
   </div>
-);
-export default ResultFigure;
+)};
+
+export default connect(mapStateToProps)(ResultFigure);

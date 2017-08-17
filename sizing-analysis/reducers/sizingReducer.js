@@ -10,7 +10,7 @@ const initialState = {
       "appName": "Kafka",
       "sloType": "throughput",
       "sloValue": 57085,
-      "budget": 300,
+      "budget": 380,
       "sizingRuns": [{
           "run": 1,
           "samples": 3,
@@ -81,6 +81,54 @@ const initialState = {
     {
       "appId": "59671042e3fd9e5094df9812",
       "appName": "mongoDB",
+      "budget": 450,
+      "sizingRuns": [{
+          "run": 1,
+          "samples": 3,
+          "results": [{
+              "nodetype": "c3.4xlarge",
+              "status": "done",
+              "qosValue": 480000.0,
+              "cost": 420.48,
+              "perfOverCost": 1141.553
+            },
+            {
+              "nodetype": "m3.large",
+              "status": "done",
+              "qosValue": 60000.0,
+              "cost": 68.40,
+              "perfOverCost": 877.193
+            },
+            {
+              "nodetype": "r4.xlarge",
+              "status": "done",
+              "qosValue": 120000.0,
+              "cost": 120.96,
+              "perfOverCost": 992.063
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "samples": 2,
+          "results": [{
+              "nodetype": "p2.16xlarge",
+              "status": "done",
+              "qosValue": 1920000.0,
+              "cost": 7076.16,
+              "perfOverCost": 271.334
+            },
+            {
+              "nodetype": "c4.4xlarge",
+              "status": "done",
+              "qosValue": 480000.0,
+              "cost": 362.88,
+              "perfOverCost": 1322.751
+            }
+          ]
+        }
+      ],
+      "status": "complete",
       "recommendations": [{
           "nodetype": "c4.3xlarge",
           "objective": "MaxPerfOverCost",
@@ -104,6 +152,54 @@ const initialState = {
     {
       "appId": "59633e42e3fd9e5094dec25e",
       "appName": "Redis",
+      "budget": 300,
+      "sizingRuns": [{
+          "run": 1,
+          "samples": 1,
+          "results": [{
+              "nodetype": "c3.4xlarge",
+              "status": "done",
+              "qosValue": 480000.0,
+              "cost": 420.48,
+              "perfOverCost": 1141.553
+            },
+            {
+              "nodetype": "m3.large",
+              "status": "done",
+              "qosValue": 60000.0,
+              "cost": 68.40,
+              "perfOverCost": 877.193
+            },
+            {
+              "nodetype": "r4.xlarge",
+              "status": "done",
+              "qosValue": 120000.0,
+              "cost": 120.96,
+              "perfOverCost": 992.063
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "samples": 2,
+          "results": [{
+              "nodetype": "p2.16xlarge",
+              "status": "done",
+              "qosValue": 1920000.0,
+              "cost": 7076.16,
+              "perfOverCost": 271.334
+            },
+            {
+              "nodetype": "c4.4xlarge",
+              "status": "done",
+              "qosValue": 480000.0,
+              "cost": 362.88,
+              "perfOverCost": 1322.751
+            }
+          ]
+        }
+      ],
+      "status": "complete",
       "recommendations": [{
           "nodetype": "c4.4xlarge",
           "objective": "MaxPerfOverCost",
@@ -140,7 +236,7 @@ const initialState = {
     "kafka": kafkaLogo,
     "redis": redisLogo
   },
-  version: "0.0.0.1"
+  version: "0.0.0.2"
 };
 
 export default function reducer(state = initialState, action) {
@@ -173,7 +269,7 @@ export default function reducer(state = initialState, action) {
 
     case 'persist/REHYDRATE':
       if (!!action.payload && !!action.payload.version &&
-        action.payload.version === "0.0.0.1") {
+        action.payload.version === "0.0.0.2") {
         return Object.assign({}, action.payload);
       }
 
