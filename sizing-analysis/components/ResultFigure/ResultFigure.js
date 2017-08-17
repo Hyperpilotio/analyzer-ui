@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import _ from "lodash";
 import {
   VictoryChart,
   VictoryScatter,
@@ -7,6 +8,7 @@ import {
   VictoryTooltip,
   createContainer
 } from "victory";
+import { sampleInstancesData } from "../../constants";
 import ResultFigureFlyout from "../ResultFigureFlyout";
 import styles from "./ResultFigure.scss";
 
@@ -17,10 +19,10 @@ const HEIGHT = 400;
 const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 
 const pointStyles = {
-  maxPerfOverCost: { fill: "#5677fa", stroke: "#ffffff" },
-  maxPerfWithCostLimit: { fill: "#eef0fa", stroke: "#5677fa" },
-  minCostWithPerfLimit: { fill: "#daf9b8", stroke: "#b8e986" },
-  notSelected: { fill: "#b9bacb", stroke: "#ffffff" }
+  MaxPerfOverCost: { fill: "#5677fa", stroke: "#ffffff" },
+  MaxPerfWithCostLimit: { fill: "#eef0fa", stroke: "#5677fa" },
+  MinCostWithPerfLimit: { fill: "#daf9b8", stroke: "#b8e986" },
+  NotRecommended: { fill: "#b9bacb", stroke: "#ffffff" }
 };
 
 
@@ -28,8 +30,39 @@ class VictoryLineWithoutPoints extends VictoryLine {
   static getData = () => null;
 }
 
+const reshapeData = data => {
+  // Flatten the batch runs data
+  const runResults = _.concat(..._.map(data.sizingRuns, "results"));
+  return runResults
+    // Make recommended instances have higher z-index
+    // (but there's no z-index in SVG so just draw the lower ones first)
+    .filter(result => (
+      !_.includes(_.map(data.recommendations, "nodetype"), result.nodetype)
+    ))
+    // Draw non-recommended instances
+    .map(({ qosValue, cost, nodetype }) => ({
+      x: cost,
+      y: qosValue,
+      // Get the instance details from this fixed dataset
+      // which we should change later
+      instance: _.find(sampleInstancesData, { name: nodetype }),
+      ...pointStyles.NotRecommended
+    }))
+    // Then draw the recommended instances
+    .concat(
+      data.recommendations.map(({ nodetype, objective }) => {
+        const runResult = _.find(runResults, { nodetype });
+        return {
+          x: runResult.cost,
+          y: runResult.qosValue,
+          instance: _.find(sampleInstancesData, { name: nodetype }),
+          ...pointStyles[objective]
+        };
+      })
+    );
+};
 
-const ResultFigure = ({ className }) => (
+const ResultFigure = ({ className, data }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
       containerComponent={ <VictoryZoomVoronoiContainer
@@ -82,27 +115,9 @@ const ResultFigure = ({ className }) => (
         }
       }} />
       <VictoryScatter
-        data={[
-          { x: 2442.24, y: 1920000, ...pointStyles.notSelected },
-          { x: 3538.08, y: 1920000, ...pointStyles.notSelected },
-          { x: 1234.08, y: 1920000, ...pointStyles.notSelected },
-          { x: 2315.52, y: 2160000, ...pointStyles.notSelected },
-          { x: 967.68, y: 1920000, ...pointStyles.notSelected },
-          { x: 356.832, y: 960000, ...pointStyles.notSelected },
-          { x: 1216.08, y: 1920000, ...pointStyles.notSelected },
-          { x: 1120.392, y: 1920000, ...pointStyles.notSelected },
-          { x: 362.88, y: 960000, ...pointStyles.notSelected },
-          { x: 892.08, y: 2400000, ...pointStyles.notSelected },
-          { x: 2959.2, y: 3840000, ...pointStyles.notSelected },
-          { x: 289.44, y: 240000, ...pointStyles.notSelected },
-          { x: 273.6, y: 480000, ...pointStyles.maxPerfWithCostLimit },
-          { x: 241.92, y: 480000, ...pointStyles.minCostWithPerfLimit },
-          { x: 725.76, y: 2160000, ...pointStyles.maxPerfOverCost },
-        ]}
+        data={reshapeData(data)}
         size={10}
-        style={{
-          data: { strokeWidth: 2 }
-        }}
+        style={{ data: { strokeWidth: 2 } }}
       />
     </VictoryChart>
   </div>

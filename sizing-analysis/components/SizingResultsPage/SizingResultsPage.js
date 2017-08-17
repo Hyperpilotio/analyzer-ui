@@ -7,19 +7,28 @@ import ResultTable from "../ResultTable";
 import ResultFigure from "../ResultFigure";
 import KeySummary from "../KeySummary";
 import ProgressIndicator from "../ProgressIndicator";
-import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
+import {
+  STAGE_CONFIG,
+  STAGE_TEST,
+  STAGE_RESULT,
+  sampleSizingAnalysisData
+} from "../../constants";
 import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const SizingResultsPage = ({ logoMap, location, selectedApps}) => {
+const SizingResultsPage = ({ logoMap, location, selectedApps }) => {
   let pathSplit = location.pathname.split("/");
   let id = pathSplit[pathSplit.length -1];
   let resultTable = "";
   let resultFigure = "";
   if (id !== "result") {
     resultTable = <ResultTable className={styles.ResultTable} id={id} />;
-    resultFigure = <ResultFigure className={styles.ResultFigure} id={id} />;
+    resultFigure = <ResultFigure
+      className={styles.ResultFigure}
+      data={sampleSizingAnalysisData}
+      id={id}
+    />;
   }
   return (
     <div>
@@ -45,7 +54,6 @@ const SizingResultsPage = ({ logoMap, location, selectedApps}) => {
             <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
           </NavItemLink>
         ))}
-
       </Navbar>
       <Container className={styles["results-content"]}>
         <div>
