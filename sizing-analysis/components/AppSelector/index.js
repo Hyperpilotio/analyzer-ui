@@ -11,14 +11,9 @@ import { mapStateToProps, mapDispatchToProps } from "../../actions";
 const AppSelector = ({addAll, apps}) =>  (
   <div className={styles.AppSelector}>
     <div className={styles["select-buttons"]}>
-      <Link
-        to="/sizing-test/run-test" onClick={ addAll }
-        className={`${styles.Button} ${styles.invert}`}>
-        Analyze All
-      </Link>
-      <Link
-        to="/sizing-test/run-test" className={`${styles.Button}`}>
-        Analyze Selected
+      <Button invert onClick={ addAll }> Select All </Button>
+      <Link to="/sizing-test/run-test" className={styles.Button}>
+        Analyze
       </Link>
     </div>
     <div className={styles["apps-area"]}>

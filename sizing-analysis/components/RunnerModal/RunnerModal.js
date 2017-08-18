@@ -6,8 +6,7 @@ import ProgressBar from "commons/components/ProgressBar";
 import ProgressItem from "../ProgressItem";
 import Button from "commons/components/Button";
 import styles from "./index.scss";
-import { connect } from 'react-redux';
-import { mapStateToProps } from "../../actions";
+import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
 
 
 const RunnerModal = ({
@@ -18,11 +17,28 @@ const RunnerModal = ({
   className = ""
 }) => (
   <div className={`${styles.RunnerModal} ${className}`}>
-    <h3>Running sizing analysis...</h3>
+
+    <div className={styles.RunnerHeader}>
+      <img className={styles["RunnerHeader-logo"]} src={mongoLogo} />
+      mongoDB running
+    </div>
+
+    {/* progress bar*/}
     <div className={styles.progressbar}>
       <ProgressBar percent={progress} />
-      <p>{ finished ? "42 mins left" : `${remainingTime}mins left` }</p>
     </div>
+
+
+    {/* instance info*/}
+    <div className={styles["instance-progress-type"]}>
+
+    <div className={styles["instance-progress-type-status"]}>Status</div>
+    <div className={styles["instance-progress-type-perf"]}>Perf</div>
+    <div className={styles["instance-progress-type-cost"]}>Cost</div>
+        <div className={styles["instance-progress-type-perfcost"]}>Perf/Cost</div>
+    </div>
+
+    {/* instance run*/}
     <div className={styles["completion-status-group-canvas"]}>
     <ul className={styles["completion-status-group"]}>
       { tasksProgress.map( ({ status, instance, time }) => (
@@ -30,6 +46,8 @@ const RunnerModal = ({
       ) ) }
     </ul>
     </div>
+
+
     { finished ? (
       <div className={styles["button-to-result"]}>
         <Link to="/sizing-test/result" className={styles.Button}>
@@ -40,4 +58,4 @@ const RunnerModal = ({
   </div>
 );
 
-export default connect(mapStateToProps)(RunnerModal);
+export default RunnerModal;
