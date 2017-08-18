@@ -1,14 +1,10 @@
 @import "styles/variables.sass";
 
-.ResultFigure {
-  background: $color-light;
-  border: 1px solid $color-divider;
-  border-radius: 4px;
-}
-
-
 .ResultFigureFlyout {
-  rect {
+  rect.background {
+    fill: rgba($color-light, 0.7);
+  }
+  rect.box {
     stroke: $color-primary;
     fill: rgba(140, 177, 250, 0.05);
   }

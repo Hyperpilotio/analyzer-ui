@@ -56,10 +56,9 @@ class ResultTable extends Component {
   }
 
 
-
   render() {
     let className = this.props.className;
-    let selectedApp = this.state.selectedApp;
+    let selectedApp = this.getSelectedApp(this.props);
     let returnTable;
     let optimal;
     let highPerf;

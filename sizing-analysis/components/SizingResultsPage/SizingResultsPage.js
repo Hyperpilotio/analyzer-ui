@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import Jumbotron from "commons/components/Jumbotron";
 import Container from "commons/components/Container";
 import Navbar from "commons/components/Navbar";
@@ -7,19 +8,24 @@ import ResultTable from "../ResultTable";
 import ResultFigure from "../ResultFigure";
 import KeySummary from "../KeySummary";
 import ProgressIndicator from "../ProgressIndicator";
-import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
+import {
+  STAGE_CONFIG,
+  STAGE_TEST,
+  STAGE_RESULT,
+  sampleSizingAnalysisData
+} from "../../constants";
 import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const SizingResultsPage = ({ logoMap, location, selectedApps}) => {
-  let pathSplit = location.pathname.split("/");
-  let id = pathSplit[pathSplit.length -1];
-  let resultTable = "";
-  let resultFigure = "";
-  if (id !== "result") {
-    resultTable = <ResultTable className={styles.ResultTable} id={id} />;
-    resultFigure = <ResultFigure className={styles.ResultFigure} id={id} />;
+const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
+  const { appId } = match.params;
+
+  if (!appId) {
+    if (selectedApps.length) {
+      history.replace(`/sizing-test/result/${selectedApps[0].appId}`);
+    }
+    return <div />;
   }
   return (
     <div>
@@ -38,23 +44,26 @@ const SizingResultsPage = ({ logoMap, location, selectedApps}) => {
       </Jumbotron>
       <Navbar>
         {selectedApps.map(app => (
-          <NavItemLink key={"sub_link_" + app.appId} id={"sub_link_" + app.appId} app={app}
+          <NavItemLink key={app.appId}
             className={styles.NavItemLink}
             activeClassName={styles.selected}
             to={"/sizing-test/result/" + app.appId} >
             <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
           </NavItemLink>
         ))}
-
       </Navbar>
       <Container className={styles["results-content"]}>
         <div>
           <p>&nbsp;</p>
-          { resultTable }
+          <ResultTable className={styles.ResultTable} id={appId} />
         </div>
         <div>
           <p>Performance</p>
-          { resultFigure }
+          <ResultFigure
+            className={styles.ResultFigure}
+            data={_.find(selectedApps, { appId })}
+            id={appId}
+          />
         </div>
       </Container>
     </div>
