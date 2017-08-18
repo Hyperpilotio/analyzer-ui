@@ -14,12 +14,12 @@ import { mapStateToProps } from "../../actions";
 const WIDTH = 540;
 const HEIGHT = 400;
 
-const ResultFigure = ({ selected_apps, className, id }) => {
-  let selected_app;
+const ResultFigure = ({ selectedApps, className, id }) => {
+  let selectedApp;
 
-  for(let app of selected_apps){
+  for(let app of selectedApps){
     if(id === app.appId){
-       selected_app = app;
+       selectedApp = app;
        break;
     }
   }
@@ -29,17 +29,17 @@ const ResultFigure = ({ selected_apps, className, id }) => {
   let budget;
   let otherTests = [];
 
-  if(!!selected_app){
-    budget = selected_app.budget;
-    if(!!selected_app.sizingRuns){
-      for(let sizingRun of selected_app.sizingRuns){
+  if(!!selectedApp){
+    budget = selectedApp.budget;
+    if(!!selectedApp.sizingRuns){
+      for(let sizingRun of selectedApp.sizingRuns){
         for(let test of sizingRun.results){
           otherTests.push(test);
         }
       }
     }
-  if(!!selected_app.recommendations){
-    for(let result of selected_app.recommendations){
+  if(!!selectedApp.recommendations){
+    for(let result of selectedApp.recommendations){
        switch(result.objective){
          case "MaxPerfOverCost":
             highPerf = result;

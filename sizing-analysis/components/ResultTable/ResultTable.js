@@ -11,12 +11,12 @@ class ResultTable extends Component {
     this.state = {
       otherTests: [], 
       toggleOn: false, 
-      selected_app: this.getSelectedApp(props)
+      selectedApp: this.getSelectedApp(props)
     }
     this.toggleOtherTests = this.toggleOtherTests.bind(this);
   }
   getSelectedApp(props) {
-    for (let app of props.selected_apps) {
+    for (let app of props.selectedApps) {
       if (props.id === app.appId) {
         return app;
       }
@@ -27,8 +27,8 @@ class ResultTable extends Component {
     let otherTests = [];
     let toggleOn = !this.state.toggleOn;
     if(toggleOn){
-      if (!!this.state.selected_app.sizingRuns) {
-        for (let sizingRun of this.state.selected_app.sizingRuns) {
+      if (!!this.state.selectedApp.sizingRuns) {
+        for (let sizingRun of this.state.selectedApp.sizingRuns) {
           let run = sizingRun.run;
           let testNum = 0;
           for (let test of sizingRun.results) {
@@ -50,7 +50,7 @@ class ResultTable extends Component {
         this.setState({
           otherTests: [],
           toggleOn: false,
-          selected_app: this.getSelectedApp(nextProps)
+          selectedApp: this.getSelectedApp(nextProps)
         });
       }
   }
@@ -59,7 +59,7 @@ class ResultTable extends Component {
 
   render() {
     let className = this.props.className;
-    let selected_app = this.state.selected_app;
+    let selectedApp = this.state.selectedApp;
     let returnTable;
     let optimal;
     let highPerf;
@@ -73,8 +73,8 @@ class ResultTable extends Component {
     }
 
 
-    if (!!selected_app && !!selected_app.recommendations) {
-      for (let result of selected_app.recommendations) {
+    if (!!selectedApp && !!selectedApp.recommendations) {
+      for (let result of selectedApp.recommendations) {
         switch (result.objective) {
           case "MaxPerfOverCost":
             highPerf = result;

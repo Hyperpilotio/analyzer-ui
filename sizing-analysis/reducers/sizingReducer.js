@@ -210,7 +210,7 @@ const initialState = {
       "appName": "Nginx"
     },
   ],
-  selected_apps: [],
+  selectedApps: [],
   current_appId: null,
   logoMap: {
     "mongodb": mongoDBLogo,
@@ -225,26 +225,26 @@ export default function reducer(state = initialState, action) {
   let cloneState = JSON.parse(JSON.stringify(state));
   switch (action.type) {
     case ADD_ALL:
-      cloneState.selected_apps = [];
+      cloneState.selectedApps = [];
       for (let app of cloneState.apps) {
-        cloneState.selected_apps.push(Object.assign({}, app));
+        cloneState.selectedApps.push(Object.assign({}, app));
       }
       return cloneState;
 
     case TOGGLE_SELECTED:
       //decide push or splice it
       let selected = true;
-      for (let i = 0; i < cloneState.selected_apps.length; i++) {
-        let app = cloneState.selected_apps[i];
-        if (app.appId === action.selected_app.appId) {
-          cloneState.selected_apps.splice(i, 1);
+      for (let i = 0; i < cloneState.selectedApps.length; i++) {
+        let app = cloneState.selectedApps[i];
+        if (app.appId === action.selectedApp.appId) {
+          cloneState.selectedApps.splice(i, 1);
           selected = false;
           break;
         }
       }
-      //If it is not exist in the selected_apps, push it into selected array
+      //If it is not exist in the selectedApps, push it into selected array
       if (selected) {
-        cloneState.selected_apps.push(action.selected_app);
+        cloneState.selectedApps.push(action.selectedApp);
       }
       return cloneState;
 

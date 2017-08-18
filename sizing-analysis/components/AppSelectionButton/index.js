@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
-const AppSelectionButton = ({ selected_apps, id, toggleSelected, app, iconUrl }) => {
+const AppSelectionButton = ({ selectedApps, id, toggleSelected, app, iconUrl }) => {
   let selected = false;
-  for(let selected_app of selected_apps){
-     if(selected_app.appId === id){
+  for(let selectedApp of selectedApps){
+     if(selectedApp.appId === id){
        selected = true;
        break;
      }
