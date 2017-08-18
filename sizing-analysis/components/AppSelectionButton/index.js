@@ -8,16 +8,18 @@ import { mapStateToProps, mapDispatchToProps } from "../../actions";
 const AppSelectionButton = ({ selectedApps, id, toggleSelected, app, iconUrl }) => {
   let selected = false;
   for(let selectedApp of selectedApps){
-     if(selectedApp.appId === id){
-       selected = true;
-       break;
-     }
+    if(selectedApp.appId === id){
+      selected = true;
+      break;
+    }
   }
   let selectedClass = selected ? styles.selected : "";
   
   return (
-    <Button className={`${styles.AppSelectionButton} ${selectedClass}`} 
-        onClick={function(){toggleSelected(app)}}>
+    <Button
+      className={`${styles.AppSelectionButton} ${selectedClass}`} 
+      onClick={() => toggleSelected(app)}
+    >
       <img src={iconUrl} />
       { app.appName }
     </Button>

@@ -5,16 +5,19 @@ import redisLogo from "assets/images/asset_redis_logo.svg";
 
 //set default values
 const initialState = {
-  apps: [{
+  apps: [
+    {
       "appId": "59306145e3fd9e5094db04e5",
       "appName": "Kafka",
       "sloType": "throughput",
       "sloValue": 57085,
       "budget": 380,
-      "sizingRuns": [{
+      "sizingRuns": [
+        {
           "run": 1,
           "samples": 3,
-          "results": [{
+          "results": [
+            {
               "nodetype": "c3.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
@@ -40,7 +43,8 @@ const initialState = {
         {
           "run": 2,
           "samples": 2,
-          "results": [{
+          "results": [
+            {
               "nodetype": "p2.16xlarge",
               "status": "done",
               "qosValue": 1920000.0,
@@ -58,7 +62,8 @@ const initialState = {
         }
       ],
       "status": "complete",
-      "recommendations": [{
+      "recommendations": [
+        {
           "nodetype": "c4.4xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 680,
@@ -82,10 +87,12 @@ const initialState = {
       "appId": "59671042e3fd9e5094df9812",
       "appName": "mongoDB",
       "budget": 450,
-      "sizingRuns": [{
+      "sizingRuns": [
+        {
           "run": 1,
           "samples": 2,
-          "results": [{
+          "results": [
+            {
               "nodetype": "c3.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
@@ -110,7 +117,8 @@ const initialState = {
         }
       ],
       "status": "complete",
-      "recommendations": [{
+      "recommendations": [
+        {
           "nodetype": "c4.3xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 450,
@@ -134,10 +142,12 @@ const initialState = {
       "appId": "59633e42e3fd9e5094dec25e",
       "appName": "Redis",
       "budget": 300,
-      "sizingRuns": [{
+      "sizingRuns": [
+        {
           "run": 1,
           "samples": 1,
-          "results": [{
+          "results": [
+            {
               "nodetype": "c3.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
@@ -156,7 +166,8 @@ const initialState = {
         {
           "run": 2,
           "samples": 3,
-          "results": [{
+          "results": [
+            {
               "nodetype": "p2.16xlarge",
               "status": "done",
               "qosValue": 1920000.0,
@@ -181,7 +192,8 @@ const initialState = {
         }
       ],
       "status": "complete",
-      "recommendations": [{
+      "recommendations": [
+        {
           "nodetype": "c4.4xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 290,
@@ -208,10 +220,9 @@ const initialState = {
     {
       "appId": "5988990dafdabc92347fddf9",
       "appName": "Nginx"
-    },
+    }
   ],
   selectedApps: [],
-  current_appId: null,
   logoMap: {
     "mongodb": mongoDBLogo,
     "kafka": kafkaLogo,
@@ -248,11 +259,11 @@ export default function reducer(state = initialState, action) {
       }
       return cloneState;
 
-    case 'persist/REHYDRATE':
-      if (!!action.payload && !!action.payload.version &&
-        action.payload.version === "0.0.0.3") {
-        return Object.assign({}, action.payload);
-      }
+    // case 'persist/REHYDRATE':
+    //   if (!!action.payload && !!action.payload.version &&
+    //     action.payload.version === "0.0.0.3") {
+    //     return Object.assign({}, action.payload);
+    //   }
 
     default:
       return state

@@ -17,7 +17,7 @@ const SizingResultsPage = ({ logoMap, location, selectedApps}) => {
   let id = pathSplit[pathSplit.length -1];
   let resultTable = "";
   let resultFigure = "";
-  if(id !== "result"){
+  if (id !== "result") {
     resultTable = <ResultTable className={styles.ResultTable} id={id} />;
     resultFigure = <ResultFigure className={styles.ResultFigure} id={id} />;
   }

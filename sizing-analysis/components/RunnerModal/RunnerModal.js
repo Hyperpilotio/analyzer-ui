@@ -16,7 +16,7 @@ const RunnerModal = ({
   remainingTime = 0,
   finished = false,
   className = "",
-  selectedApps:[firstApp]
+  selectedApps: [firstApp]
 }) => (
   <div className={`${styles.RunnerModal} ${className}`}>
     <h3>Running sizing analysis...</h3>
