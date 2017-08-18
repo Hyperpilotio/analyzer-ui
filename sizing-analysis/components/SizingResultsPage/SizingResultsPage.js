@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import Jumbotron from "commons/components/Jumbotron";
 import Container from "commons/components/Container";
 import Navbar from "commons/components/Navbar";
@@ -60,7 +61,7 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
           <p>Performance</p>
           <ResultFigure
             className={styles.ResultFigure}
-            data={sampleSizingAnalysisData}
+            data={_.find(selectedApps, { appId })}
             id={appId}
           />
         </div>

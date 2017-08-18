@@ -31,6 +31,7 @@ class VictoryLineWithoutPoints extends VictoryLine {
 }
 
 const reshapeData = data => {
+  if (!data) { return []; }
   // Flatten the batch runs data
   const runResults = _.concat(..._.map(data.sizingRuns, "results"));
   return runResults

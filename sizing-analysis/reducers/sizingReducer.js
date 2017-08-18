@@ -119,7 +119,7 @@ const initialState = {
       "status": "complete",
       "recommendations": [
         {
-          "nodetype": "c4.3xlarge",
+          "nodetype": "c3.4xlarge",
           "objective": "MaxPerfOverCost",
           "performance": 450,
           "cost": 230
@@ -206,7 +206,7 @@ const initialState = {
           "cost": 58.23
         },
         {
-          "nodetype": "r4.xlarge",
+          "nodetype": "c4.2xlarge",
           "objective": "MaxPerfWithCostLimit",
           "performance": 270,
           "cost": 190
