@@ -42,7 +42,10 @@
 
     border-width: 2px;
     border-style: solid;
-
+    &.other-test {
+      background-color: $color-light-grey;
+      border-color: $color-white;
+    }
     &.optimal-perf-cost {
       background-color: $color-primary;
       border-color: $color-white;
@@ -66,6 +69,7 @@ tr.see-all {
   height: 100%;
   vertical-align: top;
   color: #78c1f9;
+  cursor: pointer;
 
   .down-icon {
     margin-left: 1rem;

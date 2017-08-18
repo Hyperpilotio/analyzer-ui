@@ -22,10 +22,11 @@
   &:hover {
     background-color: $color-white;
     color: $color-dark-grey;
-    border: 1px solid $color-blue;
+    border: 1px solid #b3c6ff;
   }
 
   &.selected {
     border: 1px solid $color-blue;
+    transition: border .3s;
   }
 }
