@@ -84,46 +84,27 @@ const initialState = {
       "budget": 450,
       "sizingRuns": [{
           "run": 1,
-          "samples": 3,
+          "samples": 2,
           "results": [{
               "nodetype": "c3.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
-              "cost": 420.48,
-              "perfOverCost": 1141.553
+              "cost": 410.48,
+              "perfOverCost": 900.99
             },
             {
               "nodetype": "m3.large",
               "status": "done",
               "qosValue": 60000.0,
-              "cost": 68.40,
-              "perfOverCost": 877.193
+              "cost": 70.40,
+              "perfOverCost": 810.19
             },
             {
               "nodetype": "r4.xlarge",
               "status": "done",
               "qosValue": 120000.0,
-              "cost": 120.96,
-              "perfOverCost": 992.063
-            }
-          ]
-        },
-        {
-          "run": 2,
-          "samples": 2,
-          "results": [{
-              "nodetype": "p2.16xlarge",
-              "status": "done",
-              "qosValue": 1920000.0,
-              "cost": 7076.16,
-              "perfOverCost": 271.334
-            },
-            {
-              "nodetype": "c4.4xlarge",
-              "status": "done",
-              "qosValue": 480000.0,
-              "cost": 362.88,
-              "perfOverCost": 1322.751
+              "cost": 110.6,
+              "perfOverCost": 780.063
             }
           ]
         }
@@ -160,41 +141,41 @@ const initialState = {
               "nodetype": "c3.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
-              "cost": 420.48,
-              "perfOverCost": 1141.553
+              "cost": 425.48,
+              "perfOverCost": 940.553
             },
             {
               "nodetype": "m3.large",
               "status": "done",
               "qosValue": 60000.0,
-              "cost": 68.40,
-              "perfOverCost": 877.193
-            },
-            {
-              "nodetype": "r4.xlarge",
-              "status": "done",
-              "qosValue": 120000.0,
-              "cost": 120.96,
-              "perfOverCost": 992.063
+              "cost": 69.40,
+              "perfOverCost": 870.193
             }
           ]
         },
         {
           "run": 2,
-          "samples": 2,
+          "samples": 3,
           "results": [{
               "nodetype": "p2.16xlarge",
               "status": "done",
               "qosValue": 1920000.0,
-              "cost": 7076.16,
-              "perfOverCost": 271.334
+              "cost": 7999.16,
+              "perfOverCost": 1271.334
             },
             {
               "nodetype": "c4.4xlarge",
               "status": "done",
               "qosValue": 480000.0,
-              "cost": 362.88,
-              "perfOverCost": 1322.751
+              "cost": 500.88,
+              "perfOverCost": 1100.751
+            },
+            {
+              "nodetype": "c4.2xlarge",
+              "status": "done",
+              "qosValue": 480000.0,
+              "cost": 489.88,
+              "perfOverCost": 987.751
             }
           ]
         }
@@ -236,7 +217,7 @@ const initialState = {
     "kafka": kafkaLogo,
     "redis": redisLogo
   },
-  version: "0.0.0.2"
+  version: "0.0.0.3"
 };
 
 export default function reducer(state = initialState, action) {
@@ -269,7 +250,7 @@ export default function reducer(state = initialState, action) {
 
     case 'persist/REHYDRATE':
       if (!!action.payload && !!action.payload.version &&
-        action.payload.version === "0.0.0.2") {
+        action.payload.version === "0.0.0.3") {
         return Object.assign({}, action.payload);
       }
 

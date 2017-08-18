@@ -13,7 +13,7 @@ class ResultTable extends Component {
       toggleOn: false, 
       selected_app: this.getSelectedApp(props)
     }
-    this.toggle = this.toggle.bind(this);
+    this.toggleOtherTests = this.toggleOtherTests.bind(this);
   }
   getSelectedApp(props) {
     for (let app of props.selected_apps) {
@@ -23,7 +23,7 @@ class ResultTable extends Component {
     }
   }
 
-  toggle() {
+  toggleOtherTests() {
     let otherTests = [];
     let toggleOn = !this.state.toggleOn;
     if(toggleOn){
@@ -141,7 +141,7 @@ class ResultTable extends Component {
 
             <tr className={styles["see-all"]}>
               <td colSpan="4">
-                <a onClick={() => this.toggle()}>
+                <a onClick={() => this.toggleOtherTests()}>
                   {clickToggleTxt}{clickToggle}
                 </a>
               </td>
