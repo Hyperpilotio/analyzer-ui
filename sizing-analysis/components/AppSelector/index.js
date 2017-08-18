@@ -14,11 +14,11 @@ const AppSelector = ({addAll, apps}) =>  (
       <Link
         to="/sizing-test/run-test" onClick={ addAll }
         className={`${styles.Button} ${styles.invert}`}>
-        Analyze All
+        Select All
       </Link>
       <Link
         to="/sizing-test/run-test" className={`${styles.Button}`}>
-        Analyze Selected
+        Analyze
       </Link>
     </div>
     <div className={styles["apps-area"]}>

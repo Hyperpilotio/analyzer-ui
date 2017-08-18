@@ -12,12 +12,21 @@ const ProgressItem = ({ status, instance, runningTime }) => (
           : <FaRefresh className={`${styles.checkmark}`} size={18} />
       }
       <p>
-        <mark>{ instance }</mark> instance
+        <mark>{ instance }</mark>
       </p>
     </div>
     <div className={styles["running-time"]}>
       <p>{ runningTime } mins</p>
     </div>
+
+    <div className={styles["running-time"]}>
+      <p>{ runningTime } mins</p>
+    </div>
+
+    <div className={styles["running-time"]}>
+      <p>{ runningTime } mins</p>
+    </div>
+
   </li>
 );
 
