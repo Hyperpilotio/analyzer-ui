@@ -13,14 +13,14 @@ const ProgressIndicator = ({ stage = STAGE_CONFIG, className = "" }) => (
     <TestStageIndicator
       active={stage > STAGE_CONFIG}
       title="Sizing Analysis"
-      description="all your instances"
+      description="app instances"
       icon={testStageIcon}
       activeIcon={testStageActiveIcon} />
 
     <TestStageIndicator
       active={stage > STAGE_TEST}
       title="Recommend"
-      description="instances for apps"
+      description="best instances"
       icon={resultStageIcon}
       activeIcon={resultStageActiveIcon} />
   </div>

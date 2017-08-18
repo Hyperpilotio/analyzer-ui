@@ -1,6 +1,19 @@
 @import "styles/variables.sass";
 @import "commons/components/Button/Button.scss";
 
+.RunnerHeader {
+  font-size: 18px;
+  font-weight: 400;
+  color:$color-dark-grey;
+  margin-bottom: 15px;
+
+}
+.RunnerHeader-logo{
+  width: 40px;
+  height: auto;
+}
+
+
 .RunnerModal {
   border: 1px solid $color-divider;
   border-radius: 4px;
@@ -19,16 +32,54 @@
 }
 
 .completion-status-group-canvas {
-  margin-top: 60px;
+  margin-top: 20px;
   margin-bottom: 30px;
   overflow-y: auto;
-  height: 180px;
+  height: 200px;
+  background-color: #f7f9fc;
 }
+
 
 .completion-status-group {
   list-style: none;
   overflow-y: auto;
   clear: both;
+  padding: 0;
+  margin-left: 1em;
+
+
+}
+
+.instance-progress-type {
+  display: flex;
+  margin-top: 2rem;
+	font-family: WorkSans;
+	font-size: 16px;
+	letter-spacing: 0.4px;
+	color: #b9bacb;
+  width: auto;
+}
+
+.instance-progress-type-status {
+margin-left: 1em;
+  width: 35%;
+
+
+}
+
+.instance-progress-type-perf {
+  width:20%;
+
+}
+
+.instance-progress-type-cost {
+  width:20%;
+
+}
+
+.instance-progress-type-perfcost {
+  width:0;
+
 }
 
 .button-to-result {

@@ -8,7 +8,6 @@ import styles from "./index.scss";
 import ProgressIndicator from "../ProgressIndicator"
 
 const sampleProgress = [
-  { status: "completed", instance: "C3.large", time: 25 },
   { status: "completed", instance: "C3.xlarge", time: 21 },
   { status: "completed", instance: "M2.xlarge", time: 10 },
   { status: "running", instance: "M3.large", time: 15 },

@@ -4,10 +4,11 @@ import _ from "lodash";
 import styles from "./NavItemLink.scss";
 
 
-export default ({ className = "", activeClassName = "", to, text, children }) => (
+export default ({ activeStyle="", className = "", activeClassName = "", to, text, children }) => (
   <NavLink to={to}
            className={`${styles.NavItemLink} ${className}`}
-           activeClassName={`${styles.selected} ${activeClassName}`}>
+           activeClassName={`${styles.selected} ${activeClassName}`}
+           activeStyle={activeStyle}>
     { _.isUndefined(children) ? text : children }
   </NavLink>
 )

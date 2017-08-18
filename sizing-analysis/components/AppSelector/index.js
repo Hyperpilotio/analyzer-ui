@@ -14,9 +14,9 @@ const AppSelector = (props) =>  (
       <Link
         to="/sizing-test/run-test" onClick={props.addAll}
         className={`${styles.Button} ${styles.invert}`}>
-        Analyze All
+        Select All
       </Link>
-      <Button>Analyze Selected</Button>
+      <Button>Analyze</Button>
     </div>
     <div className={styles["apps-area"]}>
       { props.reducer[0].apps.map(app => (
