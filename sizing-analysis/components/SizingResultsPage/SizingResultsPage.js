@@ -17,18 +17,14 @@ import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const SizingResultsPage = ({ logoMap, location, selectedApps }) => {
-  let pathSplit = location.pathname.split("/");
-  let id = pathSplit[pathSplit.length -1];
-  let resultTable = "";
-  let resultFigure = "";
-  if (id !== "result") {
-    resultTable = <ResultTable className={styles.ResultTable} id={id} />;
-    resultFigure = <ResultFigure
-      className={styles.ResultFigure}
-      data={sampleSizingAnalysisData}
-      id={id}
-    />;
+const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
+  const { appId } = match.params;
+
+  if (!appId) {
+    if (selectedApps.length) {
+      history.replace(`/sizing-test/result/${selectedApps[0].appId}`);
+    }
+    return <div />;
   }
   return (
     <div>
@@ -47,7 +43,7 @@ const SizingResultsPage = ({ logoMap, location, selectedApps }) => {
       </Jumbotron>
       <Navbar>
         {selectedApps.map(app => (
-          <NavItemLink key={"sub_link_" + app.appId} id={"sub_link_" + app.appId} app={app}
+          <NavItemLink key={app.appId}
             className={styles.NavItemLink}
             activeClassName={styles.selected}
             to={"/sizing-test/result/" + app.appId} >
@@ -58,11 +54,15 @@ const SizingResultsPage = ({ logoMap, location, selectedApps }) => {
       <Container className={styles["results-content"]}>
         <div>
           <p>&nbsp;</p>
-          { resultTable }
+          <ResultTable className={styles.ResultTable} id={appId} />
         </div>
         <div>
           <p>Performance</p>
-          { resultFigure }
+          <ResultFigure
+            className={styles.ResultFigure}
+            data={sampleSizingAnalysisData}
+            id={appId}
+          />
         </div>
       </Container>
     </div>
