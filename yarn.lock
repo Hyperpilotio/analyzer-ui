@@ -1861,7 +1861,7 @@ d3-scale@^1.0.0:
     d3-time "1"
     d3-time-format "2"
 
-d3-shape@^1.0.0, d3-shape@^1.2.0:
+d3-shape@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.2.0.tgz#45d01538f064bafd05ea3d6d2cb748fd8c41f777"
   dependencies:
@@ -6253,9 +6253,9 @@ vfile@^2.0.0:
     replace-ext "1.0.0"
     unist-util-stringify-position "^1.0.0"
 
-victory-chart@^21.4.0:
-  version "21.5.0"
-  resolved "https://registry.yarnpkg.com/victory-chart/-/victory-chart-21.5.0.tgz#b4434f0d12f28845b1a0d250d9ee06d09418e438"
+victory-chart@^21.6.1:
+  version "21.6.1"
+  resolved "https://registry.yarnpkg.com/victory-chart/-/victory-chart-21.6.1.tgz#afe5c4957d7542dc10db6354b416a51a0f176199"
   dependencies:
     d3-voronoi "^1.1.2"
     lodash "^4.17.4"
@@ -6272,7 +6272,7 @@ victory-core@17.2.5:
     d3-timer "^1.0.0"
     lodash "^4.17.4"
 
-victory-core@^17.0.0, victory-core@^17.1.0:
+victory-core@^17.1.0:
   version "17.1.0"
   resolved "https://registry.yarnpkg.com/victory-core/-/victory-core-17.1.0.tgz#324c2be6ad2e49ad91f1eec0c4609d181f4b3f33"
   dependencies:
@@ -6282,22 +6282,6 @@ victory-core@^17.0.0, victory-core@^17.1.0:
     d3-shape "^1.2.0"
     d3-timer "^1.0.0"
     lodash "^4.17.4"
-
-victory-pie@^11.4.0:
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/victory-pie/-/victory-pie-11.4.0.tgz#9fb6dd84f68b27b8c4382cc792abc5a2ad6949d7"
-  dependencies:
-    d3-shape "^1.0.0"
-    lodash "^4.17.4"
-    victory-core "^17.0.0"
-
-victory@^0.21.3:
-  version "0.21.3"
-  resolved "https://registry.yarnpkg.com/victory/-/victory-0.21.3.tgz#9111a1a1c80baa957c183832519138013673ba78"
-  dependencies:
-    victory-chart "^21.4.0"
-    victory-core "^17.0.0"
-    victory-pie "^11.4.0"
 
 vlq@^0.2.1:
   version "0.2.2"
