@@ -259,11 +259,11 @@ export default function reducer(state = initialState, action) {
       }
       return cloneState;
 
-    // case 'persist/REHYDRATE':
-    //   if (!!action.payload && !!action.payload.version &&
-    //     action.payload.version === "0.0.0.3") {
-    //     return Object.assign({}, action.payload);
-    //   }
+    case 'persist/REHYDRATE':
+      if (!!action.payload && !!action.payload.version &&
+        action.payload.version === "0.0.0.3") {
+        return Object.assign({}, action.payload);
+      }
 
     default:
       return state
