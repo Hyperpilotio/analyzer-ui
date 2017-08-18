@@ -5,9 +5,9 @@ import {
   VictoryScatter,
   VictoryAxis,
   VictoryLine,
-  VictoryTooltip,
   createContainer
-} from "victory";
+} from "victory-chart";
+import { VictoryTooltip } from "victory-core";
 import { sampleInstancesData } from "../../constants";
 import ResultFigureFlyout from "../ResultFigureFlyout";
 import styles from "./ResultFigure.scss";
