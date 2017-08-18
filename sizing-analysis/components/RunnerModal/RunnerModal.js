@@ -6,13 +6,17 @@ import ProgressBar from "commons/components/ProgressBar";
 import ProgressItem from "../ProgressItem";
 import Button from "commons/components/Button";
 import styles from "./index.scss";
+import { connect } from 'react-redux';
+import { mapStateToProps } from "../../actions";
+
 
 const RunnerModal = ({
   tasksProgress = [],
   progress = 100,
   remainingTime = 0,
   finished = false,
-  className = ""
+  className = "",
+  selected_apps:[first_app]
 }) => (
   <div className={`${styles.RunnerModal} ${className}`}>
     <h3>Running sizing analysis...</h3>
@@ -29,7 +33,7 @@ const RunnerModal = ({
     </div>
     { finished ? (
       <div className={styles["button-to-result"]}>
-        <Link to="/sizing-test/result" className={styles.Button}>
+        <Link to={"/sizing-test/result/" + first_app.appId } className={styles.Button}>
           See Results
         </Link>
       </div>
@@ -37,4 +41,4 @@ const RunnerModal = ({
   </div>
 );
 
-export default RunnerModal;
+export default connect(mapStateToProps)(RunnerModal);
