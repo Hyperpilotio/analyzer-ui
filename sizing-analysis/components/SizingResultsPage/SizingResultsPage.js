@@ -12,9 +12,8 @@ import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const SizingResultsPage = ({ logoMap, location, selected_apps}) => {
-  let pathSplit = location.pathname.split("/");
-  let id = pathSplit[pathSplit.length -1];
+const SizingResultsPage = ({ logoMap, selected_apps, match}) => {
+  let id = match.params.id;
   let resultTable = "";
   let resultFigure = "";
   if(id !== "result"){

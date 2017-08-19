@@ -112,7 +112,7 @@ class ResultTable extends Component {
               <td>
                 <i className={styles["optimal-perf"]} />
                 High performance
-        </td>
+              </td>
               <td>{highPerf.nodetype}</td>
               <td>{highPerf.performance}</td>
               <td>{"$" + highPerf.cost}</td>
