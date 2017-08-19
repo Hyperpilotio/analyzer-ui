@@ -53,6 +53,7 @@
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
     "react-redux": "^5.0.5",
+    "react-refetch": "^1.0.0",
     "react-router-dom": "^4.1.1",
     "react-spinkit": "^3.0.0",
     "redux": "^3.7.2",
