@@ -8,7 +8,6 @@ import {
   createContainer
 } from "victory-chart";
 import { VictoryTooltip } from "victory-core";
-import { sampleInstancesData } from "../../constants";
 import ResultFigureFlyout from "../ResultFigureFlyout";
 import styles from "./ResultFigure.scss";
 
@@ -30,7 +29,7 @@ class VictoryLineWithoutPoints extends VictoryLine {
   static getData = () => null;
 }
 
-const reshapeData = data => {
+const reshapeData = (data, instancesData) => {
   if (!data) { return []; }
   // Flatten the batch runs data
   const runResults = _.concat(..._.map(data.sizingRuns, "results"));
@@ -46,7 +45,7 @@ const reshapeData = data => {
       y: qosValue,
       // Get the instance details from this fixed dataset
       // which we should change later
-      instance: _.find(sampleInstancesData, { name: nodetype }),
+      instance: _.find(instancesData, { name: nodetype }),
       ...pointStyles.NotRecommended
     }))
     // Then draw the recommended instances
@@ -56,14 +55,14 @@ const reshapeData = data => {
         return {
           x: runResult.cost,
           y: runResult.qosValue,
-          instance: _.find(sampleInstancesData, { name: nodetype }),
+          instance: _.find(instancesData, { name: nodetype }),
           ...pointStyles[objective]
         };
       })
     );
 };
 
-const ResultFigure = ({ className, data }) => (
+const ResultFigure = ({ className, data, instancesData }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
       containerComponent={ <VictoryZoomVoronoiContainer
@@ -116,7 +115,7 @@ const ResultFigure = ({ className, data }) => (
         }
       }} />
       <VictoryScatter
-        data={reshapeData(data)}
+        data={reshapeData(data, instancesData)}
         size={10}
         style={{ data: { strokeWidth: 2 } }}
       />

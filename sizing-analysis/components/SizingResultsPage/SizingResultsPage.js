@@ -17,8 +17,9 @@ import {
 import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
+import { connect as connectRefetch } from "react-refetch";
 
-const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
+const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFetch, analysisFetch }) => {
   const { appId } = match.params;
 
   if (!appId) {
@@ -52,21 +53,37 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
           </NavItemLink>
         ))}
       </Navbar>
-      <Container className={styles["results-content"]}>
-        <div>
-          <p>&nbsp;</p>
-          <ResultTable className={styles.ResultTable} id={appId} />
-        </div>
-        <div>
-          <p>Performance</p>
-          <ResultFigure
-            className={styles.ResultFigure}
-            data={_.find(selectedApps, { appId })}
-            id={appId}
-          />
-        </div>
-      </Container>
+      {
+        (!analysisFetch.fulfilled || !instancesFetch.fulfilled )
+        ? "Loading..."
+        : (
+          <Container className={styles["results-content"]}>
+            <div>
+              <p>&nbsp;</p>
+              <ResultTable data={analysisFetch.value} className={styles.ResultTable} id={appId} />
+            </div>
+            <div>
+              <p>Performance</p>
+              <ResultFigure
+                className={styles.ResultFigure}
+                data={analysisFetch.value}
+                instancesData={instancesFetch.value}
+                id={appId}
+              />
+            </div>
+          </Container>
+        )
+      }
     </div>
-)};
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SizingResultsPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  connectRefetch(props => ({
+    analysisFetch: `/api/apps/redis/analysis`,
+    instancesFetch: `/api/instances/us-east-1`
+  }))(SizingResultsPage)
+);
