@@ -2,7 +2,7 @@ import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
 import mongoDBLogo from "assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "assets/images/asset_kafka_logo.svg";
 import redisLogo from "assets/images/asset_redis_logo.svg";
-
+const version = '0.0.0.4';
 //set default values
 const initialState = {
   apps: [
@@ -228,7 +228,7 @@ const initialState = {
     "kafka": kafkaLogo,
     "redis": redisLogo
   },
-  version: "0.0.0.4"
+  version
 };
 
 export default function reducer(state = initialState, action) {
@@ -261,7 +261,7 @@ export default function reducer(state = initialState, action) {
 
     case 'persist/REHYDRATE':
       if (!!action.payload && !!action.payload.version &&
-        action.payload.version === "0.0.0.4") {
+        action.payload.version === version) {
         return Object.assign({}, action.payload);
       }
 
