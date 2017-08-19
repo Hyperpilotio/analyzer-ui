@@ -14,8 +14,23 @@ server.use(morgan("dev"));
 
 server.use("/static", express.static(path.join(__dirname, "dist/static")));
 
-server.get("/api/", async (req, res) => {
+server.get("/api/", (req, res) => {
   res.json({ status: "ok" });
+});
+
+server.get("/api/apps", async (req, res) => {
+  const appsShowing = ["redis", "mysql", "mongo", "kafka"];
+  const application = await configdb.collection("applications").find(
+    { name: { $in: appsShowing } },
+    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
+  ).toArray();
+  res.json(application);
+});
+
+server.get("/api/apps/:appName/analysis", async (req, res) => {
+  const { appName } = req.params;
+  const sizingAnalysis = await metricdb.collection("sizing").findOne({ appName });
+  res.json(sizingAnalysis);
 });
 
 server.use("/api", proxy(config.analyzer.url, {
