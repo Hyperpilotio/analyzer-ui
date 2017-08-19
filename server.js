@@ -27,6 +27,24 @@ server.get("/api/apps", async (req, res) => {
   res.json(application);
 });
 
+server.get("/api/instances/:region", async (req, res) => {
+  const { region } = req.params;
+  const { data } = await configdb.collection("nodetypes").findOne({ region });
+  res.json(data.map(
+    ({ name, cpuConfig, memoryConfig, storageConfig, networkConfig }) => ({
+      name,
+      cpu: `${cpuConfig.vCPU} x ${cpuConfig.clockSpeed.value}${cpuConfig.clockSpeed.unit}`,
+      memory: `${memoryConfig.size.value}${memoryConfig.size.unit}`,
+      storage: storageConfig.storageType + (
+        storageConfig.devices
+          ? ` ${storageConfig.devices}x${storageConfig.size.value}${storageConfig.size.unit}`
+          : ""
+      ),
+      network: networkConfig.performance
+    })
+  ));
+});
+
 server.get("/api/apps/:appName/analysis", async (req, res) => {
   const { appName } = req.params;
   const sizingAnalysis = await metricdb.collection("sizing").findOne({ appName });
