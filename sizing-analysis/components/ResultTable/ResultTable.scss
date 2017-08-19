@@ -44,11 +44,11 @@
     border-style: solid;
     &.other-test {
       background-color: $color-light-grey;
-      border-color: $color-light-grey;
+      border-color: $color-white;
     }
     &.optimal-perf-cost {
       background-color: $color-primary;
-      border-color: $color-primary;
+      border-color: $color-white;
     }
     &.optimal-perf {
       background-color: $color-divider;

@@ -5,15 +5,15 @@ function mapStateToProps(state) {
 }
 
 const addAll = () => ({ type: ADD_ALL });
-const toggleSelected = (selected_app) => ({ type: TOGGLE_SELECTED, selected_app: selected_app });
+const toggleSelected = (selectedApp) => ({ type: TOGGLE_SELECTED, selectedApp: selectedApp });
 
 function mapDispatchToProps(dispatch){
   return {
     addAll: function(){
       dispatch({ type: ADD_ALL });
     },
-    toggleSelected: function(selected_app) {       
-        dispatch({ type: TOGGLE_SELECTED, selected_app: selected_app }); 
+    toggleSelected: function(selectedApp) {       
+        dispatch({ type: TOGGLE_SELECTED, selectedApp: selectedApp }); 
     }
     
   };

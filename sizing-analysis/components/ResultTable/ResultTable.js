@@ -11,12 +11,12 @@ class ResultTable extends Component {
     this.state = {
       otherTests: [], 
       toggleOn: false, 
-      selected_app: this.getSelectedApp(props)
+      selectedApp: this.getSelectedApp(props)
     }
     this.toggleOtherTests = this.toggleOtherTests.bind(this);
   }
   getSelectedApp(props) {
-    for (let app of props.selected_apps) {
+    for (let app of props.selectedApps) {
       if (props.id === app.appId) {
         return app;
       }
@@ -26,9 +26,9 @@ class ResultTable extends Component {
   toggleOtherTests() {
     let otherTests = [];
     let toggleOn = !this.state.toggleOn;
-    if(toggleOn){
-      if (!!this.state.selected_app.sizingRuns) {
-        for (let sizingRun of this.state.selected_app.sizingRuns) {
+    if (toggleOn) {
+      if (!!this.state.selectedApp.sizingRuns) {
+        for (let sizingRun of this.state.selectedApp.sizingRuns) {
           let run = sizingRun.run;
           let testNum = 0;
           for (let test of sizingRun.results) {
@@ -45,36 +45,36 @@ class ResultTable extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-      //set back to originally setting when switch to another app
-      if(this.props.id !== nextProps.id){
-        this.setState({
-          otherTests: [],
-          toggleOn: false,
-          selected_app: this.getSelectedApp(nextProps)
-        });
-      }
+    //set back to originally setting when switch to another app
+    if (this.props.id !== nextProps.id) {
+      this.setState({
+        otherTests: [],
+        toggleOn: false,
+        selectedApp: this.getSelectedApp(nextProps)
+      });
+    }
   }
 
 
 
   render() {
     let className = this.props.className;
-    let selected_app = this.state.selected_app;
+    let selectedApp = this.state.selectedApp;
     let returnTable;
     let optimal;
     let highPerf;
     let lowCost;
     let clickToggleTxt = "See all tested instances";
     let clickToggle = <FaChevronDown className={styles["down-icon"]} size={16} />;
-    if(this.state.toggleOn){
+
+    if (this.state.toggleOn) {
       clickToggleTxt = "Hide other tested instances"; 
       clickToggle = <FaChevronUp className={styles["down-icon"]} size={16} />;
-
     }
 
 
-    if (!!selected_app && !!selected_app.recommendations) {
-      for (let result of selected_app.recommendations) {
+    if (!!selectedApp && !!selectedApp.recommendations) {
+      for (let result of selectedApp.recommendations) {
         switch (result.objective) {
           case "MaxPerfOverCost":
             highPerf = result;
@@ -103,7 +103,7 @@ class ResultTable extends Component {
               <td>
                 <i className={styles["optimal-perf-cost"]} />
                 Optimal Perf/Cost
-        </td>
+              </td>
               <td>{optimal.nodetype}</td>
               <td>{optimal.performance}</td>
               <td>{"$" + optimal.cost}</td>
@@ -136,8 +136,7 @@ class ResultTable extends Component {
                 <td>{Math.round(app.perfOverCost * 10) / 10}</td>
                 <td>{"$" + Math.round(app.cost * 10) / 10}</td>
               </tr>
-              )
-            )}
+            ))}
 
             <tr className={styles["see-all"]}>
               <td colSpan="4">
@@ -150,23 +149,25 @@ class ResultTable extends Component {
         </table>
       );
     } else {
-      returnTable = (<table className={`${styles.ResultTable} ${className}`}>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Instance Type</th>
-            <th>Perf</th>
-            <th>Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colSpan="4">
-              Not yet tested. No result.
-          </td>
-          </tr>
-        </tbody>
-      </table>);
+      returnTable = (
+        <table className={`${styles.ResultTable} ${className}`}>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Instance Type</th>
+              <th>Perf</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan="4">
+                Not yet tested. No result.
+            </td>
+            </tr>
+          </tbody>
+        </table>
+      );
     }
     return returnTable;
   }

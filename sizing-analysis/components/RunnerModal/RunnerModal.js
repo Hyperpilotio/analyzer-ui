@@ -16,7 +16,7 @@ const RunnerModal = ({
   remainingTime = 0,
   finished = false,
   className = "",
-  selected_apps:[first_app]
+  selectedApps: [firstApp]
 }) => (
   <div className={`${styles.RunnerModal} ${className}`}>
     <h3>Running sizing analysis...</h3>
@@ -33,7 +33,7 @@ const RunnerModal = ({
     </div>
     { finished ? (
       <div className={styles["button-to-result"]}>
-        <Link to={"/sizing-test/result/" + first_app.appId } className={styles.Button}>
+        <Link to={"/sizing-test/result/" + firstApp.appId } className={styles.Button}>
           See Results
         </Link>
       </div>

@@ -16,7 +16,7 @@ const SizingResultsPage = ({ logoMap, selected_apps, match}) => {
   let id = match.params.id;
   let resultTable = "";
   let resultFigure = "";
-  if(id !== "result"){
+  if (id !== "result") {
     resultTable = <ResultTable className={styles.ResultTable} id={id} />;
     resultFigure = <ResultFigure className={styles.ResultFigure} id={id} />;
   }
@@ -36,7 +36,7 @@ const SizingResultsPage = ({ logoMap, selected_apps, match}) => {
         </div>
       </Jumbotron>
       <Navbar>
-        {selected_apps.map(app => (
+        {selectedApps.map(app => (
           <NavItemLink key={"sub_link_" + app.appId} id={"sub_link_" + app.appId} app={app}
             className={styles.NavItemLink}
             activeClassName={styles.selected}
