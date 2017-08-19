@@ -12,7 +12,7 @@ import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
-const SizingResultsPage = ({ logoMap, selected_apps, match}) => {
+const SizingResultsPage = ({ logoMap, selectedApps, match}) => {
   let id = match.params.id;
   let resultTable = "";
   let resultFigure = "";
