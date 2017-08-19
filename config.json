@@ -1,5 +1,11 @@
 {
   "analyzer": {
     "url": "http://localhost:5000"
+  },
+  "mongo": {
+    "host": "localhost",
+    "port": 27017,
+    "username": "analyzer",
+    "password": "hyperpilot"
   }
 }

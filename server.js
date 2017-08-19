@@ -31,9 +31,11 @@ let configdb, metricdb;
 
 (async () => {
 
+  const { host, port, username, password } = config.mongo;
+
   [configdb, metricdb] = await Promise.all([
-    MongoClient.connect("mongodb://analyzer:hyperpilot@localhost:27017/configdb"),
-    MongoClient.connect("mongodb://analyzer:hyperpilot@localhost:27017/metricdb")
+    MongoClient.connect(`mongodb://${username}:${password}@${host}:${port}/configdb`),
+    MongoClient.connect(`mongodb://${username}:${password}@${host}:${port}/metricdb`)
   ]);
 
   server.listen(3000, () => {
