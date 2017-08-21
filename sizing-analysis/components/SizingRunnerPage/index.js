@@ -1,4 +1,5 @@
 import React from "react";
+import { connect as connectRefetch } from "react-refetch";
 import Jumbotron from "commons/components/Jumbotron";
 import AppSelector from "../AppSelector";
 import RunnerModal from "../RunnerModal";
@@ -15,14 +16,14 @@ const sampleProgress = [
   { status: "running", instance: "G3.xlarge", time: 20 }
 ];
 
-const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
-  let modalElement = stage !== STAGE_TEST ? "" : (
+const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
+  let modalElement = (stage !== STAGE_TEST || analysisFetch.pending) ? "" : (
     <div className={styles["modal-container"]}>
       <RunnerModal
-        tasksProgress={sampleProgress}
+        data={analysisFetch.value}
         progress={60}
         remainingTime={20}
-        finished />
+      />
     </div>
   );
 
@@ -56,4 +57,8 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
   </div>
 };
 
-export default SizingRunnerPage;
+export default connectRefetch(({ stage }) => (
+  stage === STAGE_TEST
+    ? { analysisFetch: {url: "/api/apps/redis/analysis", refreshInterval: 5 * 1000} }
+    : {}
+))(SizingRunnerPage);

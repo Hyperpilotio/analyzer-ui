@@ -10,10 +10,9 @@ import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
 
 
 const RunnerModal = ({
-  tasksProgress = [],
+  data,
   progress = 100,
   remainingTime = 0,
-  finished = false,
   className = ""
 }) => (
   <div className={`${styles.RunnerModal} ${className}`}>
@@ -41,20 +40,22 @@ const RunnerModal = ({
     {/* instance run*/}
     <div className={styles["completion-status-group-canvas"]}>
     <ul className={styles["completion-status-group"]}>
-      { tasksProgress.map( ({ status, instance, time }) => (
-        <ProgressItem status={status} instance={instance} runningTime={time} />
-      ) ) }
+      {
+        data.sizingRuns.map(({ results }) => (
+          results.map(result => (
+            <ProgressItem {...result} />
+          )
+        )))
+      }
     </ul>
     </div>
 
 
-    { finished ? (
-      <div className={styles["button-to-result"]}>
-        <Link to="/sizing-test/result" className={styles.Button}>
-          See Results
-        </Link>
-      </div>
-    ) : null }
+    <div className={styles["button-to-result"]}>
+      <Link to="/sizing-test/result" className={`${styles.Button} ${data.status === "complete" ? "" : styles.disabled}`}>
+        See Results
+      </Link>
+    </div>
   </div>
 );
 

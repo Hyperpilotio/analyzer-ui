@@ -22,6 +22,15 @@ import { connect as connectRefetch } from "react-refetch";
 const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFetch, analysisFetch }) => {
   const { appId } = match.params;
 
+  // A bug of analyzer
+  if (analysisFetch.fulfilled) {
+    let sizingRuns = analysisFetch.value.sizingRuns;
+    analysisFetch.value = {
+      ...analysisFetch.value,
+      sizingRuns: sizingRuns.filter(batch => (batch.results[0].status === "done"))
+    };
+  }
+
   if (!appId) {
     if (selectedApps.length) {
       history.replace(`/sizing-test/result/${selectedApps[0].appId}`);
