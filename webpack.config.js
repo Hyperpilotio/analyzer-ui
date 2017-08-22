@@ -152,9 +152,6 @@ let webpackConfig = module.exports = {
     },
     contentBase: "./dist/",
     host: "localhost",
-    port: 3000,
-    proxy: {
-      "/api/*": config.analyzer.url
-    }
+    port: 3000
   }
 };

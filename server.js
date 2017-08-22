@@ -51,10 +51,6 @@ server.get("/api/apps/:appName/analysis", async (req, res) => {
   res.json(sizingAnalysis);
 });
 
-server.use("/api", proxy(config.analyzer.url, {
-  proxyReqPathResolver: req => req.originalUrl
-}));
-
 server.get("/*", (req, res) => {
   res.sendFile(__dirname + `/dist/${ANALYSIS_APP}.html`);
 });
