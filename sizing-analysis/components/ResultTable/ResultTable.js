@@ -18,7 +18,7 @@ class ResultTable extends Component {
   }
   getSelectedApp(props) {
     for (let app of props.selectedApps) {
-      if (props.id === app.appId) {
+      if (props.id === app.appName) {
         return app;
       }
     }

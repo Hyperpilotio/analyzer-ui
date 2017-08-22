@@ -59,6 +59,6 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
 
 export default connectRefetch(({ stage }) => (
   stage === STAGE_TEST
-    ? { analysisFetch: {url: "/api/apps/redis/analysis", refreshInterval: 5 * 1000} }
+    ? { analysisFetch: {url: "/api/apps/mysql/analysis", refreshInterval: 5 * 1000} }
     : {}
 ))(SizingRunnerPage);

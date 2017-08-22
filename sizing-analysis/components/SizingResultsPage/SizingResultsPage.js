@@ -20,7 +20,7 @@ import { mapStateToProps, mapDispatchToProps } from "../../actions";
 import { connect as connectRefetch } from "react-refetch";
 
 const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFetch, analysisFetch }) => {
-  const { appId } = match.params;
+  const { appName } = match.params;
 
   // A bug of analyzer
   if (analysisFetch.fulfilled) {
@@ -31,9 +31,9 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
     };
   }
 
-  if (!appId) {
+  if (!appName) {
     if (selectedApps.length) {
-      history.replace(`/sizing-test/result/${selectedApps[0].appId}`);
+      history.replace(`/sizing-test/result/${selectedApps[0].appName.toLowerCase()}`);
     }
     return <div />;
   }
@@ -57,7 +57,7 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
           <NavItemLink key={app.appId}
             className={styles.NavItemLink}
             activeClassName={styles.selected}
-            to={"/sizing-test/result/" + app.appId} >
+            to={"/sizing-test/result/" + app.appName} >
             <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
           </NavItemLink>
         ))}
@@ -69,7 +69,7 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
           <Container className={styles["results-content"]}>
             <div>
               <p>&nbsp;</p>
-              <ResultTable data={analysisFetch.value} className={styles.ResultTable} id={appId} />
+              <ResultTable data={analysisFetch.value} className={styles.ResultTable} id={appName} />
             </div>
             <div>
               <p>Performance</p>
@@ -77,7 +77,6 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
                 className={styles.ResultFigure}
                 data={analysisFetch.value}
                 instancesData={instancesFetch.value}
-                id={appId}
               />
             </div>
           </Container>
@@ -91,8 +90,8 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(
-  connectRefetch(props => ({
-    analysisFetch: `/api/apps/redis/analysis`,
+  connectRefetch(({ match }) => ({
+    analysisFetch: `/api/apps/${match.params.appName}/analysis`,
     instancesFetch: `/api/instances/us-east-1`
   }))(SizingResultsPage)
 );
