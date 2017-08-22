@@ -79,13 +79,13 @@ class ResultTable extends Component {
         let doc = _.find(sizingRuns, { nodetype: result.nodetype });
         switch (result.objective) {
           case "MaxPerfOverCost":
-            highPerf = doc;
+            optimal = doc;
             break;
           case "MinCostWithPerfLimit":
             lowCost = doc;
             break;
           case "MaxPerfWithCostLimit":
-            optimal = doc;
+            highPerf = doc;
             break;
         }
       }
