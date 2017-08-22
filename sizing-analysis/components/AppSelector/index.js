@@ -18,7 +18,7 @@ const AppSelector = ({addAll, apps}) =>  (
     </div>
     <div className={styles["apps-area"]}>
       { apps.map(app => (
-        <AppSelectionButton key={app.appId} id={app.appId} app={app} iconUrl={redisLogo}  />
+        <AppSelectionButton key={app.appId} id={app.appId} app={app} />
       )) }
     </div>
   </div>
