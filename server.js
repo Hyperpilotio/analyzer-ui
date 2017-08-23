@@ -2,6 +2,7 @@ const express = require("express");
 const proxy = require("express-http-proxy");
 const morgan = require("morgan");
 const path = require("path");
+const fetch = require("isomorphic-fetch");
 const { MongoClient } = require("mongodb");
 const config = require("./config");
 
@@ -51,6 +52,36 @@ server.get("/api/apps/:appName/analysis", async (req, res) => {
   res.json(sizingAnalysis);
 });
 
+server.post("/api/apps/:appName/analysis/run", async (req, res) => {
+  const { appName } = req.params;
+  const existingDocument = await metricdb.collection("sizing").findOne({ appName });
+  if (existingDocument !== null) {
+    res.json({
+      error: false,
+      message: "Test already exists"
+    });
+    return;
+  }
+  const response = await fetch(
+    `${config.workloadProfiler.url}/sizing/aws/${appName}`,
+    { method: "POST" }
+  );
+  const jsonContent = await response.json();
+  if (jsonContent.error !== false) {
+    res.json(jsonContent);
+  } else {
+    res.json({
+      sessionId: jsonContent.data.id,
+      error: false
+    });
+  }
+});
+
+server.get("/api/analyses/:sessionId", async (req, res) => {
+  const { sessionId } = req.params;
+  res.json(await metricdb.collection("sizing").findOne({ sessionId }));
+})
+
 server.get("/*", (req, res) => {
   res.sendFile(__dirname + `/dist/${ANALYSIS_APP}.html`);
 });
@@ -60,14 +91,11 @@ let configdb, metricdb;
 
 (async () => {
 
-  const { host, port, username, password, metricdb, configdb } = config.mongo;
-  const mongoUrl = !!username && !!password
-    ? `mongodb://${username}:${password}@${host}:${port}`
-    : `mongodb://${host}:${port}`;
+  const { url, metricdbName, configdbName } = config.mongo;
 
   [configdb, metricdb] = await Promise.all([
-    MongoClient.connect(`${mongoUrl}/${configdb}`),
-    MongoClient.connect(`${mongoUrl}/${metricdb}`)
+    MongoClient.connect(`${url}/${configdbName}`),
+    MongoClient.connect(`${url}/${metricdbName}`)
   ]);
 
   server.listen(3000, () => {

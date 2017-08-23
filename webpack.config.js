@@ -6,7 +6,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
-const config = require("./config.json");
 
 const IS_PROD = process.env.NODE_ENV === "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
