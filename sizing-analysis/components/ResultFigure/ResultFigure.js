@@ -39,6 +39,8 @@ const reshapeData = (data, instancesData) => {
     .filter(result => (
       !_.includes(_.map(data.recommendations, "nodetype"), result.nodetype)
     ))
+    // Filter out results of unavailable machines
+    .filter(result => result.qosValue !== 0)
     // Draw non-recommended instances
     .map(({ qosValue, cost, nodetype }) => ({
       x: cost,
@@ -79,26 +81,6 @@ const ResultFigure = ({ className, data, instancesData }) => (
         y: [50, 50]
       }}
     >
-      <VictoryLine
-        y={() => data.sloValue}
-        style={{
-          data: {
-            strokeWidth: 1,
-            stroke: "#8cb1fa",
-            strokeDasharray: "5, 5"
-          }
-        }}
-      />
-      <VictoryLine
-        x={() => data.budget}
-        style={{
-          data: {
-            strokeWidth: 1,
-            stroke: "#ff8686",
-            strokeDasharray: "5, 5"
-          }
-        }}
-      />
       <VictoryAxis dependentAxis style={{
         axis: {
           strokeWidth: 5,
