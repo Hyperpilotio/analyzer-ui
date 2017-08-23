@@ -5,8 +5,8 @@ import styles from "./ResultFigureFlyout.scss";
 
 const InstanceConfig = ({ label, value, ...props }) => (
   <g {...props}>
-    <text className={styles["property-value"]}>{ value }</text>
-    <text y={25} className={styles["property-label"]}>{ label }</text>
+    <text className={styles["property-label"]}>{ label }</text>
+    <text y={15} className={styles["property-value"]} style={{ width: "50%" }}>{ value }</text>
   </g>
 );
 
@@ -57,34 +57,33 @@ class ResultFigureFlyout extends Component {
       <g className={styles.ResultFigureFlyout}>
         <g transform={`translate(${tooltipX},${tooltipY})`}>
           <rect
-            className={styles.background} rx={4} ry={4} width={150} height={300}
+            className={styles.background} rx={4} ry={4} width={160} height={280}
           />
           <rect
-            className={styles.box} rx={4} ry={4} width={150} height={300}
+            className={styles.box} rx={4} ry={4} width={160} height={280}
           />
           <g transform={`translate(15, 20)`}>
             <text className={styles.title}>
               { datum.instance.name }
             </text>
-            <text y={40} className={styles.subtitle}>Configuration</text>
 
             <InstanceConfig
-              transform="translate(0, 65)"
+              transform="translate(0, 55)"
               label="CPU"
               value={ datum.instance.cpu }
             />
             <InstanceConfig
-              transform="translate(0, 115)"
+              transform="translate(0, 105)"
               label="Memory"
               value={ datum.instance.memory }
             />
             <InstanceConfig
-              transform="translate(0, 165)"
+              transform="translate(0, 155)"
               label="Storage"
               value={ datum.instance.storage }
             />
             <InstanceConfig
-              transform="translate(0, 215)"
+              transform="translate(0, 205)"
               label="Network"
               value={ datum.instance.network }
             />
