@@ -17,13 +17,23 @@ import {
 import styles from "./index.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
+import { connect as connectRefetch } from "react-refetch";
 
-const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
-  const { appId } = match.params;
+const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFetch, analysisFetch }) => {
+  const { appName } = match.params;
 
-  if (!appId) {
+  // A bug of analyzer
+  if (analysisFetch.fulfilled) {
+    let sizingRuns = analysisFetch.value.sizingRuns;
+    analysisFetch.value = {
+      ...analysisFetch.value,
+      sizingRuns: sizingRuns.filter(batch => (batch.results[0].status === "done"))
+    };
+  }
+
+  if (!appName) {
     if (selectedApps.length) {
-      history.replace(`/sizing-test/result/${selectedApps[0].appId}`);
+      history.replace(`/sizing-test/result/${selectedApps[0].appName.toLowerCase()}`);
     }
     return <div />;
   }
@@ -47,26 +57,41 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps }) => {
           <NavItemLink key={app.appId}
             className={styles.NavItemLink}
             activeClassName={styles.selected}
-            to={"/sizing-test/result/" + app.appId} >
+            to={"/sizing-test/result/" + app.appName} >
             <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
           </NavItemLink>
         ))}
       </Navbar>
-      <Container className={styles["results-content"]}>
-        <div>
-          <p>&nbsp;</p>
-          <ResultTable className={styles.ResultTable} id={appId} />
-        </div>
-        <div>
-          <p>Performance</p>
-          <ResultFigure
-            className={styles.ResultFigure}
-            data={_.find(selectedApps, { appId })}
-            id={appId}
-          />
-        </div>
-      </Container>
+      {
+        (!analysisFetch.fulfilled || !instancesFetch.fulfilled )
+        ? "Loading..."
+        : (
+          <Container className={styles["results-content"]}>
+            <div>
+              <p>&nbsp;</p>
+              <ResultTable data={analysisFetch.value} className={styles.ResultTable} id={appName} />
+            </div>
+            <div>
+              <p>Performance</p>
+              <ResultFigure
+                className={styles.ResultFigure}
+                data={analysisFetch.value}
+                instancesData={instancesFetch.value}
+              />
+            </div>
+          </Container>
+        )
+      }
     </div>
-)};
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SizingResultsPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  connectRefetch(({ match }) => ({
+    analysisFetch: `/api/apps/${match.params.appName}/analysis`,
+    instancesFetch: `/api/instances/us-east-1`
+  }))(SizingResultsPage)
+);

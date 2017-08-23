@@ -1,4 +1,5 @@
 import React from "react";
+import { connect as connectRefetch } from "react-refetch";
 import Jumbotron from "commons/components/Jumbotron";
 import AppSelector from "../AppSelector";
 import RunnerModal from "../RunnerModal";
@@ -7,22 +8,14 @@ import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
 import ProgressIndicator from "../ProgressIndicator"
 
-const sampleProgress = [
-  { status: "completed", instance: "C3.xlarge", time: 21 },
-  { status: "completed", instance: "M2.xlarge", time: 10 },
-  { status: "running", instance: "M3.large", time: 15 },
-  { status: "running", instance: "G4.large", time: 9 },
-  { status: "running", instance: "G3.xlarge", time: 20 }
-];
-
-const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
-  let modalElement = stage !== STAGE_TEST ? "" : (
+const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
+  let modalElement = (stage !== STAGE_TEST || analysisFetch.pending) ? "" : (
     <div className={styles["modal-container"]}>
       <RunnerModal
-        tasksProgress={sampleProgress}
+        data={analysisFetch.value}
         progress={60}
         remainingTime={20}
-        finished />
+      />
     </div>
   );
 
@@ -56,4 +49,8 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG }) => {
   </div>
 };
 
-export default SizingRunnerPage;
+export default connectRefetch(({ stage }) => (
+  stage === STAGE_TEST
+    ? { analysisFetch: {url: "/api/apps/mysql/analysis", refreshInterval: 5 * 1000} }
+    : {}
+))(SizingRunnerPage);

@@ -6,26 +6,40 @@ import ProgressBar from "commons/components/ProgressBar";
 import ProgressItem from "../ProgressItem";
 import Button from "commons/components/Button";
 import styles from "./index.scss";
-import mongoLogo from "assets/images/asset_mongoDB_logo.svg";
+import mysqlLogo from "assets/images/asset_mysql_logo.svg";
 
+
+const calculatePercentage = data => {
+  if (data.status !== "complete" && data.sizingRuns.length === 0) {
+    return 0;
+  }
+  if (data.status === "complete") {
+    return 100;
+  } else {
+    let lastEntry = data.sizingRuns[data.sizingRuns.length - 1];
+    let generalProgress = Math.min(data.sizingRuns.length / 6, 0.9);
+    if (!!lastEntry && lastEntry.results[0].status === "running") {
+      return (generalProgress - (1 / 6) * 0.5) * 100;
+    } else {
+      return generalProgress * 100;
+    }
+  }
+}
 
 const RunnerModal = ({
-  tasksProgress = [],
-  progress = 100,
-  remainingTime = 0,
-  finished = false,
+  data = { status: "complete", sizingRuns: [] },
   className = ""
 }) => (
   <div className={`${styles.RunnerModal} ${className}`}>
 
     <div className={styles.RunnerHeader}>
-      <img className={styles["RunnerHeader-logo"]} src={mongoLogo} />
-      mongoDB running
+      <img className={styles["RunnerHeader-logo"]} src={mysqlLogo} />
+      MySQL running
     </div>
 
     {/* progress bar*/}
     <div className={styles.progressbar}>
-      <ProgressBar percent={progress} />
+      <ProgressBar percent={calculatePercentage(data)} />
     </div>
 
 
@@ -41,20 +55,22 @@ const RunnerModal = ({
     {/* instance run*/}
     <div className={styles["completion-status-group-canvas"]}>
     <ul className={styles["completion-status-group"]}>
-      { tasksProgress.map( ({ status, instance, time }) => (
-        <ProgressItem status={status} instance={instance} runningTime={time} />
-      ) ) }
+      {
+        data.sizingRuns.map(({ results }) => (
+          results.map(result => (
+            <ProgressItem {...result} />
+          )
+        )))
+      }
     </ul>
     </div>
 
 
-    { finished ? (
-      <div className={styles["button-to-result"]}>
-        <Link to="/sizing-test/result" className={styles.Button}>
-          See Results
-        </Link>
-      </div>
-    ) : null }
+    <div className={styles["button-to-result"]}>
+      <Link to="/sizing-test/result" className={`${styles.Button} ${data.status === "complete" ? "" : styles.disabled}`}>
+        See Results
+      </Link>
+    </div>
   </div>
 );
 

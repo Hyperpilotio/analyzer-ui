@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import _ from "lodash";
 import FaChevronDown from "react-icons/lib/fa/chevron-down";
 import FaChevronUp from "react-icons/lib/fa/chevron-up";
 import styles from "./ResultTable.scss";
@@ -17,7 +18,7 @@ class ResultTable extends Component {
   }
   getSelectedApp(props) {
     for (let app of props.selectedApps) {
-      if (props.id === app.appId) {
+      if (props.id === app.appName) {
         return app;
       }
     }
@@ -27,8 +28,8 @@ class ResultTable extends Component {
     let otherTests = [];
     let toggleOn = !this.state.toggleOn;
     if (toggleOn) {
-      if (!!this.state.selectedApp.sizingRuns) {
-        for (let sizingRun of this.state.selectedApp.sizingRuns) {
+      if (!!this.props.data.sizingRuns) {
+        for (let sizingRun of this.props.data.sizingRuns) {
           let run = sizingRun.run;
           let testNum = 0;
           for (let test of sizingRun.results) {
@@ -58,7 +59,8 @@ class ResultTable extends Component {
 
   render() {
     let className = this.props.className;
-    let selectedApp = this.getSelectedApp(this.props);
+    let selectedApp = this.props.data;
+    let sizingRuns = _.concat(..._.map(selectedApp.sizingRuns, "results"));
     let returnTable;
     let optimal;
     let highPerf;
@@ -74,15 +76,16 @@ class ResultTable extends Component {
 
     if (!!selectedApp && !!selectedApp.recommendations) {
       for (let result of selectedApp.recommendations) {
+        let doc = _.find(sizingRuns, { nodetype: result.nodetype });
         switch (result.objective) {
           case "MaxPerfOverCost":
-            highPerf = result;
+            optimal = doc;
             break;
           case "MinCostWithPerfLimit":
-            lowCost = result;
+            lowCost = doc;
             break;
           case "MaxPerfWithCostLimit":
-            optimal = result;
+            highPerf = doc;
             break;
         }
       }
@@ -104,8 +107,8 @@ class ResultTable extends Component {
                 Optimal Perf/Cost
               </td>
               <td>{optimal.nodetype}</td>
-              <td>{optimal.performance}</td>
-              <td>{"$" + optimal.cost}</td>
+              <td>{optimal.qosValue.toFixed(2)}</td>
+              <td>{"$" + optimal.cost.toFixed(2)}</td>
             </tr>
             <tr className={styles["single-result"]}>
               <td>
@@ -113,8 +116,8 @@ class ResultTable extends Component {
                 High performance
               </td>
               <td>{highPerf.nodetype}</td>
-              <td>{highPerf.performance}</td>
-              <td>{"$" + highPerf.cost}</td>
+              <td>{highPerf.qosValue.toFixed(2)}</td>
+              <td>{"$" + highPerf.cost.toFixed(2)}</td>
             </tr>
             <tr className={styles["single-result"]}>
               <td>
@@ -122,8 +125,8 @@ class ResultTable extends Component {
                 Low cost
               </td>
               <td>{lowCost.nodetype}</td>
-              <td>{lowCost.performance}</td>
-              <td>{"$" + lowCost.cost}</td>
+              <td>{lowCost.qosValue.toFixed(2)}</td>
+              <td>{"$" + lowCost.cost.toFixed(2)}</td>
             </tr>
             {this.state.otherTests.map(app => (
               <tr className={styles["single-result"]}>
@@ -132,8 +135,8 @@ class ResultTable extends Component {
                     Round {app.testRound}
                 </td>
                 <td>{app.nodetype}</td>
-                <td>{Math.round(app.perfOverCost * 10) / 10}</td>
-                <td>{"$" + Math.round(app.cost * 10) / 10}</td>
+                <td>{app.qosValue.toFixed(2)}</td>
+                <td>{"$" + app.cost.toFixed(2)}</td>
               </tr>
             ))}
 

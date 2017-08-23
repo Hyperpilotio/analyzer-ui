@@ -3,28 +3,28 @@ import FaCheck from "react-icons/lib/fa/check";
 import FaRefresh from "react-icons/lib/fa/refresh";
 import styles from "./index.scss";
 
-const ProgressItem = ({ status, instance, runningTime }) => (
+const ProgressItem = ({ status, nodetype, qosValue, cost, perfOverCost }) => (
   <li className={`${styles.ProgressItem} ${styles[status]}`}>
     <div className={styles["instance-type"]}>
       {
-        status === "completed"
+        status === "done"
           ? <FaCheck className={`${styles.checkmark}`} size={18} />
           : <FaRefresh className={`${styles.checkmark}`} size={18} />
       }
       <p>
-        <mark>{ instance }</mark>
+        <mark>{ nodetype }</mark>
       </p>
     </div>
     <div className={styles["running-time"]}>
-      <p>{ runningTime } mins</p>
+      <p>{ status === "done" ? qosValue.toFixed(2) : "--" }</p>
     </div>
 
     <div className={styles["running-time"]}>
-      <p>{ runningTime } mins</p>
+      <p>{ status === "done" ? cost.toFixed(2) : "--" }</p>
     </div>
 
     <div className={styles["running-time"]}>
-      <p>{ runningTime } mins</p>
+      <p>{ status === "done" ? perfOverCost.toFixed(2) : "--" }</p>
     </div>
 
   </li>

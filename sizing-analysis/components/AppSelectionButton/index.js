@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
-const AppSelectionButton = ({ selectedApps, id, toggleSelected, app, iconUrl }) => {
+const AppSelectionButton = ({ selectedApps, id, toggleSelected, app, logoMap }) => {
   let selected = false;
   for(let selectedApp of selectedApps){
     if(selectedApp.appId === id){
@@ -20,7 +20,7 @@ const AppSelectionButton = ({ selectedApps, id, toggleSelected, app, iconUrl }) 
       className={`${styles.AppSelectionButton} ${selectedClass}`} 
       onClick={() => toggleSelected(app)}
     >
-      <img src={iconUrl} />
+      <img src={logoMap[app.appName.toLowerCase()]} />
       { app.appName }
     </Button>
   );
