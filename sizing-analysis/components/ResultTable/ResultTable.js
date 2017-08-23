@@ -107,7 +107,7 @@ class ResultTable extends Component {
                 Optimal Perf/Cost
               </td>
               <td>{optimal.nodetype}</td>
-              <td>{optimal.qosValue.toFixed(2)}</td>
+              <td>{Math.round(optimal.qosValue)}</td>
               <td>{"$" + optimal.cost.toFixed(2)}</td>
             </tr>
             <tr className={styles["single-result"]}>
@@ -116,7 +116,7 @@ class ResultTable extends Component {
                 High performance
               </td>
               <td>{highPerf.nodetype}</td>
-              <td>{highPerf.qosValue.toFixed(2)}</td>
+              <td>{Math.round(highPerf.qosValue)}</td>
               <td>{"$" + highPerf.cost.toFixed(2)}</td>
             </tr>
             <tr className={styles["single-result"]}>
@@ -125,7 +125,7 @@ class ResultTable extends Component {
                 Low cost
               </td>
               <td>{lowCost.nodetype}</td>
-              <td>{lowCost.qosValue.toFixed(2)}</td>
+              <td>{Math.round(lowCost.qosValue)}</td>
               <td>{"$" + lowCost.cost.toFixed(2)}</td>
             </tr>
             {this.state.otherTests.map(app => (
@@ -135,7 +135,7 @@ class ResultTable extends Component {
                     Round {app.testRound}
                 </td>
                 <td>{app.nodetype}</td>
-                <td>{app.qosValue.toFixed(2)}</td>
+                <td>{Math.round(app.qosValue)}</td>
                 <td>{"$" + app.cost.toFixed(2)}</td>
               </tr>
             ))}
