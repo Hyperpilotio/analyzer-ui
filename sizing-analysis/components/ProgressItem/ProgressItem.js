@@ -16,7 +16,7 @@ const ProgressItem = ({ status, nodetype, qosValue, cost, perfOverCost }) => (
       </p>
     </div>
     <div className={styles["running-time"]}>
-      <p>{ status === "done" ? qosValue : "--" }</p>
+      <p>{ status === "done" ? qosValue.toFixed(2) : "--" }</p>
     </div>
 
     <div className={styles["running-time"]}>
