@@ -3,7 +3,7 @@ const proxy = require("express-http-proxy");
 const morgan = require("morgan");
 const path = require("path");
 const { MongoClient } = require("mongodb");
-const config = require("./config.json");
+const config = require("./config");
 
 
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
@@ -60,11 +60,14 @@ let configdb, metricdb;
 
 (async () => {
 
-  const { host, port, username, password } = config.mongo;
+  const { host, port, username, password, metricdb, configdb } = config.mongo;
+  const mongoUrl = !!username && !!password
+    ? `mongodb://${username}:${password}@${host}:${port}`
+    : `mongodb://${host}:${port}`;
 
   [configdb, metricdb] = await Promise.all([
-    MongoClient.connect(`mongodb://${username}:${password}@${host}:${port}/configdb`),
-    MongoClient.connect(`mongodb://${username}:${password}@${host}:${port}/metricdb`)
+    MongoClient.connect(`${mongoUrl}/${configdb}`),
+    MongoClient.connect(`${mongoUrl}/${metricdb}`)
   ]);
 
   server.listen(3000, () => {
