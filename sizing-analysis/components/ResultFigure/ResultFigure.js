@@ -80,7 +80,7 @@ const ResultFigure = ({ className, data, instancesData }) => (
       }}
     >
       <VictoryLine
-        y={() => 50000}
+        y={() => data.sloValue}
         style={{
           data: {
             strokeWidth: 1,
@@ -90,7 +90,7 @@ const ResultFigure = ({ className, data, instancesData }) => (
         }}
       />
       <VictoryLine
-        x={() => 300}
+        x={() => data.budget}
         style={{
           data: {
             strokeWidth: 1,

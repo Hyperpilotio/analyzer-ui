@@ -10,6 +10,9 @@ import mysqlLogo from "assets/images/asset_mysql_logo.svg";
 
 
 const calculatePercentage = data => {
+  if (data.status !== "complete" && data.sizingRuns.length === 0) {
+    return 0;
+  }
   if (data.status === "complete") {
     return 100;
   } else {
@@ -23,7 +26,10 @@ const calculatePercentage = data => {
   }
 }
 
-const RunnerModal = ({ data, className = "" }) => (
+const RunnerModal = ({
+  data = { status: "complete", sizingRuns: [] },
+  className = ""
+}) => (
   <div className={`${styles.RunnerModal} ${className}`}>
 
     <div className={styles.RunnerHeader}>
