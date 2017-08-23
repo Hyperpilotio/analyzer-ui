@@ -78,6 +78,7 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
                 data={analysisFetch.value}
                 instancesData={instancesFetch.value}
               />
+              <p style={{ float: "right" }}>Cost</p>
             </div>
           </Container>
         )
