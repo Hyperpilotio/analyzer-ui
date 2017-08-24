@@ -27,6 +27,25 @@ const pointStyles = {
   NotRecommended: { fill: "#b9bacb", stroke: "#ffffff" }
 };
 
+const chartStyles = {
+  axis: {
+    strokeWidth: 5,
+    stroke: "#5677fa"
+  },
+  gridLine: {
+    stroke: "#eef0fa"
+  },
+  tickValue: {
+    fontSize: 12,
+    fill: "transparent",
+    stroke: "#b9bacb",
+    strokeWidth: 0.5,
+    fontWeight: "lighter"
+  },
+  dataPoint: {
+    strokeWidth: 2
+  }
+};
 
 class VictoryLineWithoutPoints extends VictoryLine {
   static getData = () => null;
@@ -86,28 +105,43 @@ const ResultFigure = ({ className, data, instancesData }) => (
         y: [0, 22000]
       }}
     >
-      <VictoryAxis dependentAxis style={{
-        axis: {
-          strokeWidth: 5,
-          stroke: "#5677fa"
+      <VictoryAxis
+        dependentAxis
+        tickCount={4}
+        style={{ axis: chartStyles.axis, grid: chartStyles.gridLine }}
+        tickLabelComponent={
+          <VictoryLabel
+            textAnchor="start"
+            verticalAnchor="end"
+            dx={17}
+            dy={-5}
+            style={ chartStyles.tickValue }
+          />
         }
-      }} />
-      <VictoryAxis style={{
-        axis: {
-          strokeWidth: 5,
-          stroke: "#5677fa"
+      />
+      <VictoryAxis
+        tickCount={4}
+        style={{ axis: chartStyles.axis, grid: chartStyles.gridLine }}
+        tickLabelComponent={
+          <VictoryLabel
+            textAnchor="start"
+            verticalAnchor="end"
+            dx={5}
+            dy={-17}
+            style={ chartStyles.tickValue }
+          />
         }
-      }} />
+      />
       <VictoryScatter
         data={reshapeData(data, instancesData)}
         groupComponent={<g transform="translate(20, 0)" />}
         size={10}
-        style={{ data: { strokeWidth: 2 } }}
+        style={{ data: chartStyles.dataPoint }}
       />
-      <VictoryLabel x={WIDTH - 35} y={HEIGHT - 15} style={{ fill: "#b9bacb" }} text="1400" />
-      <VictoryLabel angle={90} x={15} y={10} style={{ fill: "#b9bacb" }} text="22000" />
     </VictoryChart>
   </div>
 );
 
+      // <VictoryLabel x={WIDTH - 35} y={HEIGHT - 15} style={{ fill: "#b9bacb" }} text="1400" />
+      // <VictoryLabel angle={90} x={15} y={10} style={{ fill: "#b9bacb" }} text="22000" />
 export default ResultFigure;
