@@ -69,7 +69,7 @@ class ResultTable extends Component {
     let clickToggle = <FaChevronDown className={styles["down-icon"]} size={16} />;
 
     if (this.state.toggleOn) {
-      clickToggleTxt = "Hide other tested instances"; 
+      clickToggleTxt = "Hide";
       clickToggle = <FaChevronUp className={styles["down-icon"]} size={16} />;
     }
 
@@ -105,6 +105,13 @@ class ResultTable extends Component {
               <td>{"$" + optimal.cost.toFixed(2)}</td>
               <td>{optimal.perfOverCost.toFixed(2)}</td>
             </tr>
+            <tr className={styles["see-all"]}>
+              <td colSpan="4">
+                <a onClick={() => this.toggleOtherTests()}>
+                  {clickToggleTxt}{clickToggle}
+                </a>
+              </td>
+            </tr>
             {this.state.otherTests
               .map(run => (
                 <tr className={styles["single-result"]} key={run.nodetype}>
@@ -127,13 +134,6 @@ class ResultTable extends Component {
               ))
             }
 
-            <tr className={styles["see-all"]}>
-              <td colSpan="4">
-                <a onClick={() => this.toggleOtherTests()}>
-                  {clickToggleTxt}{clickToggle}
-                </a>
-              </td>
-            </tr>
           </tbody>
         </table>
       );
