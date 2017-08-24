@@ -70,7 +70,7 @@ export default function reducer(state = initialState, action) {
 
     case 'persist/REHYDRATE':
       if (!!action.payload && !!action.payload.version &&
-        action.payload.version === "0.0.0.3") {
+        action.payload.version === "0.0.0.4") {
         return Object.assign({}, action.payload);
       }
 
