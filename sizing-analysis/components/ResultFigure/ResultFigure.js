@@ -19,8 +19,10 @@ const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 
 const pointStyles = {
   MaxPerfOverCost: { fill: "#5677fa", stroke: "#ffffff" },
-  MaxPerfWithCostLimit: { fill: "#eef0fa", stroke: "#5677fa" },
-  MinCostWithPerfLimit: { fill: "#daf9b8", stroke: "#b8e986" },
+  // MaxPerfWithCostLimit: { fill: "#eef0fa", stroke: "#5677fa" },
+  // MinCostWithPerfLimit: { fill: "#daf9b8", stroke: "#b8e986" },
+  MaxPerfWithCostLimit: { fill: "#b9bacb", stroke: "#ffffff" },
+  MinCostWithPerfLimit: { fill: "#b9bacb", stroke: "#ffffff" },
   NotRecommended: { fill: "#b9bacb", stroke: "#ffffff" }
 };
 
@@ -85,9 +87,6 @@ const ResultFigure = ({ className, data, instancesData }) => (
         axis: {
           strokeWidth: 5,
           stroke: "#5677fa"
-        },
-        grid: {
-          stroke: "#eef0fa"
         }
       }} />
       <VictoryAxis style={{
@@ -98,6 +97,7 @@ const ResultFigure = ({ className, data, instancesData }) => (
       }} />
       <VictoryScatter
         data={reshapeData(data, instancesData)}
+        groupComponent={<g transform="translate(20, 0)" />}
         size={10}
         style={{ data: { strokeWidth: 2 } }}
       />

@@ -14,7 +14,7 @@ const InstanceConfig = ({ label, value, ...props }) => (
 class ResultFigureFlyout extends Component {
   constructor(props) {
     super(props);
-    this.width = 150;
+    this.width = 160;
     this.height = 300;
     this.chartWidth = 540;
     this.chartHeight = 400;
@@ -54,7 +54,7 @@ class ResultFigureFlyout extends Component {
     const tooltipY = this.getTooltipYPosition();
 
     return (
-      <g className={styles.ResultFigureFlyout}>
+      <g transform="translate(20, 0) "className={styles.ResultFigureFlyout}>
         <g transform={`translate(${tooltipX},${tooltipY})`}>
           <rect
             className={styles.background} rx={4} ry={4} width={160} height={280}
