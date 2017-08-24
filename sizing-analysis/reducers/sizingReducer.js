@@ -3,6 +3,7 @@ import mongoDBLogo from "assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "assets/images/asset_kafka_logo.svg";
 import redisLogo from "assets/images/asset_redis_logo.svg";
 import mysqlLogo from "assets/images/asset_mysql_logo.svg";
+import nginxLogo from "assets/images/asset_nginx_logo.svg";
 
 //set default values
 const initialState = {
@@ -33,9 +34,10 @@ const initialState = {
     "mongodb": mongoDBLogo,
     "kafka": kafkaLogo,
     "redis": redisLogo,
-    "mysql": mysqlLogo
+    "mysql": mysqlLogo,
+    "nginx": nginxLogo
   },
-  version: "0.0.0.3"
+  version: "0.0.0.4"
 };
 
 export default function reducer(state = initialState, action) {
