@@ -19,6 +19,7 @@ export default () => (
             <Route path="/sizing-test">
               <Switch>
                 <Route path="/sizing-test/run-test" render={() => <SizingRunnerPage stage={STAGE_TEST} />} />
+                <Route path="/sizing-test/result/:appId" component={SizingResultsPage} />
                 <Route path="/sizing-test/result" component={SizingResultsPage} />
                 <Route render={() => <SizingRunnerPage stage={STAGE_CONFIG} />} />
               </Switch>

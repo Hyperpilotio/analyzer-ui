@@ -5,22 +5,23 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
-const AppSelectionButton = (props) => {
-  let selected_apps = props.reducer[0].selected_apps;
+const AppSelectionButton = ({ selectedApps, id, toggleSelected, app, iconUrl }) => {
   let selected = false;
-  for(let selected_app of selected_apps){
-     if(selected_app.appId === props.id){
-       selected = true;
-       break;
-     }
+  for(let selectedApp of selectedApps){
+    if(selectedApp.appId === id){
+      selected = true;
+      break;
+    }
   }
   let selectedClass = selected ? styles.selected : "";
   
   return (
-    <Button className={`${styles.AppSelectionButton} ${selectedClass}`} 
-        onClick={function(){props.toggleSelected(props.app)}}>
-      <img src={props.iconUrl} />
-      { props.app.appName }
+    <Button
+      className={`${styles.AppSelectionButton} ${selectedClass}`} 
+      onClick={() => toggleSelected(app)}
+    >
+      <img src={iconUrl} />
+      { app.appName }
     </Button>
   );
 };

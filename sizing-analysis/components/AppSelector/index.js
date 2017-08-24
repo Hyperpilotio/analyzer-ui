@@ -8,18 +8,25 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 
 
-const AppSelector = (props) =>  (
+const AppSelector = ({addAll, apps}) =>  (
   <div className={styles.AppSelector}>
     <div className={styles["select-buttons"]}>
+<<<<<<< HEAD
       <Link
         to="/sizing-test/run-test" onClick={props.addAll}
         className={`${styles.Button} ${styles.invert}`}>
         Select All
       </Link>
       <Button>Analyze</Button>
+=======
+      <Button invert onClick={ addAll }> Select All </Button>
+      <Link to="/sizing-test/run-test" className={styles.Button}>
+        Analyze
+      </Link>
+>>>>>>> origin/progress-modal
     </div>
     <div className={styles["apps-area"]}>
-      { props.reducer[0].apps.map(app => (
+      { apps.map(app => (
         <AppSelectionButton key={app.appId} id={app.appId} app={app} iconUrl={redisLogo}  />
       )) }
     </div>

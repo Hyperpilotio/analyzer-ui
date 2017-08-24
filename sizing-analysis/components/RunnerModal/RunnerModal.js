@@ -19,13 +19,19 @@ const RunnerModal = ({
   <div className={`${styles.RunnerModal} ${className}`}>
 
     <div className={styles.RunnerHeader}>
+<<<<<<< HEAD
     <img className={styles["RunnerHeader-logo"]}src={mongoLogo} /> mongoDB
     running
+=======
+      <img className={styles["RunnerHeader-logo"]} src={mongoLogo} />
+      mongoDB running
+>>>>>>> origin/progress-modal
     </div>
 
     {/* progress bar*/}
     <div className={styles.progressbar}>
       <ProgressBar percent={progress} />
+<<<<<<< HEAD
 
       {/* <p>{ finished ? "42 mins left" : `${remainingTime}mins left` }</p>*/}
     </div>
@@ -40,6 +46,20 @@ const RunnerModal = ({
         <div className={styles["instance-progress-type-perfcost"]}>Perf/Cost</div>
     </div>
 
+=======
+    </div>
+
+
+    {/* instance info*/}
+    <div className={styles["instance-progress-type"]}>
+
+    <div className={styles["instance-progress-type-status"]}>Status</div>
+    <div className={styles["instance-progress-type-perf"]}>Perf</div>
+    <div className={styles["instance-progress-type-cost"]}>Cost</div>
+        <div className={styles["instance-progress-type-perfcost"]}>Perf/Cost</div>
+    </div>
+
+>>>>>>> origin/progress-modal
     {/* instance run*/}
     <div className={styles["completion-status-group-canvas"]}>
     <ul className={styles["completion-status-group"]}>

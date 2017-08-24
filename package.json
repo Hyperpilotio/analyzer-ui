@@ -56,7 +56,8 @@
     "react-spinkit": "^3.0.0",
     "redux": "^3.7.2",
     "redux-persist": "^4.8.3",
-    "victory": "^0.21.3",
+    "victory-chart": "^21.6.1",
+    "victory-core": "17.2.5",
     "whatwg-fetch": "^2.0.3"
   }
 }

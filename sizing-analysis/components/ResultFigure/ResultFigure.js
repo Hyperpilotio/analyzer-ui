@@ -1,20 +1,77 @@
-import React from "react";
+import React, { Component } from "react";
+import _ from "lodash";
 import {
   VictoryChart,
   VictoryScatter,
   VictoryAxis,
   VictoryLine,
-  VictoryZoomContainer
-} from "victory";
+  createContainer
+} from "victory-chart";
+import { VictoryTooltip } from "victory-core";
+import { sampleInstancesData } from "../../constants";
+import ResultFigureFlyout from "../ResultFigureFlyout";
 import styles from "./ResultFigure.scss";
+
 
 const WIDTH = 540;
 const HEIGHT = 400;
 
-const ResultFigure = ({ className }) => (
+const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+
+const pointStyles = {
+  MaxPerfOverCost: { fill: "#5677fa", stroke: "#ffffff" },
+  MaxPerfWithCostLimit: { fill: "#eef0fa", stroke: "#5677fa" },
+  MinCostWithPerfLimit: { fill: "#daf9b8", stroke: "#b8e986" },
+  NotRecommended: { fill: "#b9bacb", stroke: "#ffffff" }
+};
+
+
+class VictoryLineWithoutPoints extends VictoryLine {
+  static getData = () => null;
+}
+
+const reshapeData = data => {
+  if (!data) { return []; }
+  // Flatten the batch runs data
+  const runResults = _.concat(..._.map(data.sizingRuns, "results"));
+  return runResults
+    // Make recommended instances have higher z-index
+    // (but there's no z-index in SVG so just draw the lower ones first)
+    .filter(result => (
+      !_.includes(_.map(data.recommendations, "nodetype"), result.nodetype)
+    ))
+    // Draw non-recommended instances
+    .map(({ qosValue, cost, nodetype }) => ({
+      x: cost,
+      y: qosValue,
+      // Get the instance details from this fixed dataset
+      // which we should change later
+      instance: _.find(sampleInstancesData, { name: nodetype }),
+      ...pointStyles.NotRecommended
+    }))
+    // Then draw the recommended instances
+    .concat(
+      data.recommendations.map(({ nodetype, objective }) => {
+        const runResult = _.find(runResults, { nodetype });
+        return {
+          x: runResult.cost,
+          y: runResult.qosValue,
+          instance: _.find(sampleInstancesData, { name: nodetype }),
+          ...pointStyles[objective]
+        };
+      })
+    );
+};
+
+const ResultFigure = ({ className, data }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
-      containerComponent={ <VictoryZoomContainer /> }
+      containerComponent={ <VictoryZoomVoronoiContainer
+        labels={d => ""}
+        labelComponent={
+          <VictoryTooltip flyoutComponent={ <ResultFigureFlyout /> } />
+        }
+      /> }
       padding={0}
       width={WIDTH}
       height={HEIGHT}
@@ -59,27 +116,12 @@ const ResultFigure = ({ className }) => (
         }
       }} />
       <VictoryScatter
-        data={[
-          { x: 2442.24, y: 1920000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 3538.08, y: 1920000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 1234.08, y: 1920000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 2315.52, y: 2160000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 967.68, y: 1920000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 356.832, y: 960000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 1216.08, y: 1920000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 1120.392, y: 1920000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 362.88, y: 960000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 892.08, y: 2400000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 2959.2, y: 3840000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 289.44, y: 240000, fill: "#b9bacb", stroke: "#ffffff" },
-          { x: 273.6, y: 480000, fill: "#eef0fa", stroke: "#5677fa" },
-          { x: 241.92, y: 480000, fill: "#daf9b8", stroke: "#b8e986" },
-          { x: 725.76, y: 2160000, fill: "#5677fa", stroke: "#ffffff" },
-        ]}
+        data={reshapeData(data)}
         size={10}
         style={{ data: { strokeWidth: 2 } }}
       />
     </VictoryChart>
   </div>
 );
+
 export default ResultFigure;
