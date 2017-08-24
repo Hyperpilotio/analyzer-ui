@@ -7,6 +7,7 @@ import {
   VictoryLine,
   createContainer
 } from "victory-chart";
+import { VictoryLabel } from "victory-core";
 import { VictoryTooltip } from "victory-core";
 import ResultFigureFlyout from "../ResultFigureFlyout";
 import styles from "./ResultFigure.scss";
@@ -30,6 +31,8 @@ const pointStyles = {
 class VictoryLineWithoutPoints extends VictoryLine {
   static getData = () => null;
 }
+
+VictoryLabel.getData = () => null;
 
 const reshapeData = (data, instancesData) => {
   if (!data) { return []; }
@@ -78,9 +81,9 @@ const ResultFigure = ({ className, data, instancesData }) => (
       padding={0}
       width={WIDTH}
       height={HEIGHT}
-      domainPadding={{
-        x: [50, 50],
-        y: [50, 50]
+      domain={{
+        x: [0, 1400],
+        y: [0, 22000]
       }}
     >
       <VictoryAxis dependentAxis style={{
@@ -101,6 +104,8 @@ const ResultFigure = ({ className, data, instancesData }) => (
         size={10}
         style={{ data: { strokeWidth: 2 } }}
       />
+      <VictoryLabel x={WIDTH - 35} y={HEIGHT - 15} style={{ fill: "#b9bacb" }} text="1400" />
+      <VictoryLabel angle={90} x={15} y={10} style={{ fill: "#b9bacb" }} text="22000" />
     </VictoryChart>
   </div>
 );

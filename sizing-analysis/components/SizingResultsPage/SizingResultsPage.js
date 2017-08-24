@@ -46,9 +46,9 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
         <div className={styles["testing-summary"]}>
           <p>Testing summary</p>
           <main>
-            <KeySummary title="App tested" value="2" />
+            <KeySummary title="App tested" value="1" />
             <KeySummary title="Running time" value="2:15" />
-            <KeySummary title="Instances ran" value="36" />
+            <KeySummary title="Instances ran" value="11" />
           </main>
         </div>
       </Jumbotron>
@@ -72,13 +72,13 @@ const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFet
               <ResultTable data={analysisFetch.value} className={styles.ResultTable} id={appName} />
             </div>
             <div>
-              <p>Performance</p>
+              <p>Performance (TPM)</p>
               <ResultFigure
                 className={styles.ResultFigure}
                 data={analysisFetch.value}
                 instancesData={instancesFetch.value}
               />
-              <p style={{ float: "right" }}>Cost</p>
+              <p style={{ float: "right" }}>Cost ( $/month )</p>
             </div>
           </Container>
         )
