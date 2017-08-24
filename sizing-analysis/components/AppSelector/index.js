@@ -13,8 +13,7 @@ import { mapStateToProps, mapDispatchToProps } from "../../actions";
 const AppSelector = ({addAll, apps}, {router}) =>  (
   <div className={styles.AppSelector}>
     <div className={styles["select-buttons"]}>
-      <Button invert onClick={ addAll }> Select All </Button>
-      <Button onClick={async event => {
+      <Button invert onClick={async event => {
         event.preventDefault();
         const res = await fetch("/api/apps/mysql/analysis/run", { method: "POST" });
         const data = await res.json();
@@ -25,6 +24,7 @@ const AppSelector = ({addAll, apps}, {router}) =>  (
           console.error(data);
         }
       }}> Analyze </Button>
+      <Button onClick={ addAll }> Select All </Button>
     </div>
     <div className={styles["apps-area"]}>
       { apps.map(app => (

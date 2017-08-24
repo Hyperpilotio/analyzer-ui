@@ -25,7 +25,7 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
     </Jumbotron>
     <main>
       <Container className={styles.Container}>
-        <div>
+        {/*<div>
           <h3>Apps</h3>
           <div className={styles["cluster-info"]}>
             <p>Current cluster manager</p>
@@ -39,8 +39,8 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
             <p>TBD Info</p>
             <h3>TBD</h3>
           </div>
-        </div>
-        <div>
+        </div>*/}
+        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
           <AppSelector />
         </div>
       </Container>
