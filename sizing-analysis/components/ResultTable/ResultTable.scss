@@ -69,7 +69,7 @@ tr.single-result {
   }
 }
 
-tr.single-result:hover {
+tr.single-result.highlighted {
   background: $color-light;
 }
 

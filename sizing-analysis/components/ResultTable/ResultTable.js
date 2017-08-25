@@ -21,7 +21,7 @@ class ResultTable extends Component {
   }
 
   render() {
-    const { className, data } = this.props;
+    const { className, data, highlightedInstance } = this.props;
     const sizingRuns = _.concat(..._.map(data.sizingRuns, "results")).map(
       ({ nodetype, ...stats }) => ({
         nodetype,
@@ -44,7 +44,13 @@ class ResultTable extends Component {
         <tbody>
           { data.recommendations.map(({ objective, nodetype }) => {
             const run = _.find(sizingRuns, { nodetype });
-            return <tr className={`${styles["single-result"]} ${styles["recommended-result"]} ${styles[objective]}`}>
+            const classes = [
+              styles["single-result"],
+              styles["recommended-result"],
+              styles[objective],
+              highlightedInstance === nodetype ? styles["highlighted"] : ""
+            ];
+            return <tr className={classes.join(" ")}>
               <td>
                 <i className={styles.point} />
                 { nodetype }
@@ -71,8 +77,13 @@ class ResultTable extends Component {
           </tr>
 
           { this.state.toggleOn && sizingRuns
-            .map(({ nodetype, qosValue, cost, perfOverCost, bestFor }) => (
-              <tr key={nodetype} className={`${styles["single-result"]} ${styles[bestFor] || ""}`}>
+            .map(({ nodetype, qosValue, cost, perfOverCost, bestFor }) => {
+              const classes = [
+                styles["single-result"],
+                bestFor ? styles[bestFor] : null,
+                highlightedInstance === nodetype ? styles["highlighted"] : null
+              ];
+              return <tr key={nodetype} className={classes.join(" ")}>
                 <td>
                   <i className={styles.point} />
                   { nodetype }
@@ -84,8 +95,8 @@ class ResultTable extends Component {
                     <td>{ `$${cost.toFixed(2)}` }</td>,
                     <td>{ perfOverCost.toFixed(2) }</td>
                   ] }
-              </tr>
-            )) }
+              </tr>;
+            }) }
         </tbody>
 
       </table>

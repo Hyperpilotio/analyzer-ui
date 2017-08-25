@@ -69,8 +69,6 @@ const reshapeData = (data, instancesData) => {
     .map(({ qosValue, cost, nodetype }) => ({
       x: cost,
       y: qosValue,
-      // Get the instance details from this fixed dataset
-      // which we should change later
       instance: _.find(instancesData, { name: nodetype }),
       ...pointStyles.NotRecommended
     }))
@@ -88,10 +86,11 @@ const reshapeData = (data, instancesData) => {
     );
 };
 
-const ResultFigure = ({ className, data, instancesData }) => (
+const ResultFigure = ({ className, data, instancesData, onHighlight }) => (
   <div className={`${styles.ResultFigure} ${className}`}>
     <VictoryChart
       containerComponent={ <VictoryZoomVoronoiContainer
+        onActivated={( [point] ) => onHighlight(point.instance.name)}
         labels={d => ""}
         labelComponent={
           <VictoryTooltip flyoutComponent={ <ResultFigureFlyout /> } />
@@ -142,6 +141,4 @@ const ResultFigure = ({ className, data, instancesData }) => (
   </div>
 );
 
-      // <VictoryLabel x={WIDTH - 35} y={HEIGHT - 15} style={{ fill: "#b9bacb" }} text="1400" />
-      // <VictoryLabel angle={90} x={15} y={10} style={{ fill: "#b9bacb" }} text="22000" />
 export default ResultFigure;

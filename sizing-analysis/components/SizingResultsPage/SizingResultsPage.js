@@ -21,6 +21,18 @@ import { connect as connectRefetch } from "react-refetch";
 
 
 class SizingResultsPage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { highlightedInstance: [] };
+  }
+
+  onHighlight(instance) {
+    this.setState({
+      highlightedInstance: instance
+    });
+  }
+
   render() {
     const {
       match: { params: appName },
@@ -77,7 +89,11 @@ class SizingResultsPage extends Component {
             <Container className={styles["results-content"]}>
               <div>
                 <p>&nbsp;</p>
-                <ResultTable data={analysisFetch.value} className={styles.ResultTable} />
+                <ResultTable
+                  data={analysisFetch.value}
+                  className={styles.ResultTable}
+                  highlightedInstance={this.state.highlightedInstance}
+                />
               </div>
               <div>
                 <p>Performance (TPM)</p>
@@ -85,6 +101,7 @@ class SizingResultsPage extends Component {
                   className={styles.ResultFigure}
                   data={analysisFetch.value}
                   instancesData={instancesFetch.value}
+                  onHighlight={::this.onHighlight}
                 />
                 <p style={{ float: "right" }}>Cost ($/month)</p>
               </div>
