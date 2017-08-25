@@ -22,12 +22,13 @@ import { connect as connectRefetch } from "react-refetch";
 const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFetch, analysisFetch }) => {
   const { appName } = match.params;
 
-  // A bug of analyzer
   if (analysisFetch.fulfilled) {
-    let sizingRuns = analysisFetch.value.sizingRuns;
     analysisFetch.value = {
       ...analysisFetch.value,
-      sizingRuns: sizingRuns.filter(batch => (batch.results[0].status === "done"))
+      recommendations: _.filter(
+        analysisFetch.value.recommendations,
+        { objective: "MaxPerfOverCost" }
+      )
     };
   }
 
