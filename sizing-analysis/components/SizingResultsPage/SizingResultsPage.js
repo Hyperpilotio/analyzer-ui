@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import _ from "lodash";
 import Jumbotron from "commons/components/Jumbotron";
 import Container from "commons/components/Container";
@@ -19,74 +19,82 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 import { connect as connectRefetch } from "react-refetch";
 
-const SizingResultsPage = ({ logoMap, history, match, selectedApps, instancesFetch, analysisFetch }) => {
-  const { appName } = match.params;
 
-  if (analysisFetch.fulfilled) {
-    analysisFetch.value = {
-      ...analysisFetch.value,
-      recommendations: _.filter(
-        analysisFetch.value.recommendations,
-        { objective: "MaxPerfOverCost" }
-      )
-    };
-  }
+class SizingResultsPage extends Component {
+  render() {
+    const {
+      match: { params: appName },
+      logoMap, history, selectedApps,
+      instancesFetch, analysisFetch
+    } = this.props;
 
-  if (!appName) {
-    if (selectedApps.length) {
-      history.replace(`/sizing-test/result/${selectedApps[0].appName.toLowerCase()}`);
-    }
-    return <div />;
-  }
-  return (
-    <div>
-      <Jumbotron>
-        <ProgressIndicator
-           className={styles.ProgressIndicator}
-           stage={STAGE_RESULT} />
-        <div className={styles["testing-summary"]}>
-          <p>Testing summary</p>
-          <main>
-            <KeySummary title="App tested" value="1" />
-            <KeySummary title="Running time" value="2:15" />
-            <KeySummary title="Instances ran" value="11" />
-          </main>
-        </div>
-      </Jumbotron>
-      <Navbar>
-        {selectedApps.map(app => (
-          <NavItemLink key={app.appId}
-            className={styles.NavItemLink}
-            activeClassName={styles.selected}
-            to={"/sizing-test/result/" + app.appName} >
-            <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
-          </NavItemLink>
-        ))}
-      </Navbar>
-      {
-        (!analysisFetch.fulfilled || !instancesFetch.fulfilled )
-        ? "Loading..."
-        : (
-          <Container className={styles["results-content"]}>
-            <div>
-              <p>&nbsp;</p>
-              <ResultTable data={analysisFetch.value} className={styles.ResultTable} id={appName} />
-            </div>
-            <div>
-              <p>Performance (TPM)</p>
-              <ResultFigure
-                className={styles.ResultFigure}
-                data={analysisFetch.value}
-                instancesData={instancesFetch.value}
-              />
-              <p style={{ float: "right" }}>Cost ($/month)</p>
-            </div>
-          </Container>
+    if (analysisFetch.fulfilled) {
+      analysisFetch.value = {
+        ...analysisFetch.value,
+        recommendations: _.filter(
+          analysisFetch.value.recommendations,
+          { objective: "MaxPerfOverCost" }
         )
+      };
+    }
+
+    if (!appName) {
+      if (selectedApps.length) {
+        history.replace(`/sizing-test/result/${selectedApps[0].appName.toLowerCase()}`);
       }
-    </div>
-  );
-};
+      return <div />;
+    }
+
+    return (
+      <div>
+        <Jumbotron>
+          <ProgressIndicator
+             className={styles.ProgressIndicator}
+             stage={STAGE_RESULT} />
+          <div className={styles["testing-summary"]}>
+            <p>Testing summary</p>
+            <main>
+              <KeySummary title="App tested" value="1" />
+              <KeySummary title="Running time" value="2:15" />
+              <KeySummary title="Instances ran" value="11" />
+            </main>
+          </div>
+        </Jumbotron>
+        <Navbar>
+          {selectedApps.map(app => (
+            <NavItemLink key={app.appId}
+              className={styles.NavItemLink}
+              activeClassName={styles.selected}
+              to={"/sizing-test/result/" + app.appName} >
+              <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
+            </NavItemLink>
+          ))}
+        </Navbar>
+        {
+          (!analysisFetch.fulfilled || !instancesFetch.fulfilled )
+          ? "Loading..."
+          : (
+            <Container className={styles["results-content"]}>
+              <div>
+                <p>&nbsp;</p>
+                <ResultTable data={analysisFetch.value} className={styles.ResultTable} />
+              </div>
+              <div>
+                <p>Performance (TPM)</p>
+                <ResultFigure
+                  className={styles.ResultFigure}
+                  data={analysisFetch.value}
+                  instancesData={instancesFetch.value}
+                />
+                <p style={{ float: "right" }}>Cost ($/month)</p>
+              </div>
+            </Container>
+          )
+        }
+      </div>
+    );
+  }
+}
 
 export default connect(
   mapStateToProps,
