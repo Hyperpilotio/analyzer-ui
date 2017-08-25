@@ -36,8 +36,10 @@
     font-weight: bold;
     color: $color-primary;
   }
+}
 
-  i {
+tr.single-result {
+  .point {
     display: inline-block;
     vertical-align: middle;
     width: 16px;
@@ -47,22 +49,22 @@
 
     border-width: 2px;
     border-style: solid;
-    &.other-test {
-      background-color: $color-light-grey;
-      border-color: $color-white;
-    }
-    &.optimal-perf-cost {
-      background-color: $color-primary;
-      border-color: $color-white;
-    }
-    &.optimal-perf {
-      background-color: $color-divider;
-      border-color: $color-primary;
-    }
-    &.optimal-cost {
-      background-color: $background-success;
-      border-color: #b8e986;
-    }
+
+    border-color: $color-white;
+    background-color: $color-light-grey;
+  }
+
+  &.MaxPerfOverCost .point {
+    background-color: $color-primary;
+    border-color: $color-white;
+  }
+  &.MinCostWithPerfLimit .point {
+    background-color: $background-success;
+    border-color: #b8e986;
+  }
+  &.MaxPerfWithCostLimit .point {
+    background-color: $color-divider;
+    border-color: $color-primary;
   }
 }
 
@@ -77,11 +79,11 @@ tr.see-all {
   cursor: pointer;
 
   .down-icon {
-    margin-left: 1rem;
+    margin-right: 1rem;
   }
 }
 
-.marker-badge {
+.badge {
   font-size: 12px;
   padding: 0.25rem 0.5rem;
   margin-left: 0.5rem;

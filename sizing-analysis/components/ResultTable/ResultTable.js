@@ -1,166 +1,95 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import _ from "lodash";
 import FaChevronDown from "react-icons/lib/fa/chevron-down";
 import FaChevronUp from "react-icons/lib/fa/chevron-up";
 import styles from "./ResultTable.scss";
-import { connect } from 'react-redux';
-import { mapStateToProps } from "../../actions";
+
+const objectiveBadgeMap = {
+  MaxPerfOverCost: "Optimal Perf/Cost",
+  MinCostWithPerfLimit: "Low Cost",
+  MaxPerfWithCostLimit: "High Perf"
+};
 
 class ResultTable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      otherTests: [], 
-      toggleOn: false, 
-      selectedApp: this.getSelectedApp(props)
-    }
-    this.toggleOtherTests = this.toggleOtherTests.bind(this);
-  }
-  getSelectedApp(props) {
-    for (let app of props.selectedApps) {
-      if (props.id === app.appName) {
-        return app;
-      }
-    }
-  }
+
+  state = { toggleOn: false }
 
   toggleOtherTests() {
-    let otherTests = [];
-    let toggleOn = !this.state.toggleOn;
-    if (toggleOn) {
-      if (!!this.props.data.sizingRuns) {
-        for (let sizingRun of this.props.data.sizingRuns) {
-          let run = sizingRun.run;
-          let testNum = 0;
-          for (let test of sizingRun.results) {
-            test.testRound = run + "." + (++testNum);
-            otherTests.push(test);
-          }
-        }
-      }
-    }
-    this.setState({
-      otherTests: otherTests,
-      toggleOn: toggleOn
-    });
+    this.setState({ toggleOn: !this.state.toggleOn });
   }
-
-  componentWillReceiveProps(nextProps){
-    //set back to originally setting when switch to another app
-    if (this.props.id !== nextProps.id) {
-      this.setState({
-        otherTests: [],
-        toggleOn: false,
-        selectedApp: this.getSelectedApp(nextProps)
-      });
-    }
-  }
-
 
   render() {
-    let className = this.props.className;
-    let selectedApp = this.props.data;
-    let sizingRuns = _.concat(..._.map(selectedApp.sizingRuns, "results"));
-    let returnTable;
-    let optimal;
-    // let highPerf;
-    // let lowCost;
-    let clickToggleTxt = "See all tested instances";
-    let clickToggle = <FaChevronDown className={styles["down-icon"]} size={16} />;
+    const { className, data } = this.props;
+    const sizingRuns = _.concat(..._.map(data.sizingRuns, "results")).map(
+      ({ nodetype, ...stats }) => ({
+        nodetype,
+        ...stats,
+        bestFor: _.get(_.find(data.recommendations, { nodetype }), "objective", null)
+      })
+    );
 
-    if (this.state.toggleOn) {
-      clickToggleTxt = "Hide";
-      clickToggle = <FaChevronUp className={styles["down-icon"]} size={16} />;
-    }
+    return (
+      <table className={`${styles.ResultTable} ${className}`}>
+        <thead>
+          <tr>
+            <th>Instance Type</th>
+            <th>Perf</th>
+            <th>Cost</th>
+            <th>Perf / Cost</th>
+          </tr>
+        </thead>
 
-
-    if (!!selectedApp && !!selectedApp.recommendations) {
-      for (let result of selectedApp.recommendations) {
-        let doc = _.find(sizingRuns, { nodetype: result.nodetype });
-        switch (result.objective) {
-          case "MaxPerfOverCost":
-            optimal = doc;
-            break;
-        }
-      }
-
-      returnTable = (
-        <table className={`${styles.ResultTable} ${className}`}>
-          <thead>
-            <tr>
-              <th>Instance Type</th>
-              <th>Perf</th>
-              <th>Cost</th>
-              <th>Perf / Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className={`${styles["single-result"]} ${styles["recommended-result"]}`}>
+        <tbody>
+          { data.recommendations.map(({ objective, nodetype }) => {
+            const run = _.find(sizingRuns, { nodetype });
+            return <tr className={`${styles["single-result"]} ${styles[objective]}`}>
               <td>
-                <i className={styles["optimal-perf-cost"]} />
-                { optimal.nodetype }
-                <span className={styles["marker-badge"]}>Optimal Perf/Cost</span>
+                <i className={styles.point} />
+                { nodetype }
+                <span className={styles.badge}>{ objectiveBadgeMap[objective] }</span>
               </td>
-              <td>{Math.round(optimal.qosValue)}</td>
-              <td>{"$" + optimal.cost.toFixed(2)}</td>
-              <td>{optimal.perfOverCost.toFixed(2)}</td>
-            </tr>
-            <tr className={styles["see-all"]}>
-              <td colSpan="4">
-                <a onClick={() => this.toggleOtherTests()}>
-                  {clickToggleTxt}{clickToggle}
-                </a>
-              </td>
-            </tr>
-            {this.state.otherTests
-              .map(run => (
-                <tr className={styles["single-result"]} key={run.nodetype}>
-                  <td>
-                    {
-                      run.nodetype === optimal.nodetype
-                        ? <i className={styles["optimal-perf-cost"]} />
-                        : <i className={styles["other-test"]} />
-                    }
-                    { run.nodetype }
-                  </td>
-                  {
-                    run.qosValue === 0
-                      ? <td colSpan={3}>Unavailable</td>
-                      : [ <td>{Math.round(run.qosValue)}</td>,
-                          <td>{"$" + run.cost.toFixed(2)}</td>,
-                          <td>{run.perfOverCost.toFixed(2)}</td> ]
-                  }
-                </tr>
-              ))
-            }
+              <td>{ Math.round(run.qosValue) }</td>
+              <td>{ `$${run.cost.toFixed(2)}` }</td>
+              <td>{ run.perfOverCost.toFixed(2) }</td>
+            </tr>;
+          }) }
 
-          </tbody>
-        </table>
-      );
-    } else {
-      returnTable = (
-        <table className={`${styles.ResultTable} ${className}`}>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Instance Type</th>
-              <th>Perf</th>
-              <th>Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan="4">
-                Not yet tested. No result.
+          <tr className={styles["see-all"]}>
+            <td colSpan={4}>
+              <a onClick={::this.toggleOtherTests}>
+                { this.state.toggleOn ? [
+                    <FaChevronUp className={styles["down-icon"]} size={16} />,
+                    "Hide"
+                  ] : [
+                    <FaChevronDown className={styles["down-icon"]} size={16} />,
+                    "See all tested instances"
+                  ] }
+              </a>
             </td>
-            </tr>
-          </tbody>
-        </table>
-      );
-    }
-    return returnTable;
-  }
+          </tr>
 
+          { this.state.toggleOn && sizingRuns
+            .map(({ nodetype, qosValue, cost, perfOverCost, bestFor }) => (
+              <tr key={nodetype} className={`${styles["single-result"]} ${styles[bestFor] || ""}`}>
+                <td>
+                  <i className={styles.point} />
+                  { nodetype }
+                </td>
+                { qosValue === 0 ? (
+                    <td colSpan={3}> Unavailable </td>
+                  ) : [
+                    <td>{ Math.round(qosValue) }</td>,
+                    <td>{ `$${cost.toFixed(2)}` }</td>,
+                    <td>{ perfOverCost.toFixed(2) }</td>
+                  ] }
+              </tr>
+            )) }
+        </tbody>
+
+      </table>
+    );
+
+  }
 }
 
-export default connect(mapStateToProps)(ResultTable);
+export default ResultTable;
