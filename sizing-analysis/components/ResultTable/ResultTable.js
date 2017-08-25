@@ -4,17 +4,19 @@ import FaChevronDown from "react-icons/lib/fa/chevron-down";
 import FaChevronUp from "react-icons/lib/fa/chevron-up";
 import styles from "./ResultTable.scss";
 
+
 const objectiveBadgeMap = {
   MaxPerfOverCost: "Optimal Perf/Cost",
   MinCostWithPerfLimit: "Low Cost",
   MaxPerfWithCostLimit: "High Perf"
 };
 
+
 class ResultTable extends Component {
 
   state = { toggleOn: false }
 
-  toggleOtherTests() {
+  toggleFullList() {
     this.setState({ toggleOn: !this.state.toggleOn });
   }
 
@@ -56,7 +58,7 @@ class ResultTable extends Component {
 
           <tr className={styles["see-all"]}>
             <td colSpan={4}>
-              <a onClick={::this.toggleOtherTests}>
+              <a onClick={::this.toggleFullList}>
                 { this.state.toggleOn ? [
                     <FaChevronUp className={styles["down-icon"]} size={16} />,
                     "Hide"
