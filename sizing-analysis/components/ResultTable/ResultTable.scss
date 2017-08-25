@@ -32,10 +32,6 @@
     padding-right: 2rem;
   }
 
-  .recommended-result td {
-    font-weight: bold;
-    color: $color-primary;
-  }
 }
 
 tr.single-result {
@@ -65,6 +61,11 @@ tr.single-result {
   &.MaxPerfWithCostLimit .point {
     background-color: $color-divider;
     border-color: $color-primary;
+  }
+
+  &.recommended-result td {
+    font-weight: bold;
+    color: $color-primary;
   }
 }
 

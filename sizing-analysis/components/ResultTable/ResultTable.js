@@ -26,7 +26,7 @@ class ResultTable extends Component {
       ({ nodetype, ...stats }) => ({
         nodetype,
         ...stats,
-        bestFor: _.get(_.find(data.recommendations, { nodetype }), "objective", null)
+        bestFor: _.get(_.find(data.recommendations, { nodetype }), "objective")
       })
     );
 
@@ -44,7 +44,7 @@ class ResultTable extends Component {
         <tbody>
           { data.recommendations.map(({ objective, nodetype }) => {
             const run = _.find(sizingRuns, { nodetype });
-            return <tr className={`${styles["single-result"]} ${styles[objective]}`}>
+            return <tr className={`${styles["single-result"]} ${styles["recommended-result"]} ${styles[objective]}`}>
               <td>
                 <i className={styles.point} />
                 { nodetype }
