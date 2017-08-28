@@ -21,7 +21,7 @@ class ResultTable extends Component {
   }
 
   render() {
-    const { className, data, highlightedInstance } = this.props;
+    const { className, data, highlightedInstance, onHighlight } = this.props;
     const sizingRuns = _.concat(..._.map(data.sizingRuns, "results")).map(
       ({ nodetype, ...stats }) => ({
         nodetype,
@@ -50,7 +50,7 @@ class ResultTable extends Component {
               styles[objective],
               highlightedInstance === nodetype ? styles["highlighted"] : ""
             ];
-            return <tr className={classes.join(" ")}>
+            return <tr className={classes.join(" ")} onMouseEnter={() => onHighlight(nodetype)}>
               <td>
                 <i className={styles.point} />
                 { nodetype }
@@ -83,7 +83,7 @@ class ResultTable extends Component {
                 bestFor ? styles[bestFor] : null,
                 highlightedInstance === nodetype ? styles["highlighted"] : null
               ];
-              return <tr key={nodetype} className={classes.join(" ")}>
+              return <tr key={nodetype} className={classes.join(" ")} onMouseEnter={() => onHighlight(nodetype)}>
                 <td>
                   <i className={styles.point} />
                   { nodetype }

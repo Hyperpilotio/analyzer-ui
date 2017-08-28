@@ -24,7 +24,7 @@ class SizingResultsPage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { highlightedInstance: [] };
+    this.state = { highlightedInstance: null };
   }
 
   onHighlight(instance) {
@@ -93,6 +93,7 @@ class SizingResultsPage extends Component {
                   data={analysisFetch.value}
                   className={styles.ResultTable}
                   highlightedInstance={this.state.highlightedInstance}
+                  onHighlight={::this.onHighlight}
                 />
               </div>
               <div>
@@ -101,6 +102,7 @@ class SizingResultsPage extends Component {
                   className={styles.ResultFigure}
                   data={analysisFetch.value}
                   instancesData={instancesFetch.value}
+                  highlightedInstance={this.state.highlightedInstance}
                   onHighlight={::this.onHighlight}
                 />
                 <p style={{ float: "right" }}>Cost ($/month)</p>
