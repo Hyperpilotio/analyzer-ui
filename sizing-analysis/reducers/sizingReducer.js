@@ -11,27 +11,32 @@ const initialState = {
     {
       name: "kafka",
       displayName: "Kafka",
-      logo: kafkaLogo
+      logo: kafkaLogo,
+      selected: false
     },
     {
       name: "mongodb",
       displayName: "mongoDB",
-      logo: mongoDBLogo
+      logo: mongoDBLogo,
+      selected: false
     },
     {
       name: "redis",
       displayName: "Redis",
-      logo: redisLogo
+      logo: redisLogo,
+      selected: false
     },
     {
       name: "mysql",
       displayName: "MySQL",
-      logo: mysqlLogo
+      logo: mysqlLogo,
+      selected: false
     },
     {
       name: "nginx",
       displayName: "Nginx",
-      logo: nginxLogo
+      logo: nginxLogo,
+      selected: false
     }
   ],
   selectedApps: [],
@@ -39,32 +44,25 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action) {
-  //clone state first, avoid mutate original state
-  let cloneState = JSON.parse(JSON.stringify(state));
+
   switch (action.type) {
     case ADD_ALL:
-      cloneState.selectedApps = [];
-      for (let app of cloneState.apps) {
-        cloneState.selectedApps.push(Object.assign({}, app));
-      }
-      return cloneState;
+      return {
+        ...state,
+        apps: state.apps.map(app => ({
+          ...app,
+          selected: true
+        }))
+      };
 
     case TOGGLE_SELECTED:
-      //decide push or splice it
-      let selected = true;
-      for (let i = 0; i < cloneState.selectedApps.length; i++) {
-        let app = cloneState.selectedApps[i];
-        if (app.name === action.selectedApp.name) {
-          cloneState.selectedApps.splice(i, 1);
-          selected = false;
-          break;
-        }
-      }
-      //If it is not exist in the selectedApps, push it into selected array
-      if (selected) {
-        cloneState.selectedApps.push(action.selectedApp);
-      }
-      return cloneState;
+      return {
+        ...state,
+        apps: state.apps.map(app => ({
+          ...app,
+          selected: app.name === action.appName ? !app.selected : app.selected
+        }))
+      };
 
     case 'persist/REHYDRATE':
       if (!!action.payload && !!action.payload.version &&
