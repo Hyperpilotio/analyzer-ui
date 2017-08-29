@@ -57,6 +57,7 @@ class VictoryZoomVoronoiContainer extends createContainer("zoom", "voronoi") {
   }
 
   getChildren(props) {
+    const { scale, domain } = props;
     const activePoints = _
       .filter(
         this.context.data,
@@ -66,7 +67,9 @@ class VictoryZoomVoronoiContainer extends createContainer("zoom", "voronoi") {
         tooltipArgs => ({
           ...tooltipArgs,
           _x: tooltipArgs.x,
-          _y: tooltipArgs.y
+          _y: tooltipArgs.y,
+          posX: scale.x.domain(domain.x)(tooltipArgs.x),
+          posY: scale.y.domain(domain.y)(tooltipArgs.y)
         })
       );
 
