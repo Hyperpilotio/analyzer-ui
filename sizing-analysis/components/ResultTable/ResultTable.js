@@ -52,6 +52,7 @@ class ResultTable extends Component {
             ];
             return (
               <tr
+                key={nodetype}
                 className={classes.join(" ")}
                 onMouseEnter={() => onHighlight(nodetype)}
                 onMouseLeave={() => onUnhighlight()}
@@ -72,10 +73,10 @@ class ResultTable extends Component {
             <td colSpan={4}>
               <a onClick={::this.toggleFullList}>
                 { this.state.toggleOn ? [
-                    <FaChevronUp className={styles["down-icon"]} size={16} />,
+                    <FaChevronUp key={0} className={styles["down-icon"]} size={16} />,
                     "Hide"
                   ] : [
-                    <FaChevronDown className={styles["down-icon"]} size={16} />,
+                    <FaChevronDown key={0} className={styles["down-icon"]} size={16} />,
                     "See all tested instances"
                   ] }
               </a>
@@ -103,9 +104,9 @@ class ResultTable extends Component {
                   { qosValue === 0 ? (
                       <td colSpan={3}> Unavailable </td>
                     ) : [
-                      <td>{ Math.round(qosValue) }</td>,
-                      <td>{ `$${cost.toFixed(2)}` }</td>,
-                      <td>{ perfOverCost.toFixed(2) }</td>
+                      <td key="perf">{ Math.round(qosValue) }</td>,
+                      <td key="cost">{ `$${cost.toFixed(2)}` }</td>,
+                      <td key="perfcost">{ perfOverCost.toFixed(2) }</td>
                     ] }
                 </tr>
               );

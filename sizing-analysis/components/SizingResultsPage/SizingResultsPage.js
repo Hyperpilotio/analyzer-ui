@@ -42,13 +42,14 @@ class SizingResultsPage extends Component {
   render() {
     const {
       match: { params: appName },
-      history, selectedApps,
+      history, apps,
       instancesFetch, analysisFetch
     } = this.props;
 
     if (_.isEmpty(appName)) {
-      if (selectedApps.length) {
-        history.replace(`/sizing-test/result/${selectedApps[0].name}`);
+      const firstSelectedApp = _.find(apps, { selected: true });
+      if (!_.isUndefined(firstSelectedApp)) {
+        history.replace(`/sizing-test/result/${firstSelectedApp.name}`);
       }
       return <div />;
     }
@@ -79,14 +80,18 @@ class SizingResultsPage extends Component {
           </div>
         </Jumbotron>
         <Navbar>
-          {selectedApps.map(app => (
-            <NavItemLink key={app.name}
-              className={styles.NavItemLink}
-              activeClassName={styles.selected}
-              to={"/sizing-test/result/" + app.name} >
-              <img src={app.logo} /> {app.displayName}
-            </NavItemLink>
-          ))}
+          {
+            _.filter(apps, "selected").map(app => (
+              <NavItemLink
+                key={ app.name }
+                className={ styles.NavItemLink }
+                activeClassName={ styles.selected }
+                to={ `/sizing-test/result/${ app.name }` }
+              >
+                <img src={ app.logo } /> { app.displayName }
+              </NavItemLink>
+            ))
+          }
         </Navbar>
         {
           (!analysisFetch.fulfilled || !instancesFetch.fulfilled )

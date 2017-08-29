@@ -1,4 +1,5 @@
 import React from "react";
+import fetch from "isomorphic-fetch";
 import { connect as connectRefetch } from "react-refetch";
 import Jumbotron from "commons/components/Jumbotron";
 import AppSelector from "../AppSelector";
@@ -8,7 +9,7 @@ import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./index.scss";
 import ProgressIndicator from "../ProgressIndicator"
 
-const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
+const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch, history }) => {
   let modalElement = (stage !== STAGE_TEST || analysisFetch.pending) ? "" : (
     <div className={styles["modal-container"]}>
       <RunnerModal data={analysisFetch.value} />
@@ -37,7 +38,16 @@ const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
           </div>
         </div>*/}
         <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-          <AppSelector />
+          <AppSelector onAnalyze={async e => {
+            e.preventDefault();
+            const res = await fetch("/api/apps/mysql/analysis/run", { method: "POST" });
+            const data = await res.json();
+            if (data.error === false) {
+              history.push("/sizing-test/run-test");
+            } else {
+              console.error(data);
+            }
+          }} />
         </div>
       </Container>
       { modalElement }
