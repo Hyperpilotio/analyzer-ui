@@ -9,34 +9,32 @@ import nginxLogo from "assets/images/asset_nginx_logo.svg";
 const initialState = {
   apps: [
     {
-      "appId": "59306145e3fd9e5094db04e5",
-      "appName": "Kafka",
+      name: "kafka",
+      displayName: "Kafka",
+      logo: kafkaLogo
     },
     {
-      "appId": "59671042e3fd9e5094df9812",
-      "appName": "mongoDB",
+      name: "mongodb",
+      displayName: "mongoDB",
+      logo: mongoDBLogo
     },
     {
-      "appId": "59633e42e3fd9e5094dec25e",
-      "appName": "Redis",
+      name: "redis",
+      displayName: "Redis",
+      logo: redisLogo
     },
     {
-      "appId": "5970eda9ee7da9040499ddaf",
-      "appName": "MySQL"
+      name: "mysql",
+      displayName: "MySQL",
+      logo: mysqlLogo
     },
     {
-      "appId": "5988990dafdabc92347fddf9",
-      "appName": "Nginx"
+      name: "nginx",
+      displayName: "Nginx",
+      logo: nginxLogo
     }
   ],
   selectedApps: [],
-  logoMap: {
-    "mongodb": mongoDBLogo,
-    "kafka": kafkaLogo,
-    "redis": redisLogo,
-    "mysql": mysqlLogo,
-    "nginx": nginxLogo
-  },
   version: "0.0.0.4"
 };
 
@@ -56,7 +54,7 @@ export default function reducer(state = initialState, action) {
       let selected = true;
       for (let i = 0; i < cloneState.selectedApps.length; i++) {
         let app = cloneState.selectedApps[i];
-        if (app.appId === action.selectedApp.appId) {
+        if (app.name === action.selectedApp.name) {
           cloneState.selectedApps.splice(i, 1);
           selected = false;
           break;

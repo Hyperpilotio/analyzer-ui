@@ -42,9 +42,16 @@ class SizingResultsPage extends Component {
   render() {
     const {
       match: { params: appName },
-      logoMap, history, selectedApps,
+      history, selectedApps,
       instancesFetch, analysisFetch
     } = this.props;
+
+    if (_.isEmpty(appName)) {
+      if (selectedApps.length) {
+        history.replace(`/sizing-test/result/${selectedApps[0].name}`);
+      }
+      return <div />;
+    }
 
     if (analysisFetch.fulfilled) {
       analysisFetch.value = {
@@ -54,13 +61,6 @@ class SizingResultsPage extends Component {
           { objective: "MaxPerfOverCost" }
         )
       };
-    }
-
-    if (!appName) {
-      if (selectedApps.length) {
-        history.replace(`/sizing-test/result/${selectedApps[0].appName.toLowerCase()}`);
-      }
-      return <div />;
     }
 
     return (
@@ -80,11 +80,11 @@ class SizingResultsPage extends Component {
         </Jumbotron>
         <Navbar>
           {selectedApps.map(app => (
-            <NavItemLink key={app.appId}
+            <NavItemLink key={app.name}
               className={styles.NavItemLink}
               activeClassName={styles.selected}
-              to={"/sizing-test/result/" + app.appName} >
-              <img src={logoMap[app.appName.toLowerCase()]} /> {app.appName}
+              to={"/sizing-test/result/" + app.name} >
+              <img src={app.logo} /> {app.displayName}
             </NavItemLink>
           ))}
         </Navbar>

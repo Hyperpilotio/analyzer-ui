@@ -28,7 +28,7 @@ const AppSelector = ({addAll, apps}, {router}) =>  (
     </div>
     <div className={styles["apps-area"]}>
       { apps.map(app => (
-        <AppSelectionButton key={app.appId} id={app.appId} app={app} />
+        <AppSelectionButton key={app.name} app={app} />
       )) }
     </div>
   </div>

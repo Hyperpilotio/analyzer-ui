@@ -11,11 +11,7 @@ import ProgressIndicator from "../ProgressIndicator"
 const SizingRunnerPage = ({ stage = STAGE_CONFIG, analysisFetch }) => {
   let modalElement = (stage !== STAGE_TEST || analysisFetch.pending) ? "" : (
     <div className={styles["modal-container"]}>
-      <RunnerModal
-        data={analysisFetch.value}
-        progress={60}
-        remainingTime={20}
-      />
+      <RunnerModal data={analysisFetch.value} />
     </div>
   );
 
