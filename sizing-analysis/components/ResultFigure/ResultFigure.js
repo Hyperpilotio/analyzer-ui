@@ -134,9 +134,9 @@ class ResultFigure extends Component {
   }
 
   render() {
-    const { className, data, instancesData, onHighlight } = this.props;
+    const { className, data, instancesData, onHighlight, onUnhighlight } = this.props;
 
-    return <div className={`${styles.ResultFigure} ${className}`}>
+    return <div className={`${styles.ResultFigure} ${className}`} onMouseLeave={onUnhighlight}>
       <VictoryChart
         containerComponent={ <VictoryZoomVoronoiContainer
           onActivated={( [point] ) => onHighlight(point.instance.name)}

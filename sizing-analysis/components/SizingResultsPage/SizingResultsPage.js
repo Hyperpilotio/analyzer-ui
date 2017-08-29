@@ -33,6 +33,12 @@ class SizingResultsPage extends Component {
     });
   }
 
+  onUnhighlight() {
+    this.setState({
+      highlightedInstance: null
+    });
+  }
+
   render() {
     const {
       match: { params: appName },
@@ -94,6 +100,7 @@ class SizingResultsPage extends Component {
                   className={styles.ResultTable}
                   highlightedInstance={this.state.highlightedInstance}
                   onHighlight={::this.onHighlight}
+                  onUnhighlight={::this.onUnhighlight}
                 />
               </div>
               <div>
@@ -104,6 +111,7 @@ class SizingResultsPage extends Component {
                   instancesData={instancesFetch.value}
                   highlightedInstance={this.state.highlightedInstance}
                   onHighlight={::this.onHighlight}
+                  onUnhighlight={::this.onUnhighlight}
                 />
                 <p style={{ float: "right" }}>Cost ($/month)</p>
               </div>
