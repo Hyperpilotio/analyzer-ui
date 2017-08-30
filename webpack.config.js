@@ -20,8 +20,7 @@ const gitRevisionPlugin = new GitRevisionPlugin()
 const buildEntryPoint = entryJs => _.filter([
   "whatwg-fetch",
   "babel-polyfill",
-  IS_PROD ? null : "webpack-dev-server/client?http://localhost:3000",
-  IS_PROD ? null : "webpack/hot/only-dev-server",
+  IS_PROD ? null : "webpack-hot-middleware/client?http://localhost:3000/",
   IS_PROD ? null : "react-hot-loader/patch",
   entryJs,
   "./styles/index.sass"

@@ -1,19 +1,13 @@
 const express = require("express");
-const proxy = require("express-http-proxy");
 const morgan = require("morgan");
 const path = require("path");
 const fetch = require("isomorphic-fetch");
 const { MongoClient } = require("mongodb");
 const config = require("./config");
-
-
-const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
+const webpackConfig = require("./webpack.config");
 
 const server = express();
-
 server.use(morgan("dev"));
-
-server.use("/static", express.static(path.join(__dirname, "dist/static")));
 
 server.get("/api/", (req, res) => {
   res.json({ status: "ok" });
@@ -80,11 +74,42 @@ server.post("/api/apps/:appName/analysis/run", async (req, res) => {
 server.get("/api/analyses/:sessionId", async (req, res) => {
   const { sessionId } = req.params;
   res.json(await metricdb.collection("sizing").findOne({ sessionId }));
-})
-
-server.get("/*", (req, res) => {
-  res.sendFile(__dirname + `/dist/${ANALYSIS_APP}.html`);
 });
+
+
+const isDev = process.env.NODE_ENV !== "production";
+const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
+
+if (isDev) {
+  const webpack = require("webpack");
+  const webpackDevMiddleware = require("webpack-dev-middleware");
+  const webpackHotMiddleware = require("webpack-hot-middleware");
+  const compiler = webpack(webpackConfig);
+
+  const devMiddleware = webpackDevMiddleware(compiler, {
+    stats: { colors: true },
+    publicPath: webpackConfig.output.publicPath
+  });
+
+  server.use(devMiddleware);
+  server.use(webpackHotMiddleware(compiler));
+
+  server.get("/*", (req, res) => {
+    devMiddleware.fileSystem.readFile(
+      path.join(webpackConfig.output.path, `${ANALYSIS_APP}.html`),
+      (error, result) => {
+        res.set("Content-Type", "text/html");
+        res.send(result);
+      }
+    );
+  });
+} else {
+  server.use("/static", express.static(path.join(webpackConfig.output.path, "static")));
+
+  server.get("/*", (req, res) => {
+    res.sendFile(path.join(webpackConfig.output.path, `${ANALYSIS_APP}.html`));
+  });
+}
 
 
 let configdb, metricdb;
