@@ -4,12 +4,12 @@
   "repository": "https://github.com/Hyperpilotio/analyzer-ui",
   "scripts": {
     "build": "NODE_ENV=production webpack --progress",
-    "dev-interference": "ANALYSIS_APP=interference-analysis webpack-dev-server",
-    "dev-sizing": "ANALYSIS_APP=sizing-analysis webpack-dev-server",
-    "dev": "webpack-dev-server",
-    "serve-interference": "ANALYSIS_APP=interference-analysis node server.js",
-    "serve-sizing": "ANALYSIS_APP=sizing-analysis node server.js",
-    "serve": "node server.js",
+    "dev-interference": "ANALYSIS_APP=interference-analysis node server.js",
+    "dev-sizing": "ANALYSIS_APP=sizing-analysis node server.js",
+    "dev": "node server.js",
+    "serve-interference": "NODE_ENV=production ANALYSIS_APP=interference-analysis node server.js",
+    "serve-sizing": "NODE_ENV=production ANALYSIS_APP=sizing-analysis node server.js",
+    "serve": "NODE_ENV=production node server.js",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build"
   },
