@@ -106,6 +106,8 @@ if (isDev) {
 } else {
   server.use("/static", express.static(path.join(webpackConfig.output.path, "static")));
 
+  server.use("/favicon.ico", express.static(path.join(webpackConfig.output.path, "favicon.ico")));
+
   server.get("/*", (req, res) => {
     res.sendFile(path.join(webpackConfig.output.path, `${ANALYSIS_APP}.html`));
   });

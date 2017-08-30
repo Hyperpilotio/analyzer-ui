@@ -122,12 +122,14 @@ let webpackConfig = module.exports = {
       chunks: ["commons", "interference"],
       template: "interference-analysis/index.html",
       filename: "interference-analysis.html",
+      favicon: "assets/images/favicon.ico",
       hash: true
     }),
     new HtmlWebpackPlugin({
       chunks: ["commons", "sizing"],
       template: "sizing-analysis/index.html",
       filename: "sizing-analysis.html",
+      favicon: "assets/images/favicon.ico",
       hash: true
     }),
     new webpack.DefinePlugin({
@@ -146,7 +148,10 @@ let webpackConfig = module.exports = {
   devServer: {
     hot: true,
     historyApiFallback: {
-      index: `/${ANALYSIS_APP}.html`
+      index: `/${ANALYSIS_APP}.html`,
+      rewrites: [
+        { from: /favicon.ico/, to: "favicon.ico" }
+      ]
     },
     contentBase: "./dist/",
     host: "localhost",
