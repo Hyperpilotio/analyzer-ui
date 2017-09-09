@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./index.scss";
+import styles from "./KeySummary.scss";
 
 const KeySummary = ({ title, value }) => (
   <div className={styles.KeySummary}>

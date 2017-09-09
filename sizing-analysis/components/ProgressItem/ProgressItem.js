@@ -1,7 +1,7 @@
 import React from "react";
 import FaCheck from "react-icons/lib/fa/check";
 import FaRefresh from "react-icons/lib/fa/refresh";
-import styles from "./index.scss";
+import styles from "./ProgressItem.scss";
 
 const ProgressItem = ({ status, nodetype, qosValue, cost, perfOverCost }) => (
   <li className={`${styles.ProgressItem} ${styles[status]}`}>

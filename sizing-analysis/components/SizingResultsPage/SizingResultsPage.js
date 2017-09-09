@@ -14,7 +14,7 @@ import {
   STAGE_RESULT,
   sampleSizingAnalysisData
 } from "../../constants";
-import styles from "./index.scss";
+import styles from "./SizingResultsPage.scss";
 import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
 import { connect as connectRefetch } from "react-refetch";
