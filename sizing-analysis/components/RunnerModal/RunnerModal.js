@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ProgressBar from "commons/components/ProgressBar";
 import ProgressItem from "../ProgressItem";
 import Button from "commons/components/Button";
-import styles from "./index.scss";
+import styles from "./RunnerModal.scss";
 import mysqlLogo from "assets/images/asset_mysql_logo.svg";
 
 
