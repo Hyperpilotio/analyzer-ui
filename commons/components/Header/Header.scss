@@ -1,0 +1,66 @@
+@import "styles/variables.sass";
+
+.Header {
+  header {
+    height: 60px;
+    background-color: $color-light;
+    border-bottom: 3px solid $color-blue;
+  }
+
+  nav {
+    background-color: $color-dark;
+    height: 60px;
+
+    .NavItemLink {
+      color: $color-info;
+      border: none;
+
+      &.active {
+        color: $color-white;
+      }
+    }
+
+    .Button {
+      padding: 0.5rem 0.75rem;
+      color: $color-info;
+      background-color: $background-info;
+
+      &:hover {
+        color: $color-info;
+      }
+    }
+  }
+}
+
+.Container {
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.search {
+  width: 400px;
+  outline: none;
+  border-radius: 100px;
+  border: solid 1px $color-blue;
+  background-color: $color-light;
+  padding: 0.6rem 2rem;
+  color: $color-primary;
+  letter-spacing: 1.5px;
+
+  &::placeholder {
+    font-family: WorkSans;
+    color: $color-blue;
+    letter-spacing: 0.5px;
+  }
+}
+
+.sublist {
+  display: flex;
+  align-items: center;
+
+  > * {
+    height: 30px;
+    margin-left: 1.5rem;
+  }
+}
