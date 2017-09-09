@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import HeaderNav from "commons/components/HeaderNav";
+import Header from "commons/components/Header";
 import NavItemLink from "commons/components/NavItemLink";
 import DashboardHome from "./components/DashboardHome";
 import AutopilotPage from "./components/AutopilotPage";
@@ -29,12 +29,13 @@ class App extends Component {
           <Route path="/login" component={UserAuth} />
           <Route path="/" children={({ history }) => (
             <div>
-              <HeaderNav history={history}>
+              { /* Temporary fix for Header, Header should accept children as props in the future */ }
+              <Header history={history}>
                 <NavItemLink to="/dashboard" text="Dashboard" />
                 <NavItemLink to="/autopilot" text="Autopilot" />
                 <NavItemLink to="/apps" text="Apps" />
                 <NavItemLink to="/services" text="Services" />
-              </HeaderNav>
+              </Header>
               <Switch>
                 <Route path="/dashboard" component={DashboardHome} />
                 <Route path="/autopilot" component={AutopilotPage} />
