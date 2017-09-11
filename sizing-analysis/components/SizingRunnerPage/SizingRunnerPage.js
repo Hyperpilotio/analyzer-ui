@@ -1,10 +1,10 @@
 import React from "react";
 import fetch from "isomorphic-fetch";
 import { connect as connectRefetch } from "react-refetch";
-import Jumbotron from "commons/components/Jumbotron";
+import Jumbotron from "~/commons/components/Jumbotron";
 import AppSelector from "../AppSelector";
 import RunnerModal from "../RunnerModal";
-import Container from "commons/components/Container";
+import Container from "~/commons/components/Container";
 import { STAGE_CONFIG, STAGE_TEST, STAGE_RESULT } from "../../constants";
 import styles from "./SizingRunnerPage.scss";
 import ProgressIndicator from "../ProgressIndicator"

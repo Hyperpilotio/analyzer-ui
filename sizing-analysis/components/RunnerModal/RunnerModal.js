@@ -2,11 +2,11 @@ import React from "react";
 import FaCheck from "react-icons/lib/fa/check";
 import FaRefresh from "react-icons/lib/fa/refresh";
 import { Link } from "react-router-dom";
-import ProgressBar from "commons/components/ProgressBar";
+import ProgressBar from "~/commons/components/ProgressBar";
 import ProgressItem from "../ProgressItem";
-import Button from "commons/components/Button";
+import Button from "~/commons/components/Button";
 import styles from "./RunnerModal.scss";
-import mysqlLogo from "assets/images/asset_mysql_logo.svg";
+import mysqlLogo from "~/assets/images/asset_mysql_logo.svg";
 
 
 const calculatePercentage = data => {

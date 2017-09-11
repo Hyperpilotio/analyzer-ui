@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import Jumbotron from "commons/components/Jumbotron";
-import Container from "commons/components/Container";
-import Navbar from "commons/components/Navbar";
-import NavItemLink from "commons/components/NavItemLink";
+import Jumbotron from "~/commons/components/Jumbotron";
+import Container from "~/commons/components/Container";
+import Navbar from "~/commons/components/Navbar";
+import NavItemLink from "~/commons/components/NavItemLink";
 import ResultTable from "../ResultTable";
 import ResultFigure from "../ResultFigure";
 import KeySummary from "../KeySummary";

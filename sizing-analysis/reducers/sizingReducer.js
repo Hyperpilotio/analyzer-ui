@@ -1,9 +1,9 @@
 import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
-import mongoDBLogo from "assets/images/asset_mongoDB_logo.svg";
-import kafkaLogo from "assets/images/asset_kafka_logo.svg";
-import redisLogo from "assets/images/asset_redis_logo.svg";
-import mysqlLogo from "assets/images/asset_mysql_logo.svg";
-import nginxLogo from "assets/images/asset_nginx_logo.svg";
+import mongoDBLogo from "~/assets/images/asset_mongoDB_logo.svg";
+import kafkaLogo from "~/assets/images/asset_kafka_logo.svg";
+import redisLogo from "~/assets/images/asset_redis_logo.svg";
+import mysqlLogo from "~/assets/images/asset_mysql_logo.svg";
+import nginxLogo from "~/assets/images/asset_nginx_logo.svg";
 
 //set default values
 const initialState = {

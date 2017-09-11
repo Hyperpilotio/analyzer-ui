@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "commons/components/Button";
+import Button from "~/commons/components/Button";
 import styles from "./AppSelectionButton.scss";
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "commons/components/Button";
+import Button from "~/commons/components/Button";
 import AppSelectionButton from "../AppSelectionButton";
 import styles from "./AppSelector.scss";
 import { connect } from 'react-redux';
