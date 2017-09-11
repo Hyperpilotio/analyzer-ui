@@ -1,76 +1,76 @@
-import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
 import mongoDBLogo from "~/assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "~/assets/images/asset_kafka_logo.svg";
 import redisLogo from "~/assets/images/asset_redis_logo.svg";
 import mysqlLogo from "~/assets/images/asset_mysql_logo.svg";
 import nginxLogo from "~/assets/images/asset_nginx_logo.svg";
+import { ADD_ALL, TOGGLE_SELECTED } from "../constants";
 
-//set default values
+
 const initialState = {
   apps: [
     {
       name: "kafka",
       displayName: "Kafka",
       logo: kafkaLogo,
-      selected: false
+      selected: false,
     },
     {
       name: "mongodb",
       displayName: "mongoDB",
       logo: mongoDBLogo,
-      selected: false
+      selected: false,
     },
     {
       name: "redis",
       displayName: "Redis",
       logo: redisLogo,
-      selected: false
+      selected: false,
     },
     {
       name: "mysql",
       displayName: "MySQL",
       logo: mysqlLogo,
-      selected: false
+      selected: false,
     },
     {
       name: "nginx",
       displayName: "Nginx",
       logo: nginxLogo,
-      selected: false
-    }
+      selected: false,
+    },
   ],
   selectedApps: [],
-  version: "0.0.0.4"
+  version: "0.0.0.4",
 };
 
 export default function reducer(state = initialState, action) {
-
   switch (action.type) {
-    case ADD_ALL:
-      return {
-        ...state,
-        apps: state.apps.map(app => ({
-          ...app,
-          selected: true
-        }))
-      };
+  case ADD_ALL:
+    return {
+      ...state,
+      apps: state.apps.map(app => ({
+        ...app,
+        selected: true,
+      })),
+    };
 
-    case TOGGLE_SELECTED:
-      return {
-        ...state,
-        apps: state.apps.map(app => ({
-          ...app,
-          selected: app.name === action.appName ? !app.selected : app.selected
-        }))
-      };
+  case TOGGLE_SELECTED:
+    return {
+      ...state,
+      apps: state.apps.map(app => ({
+        ...app,
+        selected: app.name === action.appName ? !app.selected : app.selected,
+      })),
+    };
 
-    case 'persist/REHYDRATE':
-      if (!!action.payload && !!action.payload.version &&
-        action.payload.version === "0.0.0.4") {
-        return Object.assign({}, action.payload);
-      }
+  case "persist/REHYDRATE":
+    if (!!action.payload && !!action.payload.version &&
+      action.payload.version === "0.0.0.4") {
+      return { ...action.payload };
+    }
+    return state;
 
-    default:
-      return state
+  default:
+    return state;
   }
 }
