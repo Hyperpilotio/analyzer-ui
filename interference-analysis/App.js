@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import Header from "commons/components/Header";
-import NavItemLink from "commons/components/NavItemLink";
+import Header from "~/commons/components/Header";
+import NavItemLink from "~/commons/components/NavItemLink";
 import DashboardHome from "./components/DashboardHome";
 import AutopilotPage from "./components/AutopilotPage";
 import AppPage from "./containers/AppPage";

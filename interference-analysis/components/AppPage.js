@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router";
-import Navbar from "commons/components/Navbar";
-import NavItemLink from "commons/components/NavItemLink";
+import Navbar from "~/commons/components/Navbar";
+import NavItemLink from "~/commons/components/NavItemLink";
 import { NavLink, Link } from "react-router-dom";
 import KeyInfo from "./KeyInfo";
 import redisLogo from "../../assets/images/asset_redis_logo.svg";
