@@ -83,4 +83,26 @@ export const AnalyzerPropTypes = {
     logo: PropTypes.string,
     selected: PropTypes.bool,
   }),
+  sizingRun: PropTypes.shape({
+    appName: PropTypes.string,
+    status: PropTypes.string,
+    budget: PropTypes.number,
+    sloType: PropTypes.string,
+    sloValue: PropTypes.number,
+    sizingRuns: PropTypes.arrayOf(PropTypes.shape({
+      run: PropTypes.number,
+      samples: PropTypes.number,
+      results: PropTypes.arrayOf(PropTypes.shape({
+        nodetype: PropTypes.string,
+        status: PropTypes.string,
+        cost: PropTypes.number,
+        qosValue: PropTypes.number,
+        perfOverCost: PropTypes.number,
+      })),
+    })),
+    recommendations: PropTypes.arrayOf(PropTypes.shape({
+      nodetype: PropTypes.string,
+      objective: PropTypes.string,
+    })),
+  }),
 };
