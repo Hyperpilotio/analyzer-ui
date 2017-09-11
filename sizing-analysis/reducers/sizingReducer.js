@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import mongoDBLogo from "~/assets/images/asset_mongoDB_logo.svg";
 import kafkaLogo from "~/assets/images/asset_kafka_logo.svg";
 import redisLogo from "~/assets/images/asset_redis_logo.svg";
@@ -74,3 +75,12 @@ export default function reducer(state = initialState, action) {
     return state;
   }
 }
+
+export const AnalyzerPropTypes = {
+  app: PropTypes.shape({
+    name: PropTypes.string,
+    displayName: PropTypes.string,
+    logo: PropTypes.string,
+    selected: PropTypes.bool,
+  }),
+};

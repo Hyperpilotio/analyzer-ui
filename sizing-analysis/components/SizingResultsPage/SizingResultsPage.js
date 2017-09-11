@@ -1,41 +1,38 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { connect as connectRefetch, PromiseState } from "react-refetch";
 import Jumbotron from "~/commons/components/Jumbotron";
 import Container from "~/commons/components/Container";
 import Navbar from "~/commons/components/Navbar";
 import NavItemLink from "~/commons/components/NavItemLink";
+import { AnalyzerPropTypes } from "../../reducers/sizingReducer";
 import ResultTable from "../ResultTable";
 import ResultFigure from "../ResultFigure";
 import KeySummary from "../KeySummary";
 import ProgressIndicator from "../ProgressIndicator";
-import {
-  STAGE_CONFIG,
-  STAGE_TEST,
-  STAGE_RESULT,
-  sampleSizingAnalysisData
-} from "../../constants";
-import styles from "./SizingResultsPage.scss";
-import { connect } from 'react-redux';
+import { STAGE_RESULT } from "../../constants";
 import { mapStateToProps, mapDispatchToProps } from "../../actions";
-import { connect as connectRefetch } from "react-refetch";
+import styles from "./SizingResultsPage.scss";
 
 
 class SizingResultsPage extends Component {
-
   constructor(props) {
     super(props);
     this.state = { highlightedInstance: null };
   }
 
-  onHighlight(instance) {
+  onHighlight = (instance) => {
     this.setState({
-      highlightedInstance: instance
+      highlightedInstance: instance,
     });
   }
 
-  onUnhighlight() {
+  onUnhighlight = () => {
     this.setState({
-      highlightedInstance: null
+      highlightedInstance: null,
     });
   }
 
@@ -43,7 +40,7 @@ class SizingResultsPage extends Component {
     const {
       match: { params: appName },
       history, apps,
-      instancesFetch, analysisFetch
+      instancesFetch, analysisFetch,
     } = this.props;
 
     if (_.isEmpty(appName)) {
@@ -59,8 +56,8 @@ class SizingResultsPage extends Component {
         ...analysisFetch.value,
         recommendations: _.filter(
           analysisFetch.value.recommendations,
-          { objective: "MaxPerfOverCost" }
-        )
+          { objective: "MaxPerfOverCost" },
+        ),
       };
     }
 
@@ -68,8 +65,9 @@ class SizingResultsPage extends Component {
       <div>
         <Jumbotron>
           <ProgressIndicator
-             className={styles.ProgressIndicator}
-             stage={STAGE_RESULT} />
+            className={styles.ProgressIndicator}
+            stage={STAGE_RESULT}
+          />
           <div className={styles["testing-summary"]}>
             <p>Testing summary</p>
             <main>
@@ -83,57 +81,69 @@ class SizingResultsPage extends Component {
           {
             _.filter(apps, "selected").map(app => (
               <NavItemLink
-                key={ app.name }
-                className={ styles.NavItemLink }
-                activeClassName={ styles.selected }
-                to={ `/sizing-test/result/${ app.name }` }
+                key={app.name}
+                className={styles.NavItemLink}
+                activeClassName={styles.selected}
+                to={`/sizing-test/result/${app.name}`}
               >
-                <img src={ app.logo } /> { app.displayName }
+                <img src={app.logo} alt={app.displayName} /> {app.displayName}
               </NavItemLink>
             ))
           }
         </Navbar>
         {
-          (!analysisFetch.fulfilled || !instancesFetch.fulfilled )
-          ? "Loading..."
-          : (
-            <Container className={styles["results-content"]}>
-              <div>
-                <p>&nbsp;</p>
-                <ResultTable
-                  data={analysisFetch.value}
-                  className={styles.ResultTable}
-                  highlightedInstance={this.state.highlightedInstance}
-                  onHighlight={::this.onHighlight}
-                  onUnhighlight={::this.onUnhighlight}
-                />
-              </div>
-              <div>
-                <p>Performance (TPM)</p>
-                <ResultFigure
-                  className={styles.ResultFigure}
-                  data={analysisFetch.value}
-                  instancesData={instancesFetch.value}
-                  highlightedInstance={this.state.highlightedInstance}
-                  onHighlight={::this.onHighlight}
-                  onUnhighlight={::this.onUnhighlight}
-                />
-                <p style={{ float: "right" }}>Cost ($/month)</p>
-              </div>
-            </Container>
-          )
+          (!analysisFetch.fulfilled || !instancesFetch.fulfilled)
+            ? "Loading..."
+            : (
+              <Container className={styles["results-content"]}>
+                <div>
+                  <p>&nbsp;</p>
+                  <ResultTable
+                    data={analysisFetch.value}
+                    className={styles.ResultTable}
+                    highlightedInstance={this.state.highlightedInstance}
+                    onHighlight={this.onHighlight}
+                    onUnhighlight={this.onUnhighlight}
+                  />
+                </div>
+                <div>
+                  <p>Performance (TPM)</p>
+                  <ResultFigure
+                    className={styles.ResultFigure}
+                    data={analysisFetch.value}
+                    instancesData={instancesFetch.value}
+                    highlightedInstance={this.state.highlightedInstance}
+                    onHighlight={this.onHighlight}
+                    onUnhighlight={this.onUnhighlight}
+                  />
+                  <p style={{ float: "right" }}>Cost ($/month)</p>
+                </div>
+              </Container>
+            )
         }
       </div>
     );
   }
 }
 
+SizingResultsPage.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  apps: PropTypes.arrayOf(AnalyzerPropTypes.app),
+  analysisFetch: PropTypes.instanceOf(PromiseState).isRequired,
+  instancesFetch: PropTypes.instanceOf(PromiseState).isRequired,
+};
+
+SizingResultsPage.defaultProps = {
+  apps: [],
+};
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(
   connectRefetch(({ match }) => ({
     analysisFetch: `/api/apps/${match.params.appName}/analysis`,
-    instancesFetch: `/api/instances/us-east-1`
-  }))(SizingResultsPage)
+    instancesFetch: "/api/instances/us-east-1",
+  }))(SizingResultsPage),
 );
