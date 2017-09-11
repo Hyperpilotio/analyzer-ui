@@ -1,22 +1,23 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import _ from "lodash";
 import FaChevronDown from "react-icons/lib/fa/chevron-down";
 import FaChevronUp from "react-icons/lib/fa/chevron-up";
+import { AnalyzerPropTypes } from "../../reducers/sizingReducer";
 import styles from "./ResultTable.scss";
 
 
 const objectiveBadgeMap = {
   MaxPerfOverCost: "Optimal Perf/Cost",
   MinCostWithPerfLimit: "Low Cost",
-  MaxPerfWithCostLimit: "High Perf"
+  MaxPerfWithCostLimit: "High Perf",
 };
 
 
 class ResultTable extends Component {
-
   state = { toggleOn: false }
 
-  toggleFullList() {
+  toggleFullList = () => {
     this.setState({ toggleOn: !this.state.toggleOn });
   }
 
@@ -26,8 +27,8 @@ class ResultTable extends Component {
       ({ nodetype, ...stats }) => ({
         nodetype,
         ...stats,
-        bestFor: _.get(_.find(data.recommendations, { nodetype }), "objective")
-      })
+        bestFor: _.get(_.find(data.recommendations, { nodetype }), "objective"),
+      }),
     );
 
     return (
@@ -48,7 +49,7 @@ class ResultTable extends Component {
               styles["single-result"],
               styles["recommended-result"],
               styles[objective],
-              highlightedInstance === nodetype ? styles["highlighted"] : ""
+              highlightedInstance === nodetype ? styles.highlighted : "",
             ];
             return (
               <tr
@@ -71,14 +72,12 @@ class ResultTable extends Component {
 
           <tr className={styles["see-all"]}>
             <td colSpan={4}>
-              <a onClick={::this.toggleFullList}>
-                { this.state.toggleOn ? [
-                    <FaChevronUp key={0} className={styles["down-icon"]} size={16} />,
-                    "Hide"
-                  ] : [
-                    <FaChevronDown key={0} className={styles["down-icon"]} size={16} />,
-                    "See all tested instances"
-                  ] }
+              <a role="presentation" onClick={this.toggleFullList}>
+                {
+                  this.state.toggleOn
+                    ? [<FaChevronUp key={0} className={styles["down-icon"]} size={16} />, "Hide"]
+                    : [<FaChevronDown key={0} className={styles["down-icon"]} size={16} />, "See all tested instances"]
+                }
               </a>
             </td>
           </tr>
@@ -88,7 +87,7 @@ class ResultTable extends Component {
               const classes = [
                 styles["single-result"],
                 bestFor ? styles[bestFor] : null,
-                highlightedInstance === nodetype ? styles["highlighted"] : null
+                highlightedInstance === nodetype ? styles.highlighted : null,
               ];
               return (
                 <tr
@@ -101,13 +100,15 @@ class ResultTable extends Component {
                     <i className={styles.point} />
                     { nodetype }
                   </td>
-                  { qosValue === 0 ? (
-                      <td colSpan={3}> Unavailable </td>
-                    ) : [
-                      <td key="perf">{ Math.round(qosValue) }</td>,
-                      <td key="cost">{ `$${cost.toFixed(2)}` }</td>,
-                      <td key="perfcost">{ perfOverCost.toFixed(2) }</td>
-                    ] }
+                  {
+                    qosValue === 0
+                      ? <td colSpan={3}> Unavailable </td>
+                      : [
+                        <td key="perf">{ Math.round(qosValue) }</td>,
+                        <td key="cost">{ `$${cost.toFixed(2)}` }</td>,
+                        <td key="perfcost">{ perfOverCost.toFixed(2) }</td>,
+                      ]
+                  }
                 </tr>
               );
             }) }
@@ -115,8 +116,22 @@ class ResultTable extends Component {
 
       </table>
     );
-
   }
 }
+
+ResultTable.propTypes = {
+  className: PropTypes.string,
+  highlightedInstance: PropTypes.string,
+  onHighlight: PropTypes.func,
+  onUnhighlight: PropTypes.func,
+  data: AnalyzerPropTypes.sizingRun.isRequired,
+};
+
+ResultTable.defaultProps = {
+  className: "",
+  highlightedInstance: null,
+  onHighlight: () => {},
+  onUnhighlight: () => {},
+};
 
 export default ResultTable;
