@@ -38,7 +38,10 @@ let webpackConfig = module.exports = {
     publicPath: "/"
   },
   resolve: {
-    modules: [__dirname, path.resolve(__dirname, "node_modules")]
+    modules: [path.resolve(__dirname, "node_modules")],
+    alias: {
+      "~": path.resolve(__dirname)
+    }
   },
   devtool: IS_PROD ? "source-map" : "eval",
   module: {
