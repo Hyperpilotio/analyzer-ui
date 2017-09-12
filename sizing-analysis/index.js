@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { AppContainer } from "react-hot-loader";
+import { AppContainer as ReactHotLoaderContainer } from "react-hot-loader";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
@@ -23,11 +23,11 @@ persistStore(store);
 const render = (Component) => {
   const rootEl = document.getElementById("react-root");
   ReactDOM.render(
-    <AppContainer>
+    <ReactHotLoaderContainer>
       <Provider store={store}>
         <Component />
       </Provider>
-    </AppContainer>,
+    </ReactHotLoaderContainer>,
     rootEl,
   );
 };
