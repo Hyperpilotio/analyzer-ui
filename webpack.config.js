@@ -3,7 +3,6 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
 
@@ -12,10 +11,10 @@ const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
 
 const extractSass = new ExtractTextPlugin({
   filename: "static/[name].bundle.css",
-  disable: !IS_PROD
+  disable: !IS_PROD,
 });
 
-const gitRevisionPlugin = new GitRevisionPlugin()
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 const buildEntryPoint = entryJs => _.filter([
   "whatwg-fetch",
@@ -23,25 +22,25 @@ const buildEntryPoint = entryJs => _.filter([
   IS_PROD ? null : "webpack-hot-middleware/client?http://localhost:3000/",
   IS_PROD ? null : "react-hot-loader/patch",
   entryJs,
-  "./styles/index.sass"
+  "./styles/index.sass",
 ]);
 
 
-let webpackConfig = module.exports = {
+module.exports = {
   entry: {
     interference: buildEntryPoint("./interference-analysis/index.js"),
-    sizing: buildEntryPoint("./sizing-analysis/index.js")
+    sizing: buildEntryPoint("./sizing-analysis/index.js"),
   },
   output: {
-    path: __dirname + "/dist",
+    path: path.resolve(__dirname, "dist"),
     filename: "static/[name].bundle.js",
-    publicPath: "/"
+    publicPath: "/",
   },
   resolve: {
     modules: [path.resolve(__dirname, "node_modules")],
     alias: {
-      "~": path.resolve(__dirname)
-    }
+      "~": path.resolve(__dirname),
+    },
   },
   devtool: IS_PROD ? "source-map" : "eval",
   module: {
@@ -53,10 +52,10 @@ let webpackConfig = module.exports = {
           presets: ["es2015", "react", "stage-0"],
           plugins: _.filter([
             IS_PROD ? null : "react-hot-loader/babel",
-            "lodash"
-          ])
+            "lodash",
+          ]),
         },
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.s[ca]ss|css$/,
@@ -68,18 +67,18 @@ let webpackConfig = module.exports = {
               loader: "css-loader",
               query: {
                 modules: false,
-                minimize: IS_PROD
-              }
+                minimize: IS_PROD,
+              },
             },
             "sass-loader",
             {
               loader: "resolve-url-loader",
               query: {
-                silent: true
-              }
-            }
-          ]
-        })
+                silent: true,
+              },
+            },
+          ],
+        }),
       },
       {
         test: /\.s[ca]ss|css$/,
@@ -92,72 +91,72 @@ let webpackConfig = module.exports = {
               query: {
                 modules: true,
                 localIdentName: "[local]__[hash:base64:5]",
-                minimize: IS_PROD
-              }
+                minimize: IS_PROD,
+              },
             },
             "sass-loader",
             {
               loader: "resolve-url-loader",
               query: {
-                silent: true
-              }
-            }
-          ]
-        })
+                silent: true,
+              },
+            },
+          ],
+        }),
       },
       {
         test: /\.(jpe?g|png|gif|svg|ttf|woff|woff2)$/i,
         loader: "file-loader",
         query: {
-          outputPath: "static/"
-        }
-      }
-    ]
+          outputPath: "static/",
+        },
+      },
+    ],
   },
   plugins: _.filter([
     new WebpackCleanupPlugin(),
     new webpack.ProgressPlugin({ profile: false }),
     new webpack.optimize.CommonsChunkPlugin({
       name: "commons",
-      minChunks: 2
+      minChunks: 2,
     }),
     new HtmlWebpackPlugin({
       chunks: ["commons", "interference"],
       template: "interference-analysis/index.html",
       filename: "interference-analysis.html",
       favicon: "assets/images/favicon.ico",
-      hash: true
+      hash: true,
     }),
     new HtmlWebpackPlugin({
       chunks: ["commons", "sizing"],
       template: "sizing-analysis/index.html",
       filename: "sizing-analysis.html",
       favicon: "assets/images/favicon.ico",
-      hash: true
+      hash: true,
     }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         REACT_SPINKIT_NO_STYLES: "true",
-        GIT_COMMIT: JSON.stringify(gitRevisionPlugin.commithash())
-      }
+        GIT_COMMIT: JSON.stringify(gitRevisionPlugin.commithash()),
+      },
     }),
     extractSass,
     IS_PROD ? null : new webpack.HotModuleReplacementPlugin(),
     IS_PROD ? null : new webpack.NamedModulesPlugin(),
     IS_PROD ? null : new webpack.NoEmitOnErrorsPlugin(),
-    !IS_PROD ? null : new webpack.optimize.UglifyJsPlugin({ comments: false })
+    !IS_PROD ? null : new webpack.optimize.UglifyJsPlugin({ comments: false }),
   ]),
   devServer: {
     hot: true,
     historyApiFallback: {
       index: `/${ANALYSIS_APP}.html`,
       rewrites: [
-        { from: /favicon.ico/, to: "favicon.ico" }
-      ]
+        { from: /favicon.ico/, to: "favicon.ico" },
+      ],
     },
     contentBase: "./dist/",
     host: "localhost",
-    port: 3000
-  }
+    port: 3000,
+  },
 };
