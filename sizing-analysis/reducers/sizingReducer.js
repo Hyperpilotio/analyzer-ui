@@ -83,6 +83,7 @@ export const AnalyzerPropTypes = {
     logo: PropTypes.string,
     selected: PropTypes.bool,
   }),
+
   sizingRun: PropTypes.shape({
     appName: PropTypes.string,
     status: PropTypes.string,
@@ -104,5 +105,13 @@ export const AnalyzerPropTypes = {
       nodetype: PropTypes.string,
       objective: PropTypes.string,
     })),
+  }),
+
+  instanceSpec: PropTypes.shape({
+    name: PropTypes.string,
+    cpu: PropTypes.string,
+    memory: PropTypes.string,
+    network: PropTypes.string,
+    storage: PropTypes.string,
   }),
 };
