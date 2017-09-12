@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import FaCheck from "react-icons/lib/fa/check";
 import FaRefresh from "react-icons/lib/fa/refresh";
 import styles from "./ProgressItem.scss";
@@ -29,5 +30,19 @@ const ProgressItem = ({ status, nodetype, qosValue, cost, perfOverCost }) => (
 
   </li>
 );
+
+ProgressItem.propTypes = {
+  status: PropTypes.string.isRequired,
+  nodetype: PropTypes.string.isRequired,
+  qosValue: PropTypes.number,
+  cost: PropTypes.number,
+  perfOverCost: PropTypes.number,
+};
+
+ProgressItem.defaultProps = {
+  qosValue: null,
+  cost: null,
+  perfOverCost: null,
+};
 
 export default ProgressItem;
