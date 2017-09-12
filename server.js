@@ -1,13 +1,16 @@
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
-const fetch = require("isomorphic-fetch");
+const fetch = require("node-fetch");
 const { MongoClient } = require("mongodb");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
 
 const server = express();
 server.use(morgan("dev"));
+
+let configdb;
+let metricdb;
 
 server.get("/api/", (req, res) => {
   res.json({ status: "ok" });
@@ -17,7 +20,7 @@ server.get("/api/apps", async (req, res) => {
   const appsShowing = ["redis", "mysql", "mongo", "kafka"];
   const application = await configdb.collection("applications").find(
     { name: { $in: appsShowing } },
-    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
+    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 },
   ).toArray();
   res.json(application);
 });
@@ -35,8 +38,8 @@ server.get("/api/instances/:region", async (req, res) => {
           ? ` ${storageConfig.devices}x${storageConfig.size.value}${storageConfig.size.unit}`
           : ""
       ),
-      network: networkConfig.performance
-    })
+      network: networkConfig.performance,
+    }),
   ));
 });
 
@@ -52,13 +55,13 @@ server.post("/api/apps/:appName/analysis/run", async (req, res) => {
   if (existingDocument !== null) {
     res.json({
       error: false,
-      message: "Test already exists"
+      message: "Test already exists",
     });
     return;
   }
   const response = await fetch(
     `${config.workloadProfiler.url}/sizing/aws/${appName}`,
-    { method: "POST" }
+    { method: "POST" },
   );
   const jsonContent = await response.json();
   if (jsonContent.error !== false) {
@@ -66,7 +69,7 @@ server.post("/api/apps/:appName/analysis/run", async (req, res) => {
   } else {
     res.json({
       sessionId: jsonContent.data.id,
-      error: false
+      error: false,
     });
   }
 });
@@ -81,14 +84,16 @@ const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
 
 if (isDev) {
+  /* eslint-disable global-require, import/no-extraneous-dependencies */
   const webpack = require("webpack");
   const webpackDevMiddleware = require("webpack-dev-middleware");
   const webpackHotMiddleware = require("webpack-hot-middleware");
+  /* eslint-enable */
   const compiler = webpack(webpackConfig);
 
   const devMiddleware = webpackDevMiddleware(compiler, {
     stats: { colors: true },
-    publicPath: webpackConfig.output.publicPath
+    publicPath: webpackConfig.output.publicPath,
   });
 
   server.use(devMiddleware);
@@ -100,7 +105,7 @@ if (isDev) {
       (error, result) => {
         res.set("Content-Type", "text/html");
         res.send(result);
-      }
+      },
     );
   });
 } else {
@@ -114,19 +119,15 @@ if (isDev) {
 }
 
 
-let configdb, metricdb;
-
 (async () => {
-
   const { url, metricdbName, configdbName } = config.mongo;
 
   [configdb, metricdb] = await Promise.all([
     MongoClient.connect(`${url}/${configdbName}`),
-    MongoClient.connect(`${url}/${metricdbName}`)
+    MongoClient.connect(`${url}/${metricdbName}`),
   ]);
 
   server.listen(3000, () => {
-    console.log(`${ANALYSIS_APP} UI app listening on port 3000!`);
+    console.log(`${ANALYSIS_APP} UI app listening on port 3000!`); // eslint-disable-line no-console
   });
-
 })();

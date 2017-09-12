@@ -12,7 +12,7 @@
     "serve": "NODE_ENV=production node server.js",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
-    "lint": "eslint sizing-analysis commons"
+    "lint": "eslint sizing-analysis commons server.js"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -55,6 +55,7 @@
     "lodash": "^4.17.4",
     "mongodb": "^2.2.31",
     "morgan": "^1.8.2",
+    "node-fetch": "^1.7.3",
     "normalize.css": "^7.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
