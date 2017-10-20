@@ -8,7 +8,7 @@ WORKDIR /app
 RUN npm install
 RUN npm run build
 
-ENV ANALYSIS_APP sizing-analysis
+ENV ANALYSIS_APP alpha
 
 EXPOSE 3000
 CMD npm run serve

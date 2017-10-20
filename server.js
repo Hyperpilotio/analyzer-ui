@@ -81,7 +81,7 @@ server.get("/api/analyses/:sessionId", async (req, res) => {
 
 
 const isDev = process.env.NODE_ENV !== "production";
-const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
+const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
 if (isDev) {
   /* eslint-disable global-require, import/no-extraneous-dependencies */

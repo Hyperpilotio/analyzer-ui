@@ -7,7 +7,7 @@ const path = require("path");
 const _ = require("lodash");
 
 const IS_PROD = process.env.NODE_ENV === "production";
-const ANALYSIS_APP = process.env.ANALYSIS_APP || "sizing-analysis";
+const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
 const extractSass = new ExtractTextPlugin({
   filename: "static/[name].bundle.css",
