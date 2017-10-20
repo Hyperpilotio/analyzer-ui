@@ -20,7 +20,7 @@ server.get("/api/apps", async (req, res) => {
   const appsShowing = ["redis", "mysql", "mongo", "kafka"];
   const application = await configdb.collection("applications").find(
     { name: { $in: appsShowing } },
-    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 },
+    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
   ).toArray();
   res.json(application);
 });
@@ -39,7 +39,7 @@ server.get("/api/instances/:region", async (req, res) => {
           : ""
       ),
       network: networkConfig.performance,
-    }),
+    })
   ));
 });
 
@@ -61,7 +61,7 @@ server.post("/api/apps/:appName/analysis/run", async (req, res) => {
   }
   const response = await fetch(
     `${config.workloadProfiler.url}/sizing/aws/${appName}`,
-    { method: "POST" },
+    { method: "POST" }
   );
   const jsonContent = await response.json();
   if (jsonContent.error !== false) {
@@ -105,7 +105,7 @@ if (isDev) {
       (error, result) => {
         res.set("Content-Type", "text/html");
         res.send(result);
-      },
+      }
     );
   });
 } else {
