@@ -30,6 +30,7 @@ module.exports = {
   entry: {
     interference: buildEntryPoint("./interference-analysis/index.js"),
     sizing: buildEntryPoint("./sizing-analysis/index.js"),
+    alpha: buildEntryPoint(IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js"),
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -131,6 +132,13 @@ module.exports = {
       chunks: ["commons", "sizing"],
       template: "sizing-analysis/index.html",
       filename: "sizing-analysis.html",
+      favicon: "assets/images/favicon.ico",
+      hash: true,
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["commons", "alpha"],
+      template: "alpha/index.html",
+      filename: "alpha.html",
       favicon: "assets/images/favicon.ico",
       hash: true,
     }),
