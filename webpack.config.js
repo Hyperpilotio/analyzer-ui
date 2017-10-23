@@ -16,21 +16,21 @@ const extractSass = new ExtractTextPlugin({
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 
-const buildEntryPoint = entryJs => _.filter([
+const buildEntryPoint = (...entries) => _.filter([
   "whatwg-fetch",
   "babel-polyfill",
   IS_PROD ? null : "webpack-hot-middleware/client?http://localhost:3000/",
   IS_PROD ? null : "react-hot-loader/patch",
-  entryJs,
-  "./styles/index.sass",
+  "./commons/styles/global.scss",
+  ...entries,
 ]);
 
 
 module.exports = {
   entry: {
-    interference: buildEntryPoint("./interference-analysis/index.js"),
+    interference: buildEntryPoint("./interference-analysis/index.js", "./interference-analysis/styles/index.sass"),
     sizing: buildEntryPoint("./sizing-analysis/index.js"),
-    alpha: buildEntryPoint(IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js"),
+    alpha: buildEntryPoint(IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js", "./alpha/scss/index.scss"),
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -60,7 +60,7 @@ module.exports = {
       },
       {
         test: /\.s[ca]ss|css$/,
-        include: [path.resolve(__dirname, "styles")],
+        include: [path.resolve("interference-analysis", "styles"), path.resolve("commons", "styles"), path.resolve("alpha", "scss")],
         use: extractSass.extract({
           fallback: "style-loader",
           use: [
@@ -83,7 +83,7 @@ module.exports = {
       },
       {
         test: /\.s[ca]ss|css$/,
-        exclude: ["styles", "node_modules"].map(dir => path.resolve(__dirname, dir)),
+        exclude: ["interference-analysis/styles", "node_modules", "alpha/scss", "commons/styles"].map(dir => path.resolve(__dirname, dir)),
         use: extractSass.extract({
           fallback: "style-loader",
           use: [

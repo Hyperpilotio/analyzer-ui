@@ -1,4 +1,9 @@
-@import "../styles/variables.sass";
+@import "~normalize.css";
+@import "commons/styles/variables";
+
+* {
+  letter-spacing: 0.5px;
+}
 
 h3 {
   font-weight: lighter;
