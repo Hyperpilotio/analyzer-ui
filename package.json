@@ -12,7 +12,7 @@
     "serve": "NODE_ENV=production node server.js",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
-    "lint": "eslint sizing-analysis commons webpack.config.js"
+    "lint": "eslint sizing-analysis commons alpha webpack.config.js"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
