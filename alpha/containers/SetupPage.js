@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import classnames from "classnames";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { addToHyperPilot, removeFromHyperPilot } from "../actions";
 
 
-const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick }) => (
+const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick, location }) => (
   <div className="container">
     <div className="row pt-5">
       <div className="col">
@@ -14,11 +16,11 @@ const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick }) => (
     </div>
     <div className="row pt-3">
       <div className="col">
-        <nav className="nav nav-secondary nav-pills nav-fill">
-          <a href="#" className="nav-item nav-link">Step 1: Select Applications</a>
-          <a href="#" className="nav-item nav-link text-secondary">Step 2: Define SLO</a>
-          <a href="#" className="nav-item nav-link text-secondary">Step 3: Begin HyperPiloting</a>
-        </nav>
+        <ul className="nav nav-secondary nav-pills nav-fill">
+          <li className="nav-item nav-link text-primary">Step 1: Select Applications</li>
+          <li className="nav-item nav-link text-secondary">Step 2: Define SLO</li>
+          <li className="nav-item nav-link text-secondary">Step 3: Begin HyperPiloting</li>
+        </ul>
       </div>
     </div>
     <div className="row pt-4 pb-1">
@@ -26,14 +28,18 @@ const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick }) => (
         <h4>Step 1: Add Applications to HyperPilot</h4>
       </div>
     </div>
-    <div className="row" style={{ maxHeight: "300px", overflow: "scroll" }}>
+    <div className="row" style={{ maxHeight: "250px", overflow: "scroll" }}>
       {
         availableApps.map(app => (
           <div className="col-3 pt-2 pb-2" key={app.id}>
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">{ app.name }</h5>
-                <a onClick={() => onAddClick(app.id)} href="#" className="card-link">Add</a>
+                <Link
+                  to={location}
+                  onClick={() => onAddClick(app.id)}
+                  className="card-link"
+                >Add</Link>
               </div>
             </div>
           </div>
@@ -49,13 +55,20 @@ const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick }) => (
     <div className="row">
       <div className="col-9 p-0">
         <div className="row m-0">
-          {
+          { addedApps.length === 0 ?
+            <div className="col">
+              <p>No applications selected yet, click &quot;Add&quot; to add an app to HyperPilot</p>
+            </div> :
             addedApps.map(app => (
               <div className="col-4 pt-2 pb-2" key={app.id}>
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">{ app.name }</h5>
-                    <a href="#" onClick={() => onRemoveClick(app.id)} className="card-link">Remove</a>
+                    <Link
+                      to={location}
+                      onClick={() => onRemoveClick(app.id)}
+                      className="card-link"
+                    >Remove</Link>
                   </div>
                 </div>
               </div>
@@ -65,7 +78,10 @@ const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick }) => (
       </div>
       <div className="col-3">
         <h5 className="text-secondary">Done, next step:</h5>
-        <a className="btn btn-primary" href="#">Define SLO</a>
+        <Link
+          to="/setup/define"
+          className={classnames("btn btn-primary", { disabled: addedApps.length === 0 })}
+        > Define SLO </Link>
       </div>
     </div>
   </div>
