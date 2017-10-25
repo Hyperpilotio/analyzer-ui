@@ -1,8 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 import ProgressBar from "~/commons/components/ProgressBar";
+import { addToHyperPilot, removeFromHyperPilot } from "../actions";
 
 
-const SetupPage = () => (
+const SetupPage = ({ availableApps, addedApps, onAddClick, onRemoveClick }) => (
   <div className="container">
     <div className="row pt-5">
       <div className="col">
@@ -14,8 +16,8 @@ const SetupPage = () => (
       <div className="col">
         <nav className="nav nav-secondary nav-pills nav-fill">
           <a href="#" className="nav-item nav-link">Step 1: Select Applications</a>
-          <a href="#" className="nav-item nav-link disabled">Step 2: Define SLO</a>
-          <a href="#" className="nav-item nav-link disabled">Step 3: Begin HyperPiloting</a>
+          <a href="#" className="nav-item nav-link text-secondary">Step 2: Define SLO</a>
+          <a href="#" className="nav-item nav-link text-secondary">Step 3: Begin HyperPiloting</a>
         </nav>
       </div>
     </div>
@@ -24,14 +26,14 @@ const SetupPage = () => (
         <h4>Step 1: Add Applications to HyperPilot</h4>
       </div>
     </div>
-    <div className="row" style={{ height: "250px", overflow: "scroll" }}>
+    <div className="row" style={{ maxHeight: "300px", overflow: "scroll" }}>
       {
-        ["MongoDB", "Frontend Service", "Internal Dashboard", "Cassandra", "Jenkins"].map(app => (
-          <div className="col-3 pt-2 pb-2" key={app}>
+        availableApps.map(app => (
+          <div className="col-3 pt-2 pb-2" key={app.id}>
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">{ app }</h5>
-                <a href="#" className="card-link">Add</a>
+                <h5 className="card-title">{ app.name }</h5>
+                <a onClick={() => onAddClick(app.id)} href="#" className="card-link">Add</a>
               </div>
             </div>
           </div>
@@ -47,14 +49,18 @@ const SetupPage = () => (
     <div className="row">
       <div className="col-9 p-0">
         <div className="row m-0">
-          <div className="col-4 pt-2 pb-2">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Spark</h5>
-                <a href="#" className="card-link">Remove</a>
+          {
+            addedApps.map(app => (
+              <div className="col-4 pt-2 pb-2" key={app.id}>
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{ app.name }</h5>
+                    <a href="#" onClick={() => onRemoveClick(app.id)} className="card-link">Remove</a>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            ))
+          }
         </div>
       </div>
       <div className="col-3">
@@ -65,4 +71,18 @@ const SetupPage = () => (
   </div>
 );
 
-export default SetupPage;
+
+const mapStateToProps = ({ apps, addedAppIds }) => ({
+  availableApps: apps.filter(app => !addedAppIds.includes(app.id)),
+  addedApps: apps.filter(app => addedAppIds.includes(app.id)),
+});
+
+const mapDispatchToProps = dispatch => ({
+  onAddClick: id => dispatch(addToHyperPilot(id)),
+  onRemoveClick: id => dispatch(removeFromHyperPilot(id)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SetupPage);
