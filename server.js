@@ -17,10 +17,8 @@ server.get("/api/", (req, res) => {
 });
 
 server.get("/api/apps", async (req, res) => {
-  const appsShowing = ["redis", "mysql", "mongo", "kafka"];
   const application = await configdb.collection("applications").find(
-    { name: { $in: appsShowing } },
-    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
+    {}, { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
   ).toArray();
   res.json(application);
 });
