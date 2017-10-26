@@ -2,12 +2,14 @@ const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 const fetch = require("node-fetch");
-const { MongoClient } = require("mongodb");
+const bodyParser = require("body-parser");
+const { MongoClient, ObjectId } = require("mongodb");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
 
 const server = express();
 server.use(morgan("dev"));
+server.use(bodyParser.json());
 
 let configdb;
 let metricdb;
@@ -17,12 +19,25 @@ server.get("/api/", (req, res) => {
 });
 
 server.get("/api/apps", async (req, res) => {
-  const appsShowing = ["redis", "mysql", "mongo", "kafka"];
   const application = await configdb.collection("applications").find(
-    { name: { $in: appsShowing } },
-    { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
+    {}, { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
   ).toArray();
   res.json(application);
+});
+
+server.post("/api/apps/select", async (req, res) => {
+  const selectPromise = configdb.collection("applications").updateMany(
+    { _id: { $in: req.body.select.map(ObjectId) } },
+    { $set: { selected: true } }
+  );
+  const excludePromise = configdb.collection("applications").updateMany(
+    { _id: { $in: req.body.exclude.map(ObjectId) } },
+    { $set: { selected: false } }
+  );
+  const updateResults = await Promise.all([selectPromise, excludePromise]);
+  res.json({
+    success: updateResults.every(res => res.result.ok === 1)
+  });
 });
 
 server.get("/api/instances/:region", async (req, res) => {
