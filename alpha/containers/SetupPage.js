@@ -21,4 +21,4 @@ const SetupPage = () => (
   </div>
 );
 
-export default (SetupPage);
+export default SetupPage;

@@ -64,7 +64,7 @@ const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, location
       <div className="col-3">
         <h5 className="text-secondary">Done, next step:</h5>
         <Link
-          to="/setup/define"
+          to="/setup/stepTwo"
           className={classnames("btn btn-primary", { disabled: addedApps.length === 0 })}
         > Define SLO </Link>
       </div>

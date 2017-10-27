@@ -54,7 +54,7 @@ server.get("/api/instances/:region", async (req, res) => {
           : ""
       ),
       network: networkConfig.performance,
-    }),
+    })
   ));
 });
 
@@ -76,7 +76,7 @@ server.post("/api/apps/:appName/analysis/run", async (req, res) => {
   }
   const response = await fetch(
     `${config.workloadProfiler.url}/sizing/aws/${appName}`,
-    { method: "POST" },
+    { method: "POST" }
   );
   const jsonContent = await response.json();
   if (jsonContent.error !== false) {
