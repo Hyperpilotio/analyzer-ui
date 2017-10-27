@@ -19,10 +19,13 @@ server.get("/api/", (req, res) => {
 });
 
 server.get("/api/apps", async (req, res) => {
-  const application = await configdb.collection("applications").find(
-    {}, { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1 }
+  const applications = await configdb.collection("applications").find(
+    {}, { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1, selected: 1 }
   ).toArray();
-  res.json(application);
+  res.json({
+    success: true,
+    applications
+  });
 });
 
 server.post("/api/apps/select", async (req, res) => {
