@@ -14,18 +14,11 @@ import StepThree from "./containers/StepThree";
 const store = createStore(
   reducer,
   {
-    apps: [
-      { name: "goddd", id: "1" },
-      { name: "lucene", id: "2" },
-      { name: "kafka", id: "3" },
-      { name: "memcached", id: "4" },
-      { name: "mongo", id: "5" },
-      { name: "mysql", id: "6" },
-      { name: "nginx", id: "7" },
-      { name: "spark", id: "8" },
-      { name: "dashboard", id: "9" },
-    ],
+    apps: [],
     addedAppIds: [],
+    ui: {
+      isFetchingAppsLoading: false,
+    },
   },
   compose(
     applyMiddleware(thunk),
