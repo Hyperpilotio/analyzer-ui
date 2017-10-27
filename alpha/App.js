@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
 import { navLogo } from "~/assets";
 import reducer from "./reducers";
 import SetupPage from "./containers/SetupPage";
@@ -26,11 +27,14 @@ const store = createStore(
     ],
     addedAppIds: [],
   },
-  /* eslint-disable no-underscore-dangle */
-  process.env.NODE_ENV === "production"
-    ? undefined
-    : window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  /* eslint-enable */
+  compose(
+    applyMiddleware(thunk),
+    /* eslint-disable no-underscore-dangle */
+    process.env.NODE_ENV === "production"
+      ? undefined
+      : window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    /* eslint-enable */
+  )
 );
 
 export default () => (
