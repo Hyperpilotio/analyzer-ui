@@ -6,7 +6,9 @@ import { navLogo } from "~/assets";
 import reducer from "./reducers";
 import SetupPage from "./containers/SetupPage";
 import DashboardPage from "./containers/DashboardPage";
-
+import StepOne from "./containers/StepOne";
+import StepTwo from "./containers/StepTwo";
+import StepThree from "./containers/StepThree";
 
 const store = createStore(
   reducer,
@@ -40,8 +42,11 @@ export default () => (
             <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
           </div>
         </div>
-        <Route path="/setup" component={SetupPage} />
         <Route path="/dashboard" component={DashboardPage} />
+        <Route path="/setup" component={SetupPage} />
+        <Route path="/setup/stepOne" component={StepOne} />
+        <Route path="/setup/stepTwo" component={StepTwo} />
+        <Route path="/setup/stepThree" component={StepThree} />
       </div>
     </Router>
   </Provider>
