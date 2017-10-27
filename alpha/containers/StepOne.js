@@ -7,7 +7,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { addToHyperPilot, removeFromHyperPilot } from "../actions";
 
 const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, location }) => (
-  <div>
+  <div className="container">
     <div className="row pt-4 pb-1">
       <div className="col-sm-12">
         <h4>Step 1: Add Applications to HyperPilot</h4>

@@ -1,9 +1,5 @@
 import React from "react";
-import { Route } from "react-router-dom";
 import ProgressBar from "~/commons/components/ProgressBar";
-import StepOne from "./StepOne";
-import StepTwo from "./StepTwo";
-import StepThree from "./StepThree";
 
 const SetupPage = () => (
   <div className="container">
@@ -22,9 +18,6 @@ const SetupPage = () => (
         </ul>
       </div>
     </div>
-    <Route path="/setup/1" component={StepOne} />
-    <Route path="/setup/2" component={StepTwo} />
-    <Route path="/setup/3" component={StepThree} />
   </div>
 );
 
