@@ -4,22 +4,16 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { navLogo } from "~/assets";
-import reducer from "./reducers";
+import rootReducer from "./reducers";
 import SetupPage from "./containers/SetupPage";
 import DashboardPage from "./containers/DashboardPage";
 import StepOne from "./containers/StepOne";
 import StepTwo from "./containers/StepTwo";
 import StepThree from "./containers/StepThree";
 
+
 const store = createStore(
-  reducer,
-  {
-    apps: [],
-    addedAppIds: [],
-    ui: {
-      isFetchingAppsLoading: false,
-    },
-  },
+  rootReducer,
   compose(
     applyMiddleware(thunk),
     /* eslint-disable no-underscore-dangle */
@@ -27,7 +21,7 @@ const store = createStore(
       ? undefined
       : window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     /* eslint-enable */
-  )
+  ),
 );
 
 export default () => (

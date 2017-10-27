@@ -24,7 +24,7 @@ export const fetchAppsFail = () => ({
   type: types.FETCH_APPS_FAIL,
 });
 
-export const fetchApps = () => async dispatch => {
+export const fetchApps = () => async (dispatch) => {
   dispatch(fetchAppsLoading());
 
   const res = await fetch("/api/apps");
@@ -40,3 +40,17 @@ export const fetchApps = () => async dispatch => {
     dispatch(fetchAppsFail());
   }
 };
+
+export const editSingleApp = appId => ({
+  type: types.EDIT_SINGLE_APP,
+  appId,
+});
+
+export const submitSloCommit = data => ({
+  type: types.SUBMIT_SLO_COMMIT,
+  data,
+});
+
+export const closeModal = () => ({
+  type: types.CLOSE_MODAL,
+});
