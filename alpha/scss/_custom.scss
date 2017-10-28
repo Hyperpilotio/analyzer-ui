@@ -5,3 +5,29 @@ $theme-colors: (
   "success": #7ed321,
   "danger": #ff8686
 );
+
+.card{
+  @include effect-fade-in;
+}
+
+//Custumize Modal
+.ReactModal__Body--open{
+  transition: all .4s ease-out;
+}
+
+.ReactModal__Overlay{
+  background-color: rgba(0,0,0,0.75) !important;
+  z-index:999;
+
+  .ReactModal__Content{
+    @include rect-center(860px,initial);
+    position:relative !important;
+    border:none !important;;
+    overflow:hidden !important;
+    padding:0 !important;
+    left: 0px!important;
+    right: 0px!important;
+    border: 0px solid rgb(204, 204, 204) !important;
+    margin-top: 60px;
+  }
+}

@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import classnames from "classnames";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
-import { addToHyperPilot, removeFromHyperPilot } from "../actions";
+import { addToHyperPilot, removeFromHyperPilot, stretchProgressBar } from "../actions";
 
-const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, location }) => (
+
+const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, location ,stepNext }) => (
   <div className="container">
     <div className="row pt-4 pb-1">
       <div className="col-sm-12">
@@ -65,6 +66,7 @@ const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, location
         <h5 className="text-secondary">Done, next step:</h5>
         <Link
           to="/setup/stepTwo"
+          onClick={stepNext}
           className={classnames("btn btn-primary", { disabled: addedApps.length === 0 })}
         > Define SLO </Link>
       </div>
@@ -89,13 +91,14 @@ StepOne.propTypes = {
 };
 
 const mapStateToProps = ({ setup }) => ({
-  availableApps: setup.apps.filter(app => !setup.addedAppIds.includes(app.id)),
-  addedApps: setup.apps.filter(app => setup.addedAppIds.includes(app.id)),
+  availableApps: setup.apps.filter(app => !setup.addedAppIds.includes(app._id)),
+  addedApps: setup.apps.filter(app => setup.addedAppIds.includes(app._id)),
 });
 
 const mapDispatchToProps = dispatch => ({
   onAddClick: id => dispatch(addToHyperPilot(id)),
   onRemoveClick: id => dispatch(removeFromHyperPilot(id)),
+  stepNext: () => dispatch(stretchProgressBar()),
 });
 
 export default connect(

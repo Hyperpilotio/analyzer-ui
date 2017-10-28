@@ -8,11 +8,11 @@ import {
   Form,
 } from "react-redux-form";
 import { editSingleApp, submitSloConfig, closeModal } from "../actions/index";
-
+import _s from "./style.scss";
 
 const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelClick }) => (
 
-  <div className="container">
+  <div className={`container ${_s.stepTwo}`}>
     <div className="row pt-4">
       { addedApps.length === 0 ?
         <div className="col">
@@ -20,13 +20,13 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
         </div>
         :
         addedApps.map(app => (
-          <div key={app.id} className="">
+          <div key={app._id} className="col-3 pt-2 pb-2">
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">{ app.name }</h5>
                 <Link
                   to={location}
-                  onClick={() => onEditClick(app.id)}
+                  onClick={() => onEditClick(app._id)}
                   className="card-link"
                 >Edit</Link>
               </div>
@@ -40,7 +40,7 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
         <Form
           model="deep.slo"
           className="modal-form"
-          onSubmit={ slo => onSloSubmit(slo)}
+          onSubmit={slo => onSloSubmit(slo)}
         >
           <h2>Please choose a custom SLO configure</h2>
           <div className="container">
@@ -70,9 +70,9 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
               />
             </div>
           </div>
-          <div className="fl">
-            <button className="btn btn-default" onClick={closeModal}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Submit</button>
+          <div className="btn-con">
+            <button className={`btn btn-default ${_s.btnGrp}`} onClick={onCancelClick}>Cancel</button>
+            <button type="submit" className={`btn btn-primary ${_s.btnGrp}`}>Submit</button>
           </div>
         </Form>
       </div>
@@ -93,7 +93,7 @@ StepTwo.propTypes = {
 
 
 const mapStateToProps = ({ setup }) => ({
-  addedApps: setup.apps.filter(app => setup.addedAppIds.includes(app.id)),
+  addedApps: setup.apps.filter(app => setup.addedAppIds.includes(app._id)),
   isModalOpen: setup.modal.isModalOpen,
 });
 

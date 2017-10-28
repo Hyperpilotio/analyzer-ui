@@ -28,6 +28,10 @@ module.exports = {
       "error",
       "double"
     ],
+    "no-underscore-dangle": [
+      "error", 
+      { "allow": ["_id"] }
+    ],
     "semi": [
       "error",
       "always"

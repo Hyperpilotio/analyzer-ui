@@ -11,6 +11,10 @@ export const removeFromHyperPilot = appId => ({
   appId,
 });
 
+export const stretchProgressBar = () => ({
+  type: types.STRETCH_PROGRESS_BAR,
+});
+
 export const fetchAppsLoading = () => ({
   type: types.FETCH_APPS_LOADING,
 });

@@ -4,6 +4,7 @@ import * as types from "../actions/types";
 const initialState = {
   apps: [],
   addedAppIds: [],
+  stepPercent: 34,
   ui: {
     isFetchingAppsLoading: false,
   },
@@ -45,6 +46,8 @@ export default function setup(state = initialState, action) {
     return { ...state, modal: { isModalOpen: false } };
   case types.SUBMIT_SLO_COMMIT:
     return { ...state };
+  case types.STRETCH_PROGRESS_BAR:
+    return { ...state, stepPercent: state.stepPercent + 33 };
 
   default:
     return state;

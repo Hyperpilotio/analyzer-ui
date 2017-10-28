@@ -15,7 +15,7 @@ class SetupPage extends React.Component {
         <div className="row pt-5">
           <div className="col">
             <h3>SETUP HYPERPILOT</h3>
-            <ProgressBar percent={33} />
+            <ProgressBar percent={this.props.stepPercent} />
           </div>
         </div>
         <div className="row pt-3">
@@ -32,11 +32,15 @@ class SetupPage extends React.Component {
   }
 }
 
+const mapStateToProps = ({ setup }) => ({
+  stepPercent: setup.stepPercent,
+});
+
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
-)(SetupPage)
+)(SetupPage);
