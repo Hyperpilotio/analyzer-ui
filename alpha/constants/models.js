@@ -1,7 +1,7 @@
 export const initialSloState = {
-  metric: "",
-  latency: 0,
-  treshold: "",
+  type: "",
+  rate: 0,
+  threshold: 0,
 };
 
 export default initialSloState;

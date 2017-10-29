@@ -90,9 +90,9 @@ StepOne.propTypes = {
   location: ReactRouterPropTypes.location.isRequired,
 };
 
-const mapStateToProps = ({ setup }) => ({
-  availableApps: setup.apps.filter(app => !setup.addedAppIds.includes(app._id)),
-  addedApps: setup.apps.filter(app => setup.addedAppIds.includes(app._id)),
+const mapStateToProps = ({ setup: { apps, addedAppIds } }) => ({
+  availableApps: apps.filter(app => !addedAppIds.includes(app._id)),
+  addedApps: apps.filter(app => addedAppIds.includes(app._id)),
 });
 
 const mapDispatchToProps = dispatch => ({

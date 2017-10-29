@@ -1,8 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import Modal from "react-modal";
 import {
   Control,
   Form,
@@ -16,7 +14,7 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
     <div className="row pt-4">
       { addedApps.length === 0 ?
         <div className="col">
-          <p>There is no addedApps yet.</p>
+          <p>No apps selected</p>
         </div>
         :
         addedApps.map(app => (
@@ -24,59 +22,73 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">{ app.name }</h5>
-                <Link
-                  to={location}
-                  onClick={() => onEditClick(app._id)}
-                  className="card-link"
-                >Edit</Link>
+                
+                <button type="button" className="card-link" data-toggle="modal" data-target="#exampleModal">
+                  Edit
+                </button>
               </div>
             </div>
           </div>
         ))
       }
     </div>
-    <Modal isOpen={isModalOpen}>
-      <div className="modal-bg">
-        <Form
-          model="deep.slo"
-          className="modal-form"
-          onSubmit={slo => onSloSubmit(slo)}
-        >
-          <h2>Please choose a custom SLO configure</h2>
-          <div className="container">
-            <div className="form-group">
-              <label htmlFor="metric">Metric</label>
-              <Control.text
-                type="text"
-                className="form-control"
-                model=".metric"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="latency">Latency</label>
-              <Control.text
-                type="text"
-                className="form-control"
-                model=".latency"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="form-treshold">Threshold</label>
-              <Control.text
-                type="text"
-                id="form-threshold"
-                className="form-control"
-                model=".treshold"
-              />
-            </div>
+
+    <div id="exampleModal" className="modal fade">
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Modal title</h5>
+            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <div className="btn-con">
-            <button className={`btn btn-default ${_s.btnGrp}`} onClick={onCancelClick}>Cancel</button>
-            <button type="submit" className={`btn btn-primary ${_s.btnGrp}`}>Submit</button>
+          <div className="modal-body">
+            <Form
+              model="deep.slo"
+              className="modal-form"
+              onSubmit={slo => onSloSubmit(slo)}
+            >
+              <h2>Please choose a custom SLO configure</h2>
+              <div className="container">
+                <div className="form-group">
+                  <label htmlFor="metric">Metric</label>
+                  <Control.text
+                    type="text"
+                    className="form-control"
+                    model=".type"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="latency">Latency</label>
+                  <Control.text
+                    type="text"
+                    className="form-control"
+                    model=".rate"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="form-treshold">Threshold</label>
+                  <Control.text
+                    type="text"
+                    id="form-threshold"
+                    className="form-control"
+                    model=".threshold"
+                  />
+                </div>
+              </div>
+              <div className="btn-con">
+                <button className={`btn btn-default ${_s.btnGrp}`} onClick={onCancelClick}>Cancel</button>
+                <button type="submit" className={`btn btn-primary ${_s.btnGrp}`}>Submit</button>
+              </div>
+            </Form>
           </div>
-        </Form>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-primary">Save changes</button>
+            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
-    </Modal>
+    </div>
   </div>
 );
 
