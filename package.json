@@ -76,7 +76,7 @@
     "react-router-prop-types": "^0.0.1",
     "react-spinkit": "^3.0.0",
     "react-style-proptype": "^3.0.0",
-    "reactstrap": "^4.8.0",
+    "reactstrap": "5.0.0-alpha.3",
     "redux": "^3.7.2",
     "redux-persist": "^4.8.3",
     "redux-thunk": "^2.2.0",
