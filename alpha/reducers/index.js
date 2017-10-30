@@ -4,7 +4,7 @@ import { initialSloState } from "../constants/models";
 import setup from "./setup";
 
 const rootReducer = combineReducers({
-  deep: combineForms({
+  forms: combineForms({
     slo: modelReducer("slo", initialSloState),
   }),
   setup,

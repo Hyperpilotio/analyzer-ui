@@ -33,7 +33,7 @@ const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick }) => (
 
     <Modal isOpen={isModalOpen} toggle={toggleModal}>
       <Form
-        model="deep.slo"
+        model="forms.slo"
         className="modal-form"
         onSubmit={slo => onSubmitClick(slo)}
       >
