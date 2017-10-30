@@ -1,5 +1,6 @@
 import _ from "lodash";
 import * as types from "../actions/types";
+import { fakeArr } from "../constants/models";
 
 const initialState = {
   apps: [],
@@ -12,14 +13,16 @@ const initialState = {
     isModalOpen: false,
     appId: "",
   },
-  currentApp: {
+  currentSlo: {
     metric: "",
-    latency: 0,
-    treshold: "",
+    type: 0,
+    summary: "",
+    value: "",
+    unit: "",
   },
 };
 
-// TODO: SUBMIT_SLO_COMMIT flow
+
 export default function setup(state = initialState, action) {
   switch (action.type) {
   case types.FETCH_APPS_LOADING:
@@ -30,7 +33,9 @@ export default function setup(state = initialState, action) {
   case types.FETCH_APPS_SUCCESS:
     return {
       ...state,
-      apps: action.applications,
+      // TODO: using fake data instead for structing schema in DB
+      // apps: action.applications,
+      apps: fakeArr,
       ui: _.extend({}, state.ui, { isFetchAppsLoading: false }),
     };
   case types.FETCH_APPS_FAIL:
@@ -50,6 +55,9 @@ export default function setup(state = initialState, action) {
     return { ...state };
   case types.STRETCH_PROGRESS_BAR:
     return { ...state, stepPercent: state.stepPercent + 33 };
+  case types.TOGGLE_EDIT_SLO_MODAL:
+    return { ...state, modal: { isModalOpen: !state.modal.isModalOpen }, currentSlo: action.slo };
+
 
   default:
     return state;

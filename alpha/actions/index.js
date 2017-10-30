@@ -50,8 +50,8 @@ export const editSingleApp = appId => ({
   appId,
 });
 
-export const submitSloCommit = data => ({
-  type: types.SUBMIT_SLO_COMMIT,
+export const submitSloConfig = data => ({
+  type: types.SUBMIT_SLO_CONFIG,
   data,
 });
 

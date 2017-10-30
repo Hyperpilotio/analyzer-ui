@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import {
   Control,
   Form,
+  actions,
 } from "react-redux-form";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { submitSloConfig, toggleModalStatus } from "../actions/index";
 import _s from "./style.scss";
 
-const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick }) => (
+const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick, editSloClick }) => (
 
   <div className={`container ${_s.stepTwo}`}>
     <div className="row pt-4">
@@ -18,12 +19,26 @@ const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick }) => (
           <p>No apps selected</p>
         </div>
         :
-        addedApps.map(app => (
-          <div key={app._id} className="col-3 pt-2 pb-2">
+        addedApps.map(({ _id, slo, name }) => (
+          <div key={_id} className="col-3 pt-2 pb-2">
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">{ app.name }</h5>
-                <Button color="primary" onClick={toggleModal}> Open Modal </Button>
+                <h5 className="card-title">{ name }</h5>
+                <div className="card-info">
+                  <p>metric: { slo.metric }</p>
+                  <p>type: { slo.type }</p>
+                  <p>summary: { slo.summary }</p>
+                  <p>value: { slo.value }</p>
+                  <p>unit: { slo.unit }</p>
+
+                </div>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    toggleModal();
+                    editSloClick(slo);
+                  }}
+                >Edit</Button>
               </div>
             </div>
           </div>
@@ -37,32 +52,50 @@ const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick }) => (
         className="modal-form"
         onSubmit={slo => onSubmitClick(slo)}
       >
-        <ModalHeader toggle={toggleModal}>Custom SLO configure</ModalHeader>
+        <ModalHeader toggle={toggleModal}>Edit SLO Configuration</ModalHeader>
         <ModalBody>
           <div className="container">
             <div className="form-group">
-              <label htmlFor="metric">Metric</label>
+              <label htmlFor="form-metric">Metric</label>
               <Control.text
-                type="text"
+                id="form-metric"
+                className="form-control"
+                model=".metric"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="form-type">Type</label>
+              <Control.select
+                id="form-type"
                 className="form-control"
                 model=".type"
+              >
+                <option value="rate">Rate</option>
+                <option value="latency">Latency</option>
+              </Control.select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="form-summary">Summary</label>
+              <Control.text
+                id="form-summary"
+                className="form-control"
+                model=".summary"
               />
             </div>
             <div className="form-group">
-              <label htmlFor="latency">Latency</label>
+              <label htmlFor="form-value">Value</label>
               <Control.text
-                type="text"
+                id="form-value"
                 className="form-control"
-                model=".rate"
+                model=".value"
               />
             </div>
             <div className="form-group">
-              <label htmlFor="form-treshold">Threshold</label>
+              <label htmlFor="form-unit">Unit</label>
               <Control.text
-                type="text"
-                id="form-threshold"
+                id="form-unit"
                 className="form-control"
-                model=".threshold"
+                model=".unit"
               />
             </div>
           </div>
@@ -85,6 +118,7 @@ StepTwo.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
   onSubmitClick: PropTypes.func.isRequired,
+  editSloClick: PropTypes.func.isRequired,
 };
 
 
@@ -96,6 +130,7 @@ const mapStateToProps = ({ setup }) => ({
 const mapDispatchToProps = dispatch => ({
   toggleModal: () => dispatch(toggleModalStatus()),
   onSubmitClick: slo => dispatch(submitSloConfig(slo)),
+  editSloClick: slo => dispatch(actions.change("slo", slo)),
 });
 
 export default connect(
