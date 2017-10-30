@@ -7,7 +7,14 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { addToHyperPilot, removeFromHyperPilot, stretchProgressBar } from "../actions";
 
 
-const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, stepNext, location }) => (
+const StepOne = ({
+  availableApps,
+  addedApps,
+  onAddClick,
+  onRemoveClick,
+  stepNext,
+  location,
+}) => (
   <div className="container">
     <div className="row pt-4 pb-1">
       <div className="col-sm-12">

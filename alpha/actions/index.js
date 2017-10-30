@@ -58,3 +58,34 @@ export const submitSloConfig = data => ({
 export const toggleModalStatus = () => ({
   type: types.TOGGLE_MODAL,
 });
+
+
+export const updateSingleSloLoading = () => ({
+  type: types.UPDATE_SINGLE_SLO_LOADING,
+});
+
+export const updateSingleSloSuccess = applications => ({
+  type: types.UPDATE_SINGLE_SLO_SUCCESS,
+  applications,
+});
+
+export const updateSingleSloFail = () => ({
+  type: types.UPDATE_SINGLE_SLO_FAIL,
+});
+
+export const updateSingleSlo = () => async (dispatch) => {
+  dispatch(updateSingleSloLoading());
+
+  const res = await fetch("/api/update");
+  if (!res.ok) {
+    dispatch(updateSingleSloFail());
+    return;
+  }
+
+  const data = await res.json();
+  if (data.success) {
+    dispatch(updateSingleSloSuccess(data.applications));
+  } else {
+    dispatch(updateSingleSloFail());
+  }
+};

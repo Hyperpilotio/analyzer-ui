@@ -8,18 +8,13 @@ const initialState = {
   stepPercent: 34,
   ui: {
     isFetchingAppsLoading: false,
+    isUpdatingSingleSloLoading: false,
   },
   modal: {
     isModalOpen: false,
     appId: "",
   },
-  currentSlo: {
-    metric: "",
-    type: 0,
-    summary: "",
-    value: "",
-    unit: "",
-  },
+  isHPReady: false,
 };
 
 
@@ -57,7 +52,22 @@ export default function setup(state = initialState, action) {
     return { ...state, stepPercent: state.stepPercent + 33 };
   case types.TOGGLE_EDIT_SLO_MODAL:
     return { ...state, modal: { isModalOpen: !state.modal.isModalOpen }, currentSlo: action.slo };
-
+  case types.UPDATE_SINGLE_SLO_LOADING:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isUpdatingSingleSloLoading: true }),
+    };
+  case types.UPDATE_SINGLE_SLO_SUCCESS:
+    return {
+      ...state,
+      // TODO: using fake data instead for structing schema in DB
+      // apps: action.applications,
+      apps: fakeArr,
+      ui: _.extend({}, state.ui, { isUpdatingSingleSloLoading: false }),
+    };
+  case types.UPDATE_SINGLE_SLO_FAIL:
+    console.error("Update SLO failed");
+    return state;
 
   default:
     return state;
