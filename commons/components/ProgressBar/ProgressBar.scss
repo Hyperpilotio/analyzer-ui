@@ -12,6 +12,7 @@
     border-radius: 15px;
     position: absolute;
     height: 100%;
+    transition: all .4s ease-in-out;
     background-image:
        -webkit-linear-gradient(-45deg,
                                transparent 22%, rgba(0, 0, 0, .1) 33%,

@@ -1,0 +1,23 @@
+//Mixin
+@mixin center{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin rect-center($width,$height){
+  width: $width;
+  height: $height;
+  margin-left: auto;
+  margin-right:auto;
+}
+
+//Effect
+@mixin effect-fade-in {
+  -webkit-animation: fadein 800ms;
+  -moz-animation: fadein 800ms;
+  -ms-animation: fadein 800ms;
+  -o-animation: fadein 800ms;
+  animation: fadein 800ms;
+}
+
+

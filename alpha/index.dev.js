@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { AppContainer as ReactHotLoaderContainer } from "react-hot-loader";
 import App from "./App";
 
-
 const render = (Component) => {
   const rootEl = document.getElementById("react-root");
   ReactDOM.render(
