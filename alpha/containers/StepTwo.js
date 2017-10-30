@@ -5,10 +5,11 @@ import {
   Control,
   Form,
 } from "react-redux-form";
-import { editSingleApp, submitSloConfig, closeModal } from "../actions/index";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { submitSloConfig, toggleModalStatus } from "../actions/index";
 import _s from "./style.scss";
 
-const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelClick }) => (
+const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick }) => (
 
   <div className={`container ${_s.stepTwo}`}>
     <div className="row pt-4">
@@ -22,10 +23,7 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">{ app.name }</h5>
-                
-                <button type="button" className="card-link" data-toggle="modal" data-target="#exampleModal">
-                  Edit
-                </button>
+                <Button color="primary" onClick={toggleModal}> Open Modal </Button>
               </div>
             </div>
           </div>
@@ -33,62 +31,48 @@ const StepTwo = ({ addedApps, isModalOpen, onEditClick, onSloSubmit, onCancelCli
       }
     </div>
 
-    <div id="exampleModal" className="modal fade">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Modal title</h5>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+    <Modal isOpen={isModalOpen} toggle={toggleModal}>
+      <Form
+        model="deep.slo"
+        className="modal-form"
+        onSubmit={slo => onSubmitClick(slo)}
+      >
+        <ModalHeader toggle={toggleModal}>Custom SLO configure</ModalHeader>
+        <ModalBody>
+          <div className="container">
+            <div className="form-group">
+              <label htmlFor="metric">Metric</label>
+              <Control.text
+                type="text"
+                className="form-control"
+                model=".type"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="latency">Latency</label>
+              <Control.text
+                type="text"
+                className="form-control"
+                model=".rate"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="form-treshold">Threshold</label>
+              <Control.text
+                type="text"
+                id="form-threshold"
+                className="form-control"
+                model=".threshold"
+              />
+            </div>
           </div>
-          <div className="modal-body">
-            <Form
-              model="deep.slo"
-              className="modal-form"
-              onSubmit={slo => onSloSubmit(slo)}
-            >
-              <h2>Please choose a custom SLO configure</h2>
-              <div className="container">
-                <div className="form-group">
-                  <label htmlFor="metric">Metric</label>
-                  <Control.text
-                    type="text"
-                    className="form-control"
-                    model=".type"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="latency">Latency</label>
-                  <Control.text
-                    type="text"
-                    className="form-control"
-                    model=".rate"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="form-treshold">Threshold</label>
-                  <Control.text
-                    type="text"
-                    id="form-threshold"
-                    className="form-control"
-                    model=".threshold"
-                  />
-                </div>
-              </div>
-              <div className="btn-con">
-                <button className={`btn btn-default ${_s.btnGrp}`} onClick={onCancelClick}>Cancel</button>
-                <button type="submit" className={`btn btn-primary ${_s.btnGrp}`}>Submit</button>
-              </div>
-            </Form>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-primary">Save changes</button>
-            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={toggleModal} type="submit">Save changes</Button>
+          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+        </ModalFooter>
+      </Form>
+    </Modal>
   </div>
 );
 
@@ -99,8 +83,8 @@ StepTwo.propTypes = {
       id: PropTypes.string,
     })).isRequired,
   isModalOpen: PropTypes.bool.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-  onSloSubmit: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  onSubmitClick: PropTypes.func.isRequired,
 };
 
 
@@ -110,9 +94,8 @@ const mapStateToProps = ({ setup }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onEditClick: id => dispatch(editSingleApp(id)),
-  onSloSubmit: slo => dispatch(submitSloConfig(slo)),
-  onCancelClick: () => dispatch(closeModal()),
+  toggleModal: () => dispatch(toggleModalStatus()),
+  onSubmitClick: slo => dispatch(submitSloConfig(slo)),
 });
 
 export default connect(

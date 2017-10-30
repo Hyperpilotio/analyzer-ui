@@ -44,6 +44,8 @@ export default function setup(state = initialState, action) {
     return { ...state, modal: { isModalOpen: true } };
   case types.CLOSE_MODAL:
     return { ...state, modal: { isModalOpen: false } };
+  case types.TOGGLE_MODAL:
+    return { ...state, modal: { isModalOpen: !state.modal.isModalOpen } };
   case types.SUBMIT_SLO_COMMIT:
     return { ...state };
   case types.STRETCH_PROGRESS_BAR:

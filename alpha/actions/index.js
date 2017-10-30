@@ -55,6 +55,6 @@ export const submitSloCommit = data => ({
   data,
 });
 
-export const closeModal = () => ({
-  type: types.CLOSE_MODAL,
+export const toggleModalStatus = () => ({
+  type: types.TOGGLE_MODAL,
 });

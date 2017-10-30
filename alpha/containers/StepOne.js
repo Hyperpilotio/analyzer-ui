@@ -7,7 +7,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { addToHyperPilot, removeFromHyperPilot, stretchProgressBar } from "../actions";
 
 
-const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, location ,stepNext }) => (
+const StepOne = ({ availableApps, addedApps, onAddClick, onRemoveClick, stepNext, location }) => (
   <div className="container">
     <div className="row pt-4 pb-1">
       <div className="col-sm-12">
@@ -87,6 +87,7 @@ StepOne.propTypes = {
     })).isRequired,
   onAddClick: PropTypes.func.isRequired,
   onRemoveClick: PropTypes.func.isRequired,
+  stepNext: PropTypes.func.isRequired,
   location: ReactRouterPropTypes.location.isRequired,
 };
 
