@@ -5,6 +5,7 @@ import classnames from "classnames";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { addToHyperPilot, removeFromHyperPilot, stretchProgressBar } from "../actions";
+import { app as appPropType } from "../constants/propTypes";
 import _s from "./style.scss";
 
 const StepOne = ({
@@ -82,16 +83,8 @@ const StepOne = ({
 );
 
 StepOne.propTypes = {
-  availableApps: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      _id: PropTypes.string,
-    })).isRequired,
-  addedApps: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      _id: PropTypes.string,
-    })).isRequired,
+  availableApps: PropTypes.arrayOf(appPropType).isRequired,
+  addedApps: PropTypes.arrayOf(appPropType).isRequired,
   onAddClick: PropTypes.func.isRequired,
   onRemoveClick: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,
