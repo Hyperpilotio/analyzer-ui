@@ -1,17 +1,25 @@
 import React from "react";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import classnames from "classnames";
 import {
   Control,
   Form,
   actions,
 } from "react-redux-form";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import { submitSloConfig, toggleModalStatus } from "../actions/index";
+import { submitSloConfig, toggleModalStatus, stretchProgressBar, beginHpyerPiloting } from "../actions/index";
 import _s from "./style.scss";
 
-const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick, editSloClick }) => (
-
+const StepTwo = ({
+  addedApps,
+  isModalOpen,
+  toggleModal,
+  onSubmitClick,
+  editSloClick,
+  stepNext,
+}) => (
   <div className={`container ${_s.stepTwo}`}>
     <div className="row pt-4">
       { addedApps.length === 0 ?
@@ -44,6 +52,15 @@ const StepTwo = ({ addedApps, isModalOpen, toggleModal, onSubmitClick, editSloCl
           </div>
         ))
       }
+    </div>
+
+    <div className="col-3">
+      <h5 className="text-secondary">Done, next step:</h5>
+      <Link
+        to="/setup/stepThree"
+        onClick={stepNext}
+        className={classnames("btn btn-primary", { disabled: addedApps.length === 0 })}
+      > Begin HyperPiloting </Link>
     </div>
 
     <Modal isOpen={isModalOpen} toggle={toggleModal}>
@@ -118,6 +135,7 @@ StepTwo.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
   onSubmitClick: PropTypes.func.isRequired,
+  stepNext: PropTypes.func.isRequired,
   editSloClick: PropTypes.func.isRequired,
 };
 
@@ -130,6 +148,7 @@ const mapStateToProps = ({ setup }) => ({
 const mapDispatchToProps = dispatch => ({
   toggleModal: () => dispatch(toggleModalStatus()),
   onSubmitClick: slo => dispatch(submitSloConfig(slo)),
+  stepNext: () => dispatch(stretchProgressBar()),
   editSloClick: slo => dispatch(actions.change("slo", slo)),
 });
 

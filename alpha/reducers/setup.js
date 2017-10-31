@@ -8,20 +8,15 @@ const initialState = {
   stepPercent: 34,
   ui: {
     isFetchingAppsLoading: false,
+    isUpdatingSingleSloLoading: false,
+    isBeginHyperPilotingLoading: false,
   },
   modal: {
     isModalOpen: false,
     appId: "",
   },
-  currentSlo: {
-    metric: "",
-    type: 0,
-    summary: "",
-    value: "",
-    unit: "",
-  },
+  isHPReady: false,
 };
-
 
 export default function setup(state = initialState, action) {
   switch (action.type) {
@@ -51,13 +46,44 @@ export default function setup(state = initialState, action) {
     return { ...state, modal: { isModalOpen: false } };
   case types.TOGGLE_MODAL:
     return { ...state, modal: { isModalOpen: !state.modal.isModalOpen } };
-  case types.SUBMIT_SLO_COMMIT:
-    return { ...state };
   case types.STRETCH_PROGRESS_BAR:
     return { ...state, stepPercent: state.stepPercent + 33 };
   case types.TOGGLE_EDIT_SLO_MODAL:
     return { ...state, modal: { isModalOpen: !state.modal.isModalOpen }, currentSlo: action.slo };
-
+  case types.UPDATE_SINGLE_SLO_LOADING:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isUpdatingSingleSloLoading: true }),
+    };
+  case types.UPDATE_SINGLE_SLO_SUCCESS:
+    return {
+      ...state,
+      // TODO: using fake data instead for structing schema in DB
+      // apps: action.applications,
+      apps: fakeArr,
+      ui: _.extend({}, state.ui, { isUpdatingSingleSloLoading: false }),
+      isHPReady: true,
+    };
+  case types.UPDATE_SINGLE_SLO_FAIL:
+    console.error("Update SLO failed");
+    return state;
+  case types.BEGIN_HYPER_PILOTING_LOADING:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isBeginHyperPilotingLoading: true }),
+    };
+  case types.BEGIN_HYPER_PILOTING_SUCCESS:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isBeginHyperPilotingLoading: false }),
+      isHPReady: true,
+    };
+  case types.BEGIN_HYPER_PILOTING_FAIL:
+    console.error("Begin HP failed");
+    return {
+      ...state,
+      isHPReady: false,
+    };
 
   default:
     return state;
