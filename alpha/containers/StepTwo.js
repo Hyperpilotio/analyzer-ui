@@ -9,7 +9,7 @@ import {
   actions,
 } from "react-redux-form";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import { submitSloConfig, toggleModalStatus, stretchProgressBar } from "../actions/index";
+import { submitSloConfig, toggleModalStatus, stretchProgressBar, beginHpyerPiloting } from "../actions/index";
 import _s from "./style.scss";
 
 const StepTwo = ({

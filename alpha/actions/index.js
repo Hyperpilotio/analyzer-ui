@@ -64,9 +64,9 @@ export const updateSingleSloLoading = () => ({
   type: types.UPDATE_SINGLE_SLO_LOADING,
 });
 
-export const updateSingleSloSuccess = applications => ({
+export const updateSingleSloSuccess = status => ({
   type: types.UPDATE_SINGLE_SLO_SUCCESS,
-  applications,
+  status,
 });
 
 export const updateSingleSloFail = () => ({
@@ -87,5 +87,35 @@ export const updateSingleSlo = () => async (dispatch) => {
     dispatch(updateSingleSloSuccess(data.applications));
   } else {
     dispatch(updateSingleSloFail());
+  }
+};
+
+
+export const beginHyperPilotingLoading = () => ({
+  type: types.BEGIN_HYPER_PILOTING_LOADING,
+});
+
+export const beginHyperPilotingSuccess = status => ({
+  type: types.BEGIN_HYPER_PILOTING_SUCCESS,
+  status,
+});
+
+export const beginHyperPilotingFail = () => ({
+  type: types.BEGIN_HYPER_PILOTING_FAIL,
+});
+
+export const beginHyperPiloting = () => async (dispatch) => {
+  dispatch(beginHyperPilotingLoading());
+  // TODO: replace url when DB is done
+  const res = await fetch("http://localhost:3007/begin");
+  if (!res.ok) {
+    dispatch(beginHyperPilotingFail());
+    return;
+  }
+  const data = await res.json();
+  if (data.success) {
+    dispatch(beginHyperPilotingSuccess(data));
+  } else {
+    dispatch(beginHyperPilotingFail());
   }
 };

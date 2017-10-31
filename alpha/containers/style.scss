@@ -1,5 +1,38 @@
+//StepOne
+.stepOneCon{
+    overflow: hidden;
+}
+
+.cardsPool{
+    max-height: 250px; 
+    overflow-y: scroll;
+}
+
+
 .btnGrp{
     cursor: pointer;
     outline: none;
 }
 
+//StepTwo
+
+//StepThree
+.wordLoading{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.wordSuccess{
+    margin-top: 0px;
+    text-align: center;
+    color: #7CBF4B;
+    -webkit-animation: fadein 800ms;
+    -moz-animation: fadein 800ms;
+    -ms-animation: fadein 800ms;
+    -o-animation: fadein 800ms;
+    animation: fadein 800ms;
+}
+
+.checkCon{
+    transform: translateY(70px);
+}

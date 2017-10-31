@@ -5,7 +5,7 @@ import classnames from "classnames";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { addToHyperPilot, removeFromHyperPilot, stretchProgressBar } from "../actions";
-
+import _s from "./style.scss";
 
 const StepOne = ({
   availableApps,
@@ -15,13 +15,13 @@ const StepOne = ({
   stepNext,
   location,
 }) => (
-  <div className="container">
+  <div className={`container ${_s.stepOneCon}`}>
     <div className="row pt-4 pb-1">
       <div className="col-sm-12">
         <h4>Step 1: Add Applications to HyperPilot</h4>
       </div>
     </div>
-    <div className="row" style={{ maxHeight: "250px", overflow: "scroll" }}>
+    <div className={`row ${_s.cardsPool}`}>
       {
         availableApps.map(app => (
           <div className="col-3 pt-2 pb-2" key={app._id}>
