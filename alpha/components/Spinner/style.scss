@@ -1,0 +1,36 @@
+// spinner
+.first {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
+}
+  
+.second {
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+}
+  
+.third {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+}
+  
+.spinnerGrp{
+  border: 5px solid transparent;
+  border-top: 5px solid #5D79F7; 
+  border-radius: 200px;
+  -webkit-animation: spin 2s infinite linear;
+
+}
+  
+@-webkit-keyframes spin {
+  0% {-webkit-transform: rotateZ(0deg);}
+  100% {-webkit-transform: rotateZ(360deg);}
+}
+  
