@@ -1,5 +1,5 @@
 //check
-$color--green: #7ac142;
+@import "../../scss/_custom.scss";
 $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
 
 .checkmarkCircle {
@@ -7,11 +7,10 @@ $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
   stroke-dashoffset: 166;
   stroke-width: 2;
   stroke-miterlimit: 10;
-  stroke: $color--green;
+  stroke: map-get($theme-colors,success);
   fill: none;
-  :global{
-    animation: stroke .6s $curve forwards;
-  }
+  animation: stroke .6s $curve forwards;
+  
 }
 
 .checkmark {
@@ -23,7 +22,7 @@ $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
   stroke: #fff;
   stroke-miterlimit: 10;
   margin: 10% auto;
-  box-shadow: inset 0px 0px 0px $color--green;
+  box-shadow: inset 0px 0px 0px map-get($theme-colors,success);
   animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
 
 }
@@ -53,6 +52,6 @@ $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
 
 @keyframes fill {
   100% {
-    box-shadow: inset 0px 0px 0px 30px $color--green;
+    box-shadow: inset 0px 0px 0px 30px map-get($theme-colors,success);
   }
 }
