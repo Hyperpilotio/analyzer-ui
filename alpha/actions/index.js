@@ -107,7 +107,7 @@ export const beginHyperPilotingFail = () => ({
 export const beginHyperPiloting = () => async (dispatch) => {
   dispatch(beginHyperPilotingLoading());
   // TODO: replace url when DB is done
-  const res = await fetch("http://localhost:3007/begin");
+  const res = await fetch("http://localhost:3000/api/apps");
   if (!res.ok) {
     dispatch(beginHyperPilotingFail());
     return;
@@ -117,5 +117,35 @@ export const beginHyperPiloting = () => async (dispatch) => {
     dispatch(beginHyperPilotingSuccess(data));
   } else {
     dispatch(beginHyperPilotingFail());
+  }
+};
+
+export const fetchEventsLoading = () => ({
+  type: types.FETCH_EVENTS_LOADING,
+});
+
+export const fetchEventsSuccess = applications => ({
+  type: types.FETCH_EVENTS_SUCCESS,
+  applications,
+});
+
+export const fetchEventsFail = () => ({
+  type: types.FETCH_EVENTS_FAIL,
+});
+
+export const fetchEvents = () => async (dispatch) => {
+  dispatch(fetchEventsLoading());
+
+  const res = await fetch("/api/apps");
+  if (!res.ok) {
+    dispatch(fetchEventsFail());
+    return;
+  }
+
+  if (res.ok) {
+    // TODO: Change to connecting real API
+    dispatch(fetchEventsSuccess({}));
+  } else {
+    dispatch(fetchEventsFail());
   }
 };

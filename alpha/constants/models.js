@@ -64,4 +64,40 @@ export const fakeArr = [
   },
 ];
 
+export const fakeIncidents = {
+  "59f1a327a1619a473de6c5ae": [
+    {
+      id: 1,
+      type: "SLO_violation",
+      timestamp: new Date(),
+    },
+  ],
+  "59f1a327a1619a473de6c5b0": [],
+  "59f1a327a1619a473de6c5b2": [],
+};
+
+export const fakeRisks = {
+  "59f1a327a1619a473de6c5ae": [],
+  "59f1a327a1619a473de6c5b0": [
+    {
+      id: 1,
+      type: "resource_bottleneck",
+      timestamp: new Date(),
+    },
+  ],
+  "59f1a327a1619a473de6c5b2": [],
+};
+
+export const fakeOpportunities = {
+  "59f1a327a1619a473de6c5ae": [],
+  "59f1a327a1619a473de6c5b0": [],
+  "59f1a327a1619a473de6c5b2": [
+    {
+      id: 1,
+      type: "node_saturation",
+      timestamp: new Date(),
+    },
+  ],
+};
+
 export default initialSloState;
