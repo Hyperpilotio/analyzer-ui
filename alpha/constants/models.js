@@ -26,7 +26,7 @@ export const fakeArr = [
       type: "throughput",
       summary: "95p",
       value: 300,
-      unit: "req/s",
+      unit: "req/m",
     },
     budget: {
       unit: "dollar",
