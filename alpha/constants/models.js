@@ -9,58 +9,74 @@ export const initialSloState = {
 export const fakeArr = [
   {
     _id: "59f1a327a1619a473de6c5ae",
+    name: "goddd",
     type: "long-running",
+    services: [{
+      name: "goddd",
+      state: "Running",
+    }, {
+      name: "pathfinder",
+      state: "Running",
+    }, {
+      name: "mongo",
+      state: "Running",
+    }],
     slo: {
       metric: "initial speed",
-      type: "Rate",
+      type: "throughput",
       summary: "95p",
-      value: 400,
-      unit: "",
+      value: 300,
+      unit: "req/s",
     },
     budget: {
       unit: "dollar",
       value: 300,
     },
-    serviceNames: [
-      "goddd",
-      "pathfinder",
-      "mongo",
-    ],
-    name: "goddd",
+    state: "Active",
   },
   {
     _id: "59f1a327a1619a473de6c5b0",
+    name: "kafka",
     type: "long-running",
+    services: [{
+      name: "kafka-serve",
+      state: "Pending",
+    }, {
+      name: "zookeeper",
+      state: "Running",
+    }],
     slo: {
       metric: "running speed",
-      type: "Latency",
+      type: "latency",
       summary: "25p",
-      value: 100,
-      unit: "",
+      value: 500,
+      unit: "ms",
     },
     budget: {
       unit: "dollar",
       value: 300,
     },
-    serviceNames: [
-      "kafka-serve",
-    ],
-    name: "kafka",
+    state: "Inactive",
   },
   {
     _id: "59f1a327a1619a473de6c5b2",
-    type: "long-running",
+    name: "lucene",
+    type: "batch-processing",
+    services: [{
+      name: "analyzer",
+      state: "Pending",
+    }, {
+      name: "workload-profiler",
+      state: "Pending",
+    }],
     slo: {
       metric: "moking size",
-      type: "Latency",
+      type: "latency",
       summary: "35p",
-      value: 900,
-      unit: "",
+      value: 500,
+      unit: "ms",
     },
-    serviceNames: [
-      "lucene-serve",
-    ],
-    name: "lucene",
+    state: "Registered",
   },
 ];
 
@@ -72,7 +88,13 @@ export const fakeIncidents = {
       timestamp: new Date(),
     },
   ],
-  "59f1a327a1619a473de6c5b0": [],
+  "59f1a327a1619a473de6c5b0": [
+    {
+      id: 1,
+      type: "SLO_violation",
+      timestamp: new Date(),
+    },
+  ],
   "59f1a327a1619a473de6c5b2": [],
 };
 
