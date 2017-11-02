@@ -106,7 +106,7 @@ export const beginHyperPilotingFail = () => ({
 export const beginHyperPiloting = () => async (dispatch) => {
   dispatch(beginHyperPilotingLoading());
   // TODO: replace url when DB is done
-  const res = await fetch("http://localhost:3000/api/apps");
+  const res = await fetch("http://localhost:3007/begin");
   if (!res.ok) {
     dispatch(beginHyperPilotingFail());
     return;
