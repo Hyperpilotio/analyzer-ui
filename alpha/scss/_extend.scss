@@ -1,3 +1,9 @@
-.card{
-    @include effect-fade-in;
+.card {
+  @include effect-fade-in;
+}
+
+@each $color, $value in $theme-colors {
+  .badge-#{$color} {
+    color: white;
+  }
 }
