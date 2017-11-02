@@ -25,10 +25,10 @@
         ],
         "slo": {
           "matric": "",
-          "type": "latency",
+          "type": "throughput",
           "summary": "quantile_90",
           "value": 300,
-          "unit": "req/s"
+          "unit": "req/m"
         },
         "management_features": [
           {
