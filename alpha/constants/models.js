@@ -6,7 +6,6 @@ export const initialSloState = {
   unit: "USD",
 };
 
-
 export const editStepNames = [
   null,
   "Step 1: General",
@@ -23,7 +22,13 @@ export const fakeIncidents = {
       timestamp: new Date(),
     },
   ],
-  "59f1a327a1619a473de6c5b0": [],
+  "59f1a327a1619a473de6c5b0": [
+    {
+      id: 1,
+      type: "SLO_violation",
+      timestamp: new Date(),
+    },
+  ],
   "59f1a327a1619a473de6c5b2": [],
 };
 

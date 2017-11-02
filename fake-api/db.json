@@ -18,7 +18,7 @@
             "state": "Running"
           },
           {
-            "name": "Mongo Service",
+            "name": "mongo",
             "deployment_template": "Service",
             "state": "Running"
           }
@@ -51,7 +51,7 @@
           "value": 300,
           "unit": "USD"
         },
-        "state": "Registered"
+        "state": "Active"
       },
       {
         "_id": "59f1a327a1619a473de6c5b0",
@@ -59,17 +59,12 @@
         "type": "batch-processing", 
         "services": [
           {
-            "name": "Billing Service",
+            "name": "kafka-serve",
             "deployment_template": "Service",
-            "state": "Running"
+            "state": "Pending"
           },
           {
-            "name": "MySQL",
-            "deployment_template": "Service",
-            "state": "Running"
-          },
-          {
-            "name": "Mongo Service",
+            "name": "zookeeper",
             "deployment_template": "Service",
             "state": "Running"
           }
@@ -102,7 +97,7 @@
           "value": 300,
           "unit": "USD"
         },
-        "state": "Registered"
+        "state": "Inactive"
       }
     ],
     "k8s_resources": [
