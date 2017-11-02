@@ -1,8 +1,9 @@
 {
-  "data":{
+  "data": {
     "success": true,
-    "applications":[
-      { "_id": "59f1a327a1619a473de6c5ae", 
+    "applications": [
+      {
+        "_id": "59f1a327a1619a473de6c5ae",
         "name": "Hyperpilot Web",
         "type": "long-running", 
         "services": [
@@ -22,7 +23,7 @@
             "state": "Running"
           }
         ],
-        "slo":{
+        "slo": {
           "matric": "",
           "type": "latency",
           "summary": "quantile_90",
@@ -52,7 +53,8 @@
         },
         "state": "Registered"
       },
-      { "_id": "59f1a327a1619a473de6c5b0", 
+      {
+        "_id": "59f1a327a1619a473de6c5b0",
         "name": "kafka",
         "type": "batch-processing", 
         "services": [
@@ -102,9 +104,8 @@
         },
         "state": "Registered"
       }
-  
     ],
-    "k8s_resources":[
+    "k8s_resources": [
       {
         "name": "MySQL",
         "deployment_template": "Service",
@@ -117,11 +118,7 @@
       }
     ]
   },
-  "comments": [
-      { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" },
   "begin":{
-    "success" : true
+    "success": true
   }
 }
