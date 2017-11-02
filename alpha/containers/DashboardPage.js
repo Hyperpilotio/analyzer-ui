@@ -1,40 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import _ from "lodash";
 import PropTypes from "prop-types";
-import { Container, Row, Col, Card, CardBody, CardTitle, Badge, Button } from "reactstrap";
-import FaChevronRight from "react-icons/lib/fa/chevron-right";
+import { Container, Row, Col } from "reactstrap";
+import DashboardAppsTable from "../components/DashboardAppsTable";
 import { fetchApps, fetchEvents } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
-
-
-const eventTypeColorMap = {
-  incident: "danger",
-  risk: "warning",
-  opportunity: "success",
-};
-
-const EventItem = ({ type, event }) => (
-  <Button style={{ width: "100%", textAlign: "left" }} color="link">
-    <Row>
-      <Col md={5}>
-        <FaChevronRight className="mr-2" />
-        { event.type }
-      </Col>
-      <Col>
-        <Badge
-          style={{ fontSize: "100%" }}
-          className="mr-2 text-capitalized"
-          color={eventTypeColorMap[type]}
-        >{ type }</Badge>
-      </Col>
-    </Row>
-  </Button>
-);
-
-EventItem.propTypes = {
-  type: PropTypes.string.isRequired,
-  event: eventPropType.isRequired,
-};
 
 
 class DashboardPage extends React.Component {
@@ -61,32 +32,7 @@ class DashboardPage extends React.Component {
           </Col>
         </Row>
         <Row>
-          {
-            this.props.apps.map(app => (
-              <Col className="pb-3" md={6} key={app._id}>
-                <Card>
-                  <CardBody>
-                    <CardTitle className="mb-3">{ app.name }</CardTitle>
-                    {
-                      this.props.incidents[app._id].map(
-                        event => <EventItem key={event.id} type="incident" event={event} />,
-                      )
-                    }
-                    {
-                      this.props.risks[app._id].map(
-                        event => <EventItem key={event.id} type="risk" event={event} />,
-                      )
-                    }
-                    {
-                      this.props.opportunities[app._id].map(
-                        event => <EventItem key={event.id} type="opportunity" event={event} />,
-                      )
-                    }
-                  </CardBody>
-                </Card>
-              </Col>
-            ))
-          }
+          <DashboardAppsTable {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])} />
         </Row>
       </Container>
     );
