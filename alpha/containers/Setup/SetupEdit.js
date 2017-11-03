@@ -13,10 +13,6 @@ import {
   Nav,
   NavItem,
   NavLink,
-  Card,
-  Button,
-  CardTitle,
-  CardText,
   Row,
   Col,
 } from "reactstrap";
@@ -25,6 +21,7 @@ import {
   Control,
   Form,
 } from "react-redux-form";
+import ReactRouterPropTypes from "react-router-prop-types";
 import ProgressBar from "~/commons/components/ProgressBar";
 import {
   minusStepNumber,
@@ -315,7 +312,7 @@ class SetupEdit extends React.Component {
 
 SetupEdit.propTypes = {
   step: PropTypes.number.isRequired,
-  location: PropTypes.objectOf.isRequired,
+  location: ReactRouterPropTypes.location.isRequired,
   apps: PropTypes.arrayOf(appPropType).isRequired,
   stepBack: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,

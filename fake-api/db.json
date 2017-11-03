@@ -53,7 +53,7 @@
         "state": "Registered"
       },
       { "_id": "59f1a327a1619a473de6c5b0", 
-        "name": "Hyperpilot App2",
+        "name": "kafka",
         "type": "batch-processing", 
         "services": [
           {
@@ -77,7 +77,7 @@
           "type": "latency",
           "summary": "quantile_90",
           "value": 300,
-          "unit": "milliseconds"
+          "unit": "ms"
         },
         "management_features": [
           {

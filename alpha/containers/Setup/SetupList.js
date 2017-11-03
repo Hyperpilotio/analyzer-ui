@@ -6,6 +6,7 @@ import { Table, Button } from "reactstrap";
 import MdEdit from "react-icons/lib/md/edit";
 import MdDelete from "react-icons/lib/md/cancel";
 import { fetchApps, resetStepNumber } from "../../actions";
+import { app as appPropType } from "../../constants/propTypes";
 import _s from "../style.scss";
 
 class SetupList extends React.Component {
@@ -72,9 +73,7 @@ class SetupList extends React.Component {
 }
 
 SetupList.propTypes = {
-  apps: PropTypes.arrayOf(
-
-  ).isRequired,
+  apps: PropTypes.arrayOf(appPropType).isRequired,
   fetchApps: PropTypes.func.isRequired,
   resetStep: PropTypes.func.isRequired,
 };
