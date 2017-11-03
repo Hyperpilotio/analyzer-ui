@@ -111,7 +111,33 @@
         "deployment_template": "Service",
         "state": "Running"
       }
-    ]
+    ],
+    "incidents": {
+      "59f1a327a1619a473de6c5ae": [
+        {
+          "id": 1,
+          "type": "SLO_violation",
+          "timestamp": "2017-11-03T12:22:07.074Z"
+        }
+      ],
+      "59f1a327a1619a473de6c5b0": [
+        {
+          "id": 1,
+          "type": "SLO_violation",
+          "timestamp": "2017-11-02T12:22:07.074Z"
+        }
+      ]
+    },
+    "opportunities": {
+      "59f1a327a1619a473de6c5ae": [],
+      "59f1a327a1619a473de6c5b0": [
+        {
+          "id": 1,
+          "type": "low_utilization",
+          "timestamp": "2017-11-01T10:59:07.074Z"
+        }
+      ]
+    }
   },
   "begin":{
     "success": true

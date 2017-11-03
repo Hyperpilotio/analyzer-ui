@@ -138,9 +138,10 @@ export const fetchEventsLoading = () => ({
   type: types.FETCH_EVENTS_LOADING,
 });
 
-export const fetchEventsSuccess = applications => ({
+export const fetchEventsSuccess = ({ incidents, opportunities }) => ({
   type: types.FETCH_EVENTS_SUCCESS,
-  applications,
+  incidents,
+  opportunities,
 });
 
 export const fetchEventsFail = () => ({
@@ -150,15 +151,15 @@ export const fetchEventsFail = () => ({
 export const fetchEvents = () => async (dispatch) => {
   dispatch(fetchEventsLoading());
 
-  const res = await fetch("/api/apps");
+  const res = await fetch("http://localhost:3007/data");
   if (!res.ok) {
     dispatch(fetchEventsFail());
     return;
   }
 
-  if (res.ok) {
-    // TODO: Change to connecting real API
-    dispatch(fetchEventsSuccess({}));
+  const data = await res.json();
+  if (data.success) {
+    dispatch(fetchEventsSuccess(data));
   } else {
     dispatch(fetchEventsFail());
   }
