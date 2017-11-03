@@ -3,18 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  Container,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  Col,
+  Container, Row, Col,
+  Dropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  TabContent, TabPane,
+  Nav, NavItem, NavLink,
 } from "reactstrap";
 import classnames from "classnames";
 import {
