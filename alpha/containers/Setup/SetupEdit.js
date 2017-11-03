@@ -9,33 +9,20 @@ import {
   Nav, NavItem, NavLink,
 } from "reactstrap";
 import classnames from "classnames";
-import {
-  Control,
-  Form,
-} from "react-redux-form";
+import { Control, Form } from "react-redux-form";
 import ReactRouterPropTypes from "react-router-prop-types";
 import ProgressBar from "~/commons/components/ProgressBar";
-import {
-  minusStepNumber,
-  addStepNumber,
-} from "../../actions";
-import {
-  editStepNames,
-} from "../../constants/models";
-import {
-  app as appPropType,
-} from "../../constants/propTypes";
+import { minusStepNumber, addStepNumber } from "../../actions";
+import { editStepNames } from "../../constants/models";
+import { app as appPropType } from "../../constants/propTypes";
 
 class SetupEdit extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTab: "1",
-      dropdownOpenOne: false,
-      dropdownOpenTwo: false,
-      dropdownOpenThree: false,
-      dropdownOpenFour: false,
-    };
+  state = {
+    activeTab: "1",
+    dropdownOpenOne: false,
+    dropdownOpenTwo: false,
+    dropdownOpenThree: false,
+    dropdownOpenFour: false,
   }
   // TODO: form submit method
   onSubmitSlo = ({ slo }) => {
@@ -57,21 +44,14 @@ class SetupEdit extends React.Component {
 
   render() {
     const {
-      stepBack,
-      stepNext,
-      step,
-      location,
-      apps,
+      stepBack, stepNext, step, location, apps,
     } = this.props;
-
-    const params = new URLSearchParams(location.search);
-    const iid = params.get("iid");
 
     return (
       <Container>
         <div className="row mt-3">
-          {location.pathname.indexOf("edit") !== -1 ?
-            <h1 className="title">{`Configuring "${apps && apps[iid - 1].name}"`}</h1> :
+          {location.pathname === "/setup/edit" ?
+            <h1 className="title">Configuring {apps && apps[iid - 1].name}</h1> :
             <h1 className="title">Setup a new app</h1>
           }
         </div>
@@ -100,7 +80,7 @@ class SetupEdit extends React.Component {
                 </Dropdown>
               </div>
 
-              <Link to={"/setup"} className="btn btn-secondary mr-2">Cancel</Link>
+              <Link to="/setup" className="btn btn-secondary mr-2">Cancel</Link>
               <button type="submit" className="btn btn-primary" onClick={stepNext}>Next</button>
             </form>
           </div>
@@ -214,8 +194,8 @@ class SetupEdit extends React.Component {
                     model=".type"
                   >
                     <option value="latency">Latency</option>
-                    <option value="Throughput">Throughput</option>
-                    <option value="Execute Time">Execute Time</option>
+                    <option value="throughput">Throughput</option>
+                    <option value="executeTime">Execute Time</option>
                   </Control.select>
                 </div>
                 <div className="form-group">
