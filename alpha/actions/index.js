@@ -31,12 +31,11 @@ export const fetchAppsFail = () => ({
 export const fetchApps = () => async (dispatch) => {
   dispatch(fetchAppsLoading());
 
-  const res = await fetch("/api/apps");
+  const res = await fetch("http://localhost:3007/data");
   if (!res.ok) {
     dispatch(fetchAppsFail());
     return;
   }
-
   const data = await res.json();
   if (data.success) {
     dispatch(fetchAppsSuccess(data.applications));
@@ -119,3 +118,18 @@ export const beginHyperPiloting = () => async (dispatch) => {
     dispatch(beginHyperPilotingFail());
   }
 };
+
+export const addStepNumber = () => ({
+  type: types.ADD_STEP_NUMBER,
+  status,
+});
+
+export const minusStepNumber = () => ({
+  type: types.MINUS_STEP_NUMBER,
+  status,
+});
+
+export const resetStepNumber = () => ({
+  type: types.RESET_STEP_NUMBER,
+  status,
+});

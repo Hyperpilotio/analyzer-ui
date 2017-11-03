@@ -1,0 +1,127 @@
+{
+  "data":{
+    "success": true,
+    "applications":[
+      { "_id": "59f1a327a1619a473de6c5ae", 
+        "name": "Hyperpilot Web",
+        "type": "long-running", 
+        "services": [
+          {
+            "name": "goddd",
+            "deployment_template": "Service",
+            "state": "Running"
+          },
+          {
+            "name": "pathfinder",
+            "deployment_template": "Service",
+            "state": "Running"
+          },
+          {
+            "name": "Mongo Service",
+            "deployment_template": "Service",
+            "state": "Running"
+          }
+        ],
+        "slo":{
+          "matric": "",
+          "type": "latency",
+          "summary": "quantile_90",
+          "value": 300,
+          "unit": "req/s"
+        },
+        "management_features": [
+          {
+            "name": "interference_management",
+            "mode": "Disabled",
+            "policy": []
+          },
+          {
+            "name": "bottleneck_management",
+            "mode": "Semi-Auto",
+            "policy": []
+          },
+          {
+            "name": "efficiency_management",
+            "mode": "Auto",
+            "policy": []
+          }
+        ],
+        "budget": {
+          "value": 300,
+          "unit": "USD"
+        },
+        "state": "Registered"
+      },
+      { "_id": "59f1a327a1619a473de6c5b0", 
+        "name": "kafka",
+        "type": "batch-processing", 
+        "services": [
+          {
+            "name": "Billing Service",
+            "deployment_template": "Service",
+            "state": "Running"
+          },
+          {
+            "name": "MySQL",
+            "deployment_template": "Service",
+            "state": "Running"
+          },
+          {
+            "name": "Mongo Service",
+            "deployment_template": "Service",
+            "state": "Running"
+          }
+        ],
+        "slo":{
+          "matric": "hyperpilot/goddd/api_booking_service_request_latency_milliseconds",
+          "type": "latency",
+          "summary": "quantile_90",
+          "value": 300,
+          "unit": "ms"
+        },
+        "management_features": [
+          {
+            "name": "interference_management",
+            "mode": "Disabled",
+            "policy": []
+          },
+          {
+            "name": "bottleneck_management",
+            "mode": "Semi-Auto",
+            "policy": []
+          },
+          {
+            "name": "efficiency_management",
+            "mode": "Auto",
+            "policy": []
+          }
+        ],
+        "budget": {
+          "value": 300,
+          "unit": "USD"
+        },
+        "state": "Registered"
+      }
+  
+    ],
+    "k8s_resources":[
+      {
+        "name": "MySQL",
+        "deployment_template": "Service",
+        "state": "Running"
+      },
+      {
+        "name": "Mongo Service",
+        "deployment_template": "Service",
+        "state": "Running"
+      }
+    ]
+  },
+  "comments": [
+      { "id": 1, "body": "some comment", "postId": 1 }
+  ],
+  "profile": { "name": "typicode" },
+  "begin":{
+    "success" : true
+  }
+}

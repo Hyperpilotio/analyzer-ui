@@ -6,3 +6,17 @@ $theme-colors: (
   "danger": #ff8686
 );
 
+//table
+.table tr th {
+  text-align: center;   
+}
+
+.table td {
+  text-align: center;   
+}
+
+// dropdown
+.show > .dropdown-menu {
+  display: block;
+  position: absolute;
+}

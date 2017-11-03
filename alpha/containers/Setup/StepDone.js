@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Container } from "reactstrap";
-import { beginHyperPiloting } from "../actions";
-import Spinner from "../components/Spinner";
-import CheckMark from "../components/CheckMark";
-import _s from "./style.scss";
+import { Link } from "react-router-dom";
+import { Container, Button } from "reactstrap";
+import { beginHyperPiloting } from "../../actions";
+import Spinner from "../../components/Spinner";
+import CheckMark from "../../components/CheckMark";
+import _s from "../style.scss";
 
-class StepThree extends React.Component {
+class SetupDone extends React.Component {
   componentWillMount() {
     this.props.beginHPClick();
   }
@@ -17,7 +18,7 @@ class StepThree extends React.Component {
       isHPReady,
     } = this.props;
     return (
-      <Container>
+      <Container className="effect-fade-in">
 
         { isBeginHyperPilotingLoading ?
           <div className={`spinner-con loading ${_s.spinnerCon}`}>
@@ -37,16 +38,24 @@ class StepThree extends React.Component {
         }
         {
           !isBeginHyperPilotingLoading && isHPReady ?
-            <h4 className={_s.wordSuccess}>HyperPilot is now running! </h4> : null
-            
+            <div>
+              <h4 className={_s.wordSuccess}>HyperPilot is now running! </h4> 
+              <div className="row">
+                <Button className={`btn btn-success mt-3 ${_s.btnReturn}`}>
+                  <Link to="/setup">
+                    Back to App list
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            : null
         }
-
       </Container>
     );
   }
 }
 
-StepThree.propTypes = {
+SetupDone.propTypes = {
   isBeginHyperPilotingLoading: PropTypes.bool.isRequired,
   isHPReady: PropTypes.bool.isRequired,
   beginHPClick: PropTypes.func.isRequired,
@@ -64,4 +73,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StepThree);
+)(SetupDone);

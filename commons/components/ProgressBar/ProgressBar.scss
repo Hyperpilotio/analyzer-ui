@@ -18,5 +18,13 @@
                                transparent 22%, rgba(0, 0, 0, .1) 33%,
                                rgba(0,0, 0, .1) 22%, transparent 66%),
        -webkit-linear-gradient(left, #7769fc, #5677fa);
+    text-align: center;
+
+    span{
+      color:#fff;
+      line-height: 100%;
+      vertical-align: bottom;
+    }
+    
   }
 }
