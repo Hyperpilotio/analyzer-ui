@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import ReactRouterPropTypes from "react-router-prop-types";
+import _ from "lodash";
 
 const Linked = ({ to, replace, tag, history, ...props }) => (
   React.createElement(tag, {
@@ -12,14 +13,14 @@ const Linked = ({ to, replace, tag, history, ...props }) => (
         history.push(to);
       }
     },
-    ...props,
+    ..._.omit(props, ["match", "location", "staticContext"]),
   })
 );
 
 Linked.propTypes = {
-  to: ReactRouterPropTypes.location.isRequired,
+  to: PropTypes.oneOfType([PropTypes.string, ReactRouterPropTypes.location]).isRequired,
   replace: PropTypes.bool,
-  tag: PropTypes.oneOf([PropTypes.string, PropTypes.func]).isRequired,
+  tag: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
   history: ReactRouterPropTypes.history.isRequired,
 };
 
