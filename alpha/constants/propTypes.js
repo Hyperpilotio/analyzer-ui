@@ -7,6 +7,6 @@ export const app = PropTypes.shape({
 });
 
 export const event = PropTypes.shape({
-  id: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   type: PropTypes.string,
 });

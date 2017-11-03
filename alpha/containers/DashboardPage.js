@@ -13,9 +13,9 @@ class DashboardPage extends React.Component {
     fetchApps: PropTypes.func.isRequired,
     fetchEvents: PropTypes.func.isRequired,
     apps: PropTypes.arrayOf(appPropType).isRequired,
-    incidents: PropTypes.objectOf(eventPropType).isRequired,
-    risks: PropTypes.objectOf(eventPropType).isRequired,
-    opportunities: PropTypes.objectOf(eventPropType).isRequired,
+    incidents: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
+    risks: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
+    opportunities: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
   }
 
   componentWillMount() {
