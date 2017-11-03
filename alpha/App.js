@@ -5,11 +5,10 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
-import SetupPage from "./containers/SetupPage";
 import DashboardPage from "./containers/DashboardPage";
-import StepOne from "./containers/StepOne";
-import StepTwo from "./containers/StepTwo";
-import StepThree from "./containers/StepThree";
+import SetupList from "./containers/Setup/SetupList";
+import SetupEdit from "./containers/Setup/SetupEdit";
+import SetupDone from "./containers/Setup/StepDone";
 
 
 const store = createStore(
@@ -34,10 +33,10 @@ export default () => (
           </div>
         </div>
         <Route path="/dashboard" component={DashboardPage} />
-        <Route path="/setup" component={SetupPage} />
-        <Route path="/setup/stepOne" component={StepOne} />
-        <Route path="/setup/stepTwo" component={StepTwo} />
-        <Route path="/setup/stepThree" component={StepThree} />
+        <Route exact path="/setup" component={SetupList} />
+        <Route path="/setup/add" component={SetupEdit} />
+        <Route path="/setup/edit" component={SetupEdit} />
+        <Route path="/setup/done" component={SetupDone} />
       </div>
     </Router>
   </Provider>

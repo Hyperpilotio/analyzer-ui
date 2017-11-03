@@ -20,4 +20,11 @@
   animation: fadein 800ms;
 }
 
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
+.effect-fade-in{
+  @include effect-fade-in;
+}

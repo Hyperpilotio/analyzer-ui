@@ -12,7 +12,8 @@
     "serve": "NODE_ENV=production node server.js",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
-    "lint": "eslint sizing-analysis commons alpha webpack.config.js"
+    "lint": "eslint sizing-analysis commons alpha webpack.config.js",
+    "fake-api": "json-server -w ./fake-api/db.json -r ./fake-api/router.json -m ./fake-api/singular.js -d 1500 -p 3007"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -55,6 +56,7 @@
     "express": "^4.15.3",
     "express-http-proxy": "^1.0.6",
     "immutability-helper": "^2.3.0",
+    "json-server-fix-statuscode": "^0.8.8",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.31",
     "morgan": "^1.8.2",

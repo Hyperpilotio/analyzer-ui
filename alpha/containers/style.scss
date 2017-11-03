@@ -1,4 +1,4 @@
-//StepOne
+//SetupList
 .stepOneCon{
     overflow: hidden;
 }
@@ -14,9 +14,8 @@
     outline: none;
 }
 
-//StepTwo
 
-//StepThree
+//Done
 .wordLoading{
     margin-top: 30px;
     text-align: center;
@@ -44,3 +43,24 @@
     transform: translateY(70px);
 }
 
+
+.iconGrp{
+    &:hover{
+        transition: all .3s ease-out;
+        transform: scale(1.4);
+    }
+}
+
+.btnReturn, .btnBegin{
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff;
+}
+
+.btnReturn a, .btnBegin a{
+    color:#fff;
+    &:hover{
+        text-decoration: none;
+        color:#fff;
+    }
+}

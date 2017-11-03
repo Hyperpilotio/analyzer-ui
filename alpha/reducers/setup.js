@@ -4,6 +4,7 @@ import { fakeArr } from "../constants/models";
 
 const initialState = {
   apps: [],
+  step: 1,
   addedAppIds: [],
   stepPercent: 34,
   ui: {
@@ -28,9 +29,7 @@ export default function setup(state = initialState, action) {
   case types.FETCH_APPS_SUCCESS:
     return {
       ...state,
-      // TODO: using fake data instead for structing schema in DB
-      // apps: action.applications,
-      apps: fakeArr,
+      apps: action.applications,
       ui: _.extend({}, state.ui, { isFetchAppsLoading: false }),
     };
   case types.FETCH_APPS_FAIL:
@@ -84,7 +83,21 @@ export default function setup(state = initialState, action) {
       ...state,
       isHPReady: false,
     };
-
+  case types.ADD_STEP_NUMBER:
+    return {
+      ...state,
+      step: state.step + 1,
+    };
+  case types.MINUS_STEP_NUMBER:
+    return {
+      ...state,
+      step: state.step - 1,
+    };
+  case types.RESET_STEP_NUMBER:
+    return {
+      ...state,
+      step: 1,
+    };
   default:
     return state;
   }
