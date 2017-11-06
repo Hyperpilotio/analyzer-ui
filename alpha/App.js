@@ -16,9 +16,9 @@ const store = createStore(
   compose(
     applyMiddleware(thunk),
     /* eslint-disable no-underscore-dangle */
-    process.env.NODE_ENV === "production"
-      ? undefined
-      : window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    process.env.NODE_ENV === "production" || !window.__REDUX_DEVTOOLS_EXTENSION__
+      ? createStore => createStore
+      : window.__REDUX_DEVTOOLS_EXTENSION__(),
     /* eslint-enable */
   ),
 );
