@@ -6,7 +6,6 @@ export const initialSloState = {
   unit: "USD",
 };
 
-
 export const editStepNames = [
   null,
   "Step 1: General",
@@ -14,6 +13,5 @@ export const editStepNames = [
   "Step 3: SLO",
   "Step 4: Management Features",
 ];
-
 
 export default initialSloState;

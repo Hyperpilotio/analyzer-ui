@@ -133,3 +133,34 @@ export const resetStepNumber = () => ({
   type: types.RESET_STEP_NUMBER,
   status,
 });
+
+export const fetchEventsLoading = () => ({
+  type: types.FETCH_EVENTS_LOADING,
+});
+
+export const fetchEventsSuccess = ({ incidents, opportunities }) => ({
+  type: types.FETCH_EVENTS_SUCCESS,
+  incidents,
+  opportunities,
+});
+
+export const fetchEventsFail = () => ({
+  type: types.FETCH_EVENTS_FAIL,
+});
+
+export const fetchEvents = () => async (dispatch) => {
+  dispatch(fetchEventsLoading());
+
+  const res = await fetch("http://localhost:3007/data");
+  if (!res.ok) {
+    dispatch(fetchEventsFail());
+    return;
+  }
+
+  const data = await res.json();
+  if (data.success) {
+    dispatch(fetchEventsSuccess(data));
+  } else {
+    dispatch(fetchEventsFail());
+  }
+};

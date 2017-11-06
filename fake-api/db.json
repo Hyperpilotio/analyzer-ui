@@ -1,8 +1,9 @@
 {
-  "data":{
+  "data": {
     "success": true,
-    "applications":[
-      { "_id": "59f1a327a1619a473de6c5ae", 
+    "applications": [
+      {
+        "_id": "59f1a327a1619a473de6c5ae",
         "name": "Hyperpilot Web",
         "type": "long-running", 
         "services": [
@@ -17,17 +18,17 @@
             "state": "Running"
           },
           {
-            "name": "Mongo Service",
+            "name": "mongo",
             "deployment_template": "Service",
             "state": "Running"
           }
         ],
-        "slo":{
+        "slo": {
           "matric": "",
-          "type": "latency",
+          "type": "throughput",
           "summary": "quantile_90",
           "value": 300,
-          "unit": "req/s"
+          "unit": "req/m"
         },
         "management_features": [
           {
@@ -50,24 +51,20 @@
           "value": 300,
           "unit": "USD"
         },
-        "state": "Registered"
+        "state": "Active"
       },
-      { "_id": "59f1a327a1619a473de6c5b0", 
+      {
+        "_id": "59f1a327a1619a473de6c5b0",
         "name": "kafka",
         "type": "batch-processing", 
         "services": [
           {
-            "name": "Billing Service",
+            "name": "kafka-serve",
             "deployment_template": "Service",
-            "state": "Running"
+            "state": "Pending"
           },
           {
-            "name": "MySQL",
-            "deployment_template": "Service",
-            "state": "Running"
-          },
-          {
-            "name": "Mongo Service",
+            "name": "zookeeper",
             "deployment_template": "Service",
             "state": "Running"
           }
@@ -100,11 +97,10 @@
           "value": 300,
           "unit": "USD"
         },
-        "state": "Registered"
+        "state": "Inactive"
       }
-  
     ],
-    "k8s_resources":[
+    "k8s_resources": [
       {
         "name": "MySQL",
         "deployment_template": "Service",
@@ -115,13 +111,35 @@
         "deployment_template": "Service",
         "state": "Running"
       }
-    ]
+    ],
+    "incidents": {
+      "59f1a327a1619a473de6c5ae": [
+        {
+          "id": 1,
+          "type": "SLO_violation",
+          "timestamp": "2017-11-03T12:22:07.074Z"
+        }
+      ],
+      "59f1a327a1619a473de6c5b0": [
+        {
+          "id": 1,
+          "type": "SLO_violation",
+          "timestamp": "2017-11-02T12:22:07.074Z"
+        }
+      ]
+    },
+    "opportunities": {
+      "59f1a327a1619a473de6c5ae": [],
+      "59f1a327a1619a473de6c5b0": [
+        {
+          "id": 1,
+          "type": "low_utilization",
+          "timestamp": "2017-11-01T10:59:07.074Z"
+        }
+      ]
+    }
   },
-  "comments": [
-      { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" },
   "begin":{
-    "success" : true
+    "success": true
   }
 }

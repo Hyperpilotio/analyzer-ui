@@ -1,19 +1,26 @@
 import React from "react";
 import { connect } from "react-redux";
+import _ from "lodash";
 import PropTypes from "prop-types";
-import { Container, Row, Col, Card, CardBody, CardTitle } from "reactstrap";
-import { fetchApps } from "../actions";
-import { app as appPropType } from "../constants/propTypes";
+import { Container, Row, Col } from "reactstrap";
+import DashboardAppsTable from "../components/DashboardAppsTable";
+import { fetchApps, fetchEvents } from "../actions";
+import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
 
 class DashboardPage extends React.Component {
   static propTypes = {
     fetchApps: PropTypes.func.isRequired,
+    fetchEvents: PropTypes.func.isRequired,
     apps: PropTypes.arrayOf(appPropType).isRequired,
+    incidents: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
+    risks: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
+    opportunities: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
   }
 
   componentWillMount() {
     this.props.fetchApps();
+    this.props.fetchEvents();
   }
 
   render() {
@@ -25,32 +32,26 @@ class DashboardPage extends React.Component {
           </Col>
         </Row>
         <Row>
-          {
-            this.props.apps.map(app => (
-              <Col key={app._id} md={3}>
-                <Card>
-                  <CardBody>
-                    <CardTitle>{ app.name }</CardTitle>
-                    <ul>
-                      { app.serviceNames.map(service => <li>{ service }</li>) }
-                    </ul>
-                  </CardBody>
-                </Card>
-              </Col>
-            ))
-          }
+          <DashboardAppsTable {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])} />
         </Row>
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ setup: { apps } }) => ({
+const mapStateToProps = ({
+  setup: { apps },
+  diagnosis: { incidents, risks, opportunities },
+}) => ({
   apps,
+  incidents,
+  risks,
+  opportunities,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
+  fetchEvents: () => dispatch(fetchEvents()),
 });
 
 export default connect(
