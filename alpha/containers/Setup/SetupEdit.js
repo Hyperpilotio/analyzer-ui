@@ -8,12 +8,15 @@ import {
   TabContent, TabPane,
   Nav, NavItem, NavLink,
 } from "reactstrap";
+import _ from "lodash";
 import classnames from "classnames";
 import { Control, Form } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
-import { minusStepNumber, addStepNumber } from "../../actions";
+import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot } from "../../actions";
+import { fetchEditApp, fetchAvaliableServices } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as appPropType } from "../../constants/propTypes";
+
 
 class SetupEdit extends React.Component {
   state = {
@@ -25,15 +28,13 @@ class SetupEdit extends React.Component {
   }
 
   componentWillMount() {
-    // console.log("appId", this.props.match.appId);
-    // this.props.fetchApps(this.props.match.appId);
+    const appId = this.props.match.params.appId;
+    if (appId) {
+      this.props.fetchEditApp(this.props.match.params.appId);
+    }
+    this.props.fetchAvaliableServices();
   }
 
-
-  // TODO: form submit method
-  onSubmitSlo = ({ slo }) => {
-    this.props.stepNext();
-  }
   toggle = () => {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen,
@@ -52,146 +53,169 @@ class SetupEdit extends React.Component {
     const {
       stepBack,
       stepNext,
-      step,
       apps,
+      editApp,
+      step,
+      onAddClick,
+      onRemoveClick,
+      availableApps,
+      addedApps,
+      match
     } = this.props;
+
     return (
       <Container>
-        <div className="row mt-3">
-          {location.pathname === "/setup/edit" ?
-            <h1 className="title">Configuring {apps && apps[iid - 1].name}</h1> :
-            <h1 className="title">Setup a new app</h1>
-          }
-        </div>
-        <div className="row mt-2 mb-5">
-          <ProgressBar percent={25 * step} text={editStepNames[step]} />
-        </div>
+        <Form
+          model="forms.editApp"
+          className="edit-app-form"
+          onSubmit={app => this.handleSubmit(app)}
+        >
+          <div className="row mt-3">
+            {location.pathname === `/setup/edit/${match.params.appId}` ?
+              <h1 className="title">Configuring {editApp && editApp.name}</h1> :
+              <h1 className="title">Setup a new app</h1>
+            }
+          </div>
+          <div className="row mt-2 mb-5">
+            <ProgressBar percent={25 * step} text={editStepNames[step]} />
+          </div>
 
-        { step === 1 ?
-          <div className="effect-fade-in">
-            <form>
+          { step === 1 ?
+            <div className="effect-fade-in">
+              
               <div className="form-group">
                 <label htmlFor="appName">APP Name</label>
-                <input type="text" className="form-control" id="appName" placeholder="Enter APP name" />
+                <Control.text model=".name" className="form-control" id="appName" placeholder="Enter APP name" />
               </div>
-              <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Type</label>
 
-                <Dropdown isOpen={this.state.dropdownOpenOne} toggle={this.toggle}>
-                  <DropdownToggle caret>
-                    long-running
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>long-running</DropdownItem>
-                    <DropdownItem>batch-processing</DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
+              <div className="form-group">
+                <label htmlFor=".type">Type</label>
+                <Control.select model=".type" id=".type">
+                  <option value="longRunning">long-running</option>
+                  <option value="batchProcessing">batch-processing</option>
+                </Control.select>
               </div>
 
               <Link to="/setup" className="btn btn-secondary mr-2">Cancel</Link>
-              <button type="submit" className="btn btn-primary" onClick={stepNext}>Next</button>
-            </form>
-          </div>
-          : null }
-
-        { step === 2 ?
-          <div>
-            <div className="row" >
-              <div className="selected-zone">
-                <h4 className="text-secondary">Selected Applications</h4>
-              </div>
+              <button className="btn btn-primary" onClick={stepNext}>Next</button>
+            
             </div>
-            <div className="row" >
-              <div className="selected-zone">
-                <h4 className="text-secondary">Detected K8S Resources</h4>
-                <div>
-                  <Nav tabs>
-                    <NavItem>
-                      <NavLink
-                        className={classnames({ active: this.state.activeTab === "1" })}
-                        onClick={() => { this.toggleTabs("1"); }}
-                      >
-                        All
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames({ active: this.state.activeTab === "2" })}
-                        onClick={() => { this.toggleTabs("2"); }}
-                      >
-                        Services
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames({ active: this.state.activeTab === "3" })}
-                        onClick={() => { this.toggleTabs("3"); }}
-                      >
-                      Deployments
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames({ active: this.state.activeTab === "4" })}
-                        onClick={() => { this.toggleTabs("4"); }}
-                      >
-                      Stateful Sets
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
-                  <TabContent activeTab={this.state.activeTab}>
-                    <TabPane tabId="1">
-                      <Row>
-                        <Col sm="12">
-                          <h4>Tab 1 Contents</h4>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                    <TabPane tabId="2">
-                      <Row>
-                        <Col sm="12">
-                          <h4>Tab 2 Contents</h4>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                    <TabPane tabId="3">
-                      <Row>
-                        <Col sm="12">
-                          <h4>Tab 3 Contents</h4>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                    <TabPane tabId="4">
-                      <Row>
-                        <Col sm="12">
-                          <h4>Tab 4 Contents</h4>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                  </TabContent>
+            : null }
+
+          { step === 2 ?
+            <div>
+              <div className="row" >
+                <div className="selected-zone">
+                  <h4 className="text-secondary">Selected Applications</h4>
+                  {
+                    addedApps.map(app => (
+                      <div key={app._id}>
+                        <li className="resource">{app.name}</li>
+                        <li className="resource">{app.deployment_template.kind}</li>
+                        <li className="resource">{app.state}</li>
+                        <button onClick={() => onRemoveClick(app._id)}>remove</button>
+                      </div>
+                    ))
+                  }
                 </div>
               </div>
+              <div className="row" >
+                <div className="selected-zone">
+                  <h4 className="text-secondary">Detected K8S Resources</h4>
+                  <div>
+                    <Nav tabs>
+                      <NavItem>
+                        <NavLink
+                          className={classnames({ active: this.state.activeTab === "1" })}
+                          onClick={() => { this.toggleTabs("1"); }}
+                        >
+                          All
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          className={classnames({ active: this.state.activeTab === "2" })}
+                          onClick={() => { this.toggleTabs("2"); }}
+                        >
+                          Services
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          className={classnames({ active: this.state.activeTab === "3" })}
+                          onClick={() => { this.toggleTabs("3"); }}
+                        >
+                        Deployments
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          className={classnames({ active: this.state.activeTab === "4" })}
+                          onClick={() => { this.toggleTabs("4"); }}
+                        >
+                        Stateful Sets
+                        </NavLink>
+                      </NavItem>
+                    </Nav>
+                    <TabContent activeTab={this.state.activeTab}>
+                      <TabPane tabId="1">
+                        <Row>
+                          <Col sm="12">
+                            <div className="resources-data">
+                              {
+                                availableApps.map(app => (
+                                  <div key={app._id}>
+                                    <li className="resource">{app.name}</li>
+                                    <li className="resource">{app.deployment_template.kind}</li>
+                                    <li className="resource">{app.state}</li>
+                                    <button onClick={() => onAddClick(app._id)}>add</button>
+                                  </div>
+                                ))
+                              }
+                            </div>
+                          </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="2">
+                        <Row>
+                          <Col sm="12">
+                            <h4>Tab 2 Contents</h4>
+                          </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="3">
+                        <Row>
+                          <Col sm="12">
+                            <h4>Tab 3 Contents</h4>
+                          </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="4">
+                        <Row>
+                          <Col sm="12">
+                            <h4>Tab 4 Contents</h4>
+                          </Col>
+                        </Row>
+                      </TabPane>
+                    </TabContent>
+                  </div>
+                </div>
+              </div>
+              <div className="row" >
+                <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
+                <button type="submit" className="btn btn-primary" onClick={stepNext}>Next</button>
+              </div>
             </div>
-            <div className="row" >
-              <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
-              <button type="submit" className="btn btn-primary" onClick={stepNext}>Next</button>
-            </div>
-          </div>
-          : null }
-        { step === 3 ?
-          <div>
-            <div className="row" >
-              <Form
-                model="forms.slo"
-                className="modal-form"
-                onSubmit={slo => this.onSubmitSlo(slo)}
-              >
+            : null }
+          { step === 3 ?
+            <div>
+              <div className="modal-form" >
                 <div className="form-group">
                   <label htmlFor="form-metric">Metric</label>
                   <Control.text
                     id="form-metric"
                     className="form-control"
-                    model=".metric"
+                    model=".slo.metric"
                   />
                 </div>
                 <div className="form-group">
@@ -199,7 +223,7 @@ class SetupEdit extends React.Component {
                   <Control.select
                     id="form-type"
                     className="form-control"
-                    model=".type"
+                    model=".slo.type"
                   >
                     <option value="latency">Latency</option>
                     <option value="throughput">Throughput</option>
@@ -211,7 +235,7 @@ class SetupEdit extends React.Component {
                   <Control.text
                     id="form-summary"
                     className="form-control"
-                    model=".summary"
+                    model=".slo.summary"
                   />
                 </div>
                 <div className="form-group">
@@ -219,72 +243,71 @@ class SetupEdit extends React.Component {
                   <Control.text
                     id="form-value"
                     className="form-control"
-                    model=".value"
+                    model=".slo.value"
                   />
                 </div>
 
                 <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
-                <button type="submit" className="btn btn-primary">Next</button>
-
-              </Form>
+                <button className="btn btn-primary" onClick={stepNext}>Next</button>
+              </div>
             </div>
-          </div>
-          : null }
-        { step === 4 ?
-          <div>
-            <form>
-              <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Interface Management</label>
+            : null }
+          { step === 4 ?
+            <div>
+              <form>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1">Interface Management</label>
 
-                <Dropdown isOpen={this.state.dropdownOpenTwo} toggle={this.toggle}>
-                  <DropdownToggle caret>
-                    Manual
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>Disabled</DropdownItem>
-                    <DropdownItem>Manual</DropdownItem>
-                    <DropdownItem>Semi-auto</DropdownItem>
-                    <DropdownItem>Full-auto</DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </div>
-              <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Bottleneck Management</label>
+                  <Dropdown isOpen={this.state.dropdownOpenTwo} toggle={this.toggle}>
+                    <DropdownToggle caret>
+                      Manual
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Disabled</DropdownItem>
+                      <DropdownItem>Manual</DropdownItem>
+                      <DropdownItem>Semi-auto</DropdownItem>
+                      <DropdownItem>Full-auto</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1">Bottleneck Management</label>
 
-                <Dropdown isOpen={this.state.dropdownOpenThree} toggle={this.toggle}>
-                  <DropdownToggle caret>
-                    Manual
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>Disabled</DropdownItem>
-                    <DropdownItem>Manual</DropdownItem>
-                    <DropdownItem>Semi-auto</DropdownItem>
-                    <DropdownItem>Full-auto</DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </div>
-              <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Type</label>
+                  <Dropdown isOpen={this.state.dropdownOpenThree} toggle={this.toggle}>
+                    <DropdownToggle caret>
+                      Manual
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Disabled</DropdownItem>
+                      <DropdownItem>Manual</DropdownItem>
+                      <DropdownItem>Semi-auto</DropdownItem>
+                      <DropdownItem>Full-auto</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1">Type</label>
 
-                <Dropdown isOpen={this.state.dropdownOpenFour} toggle={this.toggle}>
-                  <DropdownToggle caret>
-                    Manual
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem>Disabled</DropdownItem>
-                    <DropdownItem>Manual</DropdownItem>
-                    <DropdownItem>Semi-auto</DropdownItem>
-                    <DropdownItem>Full-auto</DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
+                  <Dropdown isOpen={this.state.dropdownOpenFour} toggle={this.toggle}>
+                    <DropdownToggle caret>
+                      Manual
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Disabled</DropdownItem>
+                      <DropdownItem>Manual</DropdownItem>
+                      <DropdownItem>Semi-auto</DropdownItem>
+                      <DropdownItem>Full-auto</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+              </form>
+              <div className="row" >
+                <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
+                <Link to="/setup" type="submit"><button className="btn btn-primary">Done</button></Link>
               </div>
-            </form>
-            <div className="row" >
-              <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
-              <Link to="/setup" type="submit"><button className="btn btn-primary">Done</button></Link>
             </div>
-          </div>
-          : null }
+            : null }
+        </Form>
       </Container>
     );
   }
@@ -295,19 +318,27 @@ SetupEdit.propTypes = {
   apps: PropTypes.arrayOf(appPropType).isRequired,
   stepBack: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,
+  onAddClick: PropTypes.func.isRequired,
+  onRemoveClick: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ setup: { step, apps, addedAppIds } }) => ({
+const mapStateToProps = ({ setup: { apps, step, editApp, k8sResources, addedResourceIds } }) => ({
   apps,
   step,
-  availableApps: apps.filter(app => !addedAppIds.includes(app._id)),
-  addedApps: apps.filter(app => addedAppIds.includes(app._id)),
+  editApp,
+  k8sResources,
+  availableApps: k8sResources.filter(resource => !addedResourceIds.includes(resource._id)),
+  addedApps: k8sResources.filter(resource => addedResourceIds.includes(resource._id)),
 });
 
 const mapDispatchToProps = dispatch => ({
   stepBack: () => dispatch(minusStepNumber()),
   stepNext: () => dispatch(addStepNumber()),
-  fetchSingleApp: () => dispatch(fetchApps()),
+  onAddClick: id => dispatch(addToHyperPilot(id)),
+  onRemoveClick: id => dispatch(removeFromHyperPilot(id)),
+  fetchEditApp: appId => dispatch(fetchEditApp(appId)),
+  fetchAvaliableServices: () => dispatch(fetchAvaliableServices()),
+  updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
 });
 
 export default connect(

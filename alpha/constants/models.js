@@ -1,3 +1,21 @@
+export const initialEditAppState = {
+  name: "app",
+  type: "longRunning",
+  services: [],
+  slo: {
+    metric: "running speed",
+    type: "Rate",
+    summary: "25p",
+    value: 0,
+  },
+  managementFeatures: {
+    interface: "",
+    bottleneck: "",
+    type: "",
+  },
+};
+
+
 export const initialSloState = {
   metric: "running speed",
   type: "Rate",

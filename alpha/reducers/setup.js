@@ -4,13 +4,18 @@ import { fakeArr } from "../constants/models";
 
 const initialState = {
   apps: [],
+  editApp: {},
   step: 1,
-  addedAppIds: [],
+  addedResourceIds: [],
+  k8sResources: [],
   stepPercent: 34,
   ui: {
     isFetchingAppsLoading: false,
     isUpdatingSingleSloLoading: false,
     isBeginHyperPilotingLoading: false,
+    isK8sResourcesLoading: false,
+    isEditAppLoading: false,
+
   },
   modal: {
     isModalOpen: false,
@@ -36,9 +41,9 @@ export default function setup(state = initialState, action) {
     console.error("Fetch apps failed");
     return state;
   case types.ADD_TO_HYPERPILOT:
-    return { ...state, addedAppIds: _.union(state.addedAppIds, [action.appId]) };
+    return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appId]) };
   case types.REMOVE_FROM_HYPERPILOT:
-    return { ...state, addedAppIds: _.without(state.addedAppIds, action.appId) };
+    return { ...state, addedResourceIds: _.without(state.addedResourceIds, action.appId) };
   case types.EDIT_SINGLE_APP:
     return { ...state, modal: { isModalOpen: true } };
   case types.CLOSE_MODAL:
@@ -76,6 +81,34 @@ export default function setup(state = initialState, action) {
       ...state,
       ui: _.extend({}, state.ui, { isBeginHyperPilotingLoading: false }),
       isHPReady: true,
+    };
+  case types.FETCH_AVALIABLE_SERVICES_FAIL:
+    console.error("Fetch SLO failed");
+    return state;
+  case types.FETCH_AVALIABLE_SERVICES_LOADING:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isK8sResourcesLoading: true }),
+    };
+  case types.FETCH_AVALIABLE_SERVICES_SUCCESS:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isK8sResourcesLoading: false }),
+      k8sResources: action.k8sResources,
+    };
+  case types.FETCH_EDIT_APP_FAIL:
+    console.error("Fetch edit app failed");
+    return state;
+  case types.FETCH_EDIT_APP_LOADING:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isEditAppLoading: true }),
+    };
+  case types.FETCH_EDIT_APP_SUCCESS:
+    return {
+      ...state,
+      ui: _.extend({}, state.ui, { isEditAppLoading: false }),
+      editApp: action.editApp,
     };
   case types.BEGIN_HYPER_PILOTING_FAIL:
     console.error("Begin HP failed");

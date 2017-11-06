@@ -104,6 +104,7 @@
     ],
     "k8s_resources": [
       {
+        "_id": 1,
         "name": "mysql",
         "deployment_template": {
           "kind": "StatefulSet"
@@ -111,6 +112,7 @@
         "state": "Running"
       },
       {
+        "_id": 2,
         "name": "grafana",
         "deployment_template": {
           "kind": "Deployment"

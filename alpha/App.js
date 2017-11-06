@@ -32,11 +32,12 @@ export default () => (
             <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
           </div>
         </div>
+    
         <Route path="/dashboard" component={DashboardPage} />
         <Route exact path="/setup" component={SetupList} />
-        <Route exact path="/setup/edit" component={SetupEdit} />
-        <Route exact path="/setup/edit/:appId" component={SetupEdit} />
         <Route path="/setup/add" component={SetupEdit} />
+        <Route exact path="/setup/edit" component={SetupEdit} />
+        <Route path="/setup/edit/:appId" component={SetupEdit} />
         <Route path="/setup/done" component={SetupDone} />
       </div>
     </Router>
