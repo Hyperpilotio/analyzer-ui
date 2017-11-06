@@ -51,7 +51,7 @@ class SetupList extends React.Component {
                     <td>{d.slo.type}: {d.slo.value} {d.slo.unit}</td>
                     <td>{d.state}</td>
                     <td>
-                      <Link to={`/setup/${d._id}`}><MdEdit className={`mr-3 ${_s.iconGrp}`} /></Link>
+                      <Link to={`/setup/edit/${d._id}`}><MdEdit className={`mr-3 ${_s.iconGrp}`} /></Link>
                       <Link to="/"><MdDelete className={_s.iconGrp} /></Link>
                     </td>
                   </tr>
