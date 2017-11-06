@@ -9,17 +9,23 @@
         "services": [
           {
             "name": "goddd",
-            "deployment_template": "Service",
+            "deployment_template": {
+              "kind": "Deployment"
+            },
             "state": "Running"
           },
           {
             "name": "pathfinder",
-            "deployment_template": "Service",
+            "deployment_template": {
+              "kind": "Service"
+            },
             "state": "Running"
           },
           {
             "name": "mongo",
-            "deployment_template": "Service",
+            "deployment_template": {
+              "kind": "StatefulSet"
+            },
             "state": "Running"
           }
         ],
@@ -60,12 +66,16 @@
         "services": [
           {
             "name": "kafka-serve",
-            "deployment_template": "Service",
+            "deployment_template": {
+              "kind": "Deployment"
+            },
             "state": "Pending"
           },
           {
             "name": "zookeeper",
-            "deployment_template": "Service",
+            "deployment_template": {
+              "kind": "Service"
+            },
             "state": "Running"
           }
         ],
@@ -102,13 +112,17 @@
     ],
     "k8s_resources": [
       {
-        "name": "MySQL",
-        "deployment_template": "Service",
+        "name": "mysql",
+        "deployment_template": {
+          "kind": "StatefulSet"
+        },
         "state": "Running"
       },
       {
-        "name": "Mongo Service",
-        "deployment_template": "Service",
+        "name": "grafana",
+        "deployment_template": {
+          "kind": "Deployment"
+        },
         "state": "Running"
       }
     ],
