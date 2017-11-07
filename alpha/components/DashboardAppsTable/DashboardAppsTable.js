@@ -6,6 +6,7 @@ import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import Linked from "~/commons/components/Linked";
+import { getSLODisplay } from "../../utils";
 import _s from "./style.scss";
 
 
@@ -49,12 +50,12 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
             );
           }
           return (
-            <Linked tag="tr" to={`/dashboard/apps/${app._id}`} key={app._id}>
+            <Linked tag="tr" to={`/dashboard/${app._id}`} key={app._id}>
               <td>{ app.name }</td>
               <td>{ _.size(app.services) }</td>
               <td>{ app.state }</td>
               <td>{ app.type }</td>
-              <td>{ slo.type } { slo.type === "throughput" ? ">" : "<" } { slo.value }{ slo.unit }</td>
+              <td>{ getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
             </Linked>
           );
