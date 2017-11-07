@@ -24,7 +24,7 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
     </thead>
     <tbody>
       {
-        apps.map(({ slo, ...app }) => {
+        apps.map((app) => {
           let badge;
           if (_.size(incidents[app._id]) !== 0) {
             badge = (
@@ -55,7 +55,7 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
               <td>{ _.size(app.services) }</td>
               <td>{ app.state }</td>
               <td>{ app.type }</td>
-              <td>{ app.slo && getSLODisplay(app.slo) }</td>
+              <td>{ getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
             </Linked>
           );
