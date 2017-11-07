@@ -55,7 +55,7 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
               <td>{ _.size(app.services) }</td>
               <td>{ app.state }</td>
               <td>{ app.type }</td>
-              <td>{ getSLODisplay(app.slo) }</td>
+              <td>{ app.slo && getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
             </Linked>
           );
