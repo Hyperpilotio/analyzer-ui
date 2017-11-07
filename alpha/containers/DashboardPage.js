@@ -1,9 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Switch, Route } from "react-router";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
+import ManagedAppPage from "./ManagedAppPage";
 import { fetchApps, fetchEvents } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
@@ -24,24 +26,50 @@ class DashboardPage extends React.Component {
   }
 
   render() {
+    const { match, isEventsLoading, isFetchingAppsLoading } = this.props;
+    if (isFetchingAppsLoading || isEventsLoading) {
+      return null;
+    }
     return (
-      <Container>
-        <Row className="pt-4 pb-3">
-          <Col>
-            <h3>Applications managed by HyperPilot</h3>
-          </Col>
-        </Row>
-        <Row>
-          <DashboardAppsTable {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])} />
-        </Row>
-      </Container>
+      <div>
+        <Switch>
+          <Route path={`${match.path}/:appId`} render={({ match }) => {
+            const app = _.find(this.props.apps, { _id: match.params.appId });
+            if (_.isUndefined(app)) {
+              return null;
+            }
+            return (
+              <ManagedAppPage
+                match={match}
+                app={app}
+                incidents={this.props.incidents[app._id]}
+                opportunities={this.props.opportunities[app._id]}
+              />
+            );
+          }} />
+          <Route exact path={match.path}>
+            <Container>
+              <Row className="pt-4 pb-3">
+                <Col>
+                  <h3>Applications managed by HyperPilot</h3>
+                </Col>
+              </Row>
+              <Row>
+                <DashboardAppsTable
+                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])}
+                />
+              </Row>
+            </Container>
+          </Route>
+        </Switch>
+      </div>
     );
   }
 }
 
 const mapStateToProps = ({
-  setup: { apps },
-  diagnosis: { incidents, risks, opportunities },
+  setup: { apps, ui: { isFetchingAppsLoading } },
+  diagnosis: { incidents, risks, opportunities, ui: { isEventsLoading } },
 }) => ({
   apps,
   incidents,
