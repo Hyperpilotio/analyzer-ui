@@ -15,10 +15,6 @@ const getBadge = ({ incidents, opportunities }) => {
 
 const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
   <div>
-    { console.log(match) }
-    { console.log(app) }
-    { console.log(incidents) }
-    { console.log(opportunities) }
     <Jumbotron className="border border-right-0 border-left-0 bg-white" fluid>
       <Container>
         <Row>
