@@ -26,28 +26,31 @@ class DashboardPage extends React.Component {
   }
 
   render() {
-    const { match, isEventsLoading, isFetchingAppsLoading } = this.props;
+    const { isEventsLoading, isFetchingAppsLoading } = this.props;
     if (isFetchingAppsLoading || isEventsLoading) {
       return null;
     }
     return (
       <div>
         <Switch>
-          <Route path={`${match.path}/:appId`} render={({ match }) => {
-            const app = _.find(this.props.apps, { _id: match.params.appId });
-            if (_.isUndefined(app)) {
-              return null;
-            }
-            return (
-              <ManagedAppPage
-                match={match}
-                app={app}
-                incidents={this.props.incidents[app._id]}
-                opportunities={this.props.opportunities[app._id]}
-              />
-            );
-          }} />
-          <Route exact path={match.path}>
+          <Route
+            path={`${this.props.match.path}/:appId`}
+            render={({ match }) => {
+              const app = _.find(this.props.apps, { _id: match.params.appId });
+              if (_.isUndefined(app)) {
+                return null;
+              }
+              return (
+                <ManagedAppPage
+                  match={match}
+                  app={app}
+                  incidents={this.props.incidents[app._id]}
+                  opportunities={this.props.opportunities[app._id]}
+                />
+              );
+            }}
+          />
+          <Route exact path={this.props.match.path}>
             <Container>
               <Row className="pt-4 pb-3">
                 <Col>

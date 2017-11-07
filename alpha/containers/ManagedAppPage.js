@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
 import { getSLODisplay } from "../utils";
 
-const getBadge = ({ incidents, opportunities }) => {
+const getBadge = (incidents, opportunities) => {
   if (!_.isEmpty(incidents)) {
     return <Badge color="danger"><h6 className="mb-0">Incidents</h6></Badge>;
   } else if (!_.isEmpty(opportunities)) {
@@ -11,7 +11,7 @@ const getBadge = ({ incidents, opportunities }) => {
   } else {
     return <Badge color="secondary"><h6 className="mb-0">OK</h6></Badge>;
   }
-}
+};
 
 const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
   <div>
@@ -29,7 +29,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
             <Row className="mb-3">
               <Col md={3}>
                 <span className="text-muted d-block">Detected</span>
-                { getBadge({ incidents, opportunities }) }
+                { getBadge(incidents, opportunities) }
               </Col>
               <Col md={3}>
                 <span className="text-muted">Services</span>
@@ -78,17 +78,17 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
           <tbody>
             <tr>
               <th scope="row">#1</th>
-              <td>{ (new Date).toString() }</td>
+              <td>{ (new Date()).toString() }</td>
               <td>Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></td>
             </tr>
             <tr>
               <th scope="row">#2</th>
-              <td>{ (new Date).toString() }</td>
+              <td>{ (new Date()).toString() }</td>
               <td>Resource type <Badge>blkio</Badge> having bottleneck in container <Badge>kafka-serve</Badge></td>
             </tr>
             <tr>
               <th scope="row">#3</th>
-              <td>{ (new Date).toString() }</td>
+              <td>{ (new Date()).toString() }</td>
               <td>Resource type <Badge>net</Badge> having contention on node <Badge>node-2</Badge></td>
             </tr>
           </tbody>
