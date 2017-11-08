@@ -1,27 +1,62 @@
-export const initialEditAppState = {
-  name: "app",
-  type: "longRunning",
-  services: [],
-  slo: {
-    metric: "running speed",
-    type: "Rate",
-    summary: "25p",
-    value: 0,
-  },
-  managementFeatures: {
-    interface: "",
-    bottleneck: "",
-    type: "",
-  },
+export const initialGeneralState = {
+  name: "",
+  type: "",
 };
 
-
 export const initialSloState = {
-  metric: "running speed",
-  type: "Rate",
-  summary: "25p",
-  value: 0,
-  unit: "USD",
+  metric: "",
+  type: "",
+  summary: "",
+  value: "",
+};
+
+export const initialFeaturesState = {
+  management_features: [
+    {
+      name: "interference_management",
+      mode: "Disabled",
+      policy: [],
+    },
+    {
+      name: "bottleneck_management",
+      mode: "Semi-Auto",
+      policy: [],
+    },
+    {
+      name: "efficiency_management",
+      mode: "Auto",
+      policy: [],
+    },
+  ],
+};
+
+export const initialEditAppState = {
+  name: "",
+  type: "",
+  services: [],
+  slo: {
+    metric: "",
+    type: "",
+    summary: "",
+    value: "",
+  },
+  management_features: [
+    {
+      name: "interference_management",
+      mode: "Disabled",
+      policy: [],
+    },
+    {
+      name: "bottleneck_management",
+      mode: "Semi-Auto",
+      policy: [],
+    },
+    {
+      name: "efficiency_management",
+      mode: "Auto",
+      policy: [],
+    },
+  ],
 };
 
 export const editStepNames = [
@@ -32,4 +67,4 @@ export const editStepNames = [
   "Step 4: Management Features",
 ];
 
-export default initialSloState;
+export default initialEditAppState;

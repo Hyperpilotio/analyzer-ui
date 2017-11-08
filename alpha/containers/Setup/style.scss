@@ -1,0 +1,25 @@
+.selectedZone{
+    min-height: 320px;
+}
+
+.cardCon{
+    float:left;
+}
+
+.card{
+    border: none !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);;
+}
+
+.btnRow{
+    float: right;
+}
+
+.btnCancel{
+    padding: 0px;
+    border:none;
+}
+
+.tabContent{
+    margin-top: 30px;
+}
