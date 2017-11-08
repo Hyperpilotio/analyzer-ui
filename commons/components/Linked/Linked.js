@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import ReactRouterPropTypes from "react-router-prop-types";
 import _ from "lodash";
+import styles from "./Linked.scss";
 
-const Linked = ({ to, replace, tag, history, ...props }) => (
+const Linked = ({ to, replace, tag, history, className, ...props }) => (
   React.createElement(tag, {
     onClick: () => {
       if (replace) {
@@ -13,6 +14,7 @@ const Linked = ({ to, replace, tag, history, ...props }) => (
         history.push(to);
       }
     },
+    className: `${styles.Linked} ${className}`,
     ..._.omit(props, ["match", "location", "staticContext"]),
   })
 );
@@ -22,10 +24,12 @@ Linked.propTypes = {
   replace: PropTypes.bool,
   tag: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
   history: ReactRouterPropTypes.history.isRequired,
+  className: PropTypes.string,
 };
 
 Linked.defaultProps = {
   replace: false,
+  className: "",
 };
 
 export default withRouter(Linked);
