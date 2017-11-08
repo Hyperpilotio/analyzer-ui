@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 
 export const app = PropTypes.shape({
-  _id: PropTypes.number,
+  _id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   name: PropTypes.string,
   slo: PropTypes.shape({
     metric: PropTypes.string,

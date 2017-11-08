@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  Row, Col,
   TabContent, TabPane,
   Nav, NavItem, NavLink,
   Card, CardText, CardBody,
@@ -40,7 +39,7 @@ const StepTwo = props => (
                   <CardTitle>{app.name}</CardTitle>
                   <CardText>Kind: {app.deployment_template.kind}</CardText>
                   <CardText>State: {app.state}</CardText>
-                  <Button onClick={() => props.onRemoveClick(app._id)} color="danger">Remove</Button>
+                  <Button className={_s.btn} onClick={() => props.onRemoveClick(app._id)} color="danger">Remove</Button>
                 </CardBody>
               </Card>
             </div>
@@ -52,6 +51,7 @@ const StepTwo = props => (
       <div className="selected-zone">
         <h4 className="text-secondary">Detected K8S Resources</h4>
         <div>
+          {/* Tabs Link */}
           <Nav tabs>
             {
               tabsArr.map(tab => (
@@ -66,11 +66,11 @@ const StepTwo = props => (
               ))
             }
           </Nav>
-          {/* Tabs內容 */}
+          {/* Tabs Content */}
           <TabContent activeTab={props.activeTab} className={_s.tabContent}>
             {
               tabsArr.map(tab => (
-                <TabPane tabId={tab.id}>
+                <TabPane key={tab.id} tabId={tab.id}>
                   <div className="resources-data">
                     {
                       props.availableApps.map(app => (
@@ -80,7 +80,7 @@ const StepTwo = props => (
                               <CardTitle>{app.name}</CardTitle>
                               <CardText>Kind: {app.deployment_template.kind}</CardText>
                               <CardText>State: {app.state}</CardText>
-                              <Button onClick={() => props.onAddClick(app._id)} color="success">Add</Button>
+                              <Button className={_s.btn} onClick={() => props.onAddClick(app._id)} color="success">Add</Button>
                             </CardBody>
                           </Card>
                         </div>
@@ -108,9 +108,6 @@ StepTwo.propTypes = {
   activeTab: PropTypes.string.isRequired,
   stepBack: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,
-  toggleTabs: PropTypes.func.isRequired,
-  onAddClick: PropTypes.func.isRequired,
-  onRemoveClick: PropTypes.func.isRequired,
 };
 
 
