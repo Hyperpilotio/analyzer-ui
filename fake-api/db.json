@@ -30,7 +30,7 @@
           }
         ],
         "slo": {
-          "matric": "",
+          "metric": "hyperpilot/goddd/api_booking_service_request_count",
           "type": "throughput",
           "summary": "quantile_90",
           "value": 300,
@@ -53,10 +53,6 @@
             "policy": []
           }
         ],
-        "budget": {
-          "value": 300,
-          "unit": "USD"
-        },
         "state": "Active"
       },
       {
@@ -80,7 +76,7 @@
           }
         ],
         "slo":{
-          "matric": "hyperpilot/goddd/api_booking_service_request_latency_milliseconds",
+          "metric": "hyperpilot/goddd/api_booking_service_request_latency_milliseconds",
           "type": "latency",
           "summary": "quantile_90",
           "value": 300,
@@ -103,10 +99,6 @@
             "policy": []
           }
         ],
-        "budget": {
-          "value": 300,
-          "unit": "USD"
-        },
         "state": "Inactive"
       }
     ],

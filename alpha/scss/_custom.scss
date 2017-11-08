@@ -3,17 +3,18 @@ $theme-colors: (
   "light": #f7f9fc,
   "dark": #1c293c,
   "success": #7ed321,
+  "info": #78c1fa,
   "danger": #ff8686,
   "warning": #fdbd39,
 );
 
-//table
-.table tr th {
-  text-align: center;   
-}
-
-.table td {
-  text-align: center;   
+.table th, .table td {
+  &:first-child {
+    padding-left: 2em;
+  }
+  &:last-child {
+    padding-right: 2em;
+  }
 }
 
 // dropdown
