@@ -198,7 +198,7 @@ class SetupEdit extends React.Component {
                   <option value="Full-Auto">Full-Auto</option>
                 </Control.select>
               </div>
-              <div className="row" >
+              <div className={_s.btnRow}>
                 <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
                 <Link to="/setup"><button type="submit" className="btn btn-primary">Done</button></Link>
               </div>

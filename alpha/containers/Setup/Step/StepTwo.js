@@ -11,6 +11,22 @@ import classnames from "classnames";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
 
+const tabsArr = [
+  {
+    id: "1",
+    navLink: "All",
+  }, {
+    id: "2",
+    navLink: "Services",
+  }, {
+    id: "3",
+    navLink: "Deployments",
+  }, {
+    id: "4",
+    navLink: "Stateful Sets",
+  },
+];
+
 const StepTwo = props => (
   <div>
     <div className="row" >
@@ -18,10 +34,10 @@ const StepTwo = props => (
         <h4 className="text-secondary">Selected Applications</h4>
         {
           props.addedApps.map(app => (
-            <div key={app._id} className={_s.cardCon}>
+            <div key={app._id} className={`mr-3 ${_s.cardCon}`}>
               <Card className={_s.card}>
                 <CardBody>
-                  <CardTitle>App: {app.name}</CardTitle>
+                  <CardTitle>{app.name}</CardTitle>
                   <CardText>Kind: {app.deployment_template.kind}</CardText>
                   <CardText>State: {app.state}</CardText>
                   <Button onClick={() => props.onRemoveClick(app._id)} color="danger">Remove</Button>
@@ -37,51 +53,31 @@ const StepTwo = props => (
         <h4 className="text-secondary">Detected K8S Resources</h4>
         <div>
           <Nav tabs>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: props.activeTab === "1" })}
-                onClick={() => { props.toggleTabs("1"); }}
-              >
-                  All
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: props.activeTab === "2" })}
-                onClick={() => { props.toggleTabs("2"); }}
-              >
-                Services
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: props.activeTab === "3" })}
-                onClick={() => { props.toggleTabs("3"); }}
-              >
-              Deployments
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: props.activeTab === "4" })}
-                onClick={() => { props.toggleTabs("4"); }}
-              >
-              Stateful Sets
-              </NavLink>
-            </NavItem>
+            {
+              tabsArr.map(tab => (
+                <NavItem key={tab.id} className={_s.navItem} >
+                  <NavLink
+                    className={classnames({ active: props.activeTab === tab.id })}
+                    onClick={() => { props.toggleTabs(tab.id); }}
+                  >
+                    {tab.navLink}
+                  </NavLink>
+                </NavItem>
+              ))
+            }
           </Nav>
           {/* Tabs內容 */}
           <TabContent activeTab={props.activeTab} className={_s.tabContent}>
-            <TabPane tabId="1">
-              <Row>
-                <Col sm="12">
+            {
+              tabsArr.map(tab => (
+                <TabPane tabId={tab.id}>
                   <div className="resources-data">
                     {
                       props.availableApps.map(app => (
-                        <div key={app._id} className={_s.cardCon}>
-                          <Card>
+                        <div key={app._id} className={`mr-3 ${_s.cardCon}`}>
+                          <Card className={_s.card}>
                             <CardBody>
-                              <CardTitle>App: {app.name}</CardTitle>
+                              <CardTitle>{app.name}</CardTitle>
                               <CardText>Kind: {app.deployment_template.kind}</CardText>
                               <CardText>State: {app.state}</CardText>
                               <Button onClick={() => props.onAddClick(app._id)} color="success">Add</Button>
@@ -91,30 +87,9 @@ const StepTwo = props => (
                       ))
                     }
                   </div>
-                </Col>
-              </Row>
-            </TabPane>
-            <TabPane tabId="2">
-              <Row>
-                <Col sm="12">
-                  <h4>Tab 2 Contents</h4>
-                </Col>
-              </Row>
-            </TabPane>
-            <TabPane tabId="3">
-              <Row>
-                <Col sm="12">
-                  <h4>Tab 3 Contents</h4>
-                </Col>
-              </Row>
-            </TabPane>
-            <TabPane tabId="4">
-              <Row>
-                <Col sm="12">
-                  <h4>Tab 4 Contents</h4>
-                </Col>
-              </Row>
-            </TabPane>
+                </TabPane>
+              ))
+            }
           </TabContent>
         </div>
       </div>
