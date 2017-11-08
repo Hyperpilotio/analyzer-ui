@@ -1,20 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import {
   Container,
 } from "reactstrap";
-import { Control, Form, actions } from "react-redux-form";
+import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot } from "../../actions";
 import { fetchEditApp, fetchAvaliableServices } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as appPropType } from "../../constants/propTypes";
-import _s from "./style.scss";
 import StepOne from "./Step/StepOne";
 import StepTwo from "./Step/StepTwo";
 import StepThree from "./Step/StepThree";
+import StepFour from "./Step/StepFour";
 
 class SetupEdit extends React.Component {
   state = {
@@ -43,12 +43,10 @@ class SetupEdit extends React.Component {
     });
   }
 
-  // to step 2
   handleSubmit = (app) => {
     this.props.stepNext();
   }
 
-  // TODO: changing tab state
   toggleTabs = (tab) => {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -59,16 +57,10 @@ class SetupEdit extends React.Component {
 
   render() {
     const {
-      stepBack,
-      stepNext,
-      apps,
-      editApp,
-      step,
-      onAddClick,
-      onRemoveClick,
-      availableApps,
-      addedApps,
-      match
+      stepBack, stepNext, step,
+      editApp, availableApps, addedApps,
+      onAddClick, onRemoveClick,
+      match,
     } = this.props;
 
     return (
@@ -88,7 +80,12 @@ class SetupEdit extends React.Component {
             <ProgressBar percent={25 * step} text={editStepNames[step]} />
           </div>
 
-          { step === 1 ? <StepOne cancelEdit={this.cancelEdit} stepNext={stepNext} /> : null }
+          { step === 1 ?
+            <StepOne
+              cancelEdit={this.cancelEdit}
+              stepNext={stepNext}
+            /> : null
+          }
           { step === 2 ?
             <StepTwo
               activeTab={this.state.activeTab}
@@ -108,54 +105,9 @@ class SetupEdit extends React.Component {
             />
             : null }
           { step === 4 ?
-            <div>
-              {/* interface */}
-              <div className="form-group">
-                <label htmlFor="form-type-3">Interface</label>
-                <Control.select
-                  id="form-type-3"
-                  className="form-control"
-                  model=".management_features[0].mode"
-                >
-                  <option value="Disabled">Disabled</option>
-                  <option value="Manual">Manual</option>
-                  <option value="Semi-Auto">Semi-Auto</option>
-                  <option value="Full-Auto">Full-Auto</option>
-                </Control.select>
-              </div>
-              {/* Bottleneck */}
-              <div className="form-group">
-                <label htmlFor="form-type-4">Bottleneck</label>
-                <Control.select
-                  id="form-type-4"
-                  className="form-control"
-                  model=".management_features[1].mode"
-                >
-                  <option value="Disabled">Disabled</option>
-                  <option value="Manual">Manual</option>
-                  <option value="Semi-Auto">Semi-Auto</option>
-                  <option value="Full-Auto">Full-Auto</option>
-                </Control.select>
-              </div>
-              {/* Type */}
-              <div className="form-group">
-                <label htmlFor="form-type-5">Type</label>
-                <Control.select
-                  id="form-type-5"
-                  className="form-control"
-                  model=".management_features[2].mode"
-                >
-                  <option value="Disabled">Disabled</option>
-                  <option value="Manual">Manual</option>
-                  <option value="Semi-Auto">Semi-Auto</option>
-                  <option value="Full-Auto">Full-Auto</option>
-                </Control.select>
-              </div>
-              <div className={_s.btnRow}>
-                <button className="btn btn-secondary mr-2" onClick={stepBack}>Back</button>
-                <Link to="/setup"><button type="submit" className="btn btn-primary">Done</button></Link>
-              </div>
-            </div>
+            <StepFour
+              stepBack={stepBack}
+            />
             : null }
         </Form>
       </Container>
@@ -164,8 +116,13 @@ class SetupEdit extends React.Component {
 }
 
 SetupEdit.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
   step: PropTypes.number.isRequired,
-  apps: PropTypes.arrayOf(appPropType).isRequired,
+  availableApps: PropTypes.arrayOf(appPropType).isRequired,
+  addedApps: PropTypes.arrayOf(appPropType).isRequired,
+  fetchEditApp: PropTypes.func.isRequired,
+  fetchAvaliableServices: PropTypes.func.isRequired,
   stepBack: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,
   onAddClick: PropTypes.func.isRequired,
