@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import ReactRouterPropTypes from "react-router-prop-types";
+import classnames from "classnames";
 import _ from "lodash";
 import styles from "./Linked.scss";
 
@@ -14,7 +15,7 @@ const Linked = ({ to, replace, tag, history, className, ...props }) => (
         history.push(to);
       }
     },
-    className: `${styles.Linked} ${className}`,
+    className: classnames(styles.Linked, className),
     ..._.omit(props, ["match", "location", "staticContext"]),
   })
 );
