@@ -44,7 +44,7 @@ class SetupDone extends React.Component {
               <h4 className={_s.wordSuccess}>HyperPilot is now running for {editApp.name}! </h4>
               <div className="row">
                 <Button className={`btn btn-success mt-3 ${_s.btnReturn}`}>
-                  <Link to="/setup">
+                  <Link to="/dashboard">
                     Back to App list
                   </Link>
                 </Button>

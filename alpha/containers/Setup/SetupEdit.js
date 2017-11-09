@@ -28,7 +28,6 @@ class SetupEdit extends React.Component {
 
   componentWillMount() {
     const appId = this.props.match.params.appId;
-    
     // in edit mode
     if (appId) {
       this.props.fetchEditApp(this.props.match.params.appId);
@@ -80,11 +79,11 @@ class SetupEdit extends React.Component {
             }
           </div>
           <div className="row mt-2 mb-5">
-            <ProgressBar percent={25 * step} text={editStepNames[step]} />
+            <ProgressBar percent={25 * parseInt(match.params.step, 10)} text={editStepNames[step]} />
           </div>
           <Switch>
             <Route
-              path={`${match.path}/1`}
+              path="/setup/add/1"
               render={() => (
                 <StepOne
                   cancelEdit={this.cancelEdit}
@@ -93,7 +92,7 @@ class SetupEdit extends React.Component {
               )}
             />
             <Route
-              path={`${match.path}/2`}
+              path="/setup/add/2"
               render={() => (
                 <StepTwo
                   activeTab={this.state.activeTab}
@@ -109,7 +108,7 @@ class SetupEdit extends React.Component {
               )}
             />
             <Route
-              path={`${match.path}/3`}
+              path="/setup/add/3"
               render={() => (
                 <StepThree
                   stepBack={stepBack}
@@ -118,7 +117,7 @@ class SetupEdit extends React.Component {
               )}
             />
             <Route
-              path={`${match.path}/4`}
+              path="/setup/add/4"
               render={() => (
                 <StepFour
                   stepBack={stepBack}

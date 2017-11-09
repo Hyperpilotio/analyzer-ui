@@ -1,10 +1,9 @@
 import React from "react";
 import { Control } from "react-redux-form";
-import ReactRouterPropTypes from "react-router-prop-types";
 import { Link } from "react-router-dom";
 import _s from "../style.scss";
 
-const StepFour = props => (
+const StepFour = () => (
   <div>
     {/* Interference Management */}
     <div className="form-group">
@@ -49,14 +48,10 @@ const StepFour = props => (
       </Control.select>
     </div>
     <div className={_s.btnRow}>
-      <Link to={`${props.match.url}/3`} className="btn btn-secondary mr-2">Back</Link>
+      <Link to="/setup/add/3" className="btn btn-secondary mr-2">Back</Link>
       <Link to="/setup/done"><button type="submit" className="btn btn-success">Begin Hyperpiloting</button></Link>
     </div>
   </div>
 );
-
-StepFour.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired,
-};
 
 export default StepFour;

@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ReactRouterPropTypes from "react-router-prop-types";
 import { Link } from "react-router-dom";
 import { Control } from "react-redux-form";
 import _s from "../style.scss";
@@ -25,14 +24,13 @@ const StepOne = props => (
           Cancel
         </Control.reset>
       </textbox>
-      <Link to={`${props.match.url}/2`} className="btn btn-primary">Next</Link>
+      <Link to="/setup/add/2" className="btn btn-primary">Next</Link>
     </div>
   </div>
 
 );
 
 StepOne.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired,
   cancelEdit: PropTypes.func.isRequired,
 };
 

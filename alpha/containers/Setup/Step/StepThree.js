@@ -1,10 +1,9 @@
 import React from "react";
-import ReactRouterPropTypes from "react-router-prop-types";
 import { Link } from "react-router-dom";
 import { Control } from "react-redux-form";
 import _s from "../style.scss";
 
-const StepThree = props => (
+const StepThree = () => (
   <div>
     <div className="modal-form" >
       <div className="form-group">
@@ -52,15 +51,12 @@ const StepThree = props => (
         />
       </div>
       <div className={_s.btnRow}>
-        <Link to={`${props.match.url}/2`} className="btn btn-secondary mr-2">Back</Link>
-        <Link to={`${props.match.url}/4`} className="btn btn-primary">Next</Link>
+        <Link to="/setup/add/2" className="btn btn-secondary mr-2">Back</Link>
+        <Link to="/setup/add/4" className="btn btn-primary">Next</Link>
       </div>
     </div>
   </div>
 );
 
-StepThree.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired,
-};
 
 export default StepThree;
