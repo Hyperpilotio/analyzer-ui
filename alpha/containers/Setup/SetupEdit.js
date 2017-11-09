@@ -59,11 +59,13 @@ class SetupEdit extends React.Component {
 
   render() {
     const {
-      stepBack, stepNext, step,
+      stepBack, stepNext,
       editApp, availableApps, addedApps,
       onAddClick, onRemoveClick,
       match,
     } = this.props;
+
+    let step = parseInt(match.params.step, 10);
 
     return (
       <Container>
@@ -79,7 +81,7 @@ class SetupEdit extends React.Component {
             }
           </div>
           <div className="row mt-2 mb-5">
-            <ProgressBar percent={25 * parseInt(match.params.step, 10)} text={editStepNames[step]} />
+            <ProgressBar percent={25 * step} text={editStepNames[step]} />
           </div>
           <Switch>
             <Route
@@ -135,7 +137,6 @@ class SetupEdit extends React.Component {
 SetupEdit.propTypes = {
   match: ReactRouterPropTypes.match.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
-  step: PropTypes.number.isRequired,
   editApp: AppPropType.isRequired,
   availableApps: PropTypes.arrayOf(AppPropType).isRequired,
   addedApps: PropTypes.arrayOf(AppPropType).isRequired,
@@ -147,9 +148,8 @@ SetupEdit.propTypes = {
   onRemoveClick: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ setup: { apps, step, editApp, k8sResources, addedResourceIds } }) => ({
+const mapStateToProps = ({ setup: { apps, editApp, k8sResources, addedResourceIds } }) => ({
   apps,
-  step,
   editApp,
   k8sResources,
   availableApps: k8sResources.filter(resource => !addedResourceIds.includes(resource._id)),
