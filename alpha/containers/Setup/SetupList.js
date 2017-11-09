@@ -23,11 +23,10 @@ class SetupList extends React.Component {
       <div className="container">
         <div className="row pt-5">
           <Link
-            to={"/setup/add"}
+            to={"/setup/add/1"}
             className="btn btn-primary mt-5 mb-2"
             color="success"
           >
-          
             + Add
           </Link>
         </div>
@@ -60,13 +59,6 @@ class SetupList extends React.Component {
               }
             </tbody>
           </Table>
-        </div>
-        <div className="row mt-4">
-          <Button className={`btn btn-success ${_s.btnBegin}`}>
-            <Link to="/setup/done">
-              Begin Hyperpiloting
-            </Link>
-          </Button>
         </div>
       </div>
     );

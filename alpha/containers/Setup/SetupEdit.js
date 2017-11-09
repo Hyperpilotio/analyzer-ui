@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { connect } from "react-redux";
+import { Switch, Route } from "react-router";
 import {
   Container,
 } from "reactstrap";
@@ -10,7 +11,7 @@ import ProgressBar from "~/commons/components/ProgressBar";
 import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot } from "../../actions";
 import { fetchEditApp, fetchAvaliableServices } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
-import { app as appPropType } from "../../constants/propTypes";
+import { app as AppPropType } from "../../constants/propTypes";
 import StepOne from "./Step/StepOne";
 import StepTwo from "./Step/StepTwo";
 import StepThree from "./Step/StepThree";
@@ -27,6 +28,7 @@ class SetupEdit extends React.Component {
 
   componentWillMount() {
     const appId = this.props.match.params.appId;
+    
     // in edit mode
     if (appId) {
       this.props.fetchEditApp(this.props.match.params.appId);
@@ -34,7 +36,7 @@ class SetupEdit extends React.Component {
     this.props.fetchAvaliableServices();
   }
   cancelEdit = () => {
-    this.props.history.push("/setup");
+    this.props.history.push("/dashboard");
   }
 
   toggle = () => {
@@ -44,6 +46,7 @@ class SetupEdit extends React.Component {
   }
 
   handleSubmit = (app) => {
+    // TODO: will call API for submitting form later 
     this.props.stepNext();
   }
 
@@ -79,36 +82,51 @@ class SetupEdit extends React.Component {
           <div className="row mt-2 mb-5">
             <ProgressBar percent={25 * step} text={editStepNames[step]} />
           </div>
-
-          { step === 1 ?
-            <StepOne
-              cancelEdit={this.cancelEdit}
-              stepNext={stepNext}
-            /> : null
-          }
-          { step === 2 ?
-            <StepTwo
-              activeTab={this.state.activeTab}
-              addedApps={addedApps}
-              availableApps={availableApps}
-              onAddClick={onAddClick}
-              onRemoveClick={onRemoveClick}
-              stepBack={stepBack}
-              stepNext={stepNext}
-              toggleTabs={this.toggleTabs}
-            /> : null
-          }
-          { step === 3 ?
-            <StepThree
-              stepBack={stepBack}
-              stepNext={stepNext}
+          <Switch>
+            <Route
+              path={`${match.path}/1`}
+              render={() => (
+                <StepOne
+                  cancelEdit={this.cancelEdit}
+                  match={match}
+                />
+              )}
             />
-            : null }
-          { step === 4 ?
-            <StepFour
-              stepBack={stepBack}
+            <Route
+              path={`${match.path}/2`}
+              render={() => (
+                <StepTwo
+                  activeTab={this.state.activeTab}
+                  addedApps={addedApps}
+                  availableApps={availableApps}
+                  onAddClick={onAddClick}
+                  onRemoveClick={onRemoveClick}
+                  stepBack={stepBack}
+                  stepNext={stepNext}
+                  toggleTabs={this.toggleTabs}
+                  match={match}
+                />
+              )}
             />
-            : null }
+            <Route
+              path={`${match.path}/3`}
+              render={() => (
+                <StepThree
+                  stepBack={stepBack}
+                  match={match}
+                />
+              )}
+            />
+            <Route
+              path={`${match.path}/4`}
+              render={() => (
+                <StepFour
+                  stepBack={stepBack}
+                  match={match}
+                />
+              )}
+            />
+          </Switch>
         </Form>
       </Container>
     );
@@ -119,8 +137,9 @@ SetupEdit.propTypes = {
   match: ReactRouterPropTypes.match.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
   step: PropTypes.number.isRequired,
-  availableApps: PropTypes.arrayOf(appPropType).isRequired,
-  addedApps: PropTypes.arrayOf(appPropType).isRequired,
+  editApp: AppPropType.isRequired,
+  availableApps: PropTypes.arrayOf(AppPropType).isRequired,
+  addedApps: PropTypes.arrayOf(AppPropType).isRequired,
   fetchEditApp: PropTypes.func.isRequired,
   fetchAvaliableServices: PropTypes.func.isRequired,
   stepBack: PropTypes.func.isRequired,

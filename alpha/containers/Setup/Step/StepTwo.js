@@ -6,6 +6,8 @@ import {
   Card, CardText, CardBody,
   CardTitle, Button,
 } from "reactstrap";
+import ReactRouterPropTypes from "react-router-prop-types";
+import { Link } from "react-router-dom";
 import classnames from "classnames";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
@@ -95,19 +97,18 @@ const StepTwo = props => (
       </div>
     </div>
     <div className={_s.btnRow}>
-      <button className="btn btn-secondary mr-2" onClick={props.stepBack}>Back</button>
-      <button className="btn btn-primary" onClick={props.stepNext}>Next</button>
+      <Link to={`${props.match.url}/1`} className="btn btn-secondary mr-2">Back</Link>
+      <Link to={`${props.match.url}/3`} className="btn btn-primary">Next</Link>
     </div>
   </div>
 );
 
 
 StepTwo.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
   addedApps: PropTypes.arrayOf(appPropType).isRequired,
   availableApps: PropTypes.arrayOf(appPropType).isRequired,
   activeTab: PropTypes.string.isRequired,
-  stepBack: PropTypes.func.isRequired,
-  stepNext: PropTypes.func.isRequired,
 };
 
 

@@ -1,5 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
+import { Link } from "react-router-dom";
 import { Control } from "react-redux-form";
 import _s from "../style.scss";
 
@@ -51,16 +52,15 @@ const StepThree = props => (
         />
       </div>
       <div className={_s.btnRow}>
-        <button className="btn btn-secondary mr-2" onClick={props.stepBack}>Back</button>
-        <button className="btn btn-primary" onClick={props.stepNext}>Next</button>
+        <Link to={`${props.match.url}/2`} className="btn btn-secondary mr-2">Back</Link>
+        <Link to={`${props.match.url}/4`} className="btn btn-primary">Next</Link>
       </div>
     </div>
   </div>
 );
 
 StepThree.propTypes = {
-  stepBack: PropTypes.func.isRequired,
-  stepNext: PropTypes.func.isRequired,
+  match: ReactRouterPropTypes.match.isRequired,
 };
 
 export default StepThree;
