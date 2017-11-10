@@ -1,6 +1,9 @@
 import React from "react";
 import _ from "lodash";
+import { Switch, Route } from "react-router";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
+import Linked from "~/commons/components/Linked";
+import SLOGraph from "../components/SLOGraph";
 import { getSLODisplay } from "../utils";
 
 const getBadge = (incidents, opportunities) => {
@@ -62,39 +65,85 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
         </Row>
       </Container>
     </Jumbotron>
-    <Container>
-      <Row className="mb-2">
-        <h4>Diagnostics:</h4>
-      </Row>
-      <Row>
-        <Table>
-          <thead>
-            <tr>
-              <th>Problem #</th>
-              <th>Time</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">#1</th>
-              <td>{ (new Date()).toString() }</td>
-              <td>Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></td>
-            </tr>
-            <tr>
-              <th scope="row">#2</th>
-              <td>{ (new Date()).toString() }</td>
-              <td>Resource type <Badge>blkio</Badge> having bottleneck in container <Badge>kafka-serve</Badge></td>
-            </tr>
-            <tr>
-              <th scope="row">#3</th>
-              <td>{ (new Date()).toString() }</td>
-              <td>Resource type <Badge>net</Badge> having contention on node <Badge>node-2</Badge></td>
-            </tr>
-          </tbody>
-        </Table>
-      </Row>
+    <Container className="mb-3">
+      <SLOGraph />
     </Container>
+    <Switch>
+      <Route path={`${match.path}/:problemId`} render={({ match }) => (
+        <Container>
+          <Row className="mb-2">
+            <h4 className="text-dark">{ match.params.problemId }: Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></h4>
+          </Row>
+          <Row>
+            <Table hover>
+              <thead>
+                <tr>
+                  <th>Remediation #</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Mode</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#1</td>
+                  <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
+                  <td>Interference Management</td>
+                  <td>Semi-Auto</td>
+                </tr>
+                <tr>
+                  <td>#2</td>
+                  <td>Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge></td>
+                  <td>Interference Management</td>
+                  <td>Semi-Auto</td>
+                </tr>
+                <tr>
+                  <td>#3</td>
+                  <td>Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge></td>
+                  <td>Bottleneck Management</td>
+                  <td>Manual</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Row>
+        </Container>
+      )} />
+      <Route path={match.path}>
+        <Container>
+          <Row className="mb-2">
+            <h4>Diagnostics:</h4>
+          </Row>
+          <Row>
+            <Table hover>
+              <thead>
+                <tr>
+                  <th>Problem #</th>
+                  <th>Time</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <Linked tag="tr" to={`${match.url}/problem-1`}>
+                  <th scope="row">#1</th>
+                  <td>{ (new Date()).toString() }</td>
+                  <td>Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></td>
+                </Linked>
+                <Linked tag="tr" to={`${match.url}/problem-2`}>
+                  <th scope="row">#2</th>
+                  <td>{ (new Date()).toString() }</td>
+                  <td>Resource type <Badge>blkio</Badge> having bottleneck in container <Badge>kafka-serve</Badge></td>
+                </Linked>
+                <Linked tag="tr" to={`${match.url}/problem-3`}>
+                  <th scope="row">#3</th>
+                  <td>{ (new Date()).toString() }</td>
+                  <td>Resource type <Badge>net</Badge> having contention on node <Badge>node-2</Badge></td>
+                </Linked>
+              </tbody>
+            </Table>
+          </Row>
+        </Container>
+      </Route>
+    </Switch>
   </div>
 );
 
