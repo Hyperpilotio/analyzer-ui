@@ -65,7 +65,7 @@ class SetupEdit extends React.Component {
       match,
     } = this.props;
 
-    let step = parseInt(match.params.step, 10);
+    const step = parseInt(match.params.step, 10);
 
     return (
       <Container>

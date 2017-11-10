@@ -6,10 +6,9 @@ import thunk from "redux-thunk";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
 import DashboardPage from "./containers/DashboardPage";
-import SetupList from "./containers/Setup/SetupList";
 import SetupEdit from "./containers/Setup/SetupEdit";
 import SetupDone from "./containers/Setup/StepDone";
-
+import Chart from "./containers/ChartPage";
 
 const store = createStore(
   rootReducer,
@@ -32,15 +31,12 @@ export default () => (
             <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
           </div>
         </div>
-
+        <Route path="/" component={DashboardPage} />
         <Route path="/dashboard" component={DashboardPage} />
         <Route path="/setup/add/:step" component={SetupEdit} />
-        {/* <Route exact path="/setup/add" component={SetupEdit} /> */}
         <Route path="/setup/done" component={SetupDone} />
-
         {/* <Route exact path="/setup" component={SetupList} /> */}
-        {/* <Route exact path="/setup/edit" component={SetupEdit} /> */}
-        {/* <Route path="/setup/edit/:appId" component={SetupEdit} /> */}
+        <Route path="/chart" component={Chart} />
       </div>
     </Router>
   </Provider>

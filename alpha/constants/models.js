@@ -1,35 +1,3 @@
-export const initialGeneralState = {
-  name: "",
-  type: "",
-};
-
-export const initialSloState = {
-  metric: "",
-  type: "",
-  summary: "",
-  value: "",
-};
-
-export const initialFeaturesState = {
-  management_features: [
-    {
-      name: "interference_management",
-      mode: "Disabled",
-      policy: [],
-    },
-    {
-      name: "bottleneck_management",
-      mode: "Semi-Auto",
-      policy: [],
-    },
-    {
-      name: "efficiency_management",
-      mode: "Auto",
-      policy: [],
-    },
-  ],
-};
-
 export const initialEditAppState = {
   name: "",
   type: "",
@@ -43,17 +11,17 @@ export const initialEditAppState = {
   management_features: [
     {
       name: "interference_management",
-      mode: "Disabled",
+      mode: "Manual",
       policy: [],
     },
     {
       name: "bottleneck_management",
-      mode: "Semi-Auto",
+      mode: "Manual",
       policy: [],
     },
     {
       name: "efficiency_management",
-      mode: "Auto",
+      mode: "Manual",
       policy: [],
     },
   ],
