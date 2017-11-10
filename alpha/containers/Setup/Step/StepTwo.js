@@ -13,7 +13,7 @@ const StepTwo = props => (
     {/* Selected Apps */}
     <Card className={`row ${_s.card}`}>
       <CardBody>
-        <CardTitle>Selected Applications</CardTitle>
+        <CardTitle>Selected Services</CardTitle>
         <Table>
           <thead className={_s.tHead}>
             <tr>
