@@ -23,7 +23,7 @@ const StepThree = () => (
         >
           <option value="latency">Latency</option>
           <option value="throughput">Throughput</option>
-          <option value="executeTime">Execute-Time</option>
+          <option value="execute_time">Execute-Time</option>
         </Control.select>
       </div>
       <div className="form-group">

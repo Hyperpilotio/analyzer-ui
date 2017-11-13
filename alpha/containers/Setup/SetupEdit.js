@@ -19,6 +19,7 @@ import StepFour from "./Step/StepFour";
 
 class SetupEdit extends React.Component {
   state = {
+    rSelected: 1,
     activeTab: "1",
     dropdownOpenOne: false,
     dropdownOpenTwo: false,
@@ -34,6 +35,11 @@ class SetupEdit extends React.Component {
     }
     this.props.fetchAvaliableServices();
   }
+
+  onRadioBtnClick = (rSelected) => {
+    this.setState({ rSelected });
+  }
+
   cancelEdit = () => {
     this.props.history.push("/dashboard");
   }
@@ -105,6 +111,8 @@ class SetupEdit extends React.Component {
                   stepBack={stepBack}
                   stepNext={stepNext}
                   toggleTabs={this.toggleTabs}
+                  onRadioBtnClick={this.onRadioBtnClick}
+                  rSelected={this.state.rSelected}
                   match={match}
                 />
               )}

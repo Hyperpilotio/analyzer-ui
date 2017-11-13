@@ -1,4 +1,5 @@
 @import "../../scss/_mixin.scss";
+@import "../../scss/_custom.scss";
 
 .navItem{
     cursor:pointer;
@@ -43,4 +44,18 @@
 
 .tHead{
     color: #888998;
+}
+
+.btnGrp{
+
+    .radioBtn{
+        background-color: #fff;
+        color: map-get($theme-colors,primary);
+        border-radius:4px !important;
+
+        &:nth-child(1){
+            margin-left: 20px !important;
+        }
+
+    }
 }
