@@ -11,8 +11,8 @@ import {
 import moment from "moment";
 import _ from "lodash";
 import { scaleTime } from "d3-scale";
-import TopRightLegend from "../TopRightLegend";
-import ThresholdLine from "../ThresholdLine";
+import TopRightLegend from "./TopRightLegend";
+import ThresholdLine from "./ThresholdLine";
 import { connect as connectRefetch } from "react-refetch";
 
 
