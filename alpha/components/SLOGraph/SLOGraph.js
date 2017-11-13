@@ -25,13 +25,21 @@ class SLOGraph extends React.Component {
     }
     const data = this.props.influxFetch.value;
     return (
-      <VictoryChart width={1400} height={400} style={{ parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" } }}>
-        <VictoryLegend
-          data={[
-            { name: "hyperpilot/goddd/request_latency_milliseconds", symbol: { fill: "#5677fa" } }
-          ]}
-          style={{ labels: { fill: "#606175" } }}
-          groupComponent={<g transform="translate(1000 -20)" />}
+      <VictoryChart
+        width={1400}
+        height={400}
+        style={{
+          parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" }
+        }}
+      >
+        <TopRightLegend
+          data={[ { name: data.name, symbol: { fill: "#5677fa" } } ]}
+          style={{
+            labels: { fill: "#606175" },
+            border: { stroke: "#e2e8fb" }
+          }}
+          marginRight={50}
+          marginTop={10}
         />
         <VictoryAxis
           dependentAxis
