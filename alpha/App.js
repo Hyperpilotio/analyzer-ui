@@ -1,15 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
 import DashboardPage from "./containers/DashboardPage";
-import SetupList from "./containers/Setup/SetupList";
 import SetupEdit from "./containers/Setup/SetupEdit";
 import SetupDone from "./containers/Setup/StepDone";
-
 
 const store = createStore(
   rootReducer,
@@ -32,11 +30,12 @@ export default () => (
             <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
           </div>
         </div>
-        <Route path="/dashboard" component={DashboardPage} />
-        <Route exact path="/setup" component={SetupList} />
-        <Route path="/setup/add" component={SetupEdit} />
-        <Route path="/setup/edit" component={SetupEdit} />
-        <Route path="/setup/done" component={SetupDone} />
+        <Switch>
+          <Route path="/dashboard" component={DashboardPage} />
+          <Route path="/setup/add/:step" component={SetupEdit} />
+          <Route path="/setup/done" component={SetupDone} />
+          <Redirect from="/" to="/dashboard" />
+        </Switch>
       </div>
     </Router>
   </Provider>

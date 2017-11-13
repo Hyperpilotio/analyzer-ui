@@ -1,10 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Table, Badge } from "reactstrap";
 import FaTimesCircle from "react-icons/lib/fa/times-circle";
-import FaExclamationCircle from "react-icons/lib/fa/exclamation-circle";
 import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
-import PropTypes from "prop-types";
 import _ from "lodash";
+import MdDelete from "react-icons/lib/md/cancel";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../utils";
 import _s from "./style.scss";
@@ -20,6 +20,7 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
         <th>Type</th>
         <th>SLO</th>
         <th>Issues detected</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -57,6 +58,12 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
               <td>{ app.type }</td>
               <td>{ getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
+              <td>
+                {/* TODO: call delete item API */}
+                <Link to="/dashboard">
+                  <MdDelete className={_s.iconGrp} />
+                </Link>
+              </td>
             </Linked>
           );
         })

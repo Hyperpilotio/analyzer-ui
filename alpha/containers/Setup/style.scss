@@ -1,0 +1,61 @@
+@import "../../scss/_mixin.scss";
+@import "../../scss/_custom.scss";
+
+.navItem{
+    cursor:pointer;
+}
+
+.selectedZone{
+    min-height: 320px;
+}
+
+.cardCon{
+    float:left;
+}
+
+.card{
+    @include shadow-effect(1);
+    border: none !important;
+    
+}
+
+.btn{
+    color: #fff;
+}
+
+.btnRow{
+    float: right;
+}
+
+.btnCancel{
+    padding: 0px;
+    border:none;
+}
+
+.tabContent{
+    margin-top: 30px;
+}
+
+.noData{
+    width: 100%;
+    text-align: center;
+    color: #b9bacb; 
+}
+
+.tHead{
+    color: #888998;
+}
+
+.btnGrp{
+
+    .radioBtn{
+        background-color: #fff;
+        color: map-get($theme-colors,primary);
+        border-radius:4px !important;
+
+        &:nth-child(1){
+            margin-left: 20px !important;
+        }
+
+    }
+}

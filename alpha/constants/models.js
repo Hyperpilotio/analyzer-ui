@@ -1,9 +1,30 @@
-export const initialSloState = {
-  metric: "running speed",
-  type: "Rate",
-  summary: "25p",
-  value: 0,
-  unit: "USD",
+export const initialEditAppState = {
+  name: "",
+  type: "",
+  services: [],
+  slo: {
+    metric: "",
+    type: "",
+    summary: "",
+    value: "",
+  },
+  management_features: [
+    {
+      name: "interference_management",
+      mode: "Manual",
+      policy: [],
+    },
+    {
+      name: "bottleneck_management",
+      mode: "Manual",
+      policy: [],
+    },
+    {
+      name: "efficiency_management",
+      mode: "Manual",
+      policy: [],
+    },
+  ],
 };
 
 export const editStepNames = [
@@ -14,4 +35,4 @@ export const editStepNames = [
   "Step 4: Management Features",
 ];
 
-export default initialSloState;
+export default initialEditAppState;

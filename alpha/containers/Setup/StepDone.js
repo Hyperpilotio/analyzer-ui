@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Container, Button } from "reactstrap";
+import { app as AppPropType } from "../../constants/propTypes";
 import { beginHyperPiloting } from "../../actions";
 import Spinner from "../../components/Spinner";
 import CheckMark from "../../components/CheckMark";
@@ -16,6 +17,7 @@ class SetupDone extends React.Component {
     const {
       isBeginHyperPilotingLoading,
       isHPReady,
+      editApp,
     } = this.props;
     return (
       <Container className="effect-fade-in">
@@ -39,10 +41,10 @@ class SetupDone extends React.Component {
         {
           !isBeginHyperPilotingLoading && isHPReady ?
             <div>
-              <h4 className={_s.wordSuccess}>HyperPilot is now running! </h4> 
+              <h4 className={_s.wordSuccess}>HyperPilot is now running for {editApp.name}! </h4>
               <div className="row">
                 <Button className={`btn btn-success mt-3 ${_s.btnReturn}`}>
-                  <Link to="/setup">
+                  <Link to="/dashboard">
                     Back to App list
                   </Link>
                 </Button>
@@ -59,11 +61,13 @@ SetupDone.propTypes = {
   isBeginHyperPilotingLoading: PropTypes.bool.isRequired,
   isHPReady: PropTypes.bool.isRequired,
   beginHPClick: PropTypes.func.isRequired,
+  editApp: AppPropType.isRequired,
 };
 
-const mapStateToProps = ({ setup }) => ({
+const mapStateToProps = ({ setup, setup: { editApp } }) => ({
   isBeginHyperPilotingLoading: setup.ui.isBeginHyperPilotingLoading,
   isHPReady: setup.isHPReady,
+  editApp,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -23,7 +23,7 @@ class SetupList extends React.Component {
       <div className="container">
         <div className="row pt-5">
           <Link
-            to={"/setup/add"}
+            to={"/setup/add/1"}
             className="btn btn-primary mt-5 mb-2"
             color="success"
           >
@@ -51,7 +51,7 @@ class SetupList extends React.Component {
                     <td>{d.slo.type}: {d.slo.value} {d.slo.unit}</td>
                     <td>{d.state}</td>
                     <td>
-                      <Link to={`/setup/${d._id}`}><MdEdit className={`mr-3 ${_s.iconGrp}`} /></Link>
+                      <Link to={`/setup/edit/${d._id}`}><MdEdit className={`mr-3 ${_s.iconGrp}`} /></Link>
                       <Link to="/"><MdDelete className={_s.iconGrp} /></Link>
                     </td>
                   </tr>
@@ -59,13 +59,6 @@ class SetupList extends React.Component {
               }
             </tbody>
           </Table>
-        </div>
-        <div className="row mt-4">
-          <Button className={`btn btn-success ${_s.btnBegin}`}>
-            <Link to="/setup/done">
-              Begin Hyperpiloting
-            </Link>
-          </Button>
         </div>
       </div>
     );

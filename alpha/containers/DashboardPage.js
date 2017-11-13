@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
 import _ from "lodash";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import ManagedAppPage from "./ManagedAppPage";
@@ -12,6 +14,9 @@ import { app as appPropType, event as eventPropType } from "../constants/propTyp
 
 class DashboardPage extends React.Component {
   static propTypes = {
+    match: ReactRouterPropTypes.match.isRequired,
+    isFetchingAppsLoading: PropTypes.bool.isRequired,
+    isEventsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
     fetchEvents: PropTypes.func.isRequired,
     apps: PropTypes.arrayOf(appPropType).isRequired,
@@ -58,6 +63,15 @@ class DashboardPage extends React.Component {
                 </Col>
               </Row>
               <Row>
+                <Link
+                  to={"/setup/add/1"}
+                  className="btn btn-primary mt-5 mb-2"
+                  color="success"
+                >
+                  + Add
+                </Link>
+              </Row>
+              <Row>
                 <DashboardAppsTable
                   {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])}
                 />
@@ -78,6 +92,8 @@ const mapStateToProps = ({
   incidents,
   risks,
   opportunities,
+  isFetchingAppsLoading,
+  isEventsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
