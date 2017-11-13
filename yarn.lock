@@ -7647,28 +7647,17 @@ vfile@^2.0.0:
     replace-ext "1.0.0"
     unist-util-stringify-position "^1.0.0"
 
-victory-chart@^21.6.1:
-  version "21.6.2"
-  resolved "https://registry.yarnpkg.com/victory-chart/-/victory-chart-21.6.2.tgz#7626f392122ac11386ceb2c6d2ceab19d2895c52"
+victory-chart@^24.2.0:
+  version "24.2.0"
+  resolved "https://registry.yarnpkg.com/victory-chart/-/victory-chart-24.2.0.tgz#3550424a935295747293f1650079154c25a53f12"
   dependencies:
     d3-voronoi "^1.1.2"
     lodash "^4.17.4"
-    victory-core "^17.1.0"
+    victory-core "^20.0.0"
 
-victory-core@17.2.5:
-  version "17.2.5"
-  resolved "https://registry.yarnpkg.com/victory-core/-/victory-core-17.2.5.tgz#b0814383e93a75147148fdc34031e165cca39a7c"
-  dependencies:
-    d3-ease "^1.0.0"
-    d3-interpolate "^1.1.1"
-    d3-scale "^1.0.0"
-    d3-shape "^1.2.0"
-    d3-timer "^1.0.0"
-    lodash "^4.17.4"
-
-victory-core@^17.1.0:
-  version "17.2.7"
-  resolved "https://registry.yarnpkg.com/victory-core/-/victory-core-17.2.7.tgz#b98b23588ff100283ca892372f8c715cef534751"
+victory-core@^20.0.0, victory-core@^20.1.0:
+  version "20.1.0"
+  resolved "https://registry.yarnpkg.com/victory-core/-/victory-core-20.1.0.tgz#ef77b17a3a8fc05bcd315eaae71a06f7ed6efe83"
   dependencies:
     d3-ease "^1.0.0"
     d3-interpolate "^1.1.1"

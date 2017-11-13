@@ -87,8 +87,8 @@
     "redux-api-middleware": "^2.0.1",
     "redux-persist": "^4.8.3",
     "redux-thunk": "^2.2.0",
-    "victory-chart": "^21.6.1",
-    "victory-core": "17.2.5",
+    "victory-chart": "^24.2.0",
+    "victory-core": "^20.1.0",
     "whatwg-fetch": "^2.0.3"
   }
 }
