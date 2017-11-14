@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const { MongoClient, ObjectId } = require("mongodb");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
+const mockDB = require("./routers/mockdb");
+
 
 const server = express();
 server.use(morgan("dev"));
@@ -13,6 +15,16 @@ server.use(bodyParser.json());
 
 let configdb;
 let metricdb;
+let mockdb;
+
+server.use("/", (req, res, next) => {
+  req.mockdb = mockdb;
+  next();
+});
+
+
+// mockupdb
+server.use("/", mockDB);
 
 server.get("/api/", (req, res) => {
   res.json({ status: "ok" });
@@ -28,20 +40,20 @@ server.get("/api/apps", async (req, res) => {
   });
 });
 
-server.post("/api/apps/select", async (req, res) => {
-  const selectPromise = configdb.collection("applications").updateMany(
-    { _id: { $in: req.body.select.map(ObjectId) } },
-    { $set: { selected: true } }
-  );
-  const excludePromise = configdb.collection("applications").updateMany(
-    { _id: { $in: req.body.exclude.map(ObjectId) } },
-    { $set: { selected: false } }
-  );
-  const updateResults = await Promise.all([selectPromise, excludePromise]);
-  res.json({
-    success: updateResults.every(res => res.result.ok === 1)
-  });
-});
+// server.post("/api/apps/select", async (req, res) => {
+//   const selectPromise = configdb.collection("applications").updateMany(
+//     { _id: { $in: req.body.select.map(ObjectId) } },
+//     { $set: { selected: true } }
+//   );
+//   const excludePromise = configdb.collection("applications").updateMany(
+//     { _id: { $in: req.body.exclude.map(ObjectId) } },
+//     { $set: { selected: false } }
+//   );
+//   const updateResults = await Promise.all([selectPromise, excludePromise]);
+//   res.json({
+//     success: updateResults.every(res => res.result.ok === 1)
+//   });
+// });
 
 server.get("/api/instances/:region", async (req, res) => {
   const { region } = req.params;
@@ -138,11 +150,12 @@ if (isDev) {
 
 
 (async () => {
-  const { url, metricdbName, configdbName } = config.mongo;
+  const { url, metricdbName, configdbName, mockdbName } = config.mongo;
 
-  [configdb, metricdb] = await Promise.all([
+  [configdb, metricdb, mockdb] = await Promise.all([
     MongoClient.connect(`${url}/${configdbName}`),
     MongoClient.connect(`${url}/${metricdbName}`),
+    MongoClient.connect(`${url}/${mockdbName}`),
   ]);
 
   server.listen(3000, () => {

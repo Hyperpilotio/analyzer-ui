@@ -49,7 +49,7 @@ const StepFour = () => (
     </div>
     <div className={_s.btnRow}>
       <Link to="/setup/add/3" className="btn btn-secondary mr-2">Back</Link>
-      <Link to="/setup/done"><button type="submit" className="btn btn-success">Begin Hyperpiloting</button></Link>
+      <button type="submit" className="btn btn-success">Begin Hyperpiloting</button>
     </div>
   </div>
 );

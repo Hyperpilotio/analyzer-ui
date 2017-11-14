@@ -13,7 +13,8 @@ let config = {
     username: process.env.MONGO_USERNAME,
     password: process.env.MONGO_PASSWORD,
     configdbName: process.env.CONFIGDB_NAME || "configdb",
-    metricdbName: process.env.METRICDB_NAME || "metricdb"
+    metricdbName: process.env.METRICDB_NAME || "metricdb",
+    mockdbName: process.env.CONFIGDB_NAME || "mockdb",
   }
 };
 

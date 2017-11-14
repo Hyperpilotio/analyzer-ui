@@ -18,7 +18,7 @@ export const fetchEditAppFail = () => ({
 export const fetchEditApp = appId => async (dispatch) => {
   dispatch(fetchEditAppLoading());
 
-  const res = await fetch("http://localhost:3007/data");
+  const res = await fetch("/api/apps");
   if (!res.ok) {
     dispatch(fetchEditAppFail());
     return;

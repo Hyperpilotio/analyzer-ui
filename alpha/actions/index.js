@@ -31,7 +31,7 @@ export const fetchAppsFail = () => ({
 export const fetchApps = () => async (dispatch) => {
   dispatch(fetchAppsLoading());
 
-  const res = await fetch("http://localhost:3007/data");
+  const res = await fetch("/mock/api/apps");
   if (!res.ok) {
     dispatch(fetchAppsFail());
     return;
@@ -162,5 +162,76 @@ export const fetchEvents = () => async (dispatch) => {
     dispatch(fetchEventsSuccess(data));
   } else {
     dispatch(fetchEventsFail());
+  }
+};
+
+export const addAppLoading = () => ({
+  type: types.ADD_APP_LOADING,
+});
+
+export const addAppSuccess = () => ({
+  type: types.ADD_APP_SUCCESS,
+});
+
+export const addAppFail = () => ({
+  type: types.ADD_APP_FAIL,
+});
+
+export const addApp = app => async (dispatch) => {
+  dispatch(addAppLoading());
+  const res = await fetch("/mock/api/add", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(app),
+  });
+  if (!res.ok) {
+    dispatch(addAppFail());
+    return;
+  }
+
+  const data = await res.json();
+  if (data.success) {
+    dispatch(addAppSuccess(data));
+  } else {
+    dispatch(addAppFail());
+  }
+};
+
+
+export const removeAppLoading = () => ({
+  type: types.REMOVE_APP_LOADING,
+});
+
+export const removeAppSuccess = removedApp => ({
+  type: types.REMOVE_APP_SUCCESS,
+  removedApp,
+});
+
+export const removeAppFail = () => ({
+  type: types.REMOVE_APP_FAIL,
+});
+
+export const removeApp = appId => async (dispatch) => {
+  dispatch(removeAppLoading());
+
+  const res = await fetch("/mock/api/remove", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ appId }),
+  });
+  if (!res.ok) {
+    dispatch(removeAppFail());
+    return;
+  }
+
+  const data = await res.json();
+  if (data.success) {
+    dispatch(removeAppSuccess(data));
+  } else {
+    dispatch(removeAppFail());
   }
 };

@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
-import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot } from "../../actions";
+import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, addApp } from "../../actions";
 import { fetchEditApp, fetchAvaliableServices } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as AppPropType } from "../../constants/propTypes";
@@ -34,6 +34,7 @@ class SetupEdit extends React.Component {
       this.props.fetchEditApp(this.props.match.params.appId);
     }
     this.props.fetchAvaliableServices();
+    // this.props.addSingleApp();
   }
 
   onRadioBtnClick = (rSelected) => {
@@ -52,7 +53,10 @@ class SetupEdit extends React.Component {
 
   handleSubmit = (app) => {
     // TODO: will call API for submitting form later 
-    this.props.stepNext();
+    console.log("submit app", app);
+
+    this.props.addApp(app);
+    this.props.history.push("/setup/done");
   }
 
   toggleTabs = (tab) => {
@@ -154,9 +158,10 @@ SetupEdit.propTypes = {
   stepNext: PropTypes.func.isRequired,
   onAddClick: PropTypes.func.isRequired,
   onRemoveClick: PropTypes.func.isRequired,
+  addApp: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ setup: { apps, editApp, k8sResources, addedResourceIds } }) => ({
+const mapStateToProps = ({ applications: { apps, editApp, k8sResources, addedResourceIds } }) => ({
   apps,
   editApp,
   k8sResources,
@@ -172,6 +177,7 @@ const mapDispatchToProps = dispatch => ({
   fetchEditApp: appId => dispatch(fetchEditApp(appId)),
   fetchAvaliableServices: () => dispatch(fetchAvaliableServices()),
   updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
+  addApp: app => dispatch(addApp(app)),
 });
 
 export default connect(

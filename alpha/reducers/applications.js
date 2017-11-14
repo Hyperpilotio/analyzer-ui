@@ -15,7 +15,6 @@ const initialState = {
     isBeginHyperPilotingLoading: false,
     isK8sResourcesLoading: false,
     isEditAppLoading: false,
-
   },
   modal: {
     isModalOpen: false,
@@ -24,7 +23,7 @@ const initialState = {
   isHPReady: false,
 };
 
-export default function setup(state = initialState, action) {
+export default function apps(state = initialState, action) {
   switch (action.type) {
   case types.FETCH_APPS_LOADING:
     return {

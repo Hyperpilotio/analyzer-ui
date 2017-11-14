@@ -7,6 +7,7 @@ export const initialEditAppState = {
     type: "",
     summary: "",
     value: "",
+    unit: "",
   },
   management_features: [
     {
@@ -25,6 +26,7 @@ export const initialEditAppState = {
       policy: [],
     },
   ],
+  state: "Active",
 };
 
 export const editStepNames = [

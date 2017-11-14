@@ -8,7 +8,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import ManagedAppPage from "./ManagedAppPage";
-import { fetchApps, fetchEvents } from "../actions";
+import { fetchApps, fetchEvents, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
 
@@ -19,6 +19,7 @@ class DashboardPage extends React.Component {
     isEventsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
     fetchEvents: PropTypes.func.isRequired,
+    removeApp: PropTypes.func.isRequired,
     apps: PropTypes.arrayOf(appPropType).isRequired,
     incidents: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
     risks: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
@@ -73,7 +74,7 @@ class DashboardPage extends React.Component {
               </Row>
               <Row>
                 <DashboardAppsTable
-                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])}
+                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
                 />
               </Row>
             </Container>
@@ -85,7 +86,7 @@ class DashboardPage extends React.Component {
 }
 
 const mapStateToProps = ({
-  setup: { apps, ui: { isFetchingAppsLoading } },
+  applications: { apps, ui: { isFetchingAppsLoading } },
   diagnosis: { incidents, risks, opportunities, ui: { isEventsLoading } },
 }) => ({
   apps,
@@ -99,6 +100,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
   fetchEvents: () => dispatch(fetchEvents()),
+  removeApp: appId => dispatch(removeApp(appId)),
 });
 
 export default connect(

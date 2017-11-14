@@ -64,9 +64,9 @@ SetupDone.propTypes = {
   editApp: AppPropType.isRequired,
 };
 
-const mapStateToProps = ({ setup, setup: { editApp } }) => ({
-  isBeginHyperPilotingLoading: setup.ui.isBeginHyperPilotingLoading,
-  isHPReady: setup.isHPReady,
+const mapStateToProps = ({ applications, applications: { editApp } }) => ({
+  isBeginHyperPilotingLoading: applications.ui.isBeginHyperPilotingLoading,
+  isHPReady: applications.isHPReady,
   editApp,
 });
 
