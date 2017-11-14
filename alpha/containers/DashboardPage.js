@@ -33,9 +33,6 @@ class DashboardPage extends React.Component {
 
   render() {
     const { isEventsLoading, isFetchingAppsLoading } = this.props;
-    if (isFetchingAppsLoading || isEventsLoading) {
-      return null;
-    }
     return (
       <div>
         <Switch>
@@ -73,9 +70,12 @@ class DashboardPage extends React.Component {
                 </Link>
               </Row>
               <Row>
-                <DashboardAppsTable
-                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
-                />
+                {
+                  !(isFetchingAppsLoading || isEventsLoading) ?
+                    <DashboardAppsTable
+                      {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
+                    /> : null
+                }
               </Row>
             </Container>
           </Route>
