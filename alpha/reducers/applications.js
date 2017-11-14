@@ -70,6 +70,11 @@ export default function apps(state = initialState, action) {
   case types.UPDATE_SINGLE_SLO_FAIL:
     console.error("Update SLO failed");
     return state;
+  case types.REMOVE_APP_SUCCESS:
+    return {
+      ...state,
+      apps: _.filter(state.apps, app => app._id !== action.removedAppId),
+    };
   case types.BEGIN_HYPER_PILOTING_LOADING:
     return {
       ...state,

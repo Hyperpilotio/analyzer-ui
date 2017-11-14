@@ -8,7 +8,7 @@ export const app = PropTypes.shape({
     metric: PropTypes.string,
     type: PropTypes.string,
     summary: PropTypes.string,
-    value: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     unit: PropTypes.string,
   }),
 });

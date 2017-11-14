@@ -7,7 +7,10 @@ router
   .post("/mock/api/add", async (req, res) => {
     const newApp = req.body;
     const result = await req.mockdb.collection("applications").insert(newApp);
-    res.json({ result });
+    res.json({
+      success: true,
+      result,
+    });
   })
 
   .post("/mock/api/remove", async (req, res) => {

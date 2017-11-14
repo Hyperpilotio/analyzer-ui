@@ -204,9 +204,9 @@ export const removeAppLoading = () => ({
   type: types.REMOVE_APP_LOADING,
 });
 
-export const removeAppSuccess = removedApp => ({
+export const removeAppSuccess = removedAppId => ({
   type: types.REMOVE_APP_SUCCESS,
-  removedApp,
+  removedAppId,
 });
 
 export const removeAppFail = () => ({
@@ -230,7 +230,7 @@ export const removeApp = appId => async (dispatch) => {
 
   const data = await res.json();
   if (data.success) {
-    dispatch(removeAppSuccess(data));
+    dispatch(removeAppSuccess(appId));
   } else {
     dispatch(removeAppFail());
   }
