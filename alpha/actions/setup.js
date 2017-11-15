@@ -51,7 +51,7 @@ export const fetchAvailableServicesFail = () => ({
 export const fetchAvailableServices = () => async (dispatch) => {
   dispatch(fetchAvailableServicesLoading());
 
-  const res = await fetch("http://localhost:3007/data");
+  const res = await fetch("/mock/k8sResources");
   if (!res.ok) {
     dispatch(fetchAvailableServicesFail());
     return;

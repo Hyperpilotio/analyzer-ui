@@ -7,7 +7,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
 const mockDB = require("./routers/mockdb");
-
+const k8sJson = require("./fake-api/k8sResources.json");
 
 const server = express();
 server.use(morgan("dev"));
@@ -25,6 +25,13 @@ server.use("/", (req, res, next) => {
 
 // mockupdb
 server.use("/", mockDB);
+// k8s_resources json
+server.get("/mock/k8sResources", (req, res) => {
+  res.json({
+    success: true,
+    k8s_resources: k8sJson.k8s_resources,
+  });
+});
 
 server.get("/api/", (req, res) => {
   res.json({ status: "ok" });
@@ -36,7 +43,7 @@ server.get("/api/apps", async (req, res) => {
   ).toArray();
   res.json({
     success: true,
-    applications
+    applications,
   });
 });
 

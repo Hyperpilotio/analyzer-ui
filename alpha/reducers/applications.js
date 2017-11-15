@@ -87,7 +87,7 @@ export default function apps(state = initialState, action) {
       isHPReady: true,
     };
   case types.FETCH_AVAILABLE_SERVICES_FAIL:
-    console.error("Fetch SLO failed");
+    console.error("Fetch available services failed");
     return state;
   case types.FETCH_AVAILABLE_SERVICES_LOADING:
     return {
