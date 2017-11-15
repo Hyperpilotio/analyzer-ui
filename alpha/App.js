@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
@@ -27,7 +27,9 @@ export default () => (
       <div>
         <div className="navbar navbar-light bg-light">
           <div className="container">
-            <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
+            <Link to="/">
+              <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
+            </Link>
           </div>
         </div>
         <Switch>
