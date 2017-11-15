@@ -64,3 +64,39 @@ export const fetchAvailableServices = () => async (dispatch) => {
     dispatch(fetchAvailableServicesFail());
   }
 };
+
+export const updateResourcesInAnalyzerLoading = () => ({
+  type: types.UPDATE_RESOURCES_IN_ANALYZER_LOADING,
+});
+
+export const updateResourcesInAnalyzerSuccess = resourcesIds => ({
+  type: types.UPDATE_RESOURCES_IN_ANALYZER_SUCCESS,
+  resourcesIds,
+});
+
+export const updateResourcesInAnalyzerFail = () => ({
+  type: types.UPDATE_RESOURCES_IN_ANALYZER_FAIL,
+});
+
+export const updateResourcesInAnalyzer = services => async (dispatch) => {
+  dispatch(updateResourcesInAnalyzerLoading());
+
+  const res = await fetch("/mock/v1/k8s_services", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ services }),
+  });
+  if (!res.ok) {
+    dispatch(updateResourcesInAnalyzerFail());
+    return;
+  }
+
+  const data = await res.json();
+  if (data.success) {
+    dispatch(updateResourcesInAnalyzerSuccess(data.resourcesIds));
+  } else {
+    dispatch(updateResourcesInAnalyzerFail());
+  }
+};

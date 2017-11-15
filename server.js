@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const path = require("path");
 const fetch = require("node-fetch");
 const bodyParser = require("body-parser");
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
 const mockDB = require("./routers/mockdb");
@@ -23,7 +23,7 @@ server.use("/", (req, res, next) => {
 });
 
 
-// mockupdb
+// mockdb
 server.use("/", mockDB);
 // k8s_resources json
 server.get("/mock/k8sResources", (req, res) => {

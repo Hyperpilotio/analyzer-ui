@@ -119,7 +119,7 @@ const StepTwo = props => (
     </Card>
     <div className={_s.btnRow}>
       <Link to="/setup/add/1" className="btn btn-secondary mr-2">Back</Link>
-      <Link to="/setup/add/3" className="btn btn-primary">Next</Link>
+      <Button onClick={() => props.cacheServices(props.addedApps)} className="btn btn-primary">Next</Button>
     </div>
   </div>
 );
@@ -129,6 +129,7 @@ StepTwo.propTypes = {
   rSelected: PropTypes.number.isRequired,
   addedApps: PropTypes.arrayOf(appPropType).isRequired,
   availableApps: PropTypes.arrayOf(appPropType).isRequired,
+  cacheServices: PropTypes.func.isRequired,
 };
 
 

@@ -28,6 +28,15 @@ router
       success: true,
       applications,
     });
+  })
+  .post("/mock/v1/k8s_services", async (req, res) => {
+    const { services } = req.body;
+    console.log("services", services);
+    const resourcesIds = await req.mockdb.collection("resources").insertMany(services);
+    res.json({
+      success: true,
+      resourcesIds,
+    });
   });
 
 module.exports = router;

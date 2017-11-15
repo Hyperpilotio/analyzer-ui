@@ -9,7 +9,7 @@ import {
 import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, addApp } from "../../actions";
-import { fetchEditApp, fetchAvailableServices } from "../../actions/setup";
+import { fetchEditApp, fetchAvailableServices, updateResourcesInAnalyzer, cacheServicesInForm } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as AppPropType } from "../../constants/propTypes";
 import StepOne from "./Step/StepOne";
@@ -51,11 +51,20 @@ class SetupEdit extends React.Component {
     });
   }
 
-  handleSubmit = (app) => {
-    // TODO: will call API for submitting form later 
-    console.log("submit app", app);
+  cacheServices = (services) => {
+    this.props.cacheServices(services);
+    this.props.history.push("/setup/add/3");
+  }
 
+  handleSubmit = (app) => {
+    // TODO: 
+    // 1. insert selected resources into analyzer DB
+    // 2. await and done add App   
+    // 3. redirect to done page
+
+    this.props.updateResources(app.services);
     this.props.addApp(app);
+
     this.props.history.push("/setup/done");
   }
 
@@ -117,6 +126,7 @@ class SetupEdit extends React.Component {
                   toggleTabs={this.toggleTabs}
                   onRadioBtnClick={this.onRadioBtnClick}
                   rSelected={this.state.rSelected}
+                  cacheServices={this.cacheServices}
                   match={match}
                 />
               )}
@@ -159,6 +169,8 @@ SetupEdit.propTypes = {
   onAddClick: PropTypes.func.isRequired,
   onRemoveClick: PropTypes.func.isRequired,
   addApp: PropTypes.func.isRequired,
+  updateResources: PropTypes.func.isRequired,
+  cacheServices: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ applications: { apps, editApp, k8sResources, addedResourceIds } }) => ({
@@ -177,7 +189,9 @@ const mapDispatchToProps = dispatch => ({
   fetchEditApp: appId => dispatch(fetchEditApp(appId)),
   fetchAvailableServices: () => dispatch(fetchAvailableServices()),
   updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
+  cacheServices: services => dispatch(actions.change("forms.editApp.services", services)),
   addApp: app => dispatch(addApp(app)),
+  updateResources: services => dispatch(updateResourcesInAnalyzer(services)),
 });
 
 export default connect(
