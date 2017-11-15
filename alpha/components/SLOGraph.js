@@ -3,15 +3,18 @@ import {
   VictoryChart,
   VictoryArea,
   VictoryAxis,
+  VictoryVoronoiContainer,
 } from "victory-chart";
-import { VictoryLabel } from "victory-core";
+import { VictoryLabel, VictoryTooltip } from "victory-core";
 import moment from "moment";
 import _ from "lodash";
 import { scaleTime } from "d3-scale";
 import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
+import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesTooltipContainer from "./TimeSeriesTooltipContainer";
+import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
 
 
 const SLOGraph = ({ influxFetch }) => {
@@ -27,7 +30,11 @@ const SLOGraph = ({ influxFetch }) => {
       style={{
         parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" },
       }}
-      containerComponent={<TimeSeriesTooltipContainer />}
+      containerComponent={<TimeSeriesTooltipContainer
+        voronoiDimension="x"
+        labels={() => ""}
+        labelComponent={<DefaultDisabledTooltip flyoutComponent={<MultiPointFlyout />} />}
+      />}
     >
       <TopRightLegend
         data={[{ name: data.name, symbol: { fill: "#5677fa" } }]}
