@@ -86,15 +86,15 @@ export default function apps(state = initialState, action) {
       ui: _.extend({}, state.ui, { isBeginHyperPilotingLoading: false }),
       isHPReady: true,
     };
-  case types.FETCH_AVALIABLE_SERVICES_FAIL:
+  case types.FETCH_AVAILABLE_SERVICES_FAIL:
     console.error("Fetch SLO failed");
     return state;
-  case types.FETCH_AVALIABLE_SERVICES_LOADING:
+  case types.FETCH_AVAILABLE_SERVICES_LOADING:
     return {
       ...state,
       ui: _.extend({}, state.ui, { isK8sResourcesLoading: true }),
     };
-  case types.FETCH_AVALIABLE_SERVICES_SUCCESS:
+  case types.FETCH_AVAILABLE_SERVICES_SUCCESS:
     return {
       ...state,
       ui: _.extend({}, state.ui, { isK8sResourcesLoading: false }),

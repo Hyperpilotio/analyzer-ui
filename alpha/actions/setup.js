@@ -35,32 +35,32 @@ export const fetchEditApp = appId => async (dispatch) => {
 };
 
 
-export const fetchAvaliableServicesLoading = () => ({
-  type: types.FETCH_AVALIABLE_SERVICES_LOADING,
+export const fetchAvailableServicesLoading = () => ({
+  type: types.FETCH_AVAILABLE_SERVICES_LOADING,
 });
 
-export const fetchAvaliableServicesSuccess = k8sResources => ({
-  type: types.FETCH_AVALIABLE_SERVICES_SUCCESS,
+export const fetchAvailableServicesSuccess = k8sResources => ({
+  type: types.FETCH_AVAILABLE_SERVICES_SUCCESS,
   k8sResources,
 });
 
-export const fetchAvaliableServicesFail = () => ({
-  type: types.FETCH_AVALIABLE_SERVICES_FAIL,
+export const fetchAvailableServicesFail = () => ({
+  type: types.FETCH_AVAILABLE_SERVICES_FAIL,
 });
 
-export const fetchAvaliableServices = () => async (dispatch) => {
-  dispatch(fetchAvaliableServicesLoading());
+export const fetchAvailableServices = () => async (dispatch) => {
+  dispatch(fetchAvailableServicesLoading());
 
   const res = await fetch("http://localhost:3007/data");
   if (!res.ok) {
-    dispatch(fetchAvaliableServicesFail());
+    dispatch(fetchAvailableServicesFail());
     return;
   }
 
   const data = await res.json();
   if (data.success) {
-    dispatch(fetchAvaliableServicesSuccess(data.k8s_resources));
+    dispatch(fetchAvailableServicesSuccess(data.k8s_resources));
   } else {
-    dispatch(fetchAvaliableServicesFail());
+    dispatch(fetchAvailableServicesFail());
   }
 };

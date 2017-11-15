@@ -9,7 +9,7 @@ import {
 import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, addApp } from "../../actions";
-import { fetchEditApp, fetchAvaliableServices } from "../../actions/setup";
+import { fetchEditApp, fetchAvailableServices } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as AppPropType } from "../../constants/propTypes";
 import StepOne from "./Step/StepOne";
@@ -33,7 +33,7 @@ class SetupEdit extends React.Component {
     if (appId) {
       this.props.fetchEditApp(this.props.match.params.appId);
     }
-    this.props.fetchAvaliableServices();
+    this.props.fetchAvailableServices();
     // this.props.addSingleApp();
   }
 
@@ -153,7 +153,7 @@ SetupEdit.propTypes = {
   availableApps: PropTypes.arrayOf(AppPropType).isRequired,
   addedApps: PropTypes.arrayOf(AppPropType).isRequired,
   fetchEditApp: PropTypes.func.isRequired,
-  fetchAvaliableServices: PropTypes.func.isRequired,
+  fetchAvailableServices: PropTypes.func.isRequired,
   stepBack: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,
   onAddClick: PropTypes.func.isRequired,
@@ -175,7 +175,7 @@ const mapDispatchToProps = dispatch => ({
   onAddClick: id => dispatch(addToHyperPilot(id)),
   onRemoveClick: id => dispatch(removeFromHyperPilot(id)),
   fetchEditApp: appId => dispatch(fetchEditApp(appId)),
-  fetchAvaliableServices: () => dispatch(fetchAvaliableServices()),
+  fetchAvailableServices: () => dispatch(fetchAvailableServices()),
   updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
   addApp: app => dispatch(addApp(app)),
 });
