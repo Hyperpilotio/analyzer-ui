@@ -12,10 +12,11 @@ export default class TopRightLegend extends VictoryLegend {
 
   render() {
     const element = super.render();
-    let newProps = { ref: "legendRoot" };
+    const newProps = { ref: "legendRoot" };
+    const { width, marginRight, marginTop } = this.props;
     if (this.legendWidth !== null) {
-      const xPos = this.props.width - this.legendWidth - this.props.marginRight;
-      newProps.transform = `translate(${ xPos } ${ this.props.marginTop })`;
+      const xPos = width - this.legendWidth - marginRight;
+      newProps.transform = `translate(${xPos} ${marginTop})`;
     }
     return React.cloneElement(element, newProps);
   }
