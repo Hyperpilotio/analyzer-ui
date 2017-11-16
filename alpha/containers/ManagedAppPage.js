@@ -66,7 +66,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
       </Container>
     </Jumbotron>
     <Container className="mb-3">
-      <SLOGraph />
+      <SLOGraph app={app} />
     </Container>
     <Switch>
       <Route path={`${match.path}/:problemId`} render={({ match }) => (

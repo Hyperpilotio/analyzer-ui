@@ -16,8 +16,7 @@ import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesTooltipContainer from "./TimeSeriesTooltipContainer";
 import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
 
-
-const SLOGraph = ({ influxFetch }) => {
+const SLOGraph = ({ app, influxFetch }) => {
   if (influxFetch.pending) {
     return null;
   }
@@ -26,7 +25,8 @@ const SLOGraph = ({ influxFetch }) => {
   return (
     <VictoryChart
       width={1400}
-      height={400}
+      height={450}
+      padding={{ left: 50, right: 50, bottom: 50, top: 80 }}
       style={{
         parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" },
       }}
@@ -37,7 +37,7 @@ const SLOGraph = ({ influxFetch }) => {
       />}
     >
       <TopRightLegend
-        data={[{ name: data.name, symbol: { fill: "#5677fa" } }]}
+        data={[{ name: `${app.slo.metric} (${app.slo.summary})`, symbol: { fill: "#5677fa" } }]}
         style={{
           labels: { fill: "#606175", fontSize: 16 },
           border: { stroke: "#e2e8fb" },
@@ -52,7 +52,6 @@ const SLOGraph = ({ influxFetch }) => {
           grid: { stroke: "#eef0fa" },
           tickLabels: { fill: "#b9bacb" },
         }}
-        tickFormat={y => y}
       />
       <VictoryArea
         style={{ data: { stroke: "#5677fa", strokeWidth: "1.5px", fill: "rgba(86, 119, 250, 0.08)" } }}
@@ -79,10 +78,15 @@ const SLOGraph = ({ influxFetch }) => {
           line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
           label: { fill: "#ff8686", fontSize: "16px" },
         }}
-        threshold={500}
+        threshold={app.slo.value}
         label="SLO"
       />
-      <VictoryLabel text="latency (ms)" style={{ fill: "#606175", fontSize: "16px" }} x={15} y={30} />
+      <VictoryLabel
+        text={`${app.slo.type} (${app.slo.unit})`}
+        style={{ fill: "#606175", fontSize: "16px" }}
+        x={15}
+        y={30}
+      />
     </VictoryChart>
   );
 };
