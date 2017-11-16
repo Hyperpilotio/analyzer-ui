@@ -14,7 +14,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, children }) => {
     <VictoryChart
       width={1400}
       height={450}
-      padding={{ left: 50, right: 50, bottom: 50, top: 80 }}
+      padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
       style={{
         parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" },
       }}

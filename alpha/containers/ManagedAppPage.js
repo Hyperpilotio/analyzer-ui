@@ -3,8 +3,9 @@ import _ from "lodash";
 import { Switch, Route } from "react-router";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
 import Linked from "~/commons/components/Linked";
-import MetricGraph from "../components/MetricGraph";
 import SLOGraph from "../components/SLOGraph";
+import SingleResourceGraph from "../components/SingleResourceGraph";
+import InterferenceGraph from "../components/InterferenceGraph";
 import { getSLODisplay } from "../utils";
 
 const getBadge = (incidents, opportunities) => {
@@ -72,6 +73,16 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
     <Switch>
       <Route path={`${match.path}/:problemId`} render={({ match }) => (
         <Container>
+          <Row className="mb-2">
+            <SingleResourceGraph eventDoc={{
+              metric_name: "intel/docker/stats/cgroups/blkio_stats/io_serviced_recursive/value",
+              threshold: {
+                type: "UB",
+                value: 700,
+              }
+            }} />
+            <InterferenceGraph />
+          </Row>
           <Row className="mb-2">
             <h4 className="text-dark">{ match.params.problemId }: Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></h4>
           </Row>
