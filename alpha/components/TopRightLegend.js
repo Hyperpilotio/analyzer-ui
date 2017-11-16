@@ -12,6 +12,12 @@ export default class TopRightLegend extends VictoryLegend {
     ...VictoryLegend.defaultProps,
     dataComponent: <LegendRect />,
     labelComponent: <LegendLabel />,
+    style: {
+      labels: { fill: "#606175", fontSize: 16 },
+      border: { stroke: "#e2e8fb" },
+    },
+    marginRight: 50,
+    marginTop: 10,
   }
 
   legendWidth = null

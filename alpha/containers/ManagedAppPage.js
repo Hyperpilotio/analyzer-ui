@@ -3,6 +3,7 @@ import _ from "lodash";
 import { Switch, Route } from "react-router";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
 import Linked from "~/commons/components/Linked";
+import MetricGraph from "../components/MetricGraph";
 import SLOGraph from "../components/SLOGraph";
 import { getSLODisplay } from "../utils";
 

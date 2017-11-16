@@ -15,6 +15,11 @@ Data.getData = (props) => {
 
 export default class TimeSeriesTooltipContainer extends VictoryVoronoiContainer {
   static displayName = "TimeSeriesTooltipContainer"
+  static defaultProps = {
+    ...VictoryVoronoiContainer.defaultProps,
+    voronoiDimension: "x",
+    labels: () => "",
+  }
 
   getLabelProps(props, points) {
     const { labels, scale, labelComponent, theme, mousePosition  } = props;
