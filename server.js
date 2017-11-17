@@ -6,8 +6,8 @@ const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
+const resources = require("./routers/resources");
 const mockDB = require("./routers/mockdb");
-const k8sJson = require("./fake-api/k8sResources.json");
 
 const server = express();
 server.use(morgan("dev"));
@@ -17,21 +17,14 @@ let configdb;
 let metricdb;
 let mockdb;
 
+server.use("/", resources);
+server.use("/", mockDB);
+// MongoDB connection
 server.use("/", (req, res, next) => {
   req.mockdb = mockdb;
   next();
 });
 
-
-// mockdb
-server.use("/", mockDB);
-// k8s_resources json
-server.get("/mock/k8sResources", (req, res) => {
-  res.json({
-    success: true,
-    k8s_resources: k8sJson.k8s_resources,
-  });
-});
 
 server.get("/api/", (req, res) => {
   res.json({ status: "ok" });

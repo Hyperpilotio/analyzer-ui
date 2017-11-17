@@ -1,9 +1,9 @@
 import * as types from "./types";
 
 
-export const addToHyperPilot = appId => ({
+export const addToHyperPilot = appObj => ({
   type: types.ADD_TO_HYPERPILOT,
-  appId,
+  appObj,
 });
 
 export const removeFromHyperPilot = appId => ({

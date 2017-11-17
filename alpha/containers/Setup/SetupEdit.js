@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
-import {
-  Container,
-} from "reactstrap";
+import { Container } from "reactstrap";
+import _ from "lodash";
 import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, addApp } from "../../actions";
@@ -25,6 +24,8 @@ class SetupEdit extends React.Component {
     dropdownOpenTwo: false,
     dropdownOpenThree: false,
     dropdownOpenFour: false,
+    namespace: "All",
+    kind: "All",
   }
 
   componentWillMount() {
@@ -34,6 +35,9 @@ class SetupEdit extends React.Component {
       this.props.fetchEditApp(this.props.match.params.appId);
     }
     this.props.fetchAvailableServices();
+
+
+
     // this.props.addSingleApp();
   }
 
@@ -49,6 +53,31 @@ class SetupEdit extends React.Component {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen,
     });
+  }
+
+  filterAvailableApps = () => {
+    const { namespace, kind } = this.state;
+    const { availableApps } = this.props;
+
+    let filterApps;
+    if (namespace !== "All" && kind !== "All") {
+      filterApps = _.filter(availableApps, { namespace, kind });
+    } else if (namespace !== "All") {
+      filterApps = _.filter(availableApps, { namespace });
+    } else if (kind !== "All") {
+      filterApps = _.filter(availableApps, { kind });
+    } else {
+      filterApps = availableApps;
+    }
+    return filterApps;
+  }
+
+  filterNamespace = (event) => {
+    this.setState({ namespace: event.target.value });
+  }
+
+  filterKind = (event) => {
+    this.setState({ kind: event.target.value });
   }
 
   cacheServices = (services) => {
@@ -78,13 +107,12 @@ class SetupEdit extends React.Component {
 
   render() {
     const {
-      stepBack, stepNext,
-      editApp, availableApps, addedApps,
-      onAddClick, onRemoveClick,
-      match,
+      stepBack, stepNext, editApp, addedApps,
+      onAddClick, onRemoveClick, match,
     } = this.props;
 
     const step = parseInt(match.params.step, 10);
+    const availableApps = this.filterAvailableApps();
 
     return (
       <Container>
@@ -127,6 +155,10 @@ class SetupEdit extends React.Component {
                   onRadioBtnClick={this.onRadioBtnClick}
                   rSelected={this.state.rSelected}
                   cacheServices={this.cacheServices}
+                  filterNamespace={this.filterNamespace}
+                  filterKind={this.filterKind}
+                  namespace={this.state.namespace}
+                  kind={this.state.kind}
                   match={match}
                 />
               )}
@@ -177,8 +209,8 @@ const mapStateToProps = ({ applications: { apps, editApp, k8sResources, addedRes
   apps,
   editApp,
   k8sResources,
-  availableApps: k8sResources.filter(resource => !addedResourceIds.includes(resource._id)),
-  addedApps: k8sResources.filter(resource => addedResourceIds.includes(resource._id)),
+  availableApps: k8sResources.filter(resource => !addedResourceIds.includes(resource)),
+  addedApps: k8sResources.filter(resource => addedResourceIds.includes(resource)),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import * as types from "../actions/types";
 import { fakeArr } from "../constants/models";
+import { resourcesToFront } from "../lib/utils";
 
 const initialState = {
   apps: [],
@@ -40,7 +41,7 @@ export default function apps(state = initialState, action) {
     console.error("Fetch apps failed");
     return state;
   case types.ADD_TO_HYPERPILOT:
-    return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appId]) };
+    return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appObj]) };
   case types.REMOVE_FROM_HYPERPILOT:
     return { ...state, addedResourceIds: _.without(state.addedResourceIds, action.appId) };
   case types.EDIT_SINGLE_APP:
@@ -95,10 +96,11 @@ export default function apps(state = initialState, action) {
       ui: _.extend({}, state.ui, { isK8sResourcesLoading: true }),
     };
   case types.FETCH_AVAILABLE_SERVICES_SUCCESS:
+  // TODO: should be transform to the 
     return {
       ...state,
       ui: _.extend({}, state.ui, { isK8sResourcesLoading: false }),
-      k8sResources: action.k8sResources,
+      k8sResources: resourcesToFront(action.k8sResources),
     };
   case types.FETCH_EDIT_APP_FAIL:
     console.error("Fetch edit app failed");

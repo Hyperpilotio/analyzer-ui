@@ -34,7 +34,7 @@ export const fetchEditApp = appId => async (dispatch) => {
   }
 };
 
-
+// [stepEdit] fetch available resources  
 export const fetchAvailableServicesLoading = () => ({
   type: types.FETCH_AVAILABLE_SERVICES_LOADING,
 });
@@ -51,7 +51,7 @@ export const fetchAvailableServicesFail = () => ({
 export const fetchAvailableServices = () => async (dispatch) => {
   dispatch(fetchAvailableServicesLoading());
 
-  const res = await fetch("/mock/k8sResources");
+  const res = await fetch("/mock/cluster/mappings/all");
   if (!res.ok) {
     dispatch(fetchAvailableServicesFail());
     return;
@@ -59,7 +59,7 @@ export const fetchAvailableServices = () => async (dispatch) => {
 
   const data = await res.json();
   if (data.success) {
-    dispatch(fetchAvailableServicesSuccess(data.k8s_resources));
+    dispatch(fetchAvailableServicesSuccess(data.mockResources));
   } else {
     dispatch(fetchAvailableServicesFail());
   }

@@ -1,5 +1,5 @@
 {
-  "mockResources": [
+  "namespaces": [
     {
       "namespace": "namespace1",
       "deployments": [
