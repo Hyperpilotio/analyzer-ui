@@ -1,9 +1,7 @@
 import React from "react";
 import { VictoryLine } from "victory-chart";
-import moment from "moment";
 import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
-import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 
 const InterferenceGraph = ({ influxFetch }) => {
@@ -11,16 +9,16 @@ const InterferenceGraph = ({ influxFetch }) => {
     return null;
   }
   const data = influxFetch.value;
-  for (let row of data.values) {
-    row.push(Math.random() * 800);
-  }
+  data.values = data.values.map(row => [...row, Math.random() * 800]);
 
   return (
     <GeneralTimeSeriesGraph yLabel="metric/of/some/resource">
-      <TopRightLegend data={[
-        { name: "container_id=spark-worker-1", symbol: { fill: "#fdbd39" } },
-        { name: "container_id=goddd-goddd", symbol: { fill: "#78c1fa" } },
-      ]} />
+      <TopRightLegend
+        data={[
+          { name: "container_id=spark-worker-1", symbol: { fill: "#fdbd39" } },
+          { name: "container_id=goddd-goddd", symbol: { fill: "#78c1fa" } },
+        ]}
+      />
       <VictoryLine
         style={{ data: { stroke: "#fdbd39", strokeWidth: "2px" } }}
         data={data.values.map(([date, value]) => ({ x: new Date(date), y: value }))}
@@ -29,7 +27,7 @@ const InterferenceGraph = ({ influxFetch }) => {
       />
       <VictoryLine
         style={{ data: { stroke: "#78c1fa", strokeWidth: "2px" } }}
-        data={data.values.map(([date, _, value]) => ({ x: new Date(date), y: value }))}
+        data={data.values.map(([date, , value]) => ({ x: new Date(date), y: value }))}
         name={"container_id=goddd-goddd"}
         isData
       />

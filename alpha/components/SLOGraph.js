@@ -1,6 +1,5 @@
 import React from "react";
 import { VictoryArea } from "victory-chart";
-import moment from "moment";
 import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";

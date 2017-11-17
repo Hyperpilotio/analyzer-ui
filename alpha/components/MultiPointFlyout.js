@@ -22,13 +22,17 @@ const styles = {
   indexLine: {
     stroke: "#8cb1fa",
     strokeWidth: 1.5,
-  }
-}
+  },
+};
 
 export default class MultiPointFlyout extends React.Component {
-  width = 280
-  height = 80
-  shouldUpdateSize = false
+  constructor(props) {
+    super(props);
+    this.width = 280;
+    this.height = 80;
+    this.mainBox = null;
+    this.shouldUpdateSize = false;
+  }
 
   componentWillReceiveProps() {
     this.shouldUpdateSize = true;
@@ -36,7 +40,7 @@ export default class MultiPointFlyout extends React.Component {
 
   componentDidUpdate() {
     if (this.shouldUpdateSize) {
-      const bbox = this.refs.mainBox.getBBox();
+      const bbox = this.mainBox.getBBox();
       this.width = 10 + bbox.width + 10;
       this.height = 10 + bbox.height + 10;
       this.shouldUpdateSize = false;
@@ -64,11 +68,17 @@ export default class MultiPointFlyout extends React.Component {
         <g transform={`translate(${xShift},${yShift})`}>
           { React.cloneElement(containerElement, { style: styles.background }) }
           { React.cloneElement(containerElement, { style: styles.box }) }
-          <g ref="mainBox" transform="translate(10,10)">
+          <g ref={(g) => { this.mainBox = g; }} transform="translate(10,10)">
             <text style={styles.title}>{ moment(points[0].x).format("YYYY-MM-DD HH:mm:ss") }</text>
             { points.map((point, i) => (
-              <g key={i} transform={`translate(0,${(i + 1) * 35})`}>
-                <rect x={0} y={-5} width={30} height={5} style={{ fill: point.style.data.stroke }} />
+              <g key={point.childName} transform={`translate(0,${(i + 1) * 35})`}>
+                <rect
+                  x={0}
+                  y={-5}
+                  width={30}
+                  height={5}
+                  style={{ fill: point.style.data.stroke }}
+                />
                 <text x={40} style={styles.metricValue}>{ point.y }</text>
               </g>
             )) }
