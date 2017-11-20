@@ -17,13 +17,14 @@ let configdb;
 let metricdb;
 let mockdb;
 
-server.use("/", resources);
-server.use("/", mockDB);
 // MongoDB connection
-server.use("/", (req, res, next) => {
+server.use((req, res, next) => {
   req.mockdb = mockdb;
   next();
 });
+
+server.use(resources);
+server.use(mockDB);
 
 
 server.get("/api/", (req, res) => {

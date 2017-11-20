@@ -77,9 +77,9 @@ const StepTwo = props => (
                 value={props.kind}
               >
                 <option value="All">All</option>
-                <option value="Service">Service</option>
-                <option value="Deployment">Deployment</option>
-                <option value="StatefulSet">StatefulSet</option>
+                <option value="services">Service</option>
+                <option value="deployments">Deployment</option>
+                <option value="statefulsets">StatefulSet</option>
               </select>
             </div>
           </div>

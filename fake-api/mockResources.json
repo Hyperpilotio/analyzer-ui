@@ -1,9 +1,11 @@
 {
-  "mockResources": [
+  "namespaces": [
     {
-      "namespace": "namespace1",
+      "namespace": "default",
       "deployments": [
-        "deployment1"
+        "deployment1",
+        "deployment2",
+        "deployment3"
       ],
       "statefulsets": [
         "statefulset1",

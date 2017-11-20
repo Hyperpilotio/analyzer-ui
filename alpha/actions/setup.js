@@ -59,7 +59,7 @@ export const fetchAvailableServices = () => async (dispatch) => {
 
   const data = await res.json();
   if (data.success) {
-    dispatch(fetchAvailableServicesSuccess(data.mockResources));
+    dispatch(fetchAvailableServicesSuccess(data.namespaces));
   } else {
     dispatch(fetchAvailableServicesFail());
   }
