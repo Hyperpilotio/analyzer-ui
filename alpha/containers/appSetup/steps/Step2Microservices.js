@@ -168,7 +168,7 @@ export default class Step2Microservices extends React.Component {
         <div className={_s.btnRow}>
           <Link to="/setup/add/1" className="btn btn-secondary mr-2">Back</Link>
           <Button
-            onClick={() => this.props.cacheServices(props.addedApps)}
+            onClick={() => this.props.cacheServices(this.props.addedApps)}
             className="btn btn-primary"
           >Next</Button>
         </div>
