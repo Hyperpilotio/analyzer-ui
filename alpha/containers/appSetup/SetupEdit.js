@@ -11,10 +11,10 @@ import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, 
 import { fetchEditApp, fetchAvailableServices, updateResourcesInAnalyzer, cacheServicesInForm } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as AppPropType } from "../../constants/propTypes";
-import StepOne from "./Step/StepOne";
-import StepTwo from "./Step/StepTwo";
-import StepThree from "./Step/StepThree";
-import StepFour from "./Step/StepFour";
+import Step1BasicInfo from "./steps/Step1BasicInfo";
+import Step2Microservices from "./steps/Step2Microservices";
+import Step3SLO from "./steps/Step3SLO";
+import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
 
 class SetupEdit extends React.Component {
   state = {
@@ -134,7 +134,7 @@ class SetupEdit extends React.Component {
             <Route
               path="/setup/add/1"
               render={() => (
-                <StepOne
+                <Step1BasicInfo
                   cancelEdit={this.cancelEdit}
                   match={match}
                 />
@@ -143,7 +143,7 @@ class SetupEdit extends React.Component {
             <Route
               path="/setup/add/2"
               render={() => (
-                <StepTwo
+                <Step2Microservices
                   activeTab={this.state.activeTab}
                   addedApps={addedApps}
                   availableApps={availableApps}
@@ -166,7 +166,7 @@ class SetupEdit extends React.Component {
             <Route
               path="/setup/add/3"
               render={() => (
-                <StepThree
+                <Step3SLO
                   stepBack={stepBack}
                   match={match}
                 />
@@ -175,7 +175,7 @@ class SetupEdit extends React.Component {
             <Route
               path="/setup/add/4"
               render={() => (
-                <StepFour
+                <Step4ManagementFeatures
                   stepBack={stepBack}
                   match={match}
                 />

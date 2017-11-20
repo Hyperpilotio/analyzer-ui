@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Control } from "react-redux-form";
 import _s from "../style.scss";
 
-const StepThree = () => (
+const Step3SLO = () => (
   <div>
     <div className="modal-form" >
       <div className="form-group">
@@ -59,4 +59,4 @@ const StepThree = () => (
 );
 
 
-export default StepThree;
+export default Step3SLO;

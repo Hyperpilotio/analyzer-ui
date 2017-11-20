@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Control } from "react-redux-form";
 import _s from "../style.scss";
 
-const StepOne = props => (
+const Step1BasicInfo = props => (
   <div className="modal-formeffect-fade-in">
     <div className="form-group">
       <label htmlFor="appName">APP Name</label>
@@ -30,8 +30,8 @@ const StepOne = props => (
 
 );
 
-StepOne.propTypes = {
+Step1BasicInfo.propTypes = {
   cancelEdit: PropTypes.func.isRequired,
 };
 
-export default StepOne;
+export default Step1BasicInfo;

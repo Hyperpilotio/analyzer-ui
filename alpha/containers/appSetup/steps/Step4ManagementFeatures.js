@@ -3,7 +3,7 @@ import { Control } from "react-redux-form";
 import { Link } from "react-router-dom";
 import _s from "../style.scss";
 
-const StepFour = () => (
+const Step4ManagementFeatures = () => (
   <div>
     {/* Interference Management */}
     <div className="form-group">
@@ -54,4 +54,4 @@ const StepFour = () => (
   </div>
 );
 
-export default StepFour;
+export default Step4ManagementFeatures;

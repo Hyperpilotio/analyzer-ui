@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
 
-const StepTwo = props => (
+const Step2Microservices = props => (
   <div>
     {/* Selected Apps */}
     <Card className={`row ${_s.card}`}>
@@ -61,9 +61,9 @@ const StepTwo = props => (
                 value={props.namespace}
               >
                 <option value="All">All</option>
-                <option value="Service">Service</option>
-                <option value="Deployment">Deployment</option>
-                <option value="StatefulSet">StatefulSet</option>
+                <option value="services">Service</option>
+                <option value="deployments">Deployment</option>
+                <option value="statefulsets">StatefulSet</option>
               </select>
             </div>
 
@@ -142,7 +142,7 @@ const StepTwo = props => (
 );
 
 
-StepTwo.propTypes = {
+Step2Microservices.propTypes = {
   rSelected: PropTypes.number.isRequired,
   namespace: PropTypes.string.isRequired,
   kind: PropTypes.string.isRequired,
@@ -154,4 +154,4 @@ StepTwo.propTypes = {
 };
 
 
-export default StepTwo;
+export default Step2Microservices;

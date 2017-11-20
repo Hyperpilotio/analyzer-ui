@@ -6,8 +6,8 @@ import thunk from "redux-thunk";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
 import DashboardPage from "./containers/DashboardPage";
-import SetupEdit from "./containers/Setup/SetupEdit";
-import SetupDone from "./containers/Setup/StepDone";
+import SetupEdit from "./containers/appSetup/SetupEdit";
+import SetupDone from "./containers/appSetup/SetupDone";
 
 const store = createStore(
   rootReducer,
