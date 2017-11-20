@@ -17,17 +17,6 @@ import Step3SLO from "./steps/Step3SLO";
 import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
 
 class SetupEdit extends React.Component {
-  state = {
-    rSelected: 1,
-    activeTab: "1",
-    dropdownOpenOne: false,
-    dropdownOpenTwo: false,
-    dropdownOpenThree: false,
-    dropdownOpenFour: false,
-    namespace: "All",
-    kind: "All",
-  }
-
   componentWillMount() {
     const appId = this.props.match.params.appId;
     // in edit mode
@@ -35,49 +24,10 @@ class SetupEdit extends React.Component {
       this.props.fetchEditApp(this.props.match.params.appId);
     }
     this.props.fetchAvailableServices();
-
-
-
-    // this.props.addSingleApp();
-  }
-
-  onRadioBtnClick = (rSelected) => {
-    this.setState({ rSelected });
   }
 
   cancelEdit = () => {
     this.props.history.push("/dashboard");
-  }
-
-  toggle = () => {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
-    });
-  }
-
-  filterAvailableApps = () => {
-    const { namespace, kind } = this.state;
-    const { availableApps } = this.props;
-
-    let filterApps;
-    if (namespace !== "All" && kind !== "All") {
-      filterApps = _.filter(availableApps, { namespace, kind });
-    } else if (namespace !== "All") {
-      filterApps = _.filter(availableApps, { namespace });
-    } else if (kind !== "All") {
-      filterApps = _.filter(availableApps, { kind });
-    } else {
-      filterApps = availableApps;
-    }
-    return filterApps;
-  }
-
-  filterNamespace = (event) => {
-    this.setState({ namespace: event.target.value });
-  }
-
-  filterKind = (event) => {
-    this.setState({ kind: event.target.value });
   }
 
   cacheServices = (services) => {
@@ -97,22 +47,13 @@ class SetupEdit extends React.Component {
     this.props.history.push("/setup/done");
   }
 
-  toggleTabs = (tab) => {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab,
-      });
-    }
-  }
-
   render() {
     const {
-      stepBack, stepNext, editApp, addedApps,
+      stepBack, stepNext, editApp, addedApps, availableApps,
       onAddClick, onRemoveClick, match,
     } = this.props;
 
     const step = parseInt(match.params.step, 10);
-    const availableApps = this.filterAvailableApps();
 
     return (
       <Container>
@@ -144,22 +85,13 @@ class SetupEdit extends React.Component {
               path="/setup/add/2"
               render={() => (
                 <Step2Microservices
-                  activeTab={this.state.activeTab}
                   addedApps={addedApps}
                   availableApps={availableApps}
                   onAddClick={onAddClick}
                   onRemoveClick={onRemoveClick}
                   stepBack={stepBack}
                   stepNext={stepNext}
-                  toggleTabs={this.toggleTabs}
-                  onRadioBtnClick={this.onRadioBtnClick}
-                  rSelected={this.state.rSelected}
                   cacheServices={this.cacheServices}
-                  filterNamespace={this.filterNamespace}
-                  filterKind={this.filterKind}
-                  namespace={this.state.namespace}
-                  kind={this.state.kind}
-                  match={match}
                 />
               )}
             />
