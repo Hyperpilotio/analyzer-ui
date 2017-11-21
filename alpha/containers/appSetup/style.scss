@@ -1,0 +1,47 @@
+@import "../../scss/_mixin.scss";
+@import "../../scss/_custom.scss";
+@import "commons/styles/variables.scss";
+
+.navItem {
+  cursor: pointer;
+}
+
+.selectedZone {
+  min-height: 320px;
+}
+
+.cardCon {
+  float: left;
+}
+
+.card {
+  @include shadow-effect(1);
+  border: none !important;
+}
+
+.btn {
+  color: #fff;
+}
+
+.btnRow {
+  float: right;
+}
+
+.btnCancel {
+  padding: 0px;
+  border: none;
+}
+
+.tabContent {
+  margin-top: 30px;
+}
+
+.noData {
+  width: 100%;
+  text-align: center;
+  color: $color-light-grey;
+}
+
+.tHead {
+  color: $color-grey;
+}

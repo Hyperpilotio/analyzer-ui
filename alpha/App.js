@@ -1,18 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
+import { apiMiddleware } from "redux-api-middleware";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
 import DashboardPage from "./containers/DashboardPage";
-import SetupEdit from "./containers/Setup/SetupEdit";
-import SetupDone from "./containers/Setup/StepDone";
+import SetupEdit from "./containers/appSetup/SetupEdit";
+import SetupDone from "./containers/appSetup/SetupDone";
 
 const store = createStore(
   rootReducer,
   compose(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk, apiMiddleware),
     /* eslint-disable no-underscore-dangle */
     process.env.NODE_ENV === "production" || !window.__REDUX_DEVTOOLS_EXTENSION__
       ? f => f
@@ -27,7 +28,9 @@ export default () => (
       <div>
         <div className="navbar navbar-light bg-light">
           <div className="container">
-            <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
+            <Link to="/">
+              <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
+            </Link>
           </div>
         </div>
         <Switch>

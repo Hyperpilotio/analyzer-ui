@@ -1,3 +1,5 @@
+@import "../../scss/_custom.scss";
+
 .DashboardAppsTable {
   .Badge {
     font-size: 100%;
@@ -5,5 +7,15 @@
 
   tbody tr:hover {
     cursor: pointer;
+  }
+}
+
+.iconGrp{
+
+  color: map-get($theme-colors,primary);
+
+  &:hover{
+    transform: scale(1.4);
+    transition: all .4s ease-out;
   }
 }

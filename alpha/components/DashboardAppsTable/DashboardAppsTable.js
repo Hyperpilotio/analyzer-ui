@@ -10,7 +10,7 @@ import { getSLODisplay } from "../../utils";
 import _s from "./style.scss";
 
 
-const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
+const DashboardAppsTable = ({ apps, incidents, risks, opportunities, removeApp }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
       <tr>
@@ -60,9 +60,13 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities }) => (
               <td>{ badge }</td>
               <td>
                 {/* TODO: call delete item API */}
-                <Link to="/dashboard">
-                  <MdDelete className={_s.iconGrp} />
-                </Link>
+                <MdDelete
+                  className={_s.iconGrp}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeApp(app._id);
+                  }}
+                />
               </td>
             </Linked>
           );

@@ -1,0 +1,27 @@
+{
+  "namespaces": [
+    {
+      "namespace": "namespace1",
+      "deployments": [
+        "deployment1"
+      ],
+      "statefulsets": [
+        "statefulset1",
+        "statefulset2"
+      ],
+      "services": [
+        "service1"
+      ]
+    },
+    {
+      "namespace": "namespace2",
+      "deployments": [
+        "deployment1",
+        "deployment2"
+      ],
+      "services": [
+        "service1"
+      ]
+    }
+  ]
+}

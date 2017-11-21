@@ -1,0 +1,52 @@
+{
+  "k8s_resources": [
+    {
+      "_id": 1,
+      "name": "mysql",
+      "deployment_template": {
+        "kind": "StatefulSet"
+      },
+      "state": "Running"
+    },
+    {
+      "_id": 2,
+      "name": "grafana",
+      "deployment_template": {
+        "kind": "Deployment"
+      },
+      "state": "Running"
+    },
+    {
+      "_id": 3,
+      "name": "mongodb",
+      "deployment_template": {
+        "kind": "Deployment"
+      },
+      "state": "Running"
+    },
+    {
+      "_id": 4,
+      "name": "influxdb",
+      "deployment_template": {
+        "kind": "Deployment"
+      },
+      "state": "Running"
+    },
+    {
+      "_id": 5,
+      "name": "grafana",
+      "deployment_template": {
+        "kind": "Deployment"
+      },
+      "state": "Running"
+    },
+    {
+      "_id": 6,
+      "name": "grafana",
+      "deployment_template": {
+        "kind": "Deployment"
+      },
+      "state": "Running"
+    }
+  ]
+}

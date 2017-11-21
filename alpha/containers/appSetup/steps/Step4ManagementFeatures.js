@@ -3,7 +3,7 @@ import { Control } from "react-redux-form";
 import { Link } from "react-router-dom";
 import _s from "../style.scss";
 
-const StepFour = () => (
+const Step4ManagementFeatures = () => (
   <div>
     {/* Interference Management */}
     <div className="form-group">
@@ -49,9 +49,9 @@ const StepFour = () => (
     </div>
     <div className={_s.btnRow}>
       <Link to="/setup/add/3" className="btn btn-secondary mr-2">Back</Link>
-      <Link to="/setup/done"><button type="submit" className="btn btn-success">Begin Hyperpiloting</button></Link>
+      <button type="submit" className="btn btn-success">Begin Hyperpiloting</button>
     </div>
   </div>
 );
 
-export default StepFour;
+export default Step4ManagementFeatures;

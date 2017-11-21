@@ -1,6 +1,8 @@
 import _ from "lodash";
 import * as types from "../actions/types";
+import { SUCCESS } from "../constants/apiActions";
 import { fakeArr } from "../constants/models";
+import { resourcesToFront } from "../lib/utils";
 
 const initialState = {
   apps: [],
@@ -8,52 +10,20 @@ const initialState = {
   step: 1,
   addedResourceIds: [],
   k8sResources: [],
-  stepPercent: 34,
-  ui: {
-    isFetchingAppsLoading: false,
-    isUpdatingSingleSloLoading: false,
-    isBeginHyperPilotingLoading: false,
-    isK8sResourcesLoading: false,
-    isEditAppLoading: false,
-
-  },
-  modal: {
-    isModalOpen: false,
-    appId: "",
-  },
   isHPReady: false,
 };
 
-export default function setup(state = initialState, action) {
+export default function apps(state = initialState, action) {
   switch (action.type) {
-  case types.FETCH_APPS_LOADING:
+  case types.FETCH_APPS[SUCCESS]:
     return {
       ...state,
-      ui: _.extend({}, state.ui, { isFetchAppsLoading: true }),
+      apps: action.payload.applications,
     };
-  case types.FETCH_APPS_SUCCESS:
-    return {
-      ...state,
-      apps: action.applications,
-      ui: _.extend({}, state.ui, { isFetchAppsLoading: false }),
-    };
-  case types.FETCH_APPS_FAIL:
-    console.error("Fetch apps failed");
-    return state;
   case types.ADD_TO_HYPERPILOT:
-    return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appId]) };
+    return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appObj]) };
   case types.REMOVE_FROM_HYPERPILOT:
     return { ...state, addedResourceIds: _.without(state.addedResourceIds, action.appId) };
-  case types.EDIT_SINGLE_APP:
-    return { ...state, modal: { isModalOpen: true } };
-  case types.CLOSE_MODAL:
-    return { ...state, modal: { isModalOpen: false } };
-  case types.TOGGLE_MODAL:
-    return { ...state, modal: { isModalOpen: !state.modal.isModalOpen } };
-  case types.STRETCH_PROGRESS_BAR:
-    return { ...state, stepPercent: state.stepPercent + 33 };
-  case types.TOGGLE_EDIT_SLO_MODAL:
-    return { ...state, modal: { isModalOpen: !state.modal.isModalOpen }, currentSlo: action.slo };
   case types.UPDATE_SINGLE_SLO_LOADING:
     return {
       ...state,
@@ -71,30 +41,30 @@ export default function setup(state = initialState, action) {
   case types.UPDATE_SINGLE_SLO_FAIL:
     console.error("Update SLO failed");
     return state;
-  case types.BEGIN_HYPER_PILOTING_LOADING:
+  case types.REMOVE_APP[SUCCESS]:
     return {
       ...state,
-      ui: _.extend({}, state.ui, { isBeginHyperPilotingLoading: true }),
+      apps: _.filter(state.apps, app => app._id !== action.payload.removedAppId),
     };
-  case types.BEGIN_HYPER_PILOTING_SUCCESS:
+  case types.BEGIN_HYPERPILOTING[SUCCESS]:
     return {
       ...state,
-      ui: _.extend({}, state.ui, { isBeginHyperPilotingLoading: false }),
       isHPReady: true,
     };
-  case types.FETCH_AVALIABLE_SERVICES_FAIL:
-    console.error("Fetch SLO failed");
+  case types.FETCH_AVAILABLE_SERVICES_FAIL:
+    console.error("Fetch available services failed");
     return state;
-  case types.FETCH_AVALIABLE_SERVICES_LOADING:
+  case types.FETCH_AVAILABLE_SERVICES_LOADING:
     return {
       ...state,
       ui: _.extend({}, state.ui, { isK8sResourcesLoading: true }),
     };
-  case types.FETCH_AVALIABLE_SERVICES_SUCCESS:
+  case types.FETCH_AVAILABLE_SERVICES_SUCCESS:
+  // TODO: should be transform to the 
     return {
       ...state,
       ui: _.extend({}, state.ui, { isK8sResourcesLoading: false }),
-      k8sResources: action.k8sResources,
+      k8sResources: resourcesToFront(action.k8sResources),
     };
   case types.FETCH_EDIT_APP_FAIL:
     console.error("Fetch edit app failed");

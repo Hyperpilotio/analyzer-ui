@@ -8,17 +8,18 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import ManagedAppPage from "./ManagedAppPage";
-import { fetchApps, fetchEvents } from "../actions";
+import { fetchApps, fetchEvents, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
 
 class DashboardPage extends React.Component {
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
-    isFetchingAppsLoading: PropTypes.bool.isRequired,
-    isEventsLoading: PropTypes.bool.isRequired,
+    isFetchAppsLoading: PropTypes.bool.isRequired,
+    isFetchEventsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
     fetchEvents: PropTypes.func.isRequired,
+    removeApp: PropTypes.func.isRequired,
     apps: PropTypes.arrayOf(appPropType).isRequired,
     incidents: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
     risks: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
@@ -31,10 +32,7 @@ class DashboardPage extends React.Component {
   }
 
   render() {
-    const { isEventsLoading, isFetchingAppsLoading } = this.props;
-    if (isFetchingAppsLoading || isEventsLoading) {
-      return null;
-    }
+    const { isFetchEventsLoading, isFetchAppsLoading } = this.props;
     return (
       <div>
         <Switch>
@@ -72,9 +70,12 @@ class DashboardPage extends React.Component {
                 </Link>
               </Row>
               <Row>
-                <DashboardAppsTable
-                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities"])}
-                />
+                {
+                  !(isFetchAppsLoading || isFetchEventsLoading) ?
+                    <DashboardAppsTable
+                      {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
+                    /> : null
+                }
               </Row>
             </Container>
           </Route>
@@ -85,20 +86,22 @@ class DashboardPage extends React.Component {
 }
 
 const mapStateToProps = ({
-  setup: { apps, ui: { isFetchingAppsLoading } },
-  diagnosis: { incidents, risks, opportunities, ui: { isEventsLoading } },
+  ui: { isFetchAppsLoading, isFetchEventsLoading },
+  applications: { apps },
+  diagnosis: { incidents, risks, opportunities },
 }) => ({
   apps,
   incidents,
   risks,
   opportunities,
-  isFetchingAppsLoading,
-  isEventsLoading,
+  isFetchAppsLoading,
+  isFetchEventsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
   fetchEvents: () => dispatch(fetchEvents()),
+  removeApp: appId => dispatch(removeApp(appId)),
 });
 
 export default connect(

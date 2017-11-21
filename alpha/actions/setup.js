@@ -18,7 +18,7 @@ export const fetchEditAppFail = () => ({
 export const fetchEditApp = appId => async (dispatch) => {
   dispatch(fetchEditAppLoading());
 
-  const res = await fetch("http://localhost:3007/data");
+  const res = await fetch("/api/apps");
   if (!res.ok) {
     dispatch(fetchEditAppFail());
     return;
@@ -34,33 +34,69 @@ export const fetchEditApp = appId => async (dispatch) => {
   }
 };
 
-
-export const fetchAvaliableServicesLoading = () => ({
-  type: types.FETCH_AVALIABLE_SERVICES_LOADING,
+// [stepEdit] fetch available resources  
+export const fetchAvailableServicesLoading = () => ({
+  type: types.FETCH_AVAILABLE_SERVICES_LOADING,
 });
 
-export const fetchAvaliableServicesSuccess = k8sResources => ({
-  type: types.FETCH_AVALIABLE_SERVICES_SUCCESS,
+export const fetchAvailableServicesSuccess = k8sResources => ({
+  type: types.FETCH_AVAILABLE_SERVICES_SUCCESS,
   k8sResources,
 });
 
-export const fetchAvaliableServicesFail = () => ({
-  type: types.FETCH_AVALIABLE_SERVICES_FAIL,
+export const fetchAvailableServicesFail = () => ({
+  type: types.FETCH_AVAILABLE_SERVICES_FAIL,
 });
 
-export const fetchAvaliableServices = () => async (dispatch) => {
-  dispatch(fetchAvaliableServicesLoading());
+export const fetchAvailableServices = () => async (dispatch) => {
+  dispatch(fetchAvailableServicesLoading());
 
-  const res = await fetch("http://localhost:3007/data");
+  const res = await fetch("/mock/cluster/mappings/all");
   if (!res.ok) {
-    dispatch(fetchAvaliableServicesFail());
+    dispatch(fetchAvailableServicesFail());
     return;
   }
 
   const data = await res.json();
   if (data.success) {
-    dispatch(fetchAvaliableServicesSuccess(data.k8s_resources));
+    dispatch(fetchAvailableServicesSuccess(data.namespaces));
   } else {
-    dispatch(fetchAvaliableServicesFail());
+    dispatch(fetchAvailableServicesFail());
+  }
+};
+
+export const updateResourcesInAnalyzerLoading = () => ({
+  type: types.UPDATE_RESOURCES_IN_ANALYZER_LOADING,
+});
+
+export const updateResourcesInAnalyzerSuccess = resourcesIds => ({
+  type: types.UPDATE_RESOURCES_IN_ANALYZER_SUCCESS,
+  resourcesIds,
+});
+
+export const updateResourcesInAnalyzerFail = () => ({
+  type: types.UPDATE_RESOURCES_IN_ANALYZER_FAIL,
+});
+
+export const updateResourcesInAnalyzer = services => async (dispatch) => {
+  dispatch(updateResourcesInAnalyzerLoading());
+
+  const res = await fetch("/mock/v1/k8s_services", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ services }),
+  });
+  if (!res.ok) {
+    dispatch(updateResourcesInAnalyzerFail());
+    return;
+  }
+
+  const data = await res.json();
+  if (data.success) {
+    dispatch(updateResourcesInAnalyzerSuccess(data.resourcesIds));
+  } else {
+    dispatch(updateResourcesInAnalyzerFail());
   }
 };
