@@ -1,66 +1,61 @@
-//SetupList
-.stepOneCon{
-    overflow: hidden;
+// SetupList
+.stepOneCon {
+  overflow: hidden;
 }
 
-.cardsPool{
-    max-height: 250px; 
-    overflow-y: scroll;
+.cardsPool {
+  max-height: 250px;
+  overflow-y: scroll;
 }
 
-
-.btnGrp{
-    cursor: pointer;
-    outline: none;
+.btnGrp {
+  cursor: pointer;
+  outline: none;
 }
 
-
-//Done
-.wordLoading{
-    margin-top: 30px;
-    text-align: center;
+// Done
+.wordLoading {
+  margin-top: 30px;
+  text-align: center;
 }
 
-.wordSuccess{
-    margin-top: 0px;
-    text-align: center;
-    color: #7CBF4B;
-    -webkit-animation: fadein 800ms;
-    -moz-animation: fadein 800ms;
-    -ms-animation: fadein 800ms;
-    -o-animation: fadein 800ms;
-    animation: fadein 800ms;
+.wordSuccess {
+  margin-top: 0px;
+  text-align: center;
+  color: #7CBF4B;
+  -webkit-animation: fadein 800ms;
+  -moz-animation: fadein 800ms;
+  -ms-animation: fadein 800ms;
+  -o-animation: fadein 800ms;
+  animation: fadein 800ms;
 }
 
-.spinnerCon{
-    width: 100%;
-    height: 100px;
-    position: relative;
-    margin-top: 150px;
+.spinnerCon {
+  width: 100%;
+  height: 100px;
+  position: relative;
+  margin-top: 150px;
 }
 
-.checkCon{
-    transform: translateY(70px);
+.checkCon {
+  transform: translateY(70px);
 }
 
-
-.iconGrp{
-    &:hover{
-        transition: all .3s ease-out;
-        transform: scale(1.4);
-    }
+.iconGrp:hover {
+  transition: all .3s ease-out;
+  transform: scale(1.4);
 }
 
-.btnReturn, .btnBegin{
-    margin-left: auto;
-    margin-right: auto;
+.btnReturn, .btnBegin {
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+}
+
+.btnReturn a, .btnBegin a {
+  color: #fff;
+  &:hover {
+    text-decoration: none;
     color: #fff;
-}
-
-.btnReturn a, .btnBegin a{
-    color:#fff;
-    &:hover{
-        text-decoration: none;
-        color:#fff;
-    }
+  }
 }
