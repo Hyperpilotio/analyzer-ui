@@ -3,7 +3,8 @@ const morgan = require("morgan");
 const path = require("path");
 const fetch = require("node-fetch");
 const bodyParser = require("body-parser");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
+const moment = require("moment");
 const config = require("./config");
 const webpackConfig = require("./webpack.config");
 const resources = require("./routers/resources");
@@ -41,20 +42,35 @@ server.get("/api/apps", async (req, res) => {
   });
 });
 
-// server.post("/api/apps/select", async (req, res) => {
-//   const selectPromise = configdb.collection("applications").updateMany(
-//     { _id: { $in: req.body.select.map(ObjectId) } },
-//     { $set: { selected: true } }
-//   );
-//   const excludePromise = configdb.collection("applications").updateMany(
-//     { _id: { $in: req.body.exclude.map(ObjectId) } },
-//     { $set: { selected: false } }
-//   );
-//   const updateResults = await Promise.all([selectPromise, excludePromise]);
-//   res.json({
-//     success: updateResults.every(res => res.result.ok === 1)
-//   });
-// });
+server.get("/api/placeholder/influx-data", (req, res) => {
+  let dataPoints = [];
+  for (let i = 120; i > 0; i--) {
+    dataPoints.push([
+      moment().subtract(i, "minute"),
+      Math.random() * 1000,
+    ]);
+  }
+  res.json({
+    name: "hyperpilot/billing_service/request_latency_milliseconds",
+    columns: ["time", "value"],
+    values: dataPoints,
+  });
+});
+
+server.post("/api/apps/select", async (req, res) => {
+  const selectPromise = configdb.collection("applications").updateMany(
+    { _id: { $in: req.body.select.map(ObjectId) } },
+    { $set: { selected: true } }
+  );
+  const excludePromise = configdb.collection("applications").updateMany(
+    { _id: { $in: req.body.exclude.map(ObjectId) } },
+    { $set: { selected: false } }
+  );
+  const updateResults = await Promise.all([selectPromise, excludePromise]);
+  res.json({
+    success: updateResults.every(res => res.result.ok === 1)
+  });
+});
 
 server.get("/api/instances/:region", async (req, res) => {
   const { region } = req.params;
