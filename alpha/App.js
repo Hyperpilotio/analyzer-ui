@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect, Link } from "react-ro
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
+import { apiMiddleware } from "redux-api-middleware";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
 import DashboardPage from "./containers/DashboardPage";
@@ -12,7 +13,7 @@ import SetupDone from "./containers/appSetup/SetupDone";
 const store = createStore(
   rootReducer,
   compose(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk, apiMiddleware),
     /* eslint-disable no-underscore-dangle */
     process.env.NODE_ENV === "production" || !window.__REDUX_DEVTOOLS_EXTENSION__
       ? f => f

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Container, Button } from "reactstrap";
 import { app as AppPropType } from "../../constants/propTypes";
-import { beginHyperPiloting } from "../../actions";
+import { beginHyperpiloting } from "../../actions";
 import Spinner from "../../components/Spinner";
 import CheckMark from "../../components/CheckMark";
 import _s from "../style.scss";
@@ -15,31 +15,31 @@ class SetupDone extends React.Component {
   }
   render() {
     const {
-      isBeginHyperPilotingLoading,
+      isBeginHyperpilotingLoading,
       isHPReady,
       editApp,
     } = this.props;
     return (
       <Container className="effect-fade-in">
 
-        { isBeginHyperPilotingLoading ?
+        { isBeginHyperpilotingLoading ?
           <div className={`spinner-con loading ${_s.spinnerCon}`}>
             <Spinner />
           </div>
           : null
         }
-        { !isBeginHyperPilotingLoading && isHPReady ?
+        { !isBeginHyperpilotingLoading && isHPReady ?
           <div className={`check-con done ${_s.checkCon}`}>
             <CheckMark />
           </div>
           : null
         }
         {
-          isBeginHyperPilotingLoading ?
+          isBeginHyperpilotingLoading ?
             <h4 className={_s.wordLoading}>Setting up HyperPilot ...</h4> : null
         }
         {
-          !isBeginHyperPilotingLoading && isHPReady ?
+          !isBeginHyperpilotingLoading && isHPReady ?
             <div>
               <h4 className={_s.wordSuccess}>HyperPilot is now running for {editApp.name}! </h4>
               <div className="row">
@@ -58,20 +58,23 @@ class SetupDone extends React.Component {
 }
 
 SetupDone.propTypes = {
-  isBeginHyperPilotingLoading: PropTypes.bool.isRequired,
+  isBeginHyperpilotingLoading: PropTypes.bool.isRequired,
   isHPReady: PropTypes.bool.isRequired,
   beginHPClick: PropTypes.func.isRequired,
   editApp: AppPropType.isRequired,
 };
 
-const mapStateToProps = ({ applications, applications: { editApp } }) => ({
-  isBeginHyperPilotingLoading: applications.ui.isBeginHyperPilotingLoading,
-  isHPReady: applications.isHPReady,
+const mapStateToProps = ({
+  ui: { isBeginHyperpilotingLoading },
+  applications: { editApp, isHPReady }
+}) => ({
+  isBeginHyperpilotingLoading,
+  isHPReady,
   editApp,
 });
 
 const mapDispatchToProps = dispatch => ({
-  beginHPClick: () => dispatch(beginHyperPiloting()),
+  beginHPClick: () => dispatch(beginHyperpiloting()),
 });
 
 export default connect(

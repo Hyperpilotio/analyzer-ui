@@ -3,6 +3,7 @@ import { combineForms, modelReducer } from "react-redux-form";
 import { initialEditAppState } from "../constants/models";
 import applications from "./applications";
 import diagnosis from "./diagnosis";
+import ui from "./ui";
 
 const rootReducer = combineReducers({
   forms: combineForms({
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   }, "forms"),
   applications,
   diagnosis,
+  ui,
 });
 
 export default rootReducer;

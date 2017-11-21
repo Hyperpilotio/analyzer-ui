@@ -1,3 +1,4 @@
+import { RSAA } from "redux-api-middleware";
 import * as types from "./types";
 
 
@@ -11,38 +12,13 @@ export const removeFromHyperPilot = appId => ({
   appId,
 });
 
-export const stretchProgressBar = () => ({
-  type: types.STRETCH_PROGRESS_BAR,
+export const fetchApps = () => ({
+  [RSAA]: {
+    endpoint: "/mock/api/apps",
+    method: "GET",
+    types: types.FETCH_APPS,
+  },
 });
-
-export const fetchAppsLoading = () => ({
-  type: types.FETCH_APPS_LOADING,
-});
-
-export const fetchAppsSuccess = applications => ({
-  type: types.FETCH_APPS_SUCCESS,
-  applications,
-});
-
-export const fetchAppsFail = () => ({
-  type: types.FETCH_APPS_FAIL,
-});
-
-export const fetchApps = () => async (dispatch) => {
-  dispatch(fetchAppsLoading());
-
-  const res = await fetch("/mock/api/apps");
-  if (!res.ok) {
-    dispatch(fetchAppsFail());
-    return;
-  }
-  const data = await res.json();
-  if (data.success) {
-    dispatch(fetchAppsSuccess(data.applications));
-  } else {
-    dispatch(fetchAppsFail());
-  }
-};
 
 export const editSingleApp = appId => ({
   type: types.EDIT_SINGLE_APP,
@@ -53,11 +29,6 @@ export const submitSloConfig = data => ({
   type: types.SUBMIT_SLO_CONFIG,
   data,
 });
-
-export const toggleModalStatus = () => ({
-  type: types.TOGGLE_MODAL,
-});
-
 
 export const updateSingleSloLoading = () => ({
   type: types.UPDATE_SINGLE_SLO_LOADING,
@@ -89,35 +60,13 @@ export const updateSingleSlo = () => async (dispatch) => {
   }
 };
 
-
-export const beginHyperPilotingLoading = () => ({
-  type: types.BEGIN_HYPER_PILOTING_LOADING,
+export const beginHyperpiloting = () => ({
+  [RSAA]: {
+    endpoint: "http://localhost:3007/begin",
+    method: "POST",
+    types: types.BEGIN_HYPERPILOTING,
+  },
 });
-
-export const beginHyperPilotingSuccess = status => ({
-  type: types.BEGIN_HYPER_PILOTING_SUCCESS,
-  status,
-});
-
-export const beginHyperPilotingFail = () => ({
-  type: types.BEGIN_HYPER_PILOTING_FAIL,
-});
-
-export const beginHyperPiloting = () => async (dispatch) => {
-  dispatch(beginHyperPilotingLoading());
-  // TODO: replace url when DB is done
-  const res = await fetch("http://localhost:3007/begin");
-  if (!res.ok) {
-    dispatch(beginHyperPilotingFail());
-    return;
-  }
-  const data = await res.json();
-  if (data.success) {
-    dispatch(beginHyperPilotingSuccess(data));
-  } else {
-    dispatch(beginHyperPilotingFail());
-  }
-};
 
 export const addStepNumber = () => ({
   type: types.ADD_STEP_NUMBER,
@@ -134,104 +83,34 @@ export const resetStepNumber = () => ({
   status,
 });
 
-export const fetchEventsLoading = () => ({
-  type: types.FETCH_EVENTS_LOADING,
+export const fetchEvents = () => ({
+  [RSAA]: {
+    endpoint: "http://localhost:3007/data",
+    method: "GET",
+    types: types.FETCH_EVENTS,
+  },
 });
 
-export const fetchEventsSuccess = ({ incidents, opportunities }) => ({
-  type: types.FETCH_EVENTS_SUCCESS,
-  incidents,
-  opportunities,
-});
-
-export const fetchEventsFail = () => ({
-  type: types.FETCH_EVENTS_FAIL,
-});
-
-export const fetchEvents = () => async (dispatch) => {
-  dispatch(fetchEventsLoading());
-
-  const res = await fetch("http://localhost:3007/data");
-  if (!res.ok) {
-    dispatch(fetchEventsFail());
-    return;
-  }
-
-  const data = await res.json();
-  if (data.success) {
-    dispatch(fetchEventsSuccess(data));
-  } else {
-    dispatch(fetchEventsFail());
-  }
-};
-
-export const addAppLoading = () => ({
-  type: types.ADD_APP_LOADING,
-});
-
-export const addAppSuccess = () => ({
-  type: types.ADD_APP_SUCCESS,
-});
-
-export const addAppFail = () => ({
-  type: types.ADD_APP_FAIL,
-});
-
-export const addApp = app => async (dispatch) => {
-  dispatch(addAppLoading());
-  const res = await fetch("/mock/api/add", {
-    method: "post",
+export const addApp = app => ({
+  [RSAA]: {
+    endpoint: "/mock/api/add",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(app),
-  });
-  if (!res.ok) {
-    dispatch(addAppFail());
-    return;
-  }
-
-  const data = await res.json();
-  if (data.success) {
-    dispatch(addAppSuccess(data));
-  } else {
-    dispatch(addAppFail());
-  }
-};
-
-
-export const removeAppLoading = () => ({
-  type: types.REMOVE_APP_LOADING,
+    types: types.ADD_APP,
+  },
 });
 
-export const removeAppSuccess = removedAppId => ({
-  type: types.REMOVE_APP_SUCCESS,
-  removedAppId,
-});
-
-export const removeAppFail = () => ({
-  type: types.REMOVE_APP_FAIL,
-});
-
-export const removeApp = appId => async (dispatch) => {
-  dispatch(removeAppLoading());
-
-  const res = await fetch("/mock/api/remove", {
-    method: "post",
+export const removeApp = appId => ({
+  [RSAA]: {
+    endpoint: "/mock/api/remove",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ appId }),
-  });
-  if (!res.ok) {
-    dispatch(removeAppFail());
-    return;
-  }
-
-  const data = await res.json();
-  if (data.success) {
-    dispatch(removeAppSuccess(appId));
-  } else {
-    dispatch(removeAppFail());
-  }
-};
+    types: types.REMOVE_APP,
+  },
+});

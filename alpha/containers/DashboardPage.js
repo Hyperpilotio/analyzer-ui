@@ -15,8 +15,8 @@ import { app as appPropType, event as eventPropType } from "../constants/propTyp
 class DashboardPage extends React.Component {
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
-    isFetchingAppsLoading: PropTypes.bool.isRequired,
-    isEventsLoading: PropTypes.bool.isRequired,
+    isFetchAppsLoading: PropTypes.bool.isRequired,
+    isFetchEventsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
     fetchEvents: PropTypes.func.isRequired,
     removeApp: PropTypes.func.isRequired,
@@ -32,7 +32,7 @@ class DashboardPage extends React.Component {
   }
 
   render() {
-    const { isEventsLoading, isFetchingAppsLoading } = this.props;
+    const { isFetchEventsLoading, isFetchAppsLoading } = this.props;
     return (
       <div>
         <Switch>
@@ -71,7 +71,7 @@ class DashboardPage extends React.Component {
               </Row>
               <Row>
                 {
-                  !(isFetchingAppsLoading || isEventsLoading) ?
+                  !(isFetchAppsLoading || isFetchEventsLoading) ?
                     <DashboardAppsTable
                       {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
                     /> : null
@@ -86,15 +86,16 @@ class DashboardPage extends React.Component {
 }
 
 const mapStateToProps = ({
-  applications: { apps, ui: { isFetchingAppsLoading } },
-  diagnosis: { incidents, risks, opportunities, ui: { isEventsLoading } },
+  ui: { isFetchAppsLoading, isFetchEventsLoading },
+  applications: { apps },
+  diagnosis: { incidents, risks, opportunities },
 }) => ({
   apps,
   incidents,
   risks,
   opportunities,
-  isFetchingAppsLoading,
-  isEventsLoading,
+  isFetchAppsLoading,
+  isFetchEventsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -5,7 +5,7 @@ import { Control } from "react-redux-form";
 import _s from "../style.scss";
 
 const Step1BasicInfo = props => (
-  <div className="modal-formeffect-fade-in">
+  <div>
     <div className="form-group">
       <label htmlFor="appName">APP Name</label>
       <Control.text model=".name" className="form-control" id="appName" placeholder="Enter APP name" />
