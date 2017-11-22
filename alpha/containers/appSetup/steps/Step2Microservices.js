@@ -46,7 +46,6 @@ const MicroservicesTable = ({ microservices, buttonElement, buttonOnClick }) => 
 
 class Step2Microservices extends React.Component {
   static propTypes = {
-    availableApps: PropTypes.arrayOf(appPropType).isRequired,
     cacheServices: PropTypes.func.isRequired,
   }
 
@@ -65,7 +64,7 @@ class Step2Microservices extends React.Component {
 
   get detectedMicroservices() {
     const filter = {};
-    const excludeSelected = _.reduce(this.props.microservices, _.reject, this.props.availableApps);
+    const excludeSelected = _.reduce(this.props.microservices, _.reject, this.props.k8sResources);
     if (this.state.namespaceFilter !== "all") {
       filter.namespace = this.state.namespaceFilter;
     }
@@ -76,7 +75,7 @@ class Step2Microservices extends React.Component {
   }
 
   get namespaces() {
-    return _.uniq(_.map(this.props.availableApps, "namespace"));
+    return _.uniq(_.map(this.props.k8sResources, "namespace"));
   }
 
   render() {
@@ -155,8 +154,9 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { microservices } }) => ({
+const mapStateToProps = ({ createAppForm: { microservices }, applications: { k8sResources } }) => ({
   microservices,
+  k8sResources,
 });
 
 const mapDispatchToProps = (dispatch, { microservices }) => ({

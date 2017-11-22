@@ -8,7 +8,7 @@ import _ from "lodash";
 import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
 import generatePath from "../../lib/generatePath";
-import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, addApp } from "../../actions";
+import { addApp } from "../../actions";
 import { fetchEditApp, fetchAvailableServices, updateResourcesInAnalyzer, cacheServicesInForm } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
 import { app as AppPropType } from "../../constants/propTypes";
@@ -49,10 +49,7 @@ class SetupEdit extends React.Component {
   }
 
   render() {
-    const {
-      editApp, addedApps, availableApps,
-      onAddClick, onRemoveClick, match, history,
-    } = this.props;
+    const { editApp, match, history } = this.props;
 
     const step = _.toInteger(match.params.step);
 
@@ -71,10 +68,6 @@ class SetupEdit extends React.Component {
       break;
     case 2:
       formComponent = <Step2Microservices
-        addedApps={addedApps}
-        availableApps={availableApps}
-        onAddClick={onAddClick}
-        onRemoveClick={onRemoveClick}
         cacheServices={this.cacheServices}
         {...stepActions}
       />;
@@ -108,27 +101,18 @@ SetupEdit.propTypes = {
   match: ReactRouterPropTypes.match.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
   editApp: AppPropType.isRequired,
-  availableApps: PropTypes.arrayOf(AppPropType).isRequired,
-  addedApps: PropTypes.arrayOf(AppPropType).isRequired,
   fetchEditApp: PropTypes.func.isRequired,
   fetchAvailableServices: PropTypes.func.isRequired,
-  onAddClick: PropTypes.func.isRequired,
-  onRemoveClick: PropTypes.func.isRequired,
   addApp: PropTypes.func.isRequired,
   updateResources: PropTypes.func.isRequired,
   cacheServices: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ applications: { editApp, k8sResources, addedResourceIds } }) => ({
+const mapStateToProps = ({ applications: { editApp } }) => ({
   editApp,
-  k8sResources,
-  availableApps: k8sResources.filter(resource => !_.find(addedResourceIds, resource)),
-  addedApps: k8sResources.filter(resource => _.find(addedResourceIds, resource)),
 });
 
 const mapDispatchToProps = dispatch => ({
-  onAddClick: id => dispatch(addToHyperPilot(id)),
-  onRemoveClick: id => dispatch(removeFromHyperPilot(id)),
   fetchEditApp: appId => dispatch(fetchEditApp(appId)),
   fetchAvailableServices: () => dispatch(fetchAvailableServices()),
   updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),

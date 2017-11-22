@@ -20,13 +20,6 @@ export default function apps(state = initialState, action) {
       ...state,
       apps: action.payload.applications,
     };
-  case types.ADD_TO_HYPERPILOT:
-    return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appObj]) };
-  case types.REMOVE_FROM_HYPERPILOT:
-    return {
-      ...state,
-      addedResourceIds: _.reject(state.addedResourceIds, action.appId),
-    };
   case types.UPDATE_SINGLE_SLO_LOADING:
     return {
       ...state,
@@ -88,21 +81,6 @@ export default function apps(state = initialState, action) {
     return {
       ...state,
       isHPReady: false,
-    };
-  case types.ADD_STEP_NUMBER:
-    return {
-      ...state,
-      step: state.step + 1,
-    };
-  case types.MINUS_STEP_NUMBER:
-    return {
-      ...state,
-      step: state.step - 1,
-    };
-  case types.RESET_STEP_NUMBER:
-    return {
-      ...state,
-      step: 1,
     };
   default:
     return state;

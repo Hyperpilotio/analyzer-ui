@@ -2,16 +2,6 @@ import { RSAA } from "redux-api-middleware";
 import * as types from "./types";
 
 
-export const addToHyperPilot = appObj => ({
-  type: types.ADD_TO_HYPERPILOT,
-  appObj,
-});
-
-export const removeFromHyperPilot = appId => ({
-  type: types.REMOVE_FROM_HYPERPILOT,
-  appId,
-});
-
 export const fetchApps = () => ({
   [RSAA]: {
     endpoint: "/mock/api/apps",
@@ -66,21 +56,6 @@ export const beginHyperpiloting = () => ({
     method: "POST",
     types: types.BEGIN_HYPERPILOTING,
   },
-});
-
-export const addStepNumber = () => ({
-  type: types.ADD_STEP_NUMBER,
-  status,
-});
-
-export const minusStepNumber = () => ({
-  type: types.MINUS_STEP_NUMBER,
-  status,
-});
-
-export const resetStepNumber = () => ({
-  type: types.RESET_STEP_NUMBER,
-  status,
 });
 
 export const fetchEvents = () => ({
