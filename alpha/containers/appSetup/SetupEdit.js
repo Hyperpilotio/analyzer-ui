@@ -88,19 +88,17 @@ class SetupEdit extends React.Component {
     }
 
     return (
-      <Container>
-        <div>
-          <div className="row mt-3">
-            {location.pathname === `/setup/edit/${match.params.appId}` ?
-              <h1 className="title">Configuring {editApp && editApp.name}</h1> :
-              <h1 className="title">Setup a new app</h1>
-            }
-          </div>
-          <div className="row mt-2 mb-5">
-            <ProgressBar percent={25 * step} text={editStepNames[step]} />
-          </div>
-          { formComponent }
+      <Container className="mb-5">
+        <div className="row mt-3">
+          { match.path === "/setup/edit/:appId" ?
+            <h1 className="title">Configuring { editApp && editApp.name }</h1> :
+            <h1 className="title">Setup a new app</h1>
+          }
         </div>
+        <div className="row mt-2 mb-5">
+          <ProgressBar percent={25 * step} text={editStepNames[step]} />
+        </div>
+        { formComponent }
       </Container>
     );
   }
@@ -114,8 +112,6 @@ SetupEdit.propTypes = {
   addedApps: PropTypes.arrayOf(AppPropType).isRequired,
   fetchEditApp: PropTypes.func.isRequired,
   fetchAvailableServices: PropTypes.func.isRequired,
-  stepBack: PropTypes.func.isRequired,
-  stepNext: PropTypes.func.isRequired,
   onAddClick: PropTypes.func.isRequired,
   onRemoveClick: PropTypes.func.isRequired,
   addApp: PropTypes.func.isRequired,
@@ -123,8 +119,7 @@ SetupEdit.propTypes = {
   cacheServices: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ applications: { apps, editApp, k8sResources, addedResourceIds } }) => ({
-  apps,
+const mapStateToProps = ({ applications: { editApp, k8sResources, addedResourceIds } }) => ({
   editApp,
   k8sResources,
   availableApps: k8sResources.filter(resource => !_.find(addedResourceIds, resource)),
@@ -132,8 +127,6 @@ const mapStateToProps = ({ applications: { apps, editApp, k8sResources, addedRes
 });
 
 const mapDispatchToProps = dispatch => ({
-  stepBack: () => dispatch(minusStepNumber()),
-  stepNext: () => dispatch(addStepNumber()),
   onAddClick: id => dispatch(addToHyperPilot(id)),
   onRemoveClick: id => dispatch(removeFromHyperPilot(id)),
   fetchEditApp: appId => dispatch(fetchEditApp(appId)),
