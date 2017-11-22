@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { connect } from "react-redux";
-import { Switch, Route } from "react-router";
+import { Switch, Route, Redirect } from "react-router";
 import { Container } from "reactstrap";
 import _ from "lodash";
 import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
+import generatePath from "../../lib/generatePath";
 import { minusStepNumber, addStepNumber, addToHyperPilot, removeFromHyperPilot, addApp } from "../../actions";
 import { fetchEditApp, fetchAvailableServices, updateResourcesInAnalyzer, cacheServicesInForm } from "../../actions/setup";
 import { editStepNames } from "../../constants/models";
@@ -49,19 +50,46 @@ class SetupEdit extends React.Component {
 
   render() {
     const {
-      stepBack, stepNext, editApp, addedApps, availableApps,
-      onAddClick, onRemoveClick, match,
+      editApp, addedApps, availableApps,
+      onAddClick, onRemoveClick, match, history,
     } = this.props;
 
-    const step = parseInt(match.params.step, 10);
+    const step = _.toInteger(match.params.step);
+
+    const stepActions = {};
+    if (step !== 1) {
+      stepActions.stepBack = () => history.push(generatePath(match.path, {step: step - 1}));
+    }
+    if (step !== 4) {
+      stepActions.stepNext = () => history.push(generatePath(match.path, {step: step + 1}));
+    }
+
+    let formComponent = <Redirect to="/dashboard" />;
+    switch (step) {
+    case 1:
+      formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
+      break;
+    case 2:
+      formComponent = <Step2Microservices
+        addedApps={addedApps}
+        availableApps={availableApps}
+        onAddClick={onAddClick}
+        onRemoveClick={onRemoveClick}
+        cacheServices={this.cacheServices}
+        {...stepActions}
+      />;
+      break;
+    case 3:
+      formComponent = <Step3SLO {...stepActions} match={match} />;
+      break;
+    case 4:
+      formComponent = <Step4ManagementFeatures {...stepActions} match={match} />;
+      break;
+    }
 
     return (
       <Container>
-        <Form
-          model="forms.editApp"
-          className="edit-app-form"
-          onSubmit={app => this.handleSubmit(app)}
-        >
+        <div>
           <div className="row mt-3">
             {location.pathname === `/setup/edit/${match.params.appId}` ?
               <h1 className="title">Configuring {editApp && editApp.name}</h1> :
@@ -71,50 +99,8 @@ class SetupEdit extends React.Component {
           <div className="row mt-2 mb-5">
             <ProgressBar percent={25 * step} text={editStepNames[step]} />
           </div>
-          <Switch>
-            <Route
-              path="/setup/add/1"
-              render={() => (
-                <Step1BasicInfo
-                  cancelEdit={this.cancelEdit}
-                  match={match}
-                />
-              )}
-            />
-            <Route
-              path="/setup/add/2"
-              render={() => (
-                <Step2Microservices
-                  addedApps={addedApps}
-                  availableApps={availableApps}
-                  onAddClick={onAddClick}
-                  onRemoveClick={onRemoveClick}
-                  stepBack={stepBack}
-                  stepNext={stepNext}
-                  cacheServices={this.cacheServices}
-                />
-              )}
-            />
-            <Route
-              path="/setup/add/3"
-              render={() => (
-                <Step3SLO
-                  stepBack={stepBack}
-                  match={match}
-                />
-              )}
-            />
-            <Route
-              path="/setup/add/4"
-              render={() => (
-                <Step4ManagementFeatures
-                  stepBack={stepBack}
-                  match={match}
-                />
-              )}
-            />
-          </Switch>
-        </Form>
+          { formComponent }
+        </div>
       </Container>
     );
   }
@@ -141,8 +127,8 @@ const mapStateToProps = ({ applications: { apps, editApp, k8sResources, addedRes
   apps,
   editApp,
   k8sResources,
-  availableApps: k8sResources.filter(resource => !addedResourceIds.includes(resource)),
-  addedApps: k8sResources.filter(resource => addedResourceIds.includes(resource)),
+  availableApps: k8sResources.filter(resource => !_.find(addedResourceIds, resource)),
+  addedApps: k8sResources.filter(resource => _.find(addedResourceIds, resource)),
 });
 
 const mapDispatchToProps = dispatch => ({

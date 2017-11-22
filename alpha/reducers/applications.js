@@ -23,7 +23,10 @@ export default function apps(state = initialState, action) {
   case types.ADD_TO_HYPERPILOT:
     return { ...state, addedResourceIds: _.union(state.addedResourceIds, [action.appObj]) };
   case types.REMOVE_FROM_HYPERPILOT:
-    return { ...state, addedResourceIds: _.without(state.addedResourceIds, action.appId) };
+    return {
+      ...state,
+      addedResourceIds: _.reject(state.addedResourceIds, action.appId),
+    };
   case types.UPDATE_SINGLE_SLO_LOADING:
     return {
       ...state,
