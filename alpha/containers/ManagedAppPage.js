@@ -6,7 +6,7 @@ import Linked from "~/commons/components/Linked";
 import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
-import { getSLODisplay } from "../utils";
+import { getSLODisplay } from "../lib/utils";
 
 const getBadge = (incidents, opportunities) => {
   if (!_.isEmpty(incidents)) {

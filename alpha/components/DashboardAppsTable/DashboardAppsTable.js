@@ -6,7 +6,7 @@ import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import _ from "lodash";
 import MdDelete from "react-icons/lib/md/cancel";
 import Linked from "~/commons/components/Linked";
-import { getSLODisplay } from "../../utils";
+import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 
