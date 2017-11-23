@@ -15,6 +15,18 @@ export const editSingleApp = appId => ({
   appId,
 });
 
+export const saveSloSourceConfig = sloSource => ({
+  [RSAA]: {
+    endpoint: "/mock/api/slo-source",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(sloSource),
+    types: types.SAVE_SLO_SOURCE,
+  },
+});
+
 export const submitSloConfig = data => ({
   type: types.SUBMIT_SLO_CONFIG,
   data,

@@ -66,8 +66,13 @@ class Step2Microservices extends React.Component {
   }
 
   get detectedMicroservices() {
+    const excludeSelected = _.reduce(
+      this.props.microservices,
+      _.reject,
+      this.props.k8sMicroservices
+    );
+
     const filter = {};
-    const excludeSelected = _.reduce(this.props.microservices, _.reject, this.props.k8sResources);
     if (this.state.namespaceFilter !== "all") {
       filter.namespace = this.state.namespaceFilter;
     }
@@ -78,7 +83,7 @@ class Step2Microservices extends React.Component {
   }
 
   get namespaces() {
-    return _.uniq(_.map(this.props.k8sResources, "namespace"));
+    return _.uniq(_.map(this.props.k8sMicroservices, "namespace"));
   }
 
   render() {
@@ -159,9 +164,9 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { microservices }, applications: { k8sResources } }) => ({
+const mapStateToProps = ({ createAppForm: { microservices, forms } }) => ({
   microservices,
-  k8sResources,
+  k8sMicroservices: forms.microservices.$form.options,
 });
 
 const mapDispatchToProps = (dispatch, { microservices }) => ({

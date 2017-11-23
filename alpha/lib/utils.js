@@ -4,15 +4,10 @@ export const getSLODisplay = slo => (
   `${slo.type} ${slo.type === "throughput" ? ">" : "<"} ${slo.value}${slo.unit}`
 );
 
-export const resourcesToFront = (resources) => {
-  const result = [];
-  resources.map(({ namespace, ...kinds }) => (
-    _.map(kinds, (names, kind) => (
-      _.map(names, (name) => {
-        result.push({ name, namespace, kind });
-      })
+export const flattenResourcesData = resources => (
+  _.flatMap(resources, ({ namespace, ...kinds }) => (
+    _.flatMap(kinds, (names, kind) => (
+      _.map(names, name => ({ namespace, kind, name }))
     ))
-  ));
-  return result;
-};
-
+  ))
+);

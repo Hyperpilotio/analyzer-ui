@@ -1,5 +1,6 @@
 import { actions } from "react-redux-form";
 import _ from "lodash";
+import { RSAA } from "redux-api-middleware";
 import * as types from "./types";
 
 export const fetchEditAppLoading = () => ({
@@ -34,36 +35,13 @@ export const fetchEditApp = appId => async (dispatch) => {
   }
 };
 
-// [stepEdit] fetch available resources  
-export const fetchAvailableServicesLoading = () => ({
-  type: types.FETCH_AVAILABLE_SERVICES_LOADING,
+export const fetchAvailableServices = () => ({
+  [RSAA]: {
+    endpoint: "/mock/cluster/mappings/all",
+    method: "GET",
+    types: types.FETCH_AVAILABLE_SERVICES,
+  },
 });
-
-export const fetchAvailableServicesSuccess = k8sResources => ({
-  type: types.FETCH_AVAILABLE_SERVICES_SUCCESS,
-  k8sResources,
-});
-
-export const fetchAvailableServicesFail = () => ({
-  type: types.FETCH_AVAILABLE_SERVICES_FAIL,
-});
-
-export const fetchAvailableServices = () => async (dispatch) => {
-  dispatch(fetchAvailableServicesLoading());
-
-  const res = await fetch("/mock/cluster/mappings/all");
-  if (!res.ok) {
-    dispatch(fetchAvailableServicesFail());
-    return;
-  }
-
-  const data = await res.json();
-  if (data.success) {
-    dispatch(fetchAvailableServicesSuccess(data.namespaces));
-  } else {
-    dispatch(fetchAvailableServicesFail());
-  }
-};
 
 export const updateResourcesInAnalyzerLoading = () => ({
   type: types.UPDATE_RESOURCES_IN_ANALYZER_LOADING,

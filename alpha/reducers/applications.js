@@ -2,14 +2,10 @@ import _ from "lodash";
 import * as types from "../actions/types";
 import { SUCCESS } from "../constants/apiActions";
 import { fakeArr } from "../constants/models";
-import { resourcesToFront } from "../lib/utils";
 
 const initialState = {
   apps: [],
   editApp: {},
-  step: 1,
-  addedResourceIds: [],
-  k8sResources: [],
   isHPReady: false,
 };
 
@@ -46,21 +42,6 @@ export default function apps(state = initialState, action) {
     return {
       ...state,
       isHPReady: true,
-    };
-  case types.FETCH_AVAILABLE_SERVICES_FAIL:
-    console.error("Fetch available services failed");
-    return state;
-  case types.FETCH_AVAILABLE_SERVICES_LOADING:
-    return {
-      ...state,
-      ui: _.extend({}, state.ui, { isK8sResourcesLoading: true }),
-    };
-  case types.FETCH_AVAILABLE_SERVICES_SUCCESS:
-  // TODO: should be transform to the 
-    return {
-      ...state,
-      ui: _.extend({}, state.ui, { isK8sResourcesLoading: false }),
-      k8sResources: resourcesToFront(action.k8sResources),
     };
   case types.FETCH_EDIT_APP_FAIL:
     console.error("Fetch edit app failed");
