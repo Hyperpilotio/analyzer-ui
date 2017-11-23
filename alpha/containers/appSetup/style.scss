@@ -36,12 +36,41 @@
   margin-top: 30px;
 }
 
+.selectedMicroservices {
+  height: 400px;
+}
+
+.deetectedMicroservices {
+  height: 600px;
+}
+
 .noData {
-  width: 100%;
-  text-align: center;
-  color: $color-light-grey;
+  margin-top: -280px;
+  span {
+    width: 100%;
+    text-align: center;
+    color: $color-light-grey;
+  }
 }
 
 .tHead {
   color: $color-grey;
+}
+
+.MicroservicesTable {
+  table td, table th {
+    padding: 0.5rem;
+    &:first-child {
+      padding-left: 4rem;
+    }
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+  table, thead, tbody {
+    display: block;
+  }
+  tbody {
+    overflow: scroll;
+  }
 }
