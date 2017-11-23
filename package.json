@@ -83,6 +83,7 @@
     "react-spinkit": "^3.0.0",
     "react-style-proptype": "^3.0.0",
     "reactstrap": "5.0.0-alpha.3",
+    "reduce-reducers": "^0.1.2",
     "redux": "^3.7.2",
     "redux-api-middleware": "^2.0.1",
     "redux-persist": "^4.8.3",
