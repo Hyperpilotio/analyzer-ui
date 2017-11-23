@@ -90,7 +90,7 @@ class Step2Microservices extends React.Component {
     return (
       <Form model="createAppForm.microservices" onSubmit={this.props.stepNext}>
         {/* Selected Microservices */}
-        <Card className={`row ${_s.selectedMicroservices} ${_s.card}`}>
+        <Card className={`${_s.selectedMicroservices} ${_s.card}`}>
           <CardBody>
             <CardTitle>Selected Microservices</CardTitle>
             <MicroservicesTable
