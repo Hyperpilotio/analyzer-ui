@@ -29,6 +29,19 @@ router
       applications,
     });
   })
+
+  .post("/mock/api/slo-source", async (req, res) => {
+    console.log(req.body);
+    res.json({
+      success: true,
+      metrics: [
+        "some/metric/inside/prometheus",
+        "some/magic-metric/inside/prometheus",
+        "some/really-magic-metric/inside/prometheus",
+      ],
+    })
+  })
+
   .post("/mock/v1/k8s_services", async (req, res) => {
     const { services } = req.body;
     // console.log("services", services);
