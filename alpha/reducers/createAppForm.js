@@ -29,16 +29,16 @@ export default reduceReducers(
         name: "interference_management",
         status: "Enabled",
         remediation_policy: [
-          // {
-          //   action_name: "move_container",
-          //   mode: "Manual",
-          //   constraints: {},
-          // },
-          // {
-          //   action_name: "resize_node",
-          //   mode: "Manual",
-          //   constraints: {},
-          // }
+          {
+            action_name: "move_container",
+            mode: "Manual",
+            constraints: {},
+          },
+          {
+            action_name: "resize_node",
+            mode: "Manual",
+            constraints: {},
+          },
         ],
       },
       {
