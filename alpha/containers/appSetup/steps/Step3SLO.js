@@ -30,32 +30,38 @@ const Step3SLO = ({ submitSloSource, sloFormDisabled, metricOptions, stepBack, s
     <Col sm={{ offset: 1 }}>
       <Form model="createAppForm.slo" onSubmit={stepNext}>
         <fieldset disabled={sloFormDisabled}>
-          <FormGroup>
-            <label>Metric</label>
-            <Control.select className="form-control" model=".metric">
+          <FormGroup className="row">
+            <label className="col-3">Metric</label>
+            <Control.select className="form-control col" model=".metric">
               { _.map(metricOptions, mt => <option key={mt} value={mt}>{ mt }</option>) }
             </Control.select>
           </FormGroup>
-          <FormGroup>
-            <label>Type</label>
-            <Control.select className="form-control" model=".type">
+          <FormGroup className="row">
+            <label className="col-3">Type</label>
+            <Control.select className="form-control col" model=".type">
               <option value="latency">Latency</option>
               <option value="throughput">Throughput</option>
               <option value="execute_time">Execute-Time</option>
             </Control.select>
           </FormGroup>
-          <FormGroup>
-            <label>Summary</label>
-            <Control.text className="form-control" model=".summary" />
+          <FormGroup className="row">
+            <label className="col-3">Summary</label>
+            <Control.text className="form-control col" model=".summary" />
           </FormGroup>
-          <FormGroup>
-            <label>Value</label>
-            <Control.text className="form-control" model=".value" />
-          </FormGroup>
-          <FormGroup>
-            <label>Unit</label>
-            <Control.text className="form-control" model=".unit" />
-          </FormGroup>
+          <Row>
+            <Col>
+              <FormGroup>
+                <label>Value</label>
+                <Control.text className="form-control" model=".value" />
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup>
+                <label>Unit</label>
+                <Control.text className="form-control" model=".unit" />
+              </FormGroup>
+            </Col>
+          </Row>
         </fieldset>
         <div className="float-right">
           <Button onClick={stepBack} color="secondary" className="mr-2">Back</Button>
