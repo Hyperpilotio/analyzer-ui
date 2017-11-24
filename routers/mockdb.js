@@ -1,12 +1,19 @@
 const express = require("express");
-const mongodb = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
+const config = require("../config");
 
-const router = express.Router();
+const router = express();
+
+let mockdb;
+router.on("mount", async () => {
+  const { url, mockdbName } = config.mongo;
+  mockdb = await MongoClient.connect(`${url}/${mockdbName}`);
+});
 
 router
   .post("/mock/api/add", async (req, res) => {
     const newApp = req.body;
-    const result = await req.mockdb.collection("applications").insert(newApp);
+    const result = await mockdb.collection("applications").insert(newApp);
     res.json({
       success: true,
       result,
@@ -15,7 +22,7 @@ router
 
   .post("/mock/api/remove", async (req, res) => {
     const { appId } = req.body;
-    const result = await req.mockdb.collection("applications").remove({ _id: mongodb.ObjectID(appId) });
+    const result = await mockdb.collection("applications").remove({ _id: ObjectID(appId) });
     res.json({
       success: true,
       result,
@@ -23,7 +30,7 @@ router
   })
 
   .get("/mock/api/apps", async (req, res) => {
-    const applications = await req.mockdb.collection("applications").find({}).toArray();
+    const applications = await mockdb.collection("applications").find({}).toArray();
     res.json({
       success: true,
       applications,
@@ -31,7 +38,6 @@ router
   })
 
   .post("/mock/api/slo-source", async (req, res) => {
-    console.log(req.body);
     res.json({
       success: true,
       metrics: [
@@ -44,8 +50,7 @@ router
 
   .post("/mock/v1/k8s_services", async (req, res) => {
     const { services } = req.body;
-    // console.log("services", services);
-    const resourcesIds = await req.mockdb.collection("resources").insertMany(services);
+    const resourcesIds = await mockdb.collection("resources").insertMany(services);
     res.json({
       success: true,
       resourcesIds,
