@@ -2763,14 +2763,6 @@ expand-tilde@^2.0.0, expand-tilde@^2.0.2:
   dependencies:
     homedir-polyfill "^1.0.1"
 
-express-http-proxy@^1.0.6:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/express-http-proxy/-/express-http-proxy-1.0.7.tgz#dc170de05c46c9a8a9550cff7f9d1e44cc9b7907"
-  dependencies:
-    debug "^3.0.1"
-    es6-promise "^4.1.1"
-    raw-body "^2.3.0"
-
 express-urlrewrite@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/express-urlrewrite/-/express-urlrewrite-1.2.0.tgz#8e667b7761ff1c7ffdb0efa05d64035387c823eb"
@@ -3511,7 +3503,7 @@ http-parser-js@>=0.4.0:
   version "0.4.9"
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.4.9.tgz#ea1a04fb64adff0242e9974f297dd4c3cad271e1"
 
-http-proxy-middleware@~0.17.4:
+http-proxy-middleware@^0.17.4, http-proxy-middleware@~0.17.4:
   version "0.17.4"
   resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-0.17.4.tgz#642e8848851d66f09d4f124912846dbaeb41b833"
   dependencies:
@@ -5825,7 +5817,7 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raw-body@2.3.2, raw-body@^2.3.0:
+raw-body@2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.3.2.tgz#bcd60c77d3eb93cde0050295c3f379389bc88f89"
   dependencies:
