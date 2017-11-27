@@ -7,6 +7,10 @@ let config = {
     host: process.env.WORKLOAD_PROFILER_HOST || "localhost",
     port: process.env.WORKLOAD_PROFILER_PORT || 7779
   },
+  operator: {
+    host: process.env.OPERATOR_HOST || "localhost",
+    port: process.env.OPERATOR_PORT || 8080
+  },
   mongo: {
     host: process.env.MONGO_HOST || "localhost",
     port: process.env.MONGO_PORT || 27017,
@@ -20,6 +24,7 @@ let config = {
 
 config.analyzer.url = `http://${config.analyzer.host}:${config.analyzer.port}`;
 config.workloadProfiler.url = `http://${config.workloadProfiler.host}:${config.workloadProfiler.port}`;
+config.operator.url = `http://${config.operator.host}:${config.operator.port}`;
 config.mongo.url = !!config.mongo.username && !!config.mongo.password
   ? `mongodb://${config.mongo.username}:${config.mongo.password}@${config.mongo.host}:${config.mongo.port}`
   : `mongodb://${config.mongo.host}:${config.mongo.port}`;

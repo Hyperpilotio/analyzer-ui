@@ -14,7 +14,7 @@ export default function apps(state = initialState, action) {
   case types.FETCH_APPS[SUCCESS]:
     return {
       ...state,
-      apps: action.payload.applications,
+      apps: action.payload.data,
     };
   case types.UPDATE_SINGLE_SLO_LOADING:
     return {
