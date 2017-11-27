@@ -1,23 +1,23 @@
-const express = require("express");
-const moment = require("moment");
-const _ =  require("lodash");
-const mockResources = require("../fake-api/mockResources.json");
-const k8sResources = require("../fake-api/k8sResources.json");
+import express from "express";
+import moment from "moment";
+import _ from "lodash";
+import mockResources from "../fake-api/mockResources.json";
+import k8sResources from "../fake-api/k8sResources.json";
 
 const router = express.Router();
 
 router
   .get("/mock/cluster/mappings/all", async (req, res) => {
-    res.json(_.assign(
-      { success: true },
-      mockResources
-    ));
+    res.json({
+      success: true,
+      ...mockResources,
+    });
   })
 
   .get("/mock/cluster/specs", async (req, res) => {
     res.json({
       success: true,
-      k8sResources: k8sResources.k8sResources,
+      ...k8sResources,
     });
   })
 
@@ -37,4 +37,4 @@ router
   });
 
 
-module.exports = router;
+export default router;

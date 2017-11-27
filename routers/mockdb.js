@@ -1,6 +1,6 @@
-const express = require("express");
-const { MongoClient, ObjectId } = require("mongodb");
-const config = require("../config");
+import express from "express";
+import { MongoClient, ObjectId } from "mongodb";
+import config from "../config";
 
 const router = express();
 
@@ -57,4 +57,4 @@ router
     });
   });
 
-module.exports = router;
+export default router;

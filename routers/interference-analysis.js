@@ -1,6 +1,6 @@
-const express = require("express");
-const proxy = require("http-proxy-middleware");
-const config = require("../config");
+import express from "express";
+import proxy from "http-proxy-middleware";
+import config from "../config";
 
 const router = express();
 
@@ -9,4 +9,4 @@ router.use("/api", proxy({
   changeOrigin: true,
 }));
 
-module.exports = router;
+export default router;

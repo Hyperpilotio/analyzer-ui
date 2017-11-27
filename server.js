@@ -1,8 +1,8 @@
-const express = require("express");
-const morgan = require("morgan");
-const path = require("path");
-const bodyParser = require("body-parser");
-const webpackConfig = require("./webpack.config");
+import express from "express";
+import morgan from "morgan";
+import path from "path";
+import bodyParser from "body-parser";
+import webpackConfig from "./webpack.config";
 
 const server = express();
 server.use(morgan("dev"));
@@ -11,7 +11,7 @@ server.use(bodyParser.json());
 const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
-server.use(require(`./routers/${ANALYSIS_APP}`));
+server.use(require(`./routers/${ANALYSIS_APP}`).default);
 
 if (isDev) {
   /* eslint-disable global-require, import/no-extraneous-dependencies */

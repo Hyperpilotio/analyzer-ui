@@ -1,7 +1,7 @@
-const express = require("express");
-const MongoClient = require("mongodb");
-const fetch = require("node-fetch");
-const config = require("../config");
+import express from "express";
+import MongoClient from "mongodb";
+import fetch from "node-fetch";
+import config from "../config";
 
 const router = express();
 
@@ -20,7 +20,7 @@ router.get("/api/", (req, res) => {
 
 router.get("/api/apps", async (req, res) => {
   const applications = await configdb.collection("applications").find(
-    {}, { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1, selected: 1 }
+    {}, { name: 1, type: 1, slo: 1, budget: 1, serviceNames: 1, selected: 1 },
   ).toArray();
   res.json({
     success: true,
@@ -64,7 +64,7 @@ router.post("/api/apps/:appName/analysis/run", async (req, res) => {
   }
   const response = await fetch(
     `${config.workloadProfiler.url}/sizing/aws/${appName}`,
-    { method: "POST" }
+    { method: "POST" },
   );
   const jsonContent = await response.json();
   if (jsonContent.error !== false) {
@@ -82,4 +82,4 @@ router.get("/api/analyses/:sessionId", async (req, res) => {
   res.json(await metricdb.collection("sizing").findOne({ sessionId }));
 });
 
-module.exports = router;
+export default router;
