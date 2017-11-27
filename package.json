@@ -12,7 +12,7 @@
     "serve": "NODE_ENV=production node dist/server.bundle.js",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
-    "lint": "eslint sizing-analysis commons alpha webpack.config.js",
+    "lint": "eslint sizing-analysis commons alpha webpack.client.config.js webpack.server.config.js server.js routers",
     "server-dev-interference": "ANALYSIS_APP=interference-analysis webpack --config webpack.server.config.js --watch",
     "server-dev-sizing": "ANALYSIS_APP=sizing-analysis webpack --config webpack.server.config.js --watch",
     "server-dev": "webpack --config webpack.server.config.js --watch",

@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import path from "path";
 import bodyParser from "body-parser";
-import webpackConfig from "./webpack.config";
+import webpackConfig from "./webpack.client.config";
 
 const server = express();
 server.use(morgan("dev"));
@@ -11,7 +11,7 @@ server.use(bodyParser.json());
 const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
-server.use(require(`./routers/${ANALYSIS_APP}`).default);
+server.use(require(`./routers/${ANALYSIS_APP}`).default); // eslint-disable-line import/no-dynamic-require
 
 if (isDev) {
   /* eslint-disable global-require, import/no-extraneous-dependencies */
@@ -35,7 +35,7 @@ if (isDev) {
       (error, result) => {
         res.set("Content-Type", "text/html");
         res.send(result);
-      }
+      },
     );
   });
 } else {

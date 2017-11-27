@@ -42,7 +42,7 @@ router.get("/api/instances/:region", async (req, res) => {
           : ""
       ),
       network: networkConfig.performance,
-    })
+    }),
   ));
 });
 

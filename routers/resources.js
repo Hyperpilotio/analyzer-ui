@@ -1,6 +1,5 @@
 import express from "express";
 import moment from "moment";
-import _ from "lodash";
 import mockResources from "../fake-api/mockResources.json";
 import k8sResources from "../fake-api/k8sResources.json";
 
@@ -22,8 +21,8 @@ router
   })
 
   .get("/api/placeholder/influx-data", (req, res) => {
-    let dataPoints = [];
-    for (let i = 120; i > 0; i--) {
+    const dataPoints = [];
+    for (let i = 120; i > 0; i -= 1) {
       dataPoints.push([
         moment().subtract(i, "minute"),
         Math.random() * 1000,

@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+/* eslint-enable */
 const path = require("path");
 const _ = require("lodash");
 

@@ -1,14 +1,14 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const webpack = require("webpack");
+/* eslint-enable */
 const path = require("path");
 const fs = require("fs");
 
 const nodeModules = {};
 fs.readdirSync("node_modules")
-  .filter(function(x) {
-    return [".bin"].indexOf(x) === -1;
-  })
-  .forEach(function(mod) {
-    nodeModules[mod] = "commonjs " + mod;
+  .filter(x => [".bin"].indexOf(x) === -1)
+  .forEach((mod) => {
+    nodeModules[mod] = `commonjs ${mod}`;
   });
 
 module.exports = {
@@ -37,7 +37,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
+    new webpack.BannerPlugin({ banner: "require('source-map-support').install();", raw: true, entryOnly: false }),
   ],
-	externals: nodeModules,
+  externals: nodeModules,
 };

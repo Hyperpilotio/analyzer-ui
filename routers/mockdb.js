@@ -1,5 +1,5 @@
 import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectID } from "mongodb";
 import config from "../config";
 
 const router = express();
@@ -45,7 +45,7 @@ router
         "some/magic-metric/inside/prometheus",
         "some/really-magic-metric/inside/prometheus",
       ],
-    })
+    });
   })
 
   .post("/mock/v1/k8s_services", async (req, res) => {
