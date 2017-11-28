@@ -70,9 +70,9 @@ export default reduceReducers(
         "forms.slo.$form.metricOptions",
         action.payload.metrics,
         _.clone,
-      )
+      );
     default:
       return state;
     }
-  }
-)
+  },
+);

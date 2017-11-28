@@ -25,7 +25,7 @@ router.get("/api/apps", async (req, res) => {
   const response = await fetch(`${config.analyzer.url}/api/apps`);
   const body = await response.json();
   res.json({ success: true, ...body });
-})
+});
 
 router.post("/api/new-app", async (req, res) => {
   const response = await jsonRequest(`${config.analyzer.url}/api/apps`, "POST", req.body);

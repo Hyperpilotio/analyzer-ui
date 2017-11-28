@@ -1,8 +1,8 @@
 import _ from "lodash";
-import * as types from "../actions/types";
+import * as actionTypes from "../actions/types";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
-const RSAATypes = _.pickBy(types, type => _.isArray(type) && type.length === 3);
+const RSAATypes = _.pickBy(actionTypes, type => _.isArray(type) && type.length === 3);
 
 const initialState = _.mapValues(
   _.mapKeys(RSAATypes, (__, name) => _.camelCase(`IS_${name}_LOADING`)),
@@ -10,24 +10,28 @@ const initialState = _.mapValues(
 );
 
 export default (state = initialState, action) => {
-  for (const [name, types] of _.toPairs(RSAATypes)) {
-    const uiFieldName = _.camelCase(`IS_${name}_LOADING`);
+  const actionName = _.findKey(actionTypes, types => types.includes(action.type));
 
-    switch (action.type) {
-    case types[LOADING]:
-      return {
-        ...state,
-        [uiFieldName]: true,
-      };
-    case types[SUCCESS]:
-      return {
-        ...state,
-        [uiFieldName]: false,
-      };
-    case types[FAIL]:
-      console.error(`${name} failed`, action);
-      return state;
-    }
+  if (_.isUndefined(actionName)) {
+    return state;
   }
-  return state;
-}
+
+  const uiFieldName = _.camelCase(`IS_${actionName}_LOADING`);
+  switch (actionTypes[actionName].indexOf(action.type)) {
+  case LOADING:
+    return {
+      ...state,
+      [uiFieldName]: true,
+    };
+  case SUCCESS:
+    return {
+      ...state,
+      [uiFieldName]: false,
+    };
+  case FAIL:
+    console.error(`${name} failed`, action);
+    return state;
+  default:
+    return state;
+  }
+};
