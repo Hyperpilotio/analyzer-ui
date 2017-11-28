@@ -49,42 +49,40 @@ class SetupEdit extends React.Component {
   }
 
   render() {
-    const { editApp, match, history } = this.props;
-
-    const step = _.toInteger(match.params.step);
-
-    const stepActions = {};
-    if (step !== 1) {
-      stepActions.stepBack = () => history.push(generatePath(match.path, {step: step - 1}));
-    }
-    if (step !== 4) {
-      stepActions.stepNext = () => history.push(generatePath(match.path, {step: step + 1}));
-    }
+    const { createAppForm, match, history } = this.props;
 
     let formComponent = <Redirect to="/dashboard" />;
-    switch (step) {
-    case 1:
+    const stepActions = {};
+    const step = _.toInteger(match.params.step) || 1;
+
+    if (match.path === "/apps/new") {
+      stepActions.stepNext = appId => history.push(`/apps/${appId}/edit/2`);
       formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
-      break;
-    case 2:
-      formComponent = <Step2Microservices
-        cacheServices={this.cacheServices}
-        {...stepActions}
-      />;
-      break;
-    case 3:
-      formComponent = <Step3SLO {...stepActions} match={match} />;
-      break;
-    case 4:
-      formComponent = <Step4ManagementFeatures {...stepActions} match={match} />;
-      break;
+
+    } else {
+      if (step !== 1) {
+        stepActions.stepBack = () => history.push(generatePath(match.path, {step: step - 1}));
+      }
+      if (step !== 4) {
+        stepActions.stepNext = () => history.push(generatePath(match.path, {step: step + 1}));
+      }
+
+      if (step === 1) {
+        formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
+      } else if (step === 2) {
+        formComponent = <Step2Microservices cacheServices={this.cacheServices} {...stepActions} />;
+      } else if (step === 3) {
+        formComponent = <Step3SLO {...stepActions} match={match} />;
+      } else if (step === 4) {
+        formComponent = <Step4ManagementFeatures {...stepActions} match={match} />;
+      }
     }
 
     return (
       <Container className="mb-5">
         <div className="row mt-3">
-          { match.path === "/setup/edit/:appId" ?
-            <h1 className="title">Configuring { editApp && editApp.name }</h1> :
+          { match.path.startsWith("/apps/:appId/edit/") ?
+            <h1 className="title">Configuring { createAppForm.basicInfo.name }</h1> :
             <h1 className="title">Setup a new app</h1>
           }
         </div>
@@ -100,23 +98,23 @@ class SetupEdit extends React.Component {
 SetupEdit.propTypes = {
   match: ReactRouterPropTypes.match.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
-  editApp: AppPropType.isRequired,
+  // editApp: AppPropType.isRequired,
   fetchEditApp: PropTypes.func.isRequired,
   fetchAvailableServices: PropTypes.func.isRequired,
   addApp: PropTypes.func.isRequired,
   updateResources: PropTypes.func.isRequired,
-  cacheServices: PropTypes.func.isRequired,
+  // cacheServices: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ applications: { editApp } }) => ({
-  editApp,
+const mapStateToProps = ({ createAppForm }) => ({
+  createAppForm,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchEditApp: appId => dispatch(fetchEditApp(appId)),
   fetchAvailableServices: () => dispatch(fetchAvailableServices()),
-  updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
-  cacheServices: services => dispatch(actions.change("forms.editApp.services", services)),
+  // updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
+  // cacheServices: services => dispatch(actions.change("forms.editApp.services", services)),
   addApp: app => dispatch(addApp(app)),
   updateResources: services => dispatch(updateResourcesInAnalyzer(services)),
 });

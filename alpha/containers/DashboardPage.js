@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { actions as formActions } from "react-redux-form";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
@@ -61,11 +62,7 @@ class DashboardPage extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Link
-                  to={"/setup/add/1"}
-                  className="btn btn-primary mt-5 mb-2"
-                  color="success"
-                >
+                <Link to="/apps/new" className="btn btn-primary mt-5 mb-2" onClick={this.props.resetAppForm}>
                   + Add
                 </Link>
               </Row>
@@ -102,6 +99,11 @@ const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
   fetchEvents: () => dispatch(fetchEvents()),
   removeApp: appId => dispatch(removeApp(appId)),
+  resetAppForm: () => {
+    for (const form of ["basicInfo", "microservices", "sloSource", "slo", "management_features"]) {
+      dispatch(formActions.reset(`createAppForm.${form}`));
+    }
+  },
 });
 
 export default connect(
