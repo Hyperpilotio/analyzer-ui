@@ -1,5 +1,6 @@
 import express from "express";
 import request from "request-promise-native";
+import _ from "lodash";
 import config from "../config";
 import resources from "./resources";
 import mockdb from "./mockdb";
@@ -20,6 +21,14 @@ router.post("/api/new-app", async (req, res) => {
   const response = await request.post(
     `${config.analyzer.url}/api/apps`,
     { body: req.body, json: true },
+  );
+  res.json({ success: true, ...response });
+});
+
+router.post("/api/update-app", async (req, res) => {
+  const response = await request.put(
+    `${config.analyzer.url}/api/apps/${req.body.app_id}`,
+    { body: _.omit(req.body, "app_id"), json: true },
   );
   res.json({ success: true, ...response });
 });
