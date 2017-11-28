@@ -10,22 +10,35 @@ import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 
-const DashboardAppsTable = ({ apps, incidents, risks, opportunities, removeApp }) => (
+const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, removeApp }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
       <tr>
         <th>App Name</th>
-        <th>Services</th>
-        <th>State</th>
         <th>Type</th>
+        <th>Services</th>
         <th>SLO</th>
         <th>Issues detected</th>
+        <th>State</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      {
+      { isLoading ? null :
         apps.map((app) => {
+          if (app.state === "Registered") {
+            return (
+              <Linked tag="tr" to={`/apps/${app.app_id}/edit/1`} key={app.app_id}>
+                <td>{ app.name }</td>
+                <td>{ app.type }</td>
+                <td />
+                <td />
+                <td />
+                <td>{ app.state }</td>
+                <td />
+              </Linked>
+            );
+          }
           let badge;
           if (_.size(incidents[app._id]) !== 0) {
             badge = (
@@ -53,11 +66,11 @@ const DashboardAppsTable = ({ apps, incidents, risks, opportunities, removeApp }
           return (
             <Linked tag="tr" to={`/dashboard/${app._id}`} key={app._id}>
               <td>{ app.name }</td>
-              <td>{ _.size(app.services) }</td>
-              <td>{ app.state }</td>
               <td>{ app.type }</td>
+              <td>{ _.size(app.services) }</td>
               <td>{ getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
+              <td>{ app.state }</td>
               <td>
                 {/* TODO: call delete item API */}
                 <MdDelete
