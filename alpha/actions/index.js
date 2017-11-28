@@ -34,7 +34,7 @@ export const updateApp = (basicInfo, appId, next) => async (dispatch) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...basicInfo, app_id: appId }),
-      types: types.CREATE_APP,
+      types: types.UPDATE_APP,
     },
   };
   const response = await dispatch(payload);
