@@ -12,13 +12,16 @@ export const flattenResourcesData = resources => (
   ))
 );
 
-export const appToForm = ({ app_id, name, type, slo, management_features }) => ({
-  basicInfo: { app_id, name, type },
-  microservices: [],
-  sloSource: slo.source,
-  slo: _.omit(slo, "source"),
-  management_features,
-});
+export const appToForm = ({ app_id, name, type, slo, management_features }) => {
+  const formData = { basicInfo: { app_id, name, type }, microservices: [] };
+  if (!_.isUndefined(slo)) {
+    _.assign(formData, { sloSource: slo.source, slo: _.omit(slo, "source") });
+  }
+  if (!_.isUndefined(management_features)) {
+    _.assign(formData, { management_features });
+  }
+  return formData;
+};
 
 export const formToApp = ({ basicInfo, microservices, sloSource, slo, management_features }) => ({
   ...basicInfo,

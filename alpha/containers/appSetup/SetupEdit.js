@@ -2,14 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { connect } from "react-redux";
-import { Switch, Route, Redirect } from "react-router";
+import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 import _ from "lodash";
-import { Form, actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
-import generatePath from "../../lib/generatePath";
-import { addApp } from "../../actions";
-import { fetchEditApp, fetchAvailableServices, updateResourcesInAnalyzer, cacheServicesInForm } from "../../actions/setup";
+import { prepareEditAppForm } from "../../actions";
 import { editStepNames } from "../../constants/models";
 import { app as AppPropType } from "../../constants/propTypes";
 import Step1BasicInfo from "./steps/Step1BasicInfo";
@@ -20,11 +17,7 @@ import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
 class SetupEdit extends React.Component {
   componentWillMount() {
     const appId = this.props.match.params.appId;
-    // in edit mode
-    if (appId) {
-      this.props.fetchEditApp(this.props.match.params.appId);
-    }
-    this.props.fetchAvailableServices();
+    this.props.prepareEditAppForm(appId);
   }
 
   cancelEdit = () => {
@@ -49,7 +42,8 @@ class SetupEdit extends React.Component {
   }
 
   render() {
-    const { createAppForm, match, history } = this.props;
+    const { createAppForm, isLoading, match, history } = this.props;
+    if (isLoading) return null;
 
     let formComponent = <Redirect to="/dashboard" />;
     const stepActions = {};
@@ -70,7 +64,7 @@ class SetupEdit extends React.Component {
       if (step === 1) {
         formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
       } else if (step === 2) {
-        formComponent = <Step2Microservices cacheServices={this.cacheServices} {...stepActions} />;
+        formComponent = <Step2Microservices {...stepActions} />;
       } else if (step === 3) {
         formComponent = <Step3SLO {...stepActions} match={match} />;
       } else if (step === 4) {
@@ -98,25 +92,15 @@ class SetupEdit extends React.Component {
 SetupEdit.propTypes = {
   match: ReactRouterPropTypes.match.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
-  // editApp: AppPropType.isRequired,
-  fetchEditApp: PropTypes.func.isRequired,
-  fetchAvailableServices: PropTypes.func.isRequired,
-  addApp: PropTypes.func.isRequired,
-  updateResources: PropTypes.func.isRequired,
-  // cacheServices: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ createAppForm }) => ({
+const mapStateToProps = ({ createAppForm, ui }) => ({
   createAppForm,
+  isLoading: ui.isFetchAppsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchEditApp: appId => dispatch(fetchEditApp(appId)),
-  fetchAvailableServices: () => dispatch(fetchAvailableServices()),
-  // updateEditForm: data => dispatch(actions.change("forms.singleApp", data)),
-  // cacheServices: services => dispatch(actions.change("forms.editApp.services", services)),
-  addApp: app => dispatch(addApp(app)),
-  updateResources: services => dispatch(updateResourcesInAnalyzer(services)),
+  prepareEditAppForm: appId => dispatch(prepareEditAppForm(appId)),
 });
 
 export default connect(
