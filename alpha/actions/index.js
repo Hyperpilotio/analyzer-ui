@@ -40,6 +40,14 @@ export const prepareEditAppForm = appId => async (dispatch, getState) => {
   }
 };
 
+export const fetchAvailableServices = () => ({
+  [RSAA]: {
+    endpoint: "/api/get-cluster-mapping",
+    method: "GET",
+    types: types.FETCH_AVAILABLE_SERVICES,
+  },
+});
+
 export const editSingleApp = appId => ({
   type: types.EDIT_SINGLE_APP,
   appId,
