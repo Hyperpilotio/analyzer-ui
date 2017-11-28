@@ -67,12 +67,10 @@ class DashboardPage extends React.Component {
                 </Link>
               </Row>
               <Row>
-                {
-                  !(isFetchAppsLoading || isFetchEventsLoading) ?
-                    <DashboardAppsTable
-                      {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
-                    /> : null
-                }
+                <DashboardAppsTable
+                  isLoading={isFetchAppsLoading || isFetchEventsLoading}
+                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
+                />
               </Row>
             </Container>
           </Route>
