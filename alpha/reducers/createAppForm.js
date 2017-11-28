@@ -8,6 +8,7 @@ import { SUCCESS } from "../constants/apiActions";
 export default reduceReducers(
   combineForms({
     basicInfo: {
+      app_id: null,
       name: "",
       type: "long-running",
     },

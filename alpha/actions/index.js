@@ -4,11 +4,25 @@ import * as types from "./types";
 
 export const fetchApps = () => ({
   [RSAA]: {
-    endpoint: "/mock/api/apps",
+    endpoint: "/api/apps",
     method: "GET",
     types: types.FETCH_APPS,
   },
 });
+
+export const createApp = (basicInfo, next) => async (dispatch) => {
+  const payload = {
+    [RSAA]: {
+      endpoint: "/api/new-app",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(basicInfo),
+      types: types.CREATE_APP,
+    },
+  };
+  const response = await dispatch(payload);
+  next(response.payload.data.app_id);
+}
 
 export const editSingleApp = appId => ({
   type: types.EDIT_SINGLE_APP,
