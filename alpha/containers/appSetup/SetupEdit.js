@@ -61,10 +61,10 @@ class SetupEdit extends React.Component {
 
     } else {
       if (step !== 1) {
-        stepActions.stepBack = () => history.push(generatePath(match.path, {step: step - 1}));
+        stepActions.stepBack = () => history.push(`/apps/${match.params.appId}/edit/${step - 1}`);
       }
       if (step !== 4) {
-        stepActions.stepNext = () => history.push(generatePath(match.path, {step: step + 1}));
+        stepActions.stepNext = () => history.push(`/apps/${match.params.appId}/edit/${step + 1}`);
       }
 
       if (step === 1) {
