@@ -102,4 +102,21 @@ router.post("/api/save-microservices", async (req, res) => {
   res.json({ success: true, ...response });
 });
 
+router.post("/api/get-metrics", async (req, res) => {
+  const source = req.body;
+  const response = await request.get(`${config.operator.url}/cluster/appmetrics`, {
+    json: true,
+    body: {
+      namespace: source.service.namespace,
+      k8sType: source.service.type,
+      name: source.service.name,
+      [source.APM_type]: {
+        metricPort: source.port,
+      },
+    },
+  });
+
+  res.json({ success: true, ...response });
+});
+
 export default router;
