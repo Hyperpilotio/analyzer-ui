@@ -27,18 +27,33 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
   next(response.payload.data.app_id);
 };
 
-export const updateApp = (basicInfo, appId, next) => async (dispatch) => {
-  const payload = {
-    [RSAA]: {
-      endpoint: "/api/update-app",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...basicInfo, app_id: appId }),
-      types: types.UPDATE_APP,
-    },
-  };
-  const response = await dispatch(payload);
-  next(response.payload.data.app_id);
+export const updateReduxApps = basicInfo => ({
+  type: types.UPDATE_REDUX_APPS,
+  basicInfo,
+});
+
+export const updateApp = (basicInfo, appId, next) => async (dispatch, getState) => {
+
+  const apps = getState().applications.apps;
+  const appsItem = _.omit(_.find(apps, { app_id: appId }), ["state", "_id"]);
+
+  // update in DB and redux apps if they are different
+  if (!_.isEqual(basicInfo, appsItem)) {
+    const response = await dispatch({
+      [RSAA]: {
+        endpoint: "/api/update-app",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...basicInfo, app_id: appId }),
+        types: types.UPDATE_APP,
+      },
+    });
+    // console.log("update");
+    dispatch(updateReduxApps(basicInfo));
+    next(response.payload.data.app_id);
+  } else {
+    next(appId);
+  }
 };
 
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
