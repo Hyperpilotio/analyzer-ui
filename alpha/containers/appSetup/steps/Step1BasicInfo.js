@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { Form, Control } from "react-redux-form";
 import { connect } from "react-redux";
-import { createApp } from "../../../actions";
-import _s from "../style.scss";
+import { updateApp, createApp } from "../../../actions";
 
 const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, stepNext }) => (
   <Form model="createAppForm.basicInfo" onSubmit={data => submitBasicInfo(data, stepNext)}>
@@ -35,8 +33,15 @@ Step1BasicInfo.propTypes = {
   stepNext: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  submitBasicInfo: (basicInfo, next) => dispatch(createApp(basicInfo, next)),
+const mapDispatchToProps = (dispatch, { stepNext, mode, appId }) => ({
+  submitBasicInfo: (basicInfo) => {
+    if (mode === "create") {
+      dispatch(createApp(basicInfo, stepNext));
+    } else {
+      dispatch(updateApp(basicInfo, stepNext));
+    }
+  },
 });
+
 
 export default connect(null, mapDispatchToProps)(Step1BasicInfo);

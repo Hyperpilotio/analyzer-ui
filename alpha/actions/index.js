@@ -25,7 +25,34 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
   };
   const response = await dispatch(payload);
   next(response.payload.data.app_id);
-}
+};
+
+export const updateReduxApps = data => ({
+  type: types.UPDATE_REDUX_APPS,
+  data,
+});
+
+export const updateApp = (app, next) => async (dispatch, getState) => {
+  const apps = getState().applications.apps;
+  const appsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
+
+  // update in DB and redux apps if they are different
+  if (!_.isEqual(app, appsItem)) {
+    const response = await dispatch({
+      [RSAA]: {
+        endpoint: "/api/update-app",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(app),
+        types: types.UPDATE_APP,
+      },
+    });
+    dispatch(updateReduxApps(response.payload.data));
+    next(response.payload.data.app_id);
+  } else {
+    next(app.app_id);
+  }
+};
 
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
   const { applications, ui } = getState();

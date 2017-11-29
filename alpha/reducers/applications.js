@@ -16,6 +16,11 @@ export default function apps(state = initialState, action) {
       ...state,
       apps: action.payload.data,
     };
+  case types.UPDATE_REDUX_APPS:
+    return {
+      ...state,
+      apps: _.map(state.apps, d => (d.app_id === action.data.app_id ? action.data : d)),
+    };
   case types.UPDATE_SINGLE_SLO_LOADING:
     return {
       ...state,

@@ -51,6 +51,7 @@ class SetupEdit extends React.Component {
 
     if (match.path === "/apps/new") {
       stepActions.stepNext = appId => history.push(`/apps/${appId}/edit/2`);
+      stepActions.mode = "create";
       formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
 
     } else {
@@ -62,6 +63,7 @@ class SetupEdit extends React.Component {
       }
 
       if (step === 1) {
+        stepActions.mode = "edit";
         formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
       } else if (step === 2) {
         formComponent = <Step2Microservices {...stepActions} />;
