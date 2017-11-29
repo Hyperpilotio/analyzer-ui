@@ -9,6 +9,7 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
+import { fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
 
@@ -55,6 +56,10 @@ class Step2Microservices extends React.Component {
   state = {
     namespaceFilter: "all",
     kindFilter: "all",
+  }
+
+  componentWillMount() {
+    this.props.fetchMicroservices();
   }
 
   filterNamespace(event) {
@@ -174,6 +179,7 @@ const mapDispatchToProps = (dispatch, { microservices }) => ({
     modelActions.filter("createAppForm.microservices", added => !_.isEqual(added, ms)),
   ),
   addMicroservice: ms => dispatch(modelActions.push("createAppForm.microservices", ms)),
+  fetchMicroservices: () => dispatch(fetchAvailableServices()),
 });
 
 export default connect(

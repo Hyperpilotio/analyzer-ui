@@ -1,5 +1,8 @@
 import { RSAA } from "redux-api-middleware";
+import _ from "lodash";
+import { actions as formActions } from "react-redux-form";
 import * as types from "./types";
+import { appToForm } from "../lib/utils";
 
 
 export const fetchApps = () => ({
@@ -23,6 +26,27 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
   const response = await dispatch(payload);
   next(response.payload.data.app_id);
 }
+
+export const prepareEditAppForm = appId => async (dispatch, getState) => {
+  const { applications, ui } = getState();
+  if (applications.apps.length === 0 && !ui.isFetchAppsLoading) {
+    await dispatch(fetchApps());
+  }
+  const app = _.find(getState().applications.apps, { app_id: appId });
+  if (!_.isUndefined(app)) {
+    _.forEach(appToForm(app), (value, part) => (
+      dispatch(formActions.change(`createAppForm.${part}`, value))
+    ));
+  }
+};
+
+export const fetchAvailableServices = () => ({
+  [RSAA]: {
+    endpoint: "/api/get-cluster-mapping",
+    method: "GET",
+    types: types.FETCH_AVAILABLE_SERVICES,
+  },
+});
 
 export const editSingleApp = appId => ({
   type: types.EDIT_SINGLE_APP,

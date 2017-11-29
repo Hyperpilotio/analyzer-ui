@@ -1,5 +1,6 @@
 import express from "express";
-import fetch from "node-fetch";
+import request from "request-promise-native";
+import _ from "lodash";
 import config from "../config";
 import resources from "./resources";
 import mockdb from "./mockdb";
@@ -9,36 +10,35 @@ const router = express();
 router.use(resources);
 router.use(mockdb);
 
-const jsonRequest = async (url, method, body) => {
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (res.headers.get("Content-Type") === "application/json") {
-    return res.json();
-  }
-  return res.text();
-};
-
 router.get("/api/apps", async (req, res) => {
-  const response = await fetch(`${config.analyzer.url}/api/apps`);
-  const body = await response.json();
-  res.json({ success: true, ...body });
+  const response = await request.get({
+    uri: `${config.analyzer.url}/api/apps`, json: true,
+  });
+  res.json({ success: true, ...response });
 });
 
 router.post("/api/new-app", async (req, res) => {
-  const response = await jsonRequest(`${config.analyzer.url}/api/apps`, "POST", req.body);
+  const response = await request.post(
+    `${config.analyzer.url}/api/apps`,
+    { body: req.body, json: true },
+  );
+  res.json({ success: true, ...response });
+});
+
+router.post("/api/update-app", async (req, res) => {
+  const response = await request.put(
+    `${config.analyzer.url}/api/apps/${req.body.app_id}`,
+    { body: _.omit(req.body, "app_id"), json: true },
+  );
   res.json({ success: true, ...response });
 });
 
 router.get("/api/get-cluster-mapping", async (req, res) => {
-  const response = await jsonRequest(
+  const response = await request.get(
     `${config.operator.url}/cluster/mapping`,
-    "GET",
-    ["services", "deployments", "statefulsets"],
+    { body: ["services", "deployments", "statefulsets"], json: true },
   );
-  res.json({ success: true, ...response });
+  res.json({ success: true, data: response });
 });
 
 export default router;

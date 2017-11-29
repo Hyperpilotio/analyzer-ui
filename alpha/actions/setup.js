@@ -35,14 +35,6 @@ export const fetchEditApp = appId => async (dispatch) => {
   }
 };
 
-export const fetchAvailableServices = () => ({
-  [RSAA]: {
-    endpoint: "/mock/cluster/mappings/all",
-    method: "GET",
-    types: types.FETCH_AVAILABLE_SERVICES,
-  },
-});
-
 export const updateResourcesInAnalyzerLoading = () => ({
   type: types.UPDATE_RESOURCES_IN_ANALYZER_LOADING,
 });

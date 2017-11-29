@@ -61,7 +61,7 @@ export default reduceReducers(
       return _.setWith(
         { ...state },
         "forms.microservices.$form.options",
-        flattenResourcesData(action.payload.namespaces),
+        flattenResourcesData(action.payload.data),
         _.clone,
       );
     case types.SAVE_SLO_SOURCE[SUCCESS]:
