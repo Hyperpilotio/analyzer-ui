@@ -32,25 +32,25 @@ export const updateReduxApps = data => ({
   data,
 });
 
-export const updateApp = (basicInfo, appId, next) => async (dispatch, getState) => {
+export const updateApp = (app, next) => async (dispatch, getState) => {
   const apps = getState().applications.apps;
-  const appsItem = _.pick(_.find(apps, { app_id: basicInfo.app_id }), ["name", "type"]);
+  const appsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
 
   // update in DB and redux apps if they are different
-  if (!_.isEqual(basicInfo, appsItem)) {
+  if (!_.isEqual(app, appsItem)) {
     const response = await dispatch({
       [RSAA]: {
         endpoint: "/api/update-app",
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...basicInfo }),
+        body: JSON.stringify(app),
         types: types.UPDATE_APP,
       },
     });
     dispatch(updateReduxApps(response.payload.data));
     next(response.payload.data.app_id);
   } else {
-    next(appId);
+    next(app.app_id);
   }
 };
 

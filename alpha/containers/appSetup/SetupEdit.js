@@ -64,7 +64,6 @@ class SetupEdit extends React.Component {
 
       if (step === 1) {
         stepActions.mode = "edit";
-        stepActions.appId = match.params.appId;
         formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
       } else if (step === 2) {
         formComponent = <Step2Microservices {...stepActions} />;

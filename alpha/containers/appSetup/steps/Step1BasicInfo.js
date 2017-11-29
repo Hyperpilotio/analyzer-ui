@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch, { stepNext, mode, appId }) => ({
     if (mode === "create") {
       dispatch(createApp(basicInfo, stepNext));
     } else {
-      dispatch(updateApp(basicInfo, appId, stepNext));
+      dispatch(updateApp(basicInfo, stepNext));
     }
   },
 });
