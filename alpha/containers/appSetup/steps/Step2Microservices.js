@@ -1,12 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  Card, CardBody, CardFooter, CardTitle,
+  Card, CardBody, CardTitle,
   Table, FormGroup, Input, Button,
-  Pagination, PaginationItem, PaginationLink,
 } from "reactstrap";
 import _ from "lodash";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
 import { fetchAvailableServices } from "../../../actions";
@@ -30,18 +28,18 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
       </thead>
       <tbody style={tbodyStyle} className="d-block">
         { microservices.map(({ namespace, kind, name }) => (
-            <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
-              <td className="col">{ namespace }</td>
-              <td className="col">{ getDisplayKind(kind) }</td>
-              <td className="col">{ name }</td>
-              <td className="col">
-                { React.cloneElement(buttonElement, {
-                    onClick: () => buttonOnClick({ namespace, kind, name }),
-                  })
-                }
-              </td>
-            </tr>
-          ))
+          <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
+            <td className="col">{ namespace }</td>
+            <td className="col">{ getDisplayKind(kind) }</td>
+            <td className="col">{ name }</td>
+            <td className="col">
+              { React.cloneElement(buttonElement, {
+                onClick: () => buttonOnClick({ namespace, kind, name }),
+              })
+              }
+            </td>
+          </tr>
+        ))
         }
       </tbody>
     </Table>
@@ -50,7 +48,8 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
 
 class Step2Microservices extends React.Component {
   static propTypes = {
-    cacheServices: PropTypes.func.isRequired,
+    // cacheServices: PropTypes.func.isRequired,
+    
   }
 
   state = {
@@ -60,14 +59,6 @@ class Step2Microservices extends React.Component {
 
   componentWillMount() {
     this.props.fetchMicroservices();
-  }
-
-  filterNamespace(event) {
-    this.setState({ namespaceFilter: event.target.value });
-  }
-
-  filterKind(event) {
-    this.setState({ kindFilter: event.target.value });
   }
 
   get detectedMicroservices() {
@@ -89,6 +80,14 @@ class Step2Microservices extends React.Component {
 
   get namespaces() {
     return _.uniq(_.map(this.props.k8sMicroservices, "namespace"));
+  }
+
+  filterNamespace(event) {
+    this.setState({ namespaceFilter: event.target.value });
+  }
+
+  filterKind(event) {
+    this.setState({ kindFilter: event.target.value });
   }
 
   render() {
@@ -130,8 +129,8 @@ class Step2Microservices extends React.Component {
                   >
                     <option value="all">All</option>
                     { this.namespaces.map(namespace => (
-                        <option key={namespace} value={namespace}>{ namespace }</option>
-                      ))
+                      <option key={namespace} value={namespace}>{ namespace }</option>
+                    ))
                     }
                   </Input>
                 </FormGroup>
@@ -185,4 +184,5 @@ const mapDispatchToProps = (dispatch, { microservices }) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Step2Microservices)
+)(Step2Microservices);
+
