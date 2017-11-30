@@ -21,23 +21,6 @@ export default function apps(state = initialState, action) {
       ...state,
       apps: _.map(state.apps, d => (d.app_id === action.data.app_id ? action.data : d)),
     };
-  case types.UPDATE_SINGLE_SLO_LOADING:
-    return {
-      ...state,
-      ui: _.extend({}, state.ui, { isUpdatingSingleSloLoading: true }),
-    };
-  case types.UPDATE_SINGLE_SLO_SUCCESS:
-    return {
-      ...state,
-      // TODO: using fake data instead for structing schema in DB
-      // apps: action.applications,
-      apps: fakeArr,
-      ui: _.extend({}, state.ui, { isUpdatingSingleSloLoading: false }),
-      isHPReady: true,
-    };
-  case types.UPDATE_SINGLE_SLO_FAIL:
-    console.error("Update SLO failed");
-    return state;
   case types.REMOVE_APP[SUCCESS]:
     return {
       ...state,
