@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "repository": "https://github.com/Hyperpilotio/analyzer-ui",
   "scripts": {
-    "build": "NODE_ENV=production webpack --progress",
+    "build": "NODE_ENV=production webpack --progress --config webpack.client.config.js",
+    "build-server": "NODE_ENV=production webpack --progress --config webpack.server.config.js",
     "dev-interference": "ANALYSIS_APP=interference-analysis nodemon dist/server.bundle.js",
     "dev-sizing": "ANALYSIS_APP=sizing-analysis nodemon dist/server.bundle.js",
     "dev": "nodemon dist/server.bundle.js",
