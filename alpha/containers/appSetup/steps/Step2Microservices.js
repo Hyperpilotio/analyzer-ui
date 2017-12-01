@@ -7,9 +7,10 @@ import {
 import _ from "lodash";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
-import { fetchAvailableServices } from "../../../actions";
+import { updateMicroServices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
+
 
 const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
@@ -46,10 +47,24 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
   </div>
 );
 
+MicroservicesTable.propTypes = {
+  tbodyStyle: PropTypes.object.isRequired,
+  microservices: PropTypes.array.isRequired,
+  buttonElement: PropTypes.object.isRequired,
+  buttonOnClick: PropTypes.func.isRequired,
+};
+
 class Step2Microservices extends React.Component {
   static propTypes = {
     // cacheServices: PropTypes.func.isRequired,
-    
+    microservices: PropTypes.array.isRequired,
+    k8sMicroservices: PropTypes.array,
+    fetchMicroservices: PropTypes.func.isRequired,
+    addMicroservice: PropTypes.func.isRequired,
+    removeMicroservice: PropTypes.func.isRequired,
+    stepBack: PropTypes.func.isRequired,
+    updateMicroservices: PropTypes.func.isRequired,
+    stepNext: PropTypes.func.isRequired,
   }
 
   state = {
@@ -65,7 +80,7 @@ class Step2Microservices extends React.Component {
     const excludeSelected = _.reduce(
       this.props.microservices,
       _.reject,
-      this.props.k8sMicroservices
+      this.props.k8sMicroservices,
     );
 
     const filter = {};
@@ -91,8 +106,13 @@ class Step2Microservices extends React.Component {
   }
 
   render() {
+    const {
+      appId,
+      updateMicroservices,
+    } = this.props;
+
     return (
-      <Form model="createAppForm.microservices" onSubmit={this.props.stepNext}>
+      <Form model="createAppForm.microservices" onSubmit={microservices => updateMicroservices(microservices, appId)}>
         {/* Selected Microservices */}
         <Card className={`${_s.selectedMicroservices} ${_s.card}`}>
           <CardBody>
@@ -121,8 +141,9 @@ class Step2Microservices extends React.Component {
               <div className="row">
                 {/* NameSpace */}
                 <FormGroup className="col">
-                  <label>Namespace</label>
+                  <label htmlFor="select-namespace">Namespace</label>
                   <Input
+                    id="select-namespace"
                     type="select"
                     onChange={::this.filterNamespace}
                     value={this.state.namespaceFilter}
@@ -137,8 +158,9 @@ class Step2Microservices extends React.Component {
 
                 {/* Kind */}
                 <FormGroup className="col">
-                  <label>Kind</label>
+                  <label htmlFor="select-kind">Kind</label>
                   <Input
+                    id="select-kind"
                     type="select"
                     onChange={::this.filterKind}
                     value={this.state.kindFilter}
@@ -168,17 +190,23 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { microservices, forms } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms } }) => ({
   microservices,
+  appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
 });
 
-const mapDispatchToProps = (dispatch, { microservices }) => ({
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
   removeMicroservice: ms => dispatch(
     modelActions.filter("createAppForm.microservices", added => !_.isEqual(added, ms)),
   ),
-  addMicroservice: ms => dispatch(modelActions.push("createAppForm.microservices", ms)),
+  addMicroservice: ms => dispatch(
+    modelActions.push("createAppForm.microservices", ms),
+  ),
   fetchMicroservices: () => dispatch(fetchAvailableServices()),
+  updateMicroservices: (microservices, appId) => dispatch(
+    updateMicroServices({ microservices, app_id: appId }, stepNext),
+  ),
 });
 
 export default connect(

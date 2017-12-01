@@ -6,6 +6,7 @@ import {
 } from "reactstrap";
 import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 const texts = {
   interference_management: "Interference Management",
@@ -60,7 +61,7 @@ const Step4ManagementFeatures = ({ management_features, stepBack }) => (
                         <a href="#"><FaEdit className="mr-2" />Edit constraints</a>
                       </td>
                     </tr>
-                    ))
+                  ))
                   }
                 </tbody>
               </Table>
@@ -76,6 +77,11 @@ const Step4ManagementFeatures = ({ management_features, stepBack }) => (
     </div>
   </Form>
 );
+
+Step4ManagementFeatures.propTypes = {
+  management_features: PropTypes.array.isRequired,
+  stepBack: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = ({ createAppForm: { management_features } }) => ({
   management_features,

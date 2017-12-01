@@ -32,12 +32,37 @@ export const updateReduxApps = data => ({
   data,
 });
 
+export const updateMicroServices = (microservicesInfo, next) => async (dispatch, getState) => {
+  const apps = getState().applications.apps;
+  const matchAppsItem = _.pick(
+    _.find(apps, { app_id: microservicesInfo.app_id }),
+    _.keys(microservicesInfo),
+  );
+  // update in DB and redux apps if they are different
+  // if (!_.isEqual(microservicesInfo, matchAppsItem)) {
+  //   const response = await dispatch({
+  //     [RSAA]: {
+  //       endpoint: "/api/save-microservices",
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(microservicesInfo),
+  //       types: types.UPDATE_MICRO_SERVICES,
+  //     },
+  //   });
+  //   dispatch(updateReduxApps(response.payload.data));
+  //   next(response.payload.data.app_id);
+  // } else {
+    next(microservicesInfo.app_id);
+  // }
+
+};
+
+
 export const updateApp = (app, next) => async (dispatch, getState) => {
   const apps = getState().applications.apps;
-  const appsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
-
+  const matchAppsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
   // update in DB and redux apps if they are different
-  if (!_.isEqual(app, appsItem)) {
+  if (!_.isEqual(app, matchAppsItem)) {
     const response = await dispatch({
       [RSAA]: {
         endpoint: "/api/update-app",
