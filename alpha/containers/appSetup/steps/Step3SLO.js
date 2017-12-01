@@ -96,9 +96,9 @@ const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
 
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
   submitSloSource: sloSource => dispatch(saveSloSourceConfig(sloSource)),
-  updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign(slo, sloSource))),
+  updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign(slo, sloSource), stepNext)),
 });
 
 export default connect(

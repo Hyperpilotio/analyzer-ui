@@ -54,7 +54,6 @@ export const updateMicroServices = (microservicesInfo, next) => async (dispatch,
   // } else {
     next(microservicesInfo.app_id);
   // }
-
 };
 
 
