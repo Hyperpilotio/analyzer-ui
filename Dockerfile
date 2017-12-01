@@ -7,6 +7,7 @@ WORKDIR /app
 
 RUN npm install
 RUN npm run build
+RUN npm run build-server
 
 ENV ANALYSIS_APP alpha
 
