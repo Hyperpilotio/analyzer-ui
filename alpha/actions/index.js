@@ -87,7 +87,6 @@ export const saveSloSourceConfig = sloSource => ({
   },
 });
 
-
 export const beginHyperpiloting = () => ({
   [RSAA]: {
     endpoint: "http://localhost:3007/begin",

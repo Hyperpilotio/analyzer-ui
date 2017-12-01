@@ -4,9 +4,16 @@ import { Row, Col, FormGroup, Button } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { saveSloSourceConfig } from "../../../actions";
+import { updateApp, saveSloSourceConfig } from "../../../actions";
 
-const Step3SLO = ({ submitSloSource, sloFormDisabled, metricOptions, stepBack, stepNext }) => (
+const Step3SLO = ({
+  submitSloSource,
+  updateSlo,
+  sloSource,
+  sloFormDisabled,
+  metricOptions,
+  stepBack,
+}) => (
   <Row>
     <Col sm={5}>
       <Form onSubmit={submitSloSource} model="createAppForm.sloSource">
@@ -29,7 +36,7 @@ const Step3SLO = ({ submitSloSource, sloFormDisabled, metricOptions, stepBack, s
       </Form>
     </Col>
     <Col sm={{ offset: 1 }}>
-      <Form model="createAppForm.slo" onSubmit={stepNext}>
+      <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource)}>
         <fieldset disabled={sloFormDisabled}>
           <FormGroup className="row">
             <label htmlFor="slo-metric" className="col-3">Metric</label>
@@ -75,20 +82,23 @@ const Step3SLO = ({ submitSloSource, sloFormDisabled, metricOptions, stepBack, s
 
 Step3SLO.propTypes = {
   submitSloSource: PropTypes.func.isRequired,
+  updateSlo: PropTypes.func.isRequired,
   sloFormDisabled: PropTypes.bool.isRequired,
-  metricOptions: PropTypes.array.isRequired,
+  metricOptions: PropTypes.array,
+  sloSource: PropTypes.object,
   stepBack: PropTypes.func.isRequired,
-  stepNext: PropTypes.func.isRequired,
 };
 
-
-const mapStateToProps = ({ createAppForm: { forms } }) => ({
+const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
   sloFormDisabled: _.size(forms.slo.$form.metricOptions) === 0,
   metricOptions: forms.slo.$form.metricOptions,
+  sloSource: createAppForm.sloSource,
+
 });
 
 const mapDispatchToProps = dispatch => ({
   submitSloSource: sloSource => dispatch(saveSloSourceConfig(sloSource)),
+  updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign(slo, sloSource))),
 });
 
 export default connect(

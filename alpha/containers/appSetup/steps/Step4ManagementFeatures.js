@@ -18,57 +18,57 @@ const texts = {
 const Step4ManagementFeatures = ({ management_features, stepBack }) => (
   <Form model="createAppForm.management_features">
     { management_features.map(({ name, status, remediation_policy }, index) => (
-        <Card key={name} className="mb-3">
-          <CardBody>
-            <Row>
-              <Col sm={6}>
-                <CardTitle>{ texts[name] }</CardTitle>
-              </Col>
-              <Col sm={{ size: 3, offset: 3 }}>
-                <Control.select model={`.[${index}].status`} className="form-control">
-                  <option value="Enabled">Enabled</option>
-                  <option value="Disabled">Disabled</option>
-                </Control.select>
-              </Col>
-            </Row>
-            <Collapse className="ml-3 mr-3" isOpen={status === "Enabled"}>
-              <Row className="mt-3">
-                <Table>
-                  <caption className="ml-3">Remediation Policies</caption>
-                  <thead>
-                    <tr>
-                      <th>Action</th>
-                      <th>Mode</th>
-                      <th>Constraints</th>
+      <Card key={name} className="mb-3">
+        <CardBody>
+          <Row>
+            <Col sm={6}>
+              <CardTitle>{ texts[name] }</CardTitle>
+            </Col>
+            <Col sm={{ size: 3, offset: 3 }}>
+              <Control.select model={`.[${index}].status`} className="form-control">
+                <option value="Enabled">Enabled</option>
+                <option value="Disabled">Disabled</option>
+              </Control.select>
+            </Col>
+          </Row>
+          <Collapse className="ml-3 mr-3" isOpen={status === "Enabled"}>
+            <Row className="mt-3">
+              <Table>
+                <caption className="ml-3">Remediation Policies</caption>
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Mode</th>
+                    <th>Constraints</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { remediation_policy.map(({ action_name, mode, constraints }, rpIndex) => (
+                    <tr key={action_name}>
+                      <td>{ texts[action_name] }</td>
+                      <td>
+                        <Control.select
+                          model={`.[${index}].remediation_policy[${rpIndex}].mode`}
+                          className="form-control"
+                        >
+                          <option value="Manual">Manual</option>
+                          <option value="Semi-Auto">Semi-Auto</option>
+                          <option value="Full-Auto">Full-Auto</option>
+                        </Control.select>
+                      </td>
+                      <td>
+                        <a href="#"><FaEdit className="mr-2" />Edit constraints</a>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    { remediation_policy.map(({ action_name, mode, constraints }, rpIndex) => (
-                      <tr key={action_name}>
-                        <td>{ texts[action_name] }</td>
-                        <td>
-                          <Control.select
-                            model={`.[${index}].remediation_policy[${rpIndex}].mode`}
-                            className="form-control"
-                          >
-                            <option value="Manual">Manual</option>
-                            <option value="Semi-Auto">Semi-Auto</option>
-                            <option value="Full-Auto">Full-Auto</option>
-                          </Control.select>
-                        </td>
-                        <td>
-                          <a href="#"><FaEdit className="mr-2" />Edit constraints</a>
-                        </td>
-                      </tr>
-                      ))
-                    }
-                  </tbody>
-                </Table>
-              </Row>
-            </Collapse>
-          </CardBody>
-        </Card>
-      ))
+                    ))
+                  }
+                </tbody>
+              </Table>
+            </Row>
+          </Collapse>
+        </CardBody>
+      </Card>
+    ))
     }
     <div className="float-right">
       <Button color="secondary" className="mr-2" onClick={stepBack}>Back</Button>
