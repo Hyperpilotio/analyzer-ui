@@ -22,7 +22,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
     <Jumbotron className="border border-right-0 border-left-0 bg-white" fluid>
       <Container>
         <Row>
-          <Col className="d-flex flex-column justify-content-between" md={3}>
+          <Col className="d-flex flex-column justify-content-between" md={4}>
             <h3 className="text-dark">{ app.name }</h3>
             <div>
               <span className="text-muted d-block">SLO</span>
@@ -37,7 +37,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
               </Col>
               <Col md={3}>
                 <span className="text-muted">Services</span>
-                <h5 className="text-dark">{ app.services.length }</h5>
+                <h5 className="text-dark">{ app.microservices.length }</h5>
               </Col>
               <Col md={3}>
                 <span className="text-muted">State</span>
@@ -95,7 +95,6 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                   <tr>
                     <th>Remediation #</th>
                     <th>Description</th>
-                    <th>Category</th>
                     <th>Mode</th>
                   </tr>
                 </thead>
@@ -103,7 +102,6 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                   <tr>
                     <td>#1</td>
                     <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
-                    <td>Interference Management</td>
                     <td>Semi-Auto</td>
                   </tr>
                   <tr>
@@ -111,7 +109,6 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                     <td>
                       Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge>
                     </td>
-                    <td>Interference Management</td>
                     <td>Semi-Auto</td>
                   </tr>
                   <tr>
@@ -119,7 +116,6 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                     <td>
                       Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge>
                     </td>
-                    <td>Bottleneck Management</td>
                     <td>Manual</td>
                   </tr>
                 </tbody>
@@ -139,6 +135,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                 <tr>
                   <th>Problem #</th>
                   <th>Time</th>
+                  <th>Type</th>
                   <th>Description</th>
                 </tr>
               </thead>
@@ -146,6 +143,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                 <Linked tag="tr" to={`${match.url}/problem-1`}>
                   <th scope="row">#1</th>
                   <td>{ (new Date()).toString() }</td>
+                  <td>Resource bottleneck</td>
                   <td>
                     Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge>
                   </td>
@@ -153,6 +151,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                 <Linked tag="tr" to={`${match.url}/problem-2`}>
                   <th scope="row">#2</th>
                   <td>{ (new Date()).toString() }</td>
+                  <td>Resource bottleneck</td>
                   <td>
                     Resource type <Badge>blkio</Badge>
                     having bottleneck in container <Badge>kafka-serve</Badge>
@@ -161,6 +160,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
                 <Linked tag="tr" to={`${match.url}/problem-3`}>
                   <th scope="row">#3</th>
                   <td>{ (new Date()).toString() }</td>
+                  <td>Interference Management</td>
                   <td>
                     Resource type <Badge>net</Badge> having contention on node <Badge>node-2</Badge>
                   </td>

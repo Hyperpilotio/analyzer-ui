@@ -67,7 +67,7 @@ const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, 
             <Linked tag="tr" to={`/dashboard/${app._id}`} key={app._id}>
               <td>{ app.name }</td>
               <td>{ app.type }</td>
-              <td>{ _.size(app.services) }</td>
+              <td>{ _.size(app.microservices) }</td>
               <td>{ getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
               <td>{ app.state }</td>
