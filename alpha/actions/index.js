@@ -39,21 +39,21 @@ export const updateMicroServices = (microservicesInfo, next) => async (dispatch,
     _.keys(microservicesInfo),
   );
   // update in DB and redux apps if they are different
-  // if (!_.isEqual(microservicesInfo, matchAppsItem)) {
-  //   const response = await dispatch({
-  //     [RSAA]: {
-  //       endpoint: "/api/save-microservices",
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(microservicesInfo),
-  //       types: types.UPDATE_MICRO_SERVICES,
-  //     },
-  //   });
-  //   dispatch(updateReduxApps(response.payload.data));
-  //   next(response.payload.data.app_id);
-  // } else {
+  if (!_.isEqual(microservicesInfo, matchAppsItem)) {
+    const response = await dispatch({
+      [RSAA]: {
+        endpoint: "/api/save-microservices",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(microservicesInfo),
+        types: types.UPDATE_MICRO_SERVICES,
+      },
+    });
+    dispatch(updateReduxApps(response.payload.data));
+    next(response.payload.data.app_id);
+  } else {
     next(microservicesInfo.app_id);
-  // }
+  }
 };
 
 
