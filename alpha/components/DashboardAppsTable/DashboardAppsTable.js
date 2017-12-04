@@ -64,7 +64,7 @@ const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, 
             );
           }
           return (
-            <Linked tag="tr" to={`/dashboard/${app._id}`} key={app._id}>
+            <Linked tag="tr" to={`/dashboard/${app.app_id}`} key={app.app_id}>
               <td>{ app.name }</td>
               <td>{ app.type }</td>
               <td>{ _.size(app.microservices) }</td>

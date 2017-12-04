@@ -33,5 +33,5 @@ const SLOGraph = ({ app, influxFetch }) => {
 };
 
 export default connectRefetch(() => ({
-  influxFetch: { url: "/api/placeholder/influx-data", refreshInterval: 5 * 1000 },
+  influxFetch: { url: "/api/influx-data", refreshInterval: 5 * 1000 },
 }))(SLOGraph);

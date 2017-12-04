@@ -40,7 +40,7 @@ class DashboardPage extends React.Component {
           <Route
             path={`${this.props.match.path}/:appId`}
             render={({ match }) => {
-              const app = _.find(this.props.apps, { _id: match.params.appId });
+              const app = _.find(this.props.apps, { app_id: match.params.appId });
               if (_.isUndefined(app)) {
                 return null;
               }
