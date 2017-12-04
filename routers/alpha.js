@@ -104,11 +104,15 @@ router.post("/api/save-microservices", async (req, res) => {
 
 router.post("/api/get-metrics", async (req, res) => {
   const source = req.body;
+  const kindTypeMap = {
+    deployments: "deployment",
+    statefulsets: "statefulset",
+  };
   const response = await request.get(`${config.operator.url}/cluster/appmetrics`, {
     json: true,
     body: {
       namespace: source.service.namespace,
-      k8sType: source.service.type,
+      k8sType: _.get(kindTypeMap, source.service.kind),
       name: source.service.name,
       [source.APM_type]: {
         metricPort: source.port,
