@@ -6,6 +6,9 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import { updateApp, saveSloSourceConfig } from "../../../actions";
 
+
+const filterSelection = (arr, matchKey, matchObj) => (arr ? _.uniq(_.map(matchObj ? _.filter(_.reject(arr, { kind: "services" }), matchObj) : _.reject(arr, { kind: "services" }), matchKey)) : []);
+
 class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
@@ -23,69 +26,20 @@ class Step3SLO extends React.Component {
   }
 
   get namespace() {
-    return this.props.microservices ?
-      _.uniq(
-        _.map(
-          this.props.microservices,
-          "namespace",
-        ),
-      ) : [];
+    return filterSelection(this.props.microservices, "namespace");
   }
 
   get kind() {
-    return this.props.microservices ?
-      _.uniq(
-        _.map(
-          _.filter(
-            this.props.microservices,
-            { namespace: this.state.namespaceFilter },
-          ),
-          "kind",
-        ),
-      ) : [];
+    return filterSelection(this.props.microservices, "kind", {
+      namespace: this.state.namespaceFilter,
+    });
   }
 
   get name() {
-
-    console.log("name",
-  
-      _.filter(
-        this.props.microservices,
-        {
-          namespace: this.state.namespaceFilter,
-          kind: this.state.kindFilter,
-        },
-      ),
-
-      _.map(
-        _.filter(
-          this.props.microservices,
-          {
-            namespace: this.state.namespaceFilter,
-            kind: this.state.kindFilter,
-          },
-        ),
-        "name",
-      ),
-      this.state.namespaceFilter,
-      this.state.kindFilter,
-
-  );
-
-
-    return this.props.microservices ?
-      _.uniq(
-        _.map(
-          _.filter(
-            this.props.microservices,
-            {
-              namespace: this.state.namespaceFilter,
-              kind: this.state.kindFilter,
-            },
-          ),
-          "name",
-        ),
-      ) : [];
+    return filterSelection(this.props.microservices, "name", {
+      namespace: this.state.namespaceFilter,
+      kind: this.state.kindFilter,
+    });
   }
 
   filterNamespace = (event) => {
@@ -119,48 +73,51 @@ class Step3SLO extends React.Component {
               </Control.select>
             </FormGroup>
             <FormGroup className="row">
-              <label htmlFor="slo-microservice-namespace" className="col-4">Microservices</label>
+              <label htmlFor="slo-microservice-namespace" className="col-4">Endpoint Microservice</label>
               <div className="col-6">
 
                 <FormGroup>
                   <label htmlFor="slo-microservice-namespace" className="row">Namespace</label>
-                  <Input
+                  <Control.select
                     id="slo-microservice-namespace"
                     className="form-control row"
                     type="select"
+                    model=".service.namespace"
                     onChange={this.filterNamespace}
                   >
                     <option value="" disabled defaultValue>Select Namespace</option>
                     { this.namespace.map(namespace => <option key={namespace} value={namespace}>{ namespace }</option>) }
-                  </Input>
+                  </Control.select>
                 </FormGroup>
 
                 <FormGroup>
                   <fieldset disabled={this.namespace.length === 0}>
                     <label htmlFor="slo-microservice-kind" className="row">Kind</label>
-                    <Input
+                    <Control.select
                       id="slo-microservice-kind"
                       className="form-control row"
                       type="select"
+                      model=".service.kind"
                       onChange={this.filterKind}
                     >
                       <option value="" disabled defaultValue>Select Kind</option>
                       { this.kind.map(kind => <option key={kind} value={kind}>{ kind }</option>) }
-                    </Input>
+                    </Control.select>
                   </fieldset>
                 </FormGroup>
 
                 <FormGroup>
                   <fieldset disabled={this.kind.length === 0}>
                     <label htmlFor="slo-microservice-name" className="row">Name</label>
-                    <Input
+                    <Control.select
                       id="slo-microservice-name"
                       className="form-control row"
                       type="select"
+                      model=".service.name"
                     >
                       <option value="" disabled defaultValue>Select name</option>
                       { this.name.map(name => <option key={name} value={name}>{ name }</option>) }
-                    </Input>
+                    </Control.select>
                   </fieldset>
                 </FormGroup>
 

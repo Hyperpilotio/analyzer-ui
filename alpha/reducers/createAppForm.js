@@ -15,7 +15,11 @@ export default reduceReducers(
     microservices: [],
     sloSource: {
       APM_type: "prometheus",
-      service_name: "",
+      service: {
+        namespace: "",
+        kind: "",
+        name: "",
+      },
       port: 9090,
     },
     slo: {
