@@ -1,10 +1,11 @@
 import React from "react";
 import { Form, Control } from "react-redux-form";
-import { Row, Col, FormGroup, Button } from "reactstrap";
+import { Row, Col, FormGroup, Button, Input } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { updateApp, saveSloSourceConfig } from "../../../actions";
+
 
 const Step3SLO = ({
   submitSloSource,
@@ -12,6 +13,7 @@ const Step3SLO = ({
   sloSource,
   sloFormDisabled,
   metricOptions,
+  microservices,
   stepBack,
 }) => (
   <Row>
@@ -25,8 +27,36 @@ const Step3SLO = ({
           </Control.select>
         </FormGroup>
         <FormGroup className="row">
-          <label htmlFor="slo-service-name" className="col-4">Service Name</label>
-          <Control.text htmlFor="slo-service-name" className="form-control col" model=".service_name" />
+          <label htmlFor="slo-service-name-namespace" className="col-4">Microservices</label>
+          <FormGroup className="col">
+            <Input
+              id="slo-service-name-namespace"
+              className="form-control col"
+              type="select"
+            >
+              {/* { _.map(microservices, mt => <option key={mt} value={mt}>{ mt }</option>) } */}
+            </Input>
+          </FormGroup>
+          <FormGroup className="col">
+            <Input
+              id="slo-service-name-kind"
+              className="form-control col"
+              type="select"
+            >
+              {/* { _.map(microservices, mt => <option key={mt} value={mt}>{ mt }</option>) } */}
+            </Input>
+          </FormGroup>
+          <FormGroup className="col">
+            <Input
+              id="slo-service-name-name"
+              className="form-control col"
+              type="select"
+            >
+              {/* { _.map(microservices, mt => <option key={mt} value={mt}>{ mt }</option>) } */}
+            </Input>
+          </FormGroup>
+          
+      
         </FormGroup>
         <FormGroup className="row">
           <label htmlFor="slo-port" className="col-4">Port</label>
@@ -93,7 +123,7 @@ const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
   sloFormDisabled: _.size(forms.slo.$form.metricOptions) === 0,
   metricOptions: forms.slo.$form.metricOptions,
   sloSource: createAppForm.sloSource,
-
+  microservices: forms.$form.microservices,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
