@@ -99,15 +99,15 @@ export const fetchAvailableServices = () => ({
   },
 });
 
-export const saveSloSourceConfig = sloSource => ({
+export const fetchMetrics = sloSource => ({
   [RSAA]: {
-    endpoint: "/mock/api/slo-source",
+    endpoint: "/api/get-metrics",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(sloSource),
-    types: types.SAVE_SLO_SOURCE,
+    types: types.FETCH_METRICS,
   },
 });
 

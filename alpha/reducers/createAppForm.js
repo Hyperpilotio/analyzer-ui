@@ -68,7 +68,7 @@ export default reduceReducers(
         flattenResourcesData(action.payload.data),
         _.clone,
       );
-    case types.SAVE_SLO_SOURCE[SUCCESS]:
+    case types.FETCH_METRICS[SUCCESS]:
       return _.setWith(
         { ...state },
         "forms.slo.$form.metricOptions",

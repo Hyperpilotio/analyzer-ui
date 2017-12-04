@@ -1,10 +1,10 @@
 import React from "react";
 import { Form, Control } from "react-redux-form";
-import { Row, Col, FormGroup, Button, Input } from "reactstrap";
+import { Row, Col, FormGroup, Button } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { updateApp, saveSloSourceConfig } from "../../../actions";
+import { updateApp, fetchMetrics } from "../../../actions";
 
 
 const filterSelection = (arr, matchKey, matchObj) => (arr ? _.uniq(_.map(matchObj ? _.filter(_.reject(arr, { kind: "services" }), matchObj) : _.reject(arr, { kind: "services" }), matchKey)) : []);
@@ -15,7 +15,7 @@ class Step3SLO extends React.Component {
     updateSlo: PropTypes.func.isRequired,
     sloFormDisabled: PropTypes.bool.isRequired,
     metricOptions: PropTypes.array,
-    microservices: PropTypes.array.isRequired,
+    microservices: PropTypes.array,
     sloSource: PropTypes.object,
     stepBack: PropTypes.func.isRequired,
   };
@@ -60,7 +60,6 @@ class Step3SLO extends React.Component {
       stepBack,
     } = this.props;
 
-
     return (
       <Row>
         <Col sm={5}>
@@ -86,7 +85,9 @@ class Step3SLO extends React.Component {
                     onChange={this.filterNamespace}
                   >
                     <option value="" disabled defaultValue>Select Namespace</option>
-                    { this.namespace.map(namespace => <option key={namespace} value={namespace}>{ namespace }</option>) }
+                    { this.namespace.map(
+                      namespace => <option key={namespace} value={namespace}>{ namespace }</option>)
+                    }
                   </Control.select>
                 </FormGroup>
 
@@ -185,7 +186,7 @@ const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  submitSloSource: sloSource => dispatch(saveSloSourceConfig(sloSource)),
+  submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
   updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign(slo, sloSource), stepNext)),
 });
 
