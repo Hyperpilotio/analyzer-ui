@@ -1,13 +1,17 @@
 import React from "react";
 import { Form, Control } from "react-redux-form";
-import { Row, Col, FormGroup, Button } from "reactstrap";
+import { Row, Col, FormGroup, Button, Table, InputGroup, InputGroupAddon, Input } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { updateApp, fetchMetrics } from "../../../actions";
 
-
 const filterSelection = (arr, matchKey, matchObj) => (arr ? _.uniq(_.map(matchObj ? _.filter(_.reject(arr, { kind: "services" }), matchObj) : _.reject(arr, { kind: "services" }), matchKey)) : []);
+
+const summaryArr = [
+  { key: "1", value: "123" },
+  { key: "2", value: "123" },
+];
 
 class Step3SLO extends React.Component {
   static propTypes = {
@@ -63,8 +67,9 @@ class Step3SLO extends React.Component {
     return (
       <Row>
         <Col sm={5}>
+          <h3 className="mb-4">SLO Metrics Source</h3>
           <Form onSubmit={submitSloSource} model="createAppForm.sloSource">
-            <FormGroup className="row">
+            <FormGroup className="row" style={{ width: "100%" }}>
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
                 <option value="prometheus">Prometheus</option>
@@ -72,7 +77,7 @@ class Step3SLO extends React.Component {
               </Control.select>
             </FormGroup>
             <FormGroup className="row">
-              <label htmlFor="slo-microservice-namespace" className="col-4">Endpoint Microservice</label>
+              <label htmlFor="slo-microservice" className="col-4">Endpoint Microservice</label>
               <div className="col-6">
 
                 <FormGroup>
@@ -124,14 +129,19 @@ class Step3SLO extends React.Component {
 
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" style={{ width: "100%" }}>
               <label htmlFor="slo-port" className="col-4">Port</label>
-              <Control.text id="slo-port" className="form-control col" model=".port" />
+              <Control.text type="number" id="slo-port" className="form-control col" model=".port" />
             </FormGroup>
-            <Button type="submit" color="primary">Confirm</Button>
+            
+            <div style={{ marginRight: "15px" }}>
+              <Button onClick={stepBack} color="secondary" className="mr-2">Back</Button>
+              <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
+            </div>
           </Form>
         </Col>
-        <Col sm={{ offset: 1 }}>
+        <Col sm={{ offset: 1 }} style={sloFormDisabled ? { opacity: 0.3 } : null}>
+          <h3 className="mb-4">SLO Configuration</h3>
           <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource)}>
             <fieldset disabled={sloFormDisabled}>
               <FormGroup className="row">
@@ -150,8 +160,28 @@ class Step3SLO extends React.Component {
               </FormGroup>
               <FormGroup className="row">
                 <label htmlFor="slo-summary" className="col-3">Summary</label>
-                <Control.text id="slo-summary" className="form-control col" model=".summary" />
               </FormGroup>
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    summaryArr.map(d => (
+                      <tr>
+                        <td><Input placeholder="key" value={d.key} /></td>
+                        <td><Input placeholder="value" value={d.value} /></td>
+                        <td>x</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </Table>
+
               <Row>
                 <Col>
                   <FormGroup>
@@ -168,7 +198,6 @@ class Step3SLO extends React.Component {
               </Row>
             </fieldset>
             <div className="float-right">
-              <Button onClick={stepBack} color="secondary" className="mr-2">Back</Button>
               <Button type="submit" color="primary">Next</Button>
             </div>
           </Form>

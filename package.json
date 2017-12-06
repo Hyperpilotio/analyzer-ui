@@ -75,6 +75,7 @@
     "react": "^15.6.2",
     "react-addons-css-transition-group": "^15.6.2",
     "react-addons-transition-group": "^15.6.2",
+    "react-bootstrap-table": "^4.2.0",
     "react-chartjs-2": "^2.1.0",
     "react-dom": "^15.6.2",
     "react-hot-loader": "next",

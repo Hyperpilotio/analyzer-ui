@@ -20,7 +20,7 @@ export default reduceReducers(
         kind: "",
         name: "",
       },
-      port: 9090,
+      port: 7998,
     },
     slo: {
       metric: "",
