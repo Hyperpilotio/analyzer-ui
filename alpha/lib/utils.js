@@ -1,7 +1,7 @@
 import _ from "lodash";
 
-export const getSLODisplay = slo => (
-  `${slo.type} ${slo.type === "throughput" ? ">" : "<"} ${slo.value}${slo.unit}`
+export const getSLODisplay = ({ metric, threshold }) => (
+  `${metric.type} ${threshold.type === "UB" ? "<" : ">"} ${threshold.value} ${threshold.unit}`
 );
 
 export const flattenResourcesData = resources => (
