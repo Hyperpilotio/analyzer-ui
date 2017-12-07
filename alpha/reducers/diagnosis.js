@@ -1,20 +1,22 @@
+import _ from "lodash";
 import { SUCCESS } from "../constants/apiActions";
 import * as types from "../actions/types";
 
 const initialState = {
-  incidents: {},
-  risks: {},
-  opportunities: {},
+  results: [],
+  incidents: [],
+  problems: [],
 };
 
-export default function diagnosisReducer(state = initialState, action) {
+export default (state = initialState, action) => {
   switch (action.type) {
-  case types.FETCH_EVENTS[SUCCESS]:
+  case types.FETCH_DIAGNOSTICS[SUCCESS]:
+    const { data } = action.payload;
     return {
       ...state,
-      incidents: action.payload.incidents,
-      risks: {},
-      opportunities: action.payload.opportunities,
+      results: _.unionBy(state.results, data.results, "app_id"),
+      incidents: _.unionBy(state.incidents, data.incidents, "id"),
+      problems: _.unionBy(state.problems, data.problems, "id"),
     };
   default:
     return state;

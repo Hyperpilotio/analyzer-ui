@@ -135,11 +135,11 @@ export const beginHyperpiloting = () => ({
   },
 });
 
-export const fetchEvents = () => ({
+export const fetchDiagnostics = () => ({
   [RSAA]: {
-    endpoint: "http://localhost:3007/data",
+    endpoint: "/api/diagnostics",
     method: "GET",
-    types: types.FETCH_EVENTS,
+    types: types.FETCH_DIAGNOSTICS,
   },
 });
 

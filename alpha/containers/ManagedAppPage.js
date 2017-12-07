@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import moment from "moment";
 import { Switch, Route } from "react-router";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
 import Linked from "~/commons/components/Linked";
@@ -17,7 +18,7 @@ const getBadge = (incidents, opportunities) => {
   return <Badge color="secondary"><h6 className="mb-0">OK</h6></Badge>;
 };
 
-const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
+const ManagedAppPage = ({ match, app, result, incident, problems }) => (
   <div>
     <Jumbotron className="border border-right-0 border-left-0 bg-white" fluid>
       <Container>
@@ -33,7 +34,7 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
             <Row className="mb-3">
               <Col md={3}>
                 <span className="text-muted d-block">Detected</span>
-                { getBadge(incidents, opportunities) }
+                { getBadge(incident) }
               </Col>
               <Col md={3}>
                 <span className="text-muted">Services</span>
@@ -51,15 +52,15 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
             <Row>
               <Col md={4}>
                 <span className="text-muted">Interference Management</span>
-                <h5 className="text-dark">{ _.find(app.management_features, { name: "interference_management" }).mode }</h5>
+                <h5 className="text-dark">{ _.find(app.management_features, { name: "interference_management" }).status }</h5>
               </Col>
               <Col md={4}>
                 <span className="text-muted">Bottleneck Management</span>
-                <h5 className="text-dark">{ _.find(app.management_features, { name: "bottleneck_management" }).mode }</h5>
+                <h5 className="text-dark">{ _.find(app.management_features, { name: "bottleneck_management" }).status }</h5>
               </Col>
               <Col md={4}>
                 <span className="text-muted">Effeciency Management</span>
-                <h5 className="text-dark">{ _.find(app.management_features, { name: "efficiency_management" }).mode }</h5>
+                <h5 className="text-dark">{ _.find(app.management_features, { name: "efficiency_management" }).status }</h5>
               </Col>
             </Row>
           </Col>
@@ -67,7 +68,13 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
       </Container>
     </Jumbotron>
     <Container className="mb-3">
-      <SLOGraph app={app} />
+      <SLOGraph
+        app={app}
+        timeRange={[
+          moment(incident.timestamp),
+          moment(incident.timestamp).subtract(incident.duration, "ms"),
+        ]}
+      />
     </Container>
     <Switch>
       <Route
@@ -134,37 +141,21 @@ const ManagedAppPage = ({ match, app, incidents, risks, opportunities }) => (
               <thead>
                 <tr>
                   <th>Problem #</th>
-                  <th>Time</th>
                   <th>Type</th>
                   <th>Description</th>
                 </tr>
               </thead>
               <tbody>
-                <Linked tag="tr" to={`${match.url}/problem-1`}>
-                  <th scope="row">#1</th>
-                  <td>{ (new Date()).toString() }</td>
-                  <td>Resource bottleneck</td>
-                  <td>
-                    Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge>
-                  </td>
-                </Linked>
-                <Linked tag="tr" to={`${match.url}/problem-2`}>
-                  <th scope="row">#2</th>
-                  <td>{ (new Date()).toString() }</td>
-                  <td>Resource bottleneck</td>
-                  <td>
-                    Resource type <Badge>blkio</Badge>
-                    having bottleneck in container <Badge>kafka-serve</Badge>
-                  </td>
-                </Linked>
-                <Linked tag="tr" to={`${match.url}/problem-3`}>
-                  <th scope="row">#3</th>
-                  <td>{ (new Date()).toString() }</td>
-                  <td>Interference Management</td>
-                  <td>
-                    Resource type <Badge>net</Badge> having contention on node <Badge>node-2</Badge>
-                  </td>
-                </Linked>
+                { result.top_related_problems.map(({ id }, i) => {
+                    const problem = _.find(problems, { id });
+                    return (
+                      <Linked tag="tr" key={id} to={`${match.url}/${id}`}>
+                        <th scope="row">#{ i + 1 }</th>
+                        <td>{ problem.type }</td>
+                        <td>PLACEHOLDER</td>
+                      </Linked>
+                    );
+                  }) }
               </tbody>
             </Table>
           </Row>
