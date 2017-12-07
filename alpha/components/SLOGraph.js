@@ -29,13 +29,23 @@ const SLOGraph = ({ app: { slo }, influxFetch }) => {
           line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
           label: { fill: "#ff8686", fontSize: "16px" },
         }}
-        threshold={app.slo.value}
+        threshold={slo.threshold.value}
         label="SLO"
       />
     </GeneralTimeSeriesGraph>
   );
 };
 
-export default connectRefetch(() => ({
-  influxFetch: { url: "/api/influx-data", refreshInterval: 5 * 1000 },
+export default connectRefetch(({ app: { slo }, timeRange }) => ({
+  influxFetch: {
+    url: "/api/influx-data",
+    method: "POST",
+    body: JSON.stringify({
+      db: "snap",
+      metric: slo.metric.name,
+      tags: slo.metric.tags,
+      start: timeRange[0].valueOf(),
+      end: timeRange[1].valueOf(),
+    }),
+  },
 }))(SLOGraph);

@@ -1,11 +1,15 @@
 import express from "express";
 import request from "request-promise-native";
+import { InfluxDB } from "influx";
 import _ from "lodash";
+import moment from "moment";
 import config from "../config";
 import resources from "./resources";
 import mockdb from "./mockdb";
 
 const router = express();
+
+const influxClient = new InfluxDB(config.influx);
 
 router.use(resources);
 router.use(mockdb);
@@ -121,6 +125,74 @@ router.post("/api/get-metrics", async (req, res) => {
   });
 
   res.json({ success: true, ...response });
+});
+
+router.post("/api/influx-data", async (req, res) => {
+  const tagsFilter = _.map(req.body.tags, ({ key, value }) => `AND "${key}" = '${value}' `);
+  const query = `
+    SELECT mean(value) AS value FROM "${req.body.metric}"
+    WHERE time <= ${req.body.start * 1000000}
+    AND time >= ${req.body.end * 1000000}
+    ${tagsFilter}
+    GROUP BY time(5s)
+  `;
+  const result = await influxClient.query(query, { database: req.body.db });
+
+  res.json({
+    name: req.body.metric,
+    columns: ["time", "value"],
+    values: _.map(result, d => [d.time, d.value]),
+  });
+});
+
+router.get("/api/diagnostics", async (req, res) => {
+  const apps = await request.get({
+    uri: `${config.analyzer.url}/api/apps`, json: true,
+  });
+  const activeApps = _.filter(apps.data, { state: "Active" });
+  const incidents = activeApps.map(app => ({
+    id: `incident-${_.toInteger(10000000 * Math.random())}`,
+    app_id: app.app_id,
+    type: "SLO_violation",
+    timestamp: moment(1511980560000),
+    duration: 5 * 60 * 1000,
+  }));
+  const problems = _.flatMap(incidents, incident => [
+    {
+      id: `problem-${incident.id}-1`,
+      app_id: incident.app_id,
+      incident_id: incident.id,
+      type: "over_utilization",
+      metric_name: "intel/docker/stats/cgroups/cpu_stats/cpu_usage/user_mode/over_utilization",
+      severity: 62,
+    },
+    {
+      id: `problem-${incident.id}-2`,
+      app_id: incident.app_id,
+      incident_id: incident.id,
+      type: "resource_bottleneck",
+      metric_name: "intel/psutil/net/all/bytes_recv/resource_bottleneck",
+      severity: 57,
+    },
+    {
+      id: `problem-${incident.id}-3`,
+      app_id: incident.app_id,
+      incident_id: incident.id,
+      type: "resource_bottleneck",
+      metric_name: "intel/psutil/net/all/bytes_sent/resource_bottleneck",
+      severity: 54,
+    },
+  ]);
+  const results = incidents.map(incident => ({
+    app_id: incident.app_id,
+    incident_id: incident.id,
+    top_related_problems: _.filter(problems, { incident_id: incident.id }).map(problem => ({
+      id: problem.id,
+      remediation_options: [],
+    })),
+  }));
+
+  res.json({ success: true, data: { incidents, problems, results }});
 });
 
 export default router;

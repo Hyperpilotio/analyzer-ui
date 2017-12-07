@@ -21,10 +21,10 @@ let config = {
     mockdbName: process.env.CONFIGDB_NAME || "mockdb",
   },
   influx: {
-    host: "localhost",
-    port: 8086,
-    username: "root",
-    password: "root",
+    host: process.env.INFLUXDB_HOST || "localhost",
+    port: process.env.INFLUXDB_PORT || 8086,
+    username: process.env.INFLUXDB_USERNAME || "root",
+    password: process.env.INFLUXDB_PASSWORD || "root",
   },
 };
 
