@@ -192,7 +192,7 @@ router.get("/api/diagnostics", async (req, res) => {
     })),
   }));
 
-  res.json({ success: true, data: { incidents, problems, results }});
+  res.json({ success: true, data: { incidents, problems, results } });
 });
 
 export default router;

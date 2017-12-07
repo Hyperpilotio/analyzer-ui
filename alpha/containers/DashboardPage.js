@@ -90,7 +90,9 @@ const mapStateToProps = ({
   diagnosis: { incidents, problems, results },
 }) => ({
   apps,
-  incidents, problems, results,
+  incidents,
+  problems,
+  results,
   isFetchAppsLoading,
   isFetchDiagnosticsLoading,
 });
@@ -100,9 +102,9 @@ const mapDispatchToProps = dispatch => ({
   fetchDiagnostics: () => dispatch(fetchDiagnostics()),
   removeApp: appId => dispatch(removeApp(appId)),
   resetAppForm: () => {
-    for (const form of ["basicInfo", "microservices", "sloSource", "slo", "management_features"]) {
-      dispatch(formActions.reset(`createAppForm.${form}`));
-    }
+    ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(
+      form => dispatch(formActions.reset(`createAppForm.${form}`)),
+    );
   },
 });
 

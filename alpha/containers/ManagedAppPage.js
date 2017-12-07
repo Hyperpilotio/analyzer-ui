@@ -146,16 +146,16 @@ const ManagedAppPage = ({ match, app, result, incident, problems }) => (
                 </tr>
               </thead>
               <tbody>
-                { result.top_related_problems.map(({ id }, i) => {
-                    const problem = _.find(problems, { id });
-                    return (
-                      <Linked tag="tr" key={id} to={`${match.url}/${id}`}>
-                        <th scope="row">#{ i + 1 }</th>
-                        <td>{ problem.type }</td>
-                        <td>PLACEHOLDER</td>
-                      </Linked>
-                    );
-                  }) }
+                {result.top_related_problems.map(({ id }, i) => {
+                  const problem = _.find(problems, { id });
+                  return (
+                    <Linked tag="tr" key={id} to={`${match.url}/${id}`}>
+                      <th scope="row">#{ i + 1 }</th>
+                      <td>{ problem.type }</td>
+                      <td>PLACEHOLDER</td>
+                    </Linked>
+                  );
+                })}
               </tbody>
             </Table>
           </Row>

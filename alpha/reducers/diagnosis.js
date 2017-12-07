@@ -9,9 +9,10 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
+  let data;
   switch (action.type) {
   case types.FETCH_DIAGNOSTICS[SUCCESS]:
-    const { data } = action.payload;
+    data = action.payload.data;
     return {
       ...state,
       results: _.unionBy(state.results, data.results, "app_id"),
@@ -21,4 +22,4 @@ export default (state = initialState, action) => {
   default:
     return state;
   }
-}
+};
