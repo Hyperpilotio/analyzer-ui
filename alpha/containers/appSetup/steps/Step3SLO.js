@@ -8,11 +8,6 @@ import { updateApp, fetchMetrics } from "../../../actions";
 
 const filterSelection = (arr, matchKey, matchObj) => (arr ? _.uniq(_.map(matchObj ? _.filter(_.reject(arr, { kind: "services" }), matchObj) : _.reject(arr, { kind: "services" }), matchKey)) : []);
 
-const summaryArr = [
-  { key: "1", value: "123" },
-  { key: "2", value: "123" },
-];
-
 class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
@@ -27,6 +22,41 @@ class Step3SLO extends React.Component {
   state = {
     namespaceFilter: "all",
     kindFilter: "all",
+    summaryTags: [
+      { key: "", value: "" },
+    ],
+  }
+
+  onKeyChange = (e, i) => {
+    const summaryTags = [...this.state.summaryTags];
+    summaryTags[i].key = e.target.value;
+
+    if (!_.isEmpty(summaryTags[i].key) && !_.isEmpty(summaryTags[i].value) && summaryTags.length === (i + 1)) {
+      summaryTags.push({ key: "", value: "" });
+    }
+    this.setState({
+      summaryTags,
+    });
+  }
+
+  onValueChange = (e, i) => {
+    const summaryTags = [...this.state.summaryTags];
+    summaryTags[i].value = e.target.value;
+
+    if (!_.isEmpty(summaryTags[i].key) && !_.isEmpty(summaryTags[i].value) && summaryTags.length === (i + 1)) {
+      summaryTags.push({ key: "", value: "" });
+    }
+    this.setState({
+      summaryTags,
+    });
+  }
+
+  onItemDelete = (e, i) => {
+    const summaryTags = [...this.state.summaryTags];
+    _.pullAt(summaryTags, [i]);
+    this.setState({
+      summaryTags,
+    });
   }
 
   get namespace() {
@@ -159,23 +189,23 @@ class Step3SLO extends React.Component {
                 </Control.select>
               </FormGroup>
               <FormGroup className="row">
-                <label htmlFor="slo-summary" className="col-3">Summary</label>
+                <label htmlFor="slo-summary" className="col-3">Tags</label>
               </FormGroup>
               <Table responsive>
                 <thead>
                   <tr>
                     <th>Key</th>
                     <th>Value</th>
-                    <th>Action</th>
+                    <th>{null}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    summaryArr.map(d => (
-                      <tr>
-                        <td><Input placeholder="key" value={d.key} /></td>
-                        <td><Input placeholder="value" value={d.value} /></td>
-                        <td>x</td>
+                    this.state.summaryTags.map((d, i) => (
+                      <tr key={i} >
+                        <td><Input placeholder="New Key" value={d.key} onChange={e => this.onKeyChange(e, i)} /></td>
+                        <td><Input placeholder="New Value" value={d.value} onChange={e => this.onValueChange(e, i)} /></td>
+                        <td><button style={i === this.state.summaryTags.length - 1 ? { display: "none" } : null} onClick={e => this.onItemDelete(e, i)}>x</button></td>
                       </tr>
                     ))
                   }
@@ -198,7 +228,7 @@ class Step3SLO extends React.Component {
               </Row>
             </fieldset>
             <div className="float-right">
-              <Button type="submit" color="primary">Next</Button>
+              <Button type="submit" color="primary" disabled={sloFormDisabled} >Next</Button>
             </div>
           </Form>
         </Col>
