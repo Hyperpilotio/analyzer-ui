@@ -1,12 +1,14 @@
 import React from "react";
 import { Form, Control, actions as formActions } from "react-redux-form";
-import { Row, Col, FormGroup, Button, Table, InputGroup, InputGroupAddon, Input } from "reactstrap";
+import { Row, Col, FormGroup, Button, Table, Input } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
+import FaClose from "react-icons/lib/fa/close";
+import FaPlus from "react-icons/lib/fa/plus";
+import { getKindDisplay } from "../../../lib/utils";
 import { updateApp, fetchMetrics } from "../../../actions";
 
-const filterSelection = (arr, matchKey, matchObj) => (arr ? _.uniq(_.map(matchObj ? _.filter(_.reject(arr, { kind: "services" }), matchObj) : _.reject(arr, { kind: "services" }), matchKey)) : []);
 
 class Step3SLO extends React.Component {
   static propTypes = {
@@ -22,145 +24,78 @@ class Step3SLO extends React.Component {
     deleteTag: PropTypes.func.isRequired,
   };
 
-  state = {
-    namespaceFilter: "all",
-    kindFilter: "all",
-    summaryTags: [
-      { key: "", value: "" },
-    ],
-  }
-
-  onItemDelete = (e, i) => {
-    const summaryTags = [...this.state.summaryTags];
-    _.pullAt(summaryTags, [i]);
-    this.setState({
-      summaryTags,
-    });
-  }
-
-  get namespace() {
-    return filterSelection(this.props.microservices, "namespace");
-  }
-
-  get kind() {
-    return filterSelection(this.props.microservices, "kind", {
-      namespace: this.state.namespaceFilter,
-    });
-  }
-
-  get name() {
-    return filterSelection(this.props.microservices, "name", {
-      namespace: this.state.namespaceFilter,
-      kind: this.state.kindFilter,
-    });
-  }
-
-  filterNamespace = (event) => {
-    this.setState({ namespaceFilter: event.target.value });
-  }
-
-  filterKind = (event) => {
-    this.setState({ kindFilter: event.target.value });
-  }
-
   render() {
     const {
       appId,
       submitSloSource,
       updateSlo,
+      microservices,
       sloSource,
       sloFormDisabled,
       metricOptions,
       stepBack,
-      tags,
+      slo,
       addTagsInput,
       deleteTag,
     } = this.props;
 
     return (
       <Row>
-        <Col sm={5}>
+        <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
           <Form onSubmit={submitSloSource} model="createAppForm.sloSource">
-            <FormGroup className="row" style={{ width: "100%" }}>
+            <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
                 <option value="prometheus">Prometheus</option>
                 <option value="statsd">StatsD</option>
               </Control.select>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row w-100">
               <label htmlFor="slo-microservice" className="col-4">Endpoint Microservice</label>
-              <div className="col-6">
-
-                <FormGroup>
-                  <label htmlFor="slo-microservice-namespace" className="row">Namespace</label>
-                  <Control.select
-                    id="slo-microservice-namespace"
-                    className="form-control row"
-                    type="select"
-                    model=".service.namespace"
-                    onChange={this.filterNamespace}
+              <Control.select id="slo-microservice" className="form-control col" model=".service">
+                {_.map(microservices, ms => (
+                  <option
+                    key={ms.service_id}
+                    value={_.omit(ms, "service_id")}
                   >
-                    <option value="" disabled defaultValue>Select Namespace</option>
-                    { this.namespace.map(
-                      namespace => <option key={namespace} value={namespace}>{ namespace }</option>)
-                    }
-                  </Control.select>
-                </FormGroup>
-
-                <FormGroup>
-                  <fieldset disabled={this.namespace.length === 0}>
-                    <label htmlFor="slo-microservice-kind" className="row">Kind</label>
-                    <Control.select
-                      id="slo-microservice-kind"
-                      className="form-control row"
-                      type="select"
-                      model=".service.kind"
-                      onChange={this.filterKind}
-                    >
-                      <option value="" disabled defaultValue>Select Kind</option>
-                      { this.kind.map(kind => <option key={kind} value={kind}>{ kind }</option>) }
-                    </Control.select>
-                  </fieldset>
-                </FormGroup>
-
-                <FormGroup>
-                  <fieldset disabled={this.kind.length === 0}>
-                    <label htmlFor="slo-microservice-name" className="row">Name</label>
-                    <Control.select
-                      id="slo-microservice-name"
-                      className="form-control row"
-                      type="select"
-                      model=".service.name"
-                    >
-                      <option value="" disabled defaultValue>Select name</option>
-                      { this.name.map(name => <option key={name} value={name}>{ name }</option>) }
-                    </Control.select>
-                  </fieldset>
-                </FormGroup>
-
-              </div>
+                    {ms.namespace} | {getKindDisplay(ms.kind)} | {ms.name}
+                  </option>
+                ))}
+              </Control.select>
             </FormGroup>
-            <FormGroup className="row" style={{ width: "100%" }}>
+            <FormGroup className="row w-100">
               <label htmlFor="slo-port" className="col-4">Port</label>
-              <Control.text type="number" id="slo-port" className="form-control col" model=".port" parser={val => _.toInteger(val)} />
+              <Control.text type="number" id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
             </FormGroup>
             
-            <div style={{ marginRight: "15px" }}>
-              <Button onClick={stepBack} color="secondary" className="mr-2">Back</Button>
-              <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
-            </div>
+            <Row className="w-100">
+              <Col>
+                <Button onClick={stepBack} color="secondary">Back</Button>
+              </Col>
+              <Col>
+                <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
+              </Col>
+            </Row>
           </Form>
         </Col>
-        <Col sm={{ offset: 1 }} style={sloFormDisabled ? { opacity: 0.3 } : null}>
+        <Col style={sloFormDisabled ? { opacity: 0.3 } : null}>
           <h3 className="mb-4">SLO Configuration</h3>
           <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource, appId)}>
             <fieldset disabled={sloFormDisabled}>
               <FormGroup className="row">
                 <label htmlFor="slo-metric" className="col-3">Metric</label>
-                <Control.select htmlFor="slo-metric" className="form-control col" model=".metric.name">
-                  { _.map(metricOptions, mt => <option key={mt} value={mt}>{ mt }</option>) }
+                <Control.select id="slo-metric" className="form-control col" model=".metric.name">
+                  <option value={null} disabled>Select Metric</option>
+                  {
+                    !_.isEmpty(metricOptions)
+                      ? _.map(metricOptions, mt => <option key={mt} value={mt}>{mt}</option>)
+                      : (
+                        _.get(slo, "metric.name")
+                          ? <option value={slo.metric.name}>{slo.metric.name}</option>
+                          : null
+                      )
+                  }
                 </Control.select>
               </FormGroup>
               <FormGroup className="row">
@@ -183,17 +118,21 @@ class Step3SLO extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {_.map(tags, (tag, i) => (
+                  {_.map(slo.metric.tags, (tag, i) => (
                     <tr key={i}>
                       <td><Control.text className="form-control" placeholder="Key" model={`.metric.tags.[${i}].key`} /></td>
                       <td><Control.text className="form-control" placeholder="Value" model={`.metric.tags.[${i}].value`} /></td>
                       <td>
-                        <Button onClick={() => deleteTag(i)}>x</Button>
+                        <FaClose onClick={() => sloFormDisabled ? null : deleteTag(i)} />
                       </td>
                     </tr>
                   ))}
                   <tr>
-                    <td><Button outline color="primary" size="sm" onClick={addTagsInput}>＋Add Tags</Button></td>
+                    <td colSpan={2}>
+                      <Button outline color="primary" size="sm" onClick={addTagsInput}>
+                        <FaPlus /> Add Tags
+                      </Button>
+                    </td>
                   </tr>
                 </tbody>
               </Table>
@@ -223,13 +162,13 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
-  appId: createAppForm.basicInfo.app_id,
-  sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions),
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms } }) => ({
+  appId: basicInfo.app_id,
+  sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
   metricOptions: forms.slo.$form.metricOptions,
-  sloSource: createAppForm.sloSource,
-  microservices: createAppForm.microservices,
-  tags: createAppForm.slo.metric.tags,
+  sloSource,
+  microservices,
+  slo,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

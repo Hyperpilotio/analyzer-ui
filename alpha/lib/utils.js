@@ -4,6 +4,10 @@ export const getSLODisplay = ({ metric, threshold }) => (
   `${metric.type} ${threshold.type === "UB" ? "<" : ">"} ${threshold.value} ${threshold.unit}`
 );
 
+export const getKindDisplay = kind => (
+  _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
+);
+
 export const flattenResourcesData = resources => (
   _.flatMap(resources, ({ namespace, ...kinds }) => (
     _.flatMap(kinds, (names, kind) => (
