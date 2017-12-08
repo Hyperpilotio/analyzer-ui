@@ -32,7 +32,7 @@ export const updateReduxApps = data => ({
   data,
 });
 
-export const updateMicroServices = (microservicesInfo, next) => async (dispatch, getState) => {
+export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {
   const apps = getState().applications.apps;
   const matchAppsItem = _.pick(
     _.find(apps, { app_id: microservicesInfo.app_id }),
@@ -46,7 +46,7 @@ export const updateMicroServices = (microservicesInfo, next) => async (dispatch,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(microservicesInfo),
-        types: types.UPDATE_MICRO_SERVICES,
+        types: types.UPDATE_MICROSERVICES,
       },
     });
     dispatch(updateReduxApps(response.payload.data));

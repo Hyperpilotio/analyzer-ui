@@ -7,7 +7,7 @@ import {
 import _ from "lodash";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
-import { updateMicroServices, fetchAvailableServices } from "../../../actions";
+import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
 
@@ -205,7 +205,7 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
   ),
   fetchMicroservices: () => dispatch(fetchAvailableServices()),
   updateMicroservices: (microservices, appId) => dispatch(
-    updateMicroServices({ microservices, app_id: appId }, stepNext),
+    updateMicroservices({ microservices, app_id: appId }, stepNext),
   ),
 });
 
