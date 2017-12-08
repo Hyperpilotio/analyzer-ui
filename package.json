@@ -81,6 +81,7 @@
     "react-hot-loader": "next",
     "react-icons": "^2.2.5",
     "react-modal": "^3.1.0",
+    "react-powerplug": "^0.1.2",
     "react-redux": "^5.0.5",
     "react-redux-form": "^1.15.0",
     "react-refetch": "^1.0.0",

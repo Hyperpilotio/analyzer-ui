@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Control } from "react-redux-form";
+import { Form, Control, actions as formActions } from "react-redux-form";
 import { Row, Col, FormGroup, Button, Table, InputGroup, InputGroupAddon, Input } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
@@ -15,8 +15,11 @@ class Step3SLO extends React.Component {
     sloFormDisabled: PropTypes.bool.isRequired,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
+    tags: PropTypes.array,
     sloSource: PropTypes.object,
     stepBack: PropTypes.func.isRequired,
+    addTagsInput: PropTypes.func.isRequired,
+    deleteTag: PropTypes.func.isRequired,
   };
 
   state = {
@@ -25,30 +28,6 @@ class Step3SLO extends React.Component {
     summaryTags: [
       { key: "", value: "" },
     ],
-  }
-
-  onKeyChange = (e, i) => {
-    const summaryTags = [...this.state.summaryTags];
-    summaryTags[i].key = e.target.value;
-
-    if (!_.isEmpty(summaryTags[i].key) && !_.isEmpty(summaryTags[i].value) && summaryTags.length === (i + 1)) {
-      summaryTags.push({ key: "", value: "" });
-    }
-    this.setState({
-      summaryTags,
-    });
-  }
-
-  onValueChange = (e, i) => {
-    const summaryTags = [...this.state.summaryTags];
-    summaryTags[i].value = e.target.value;
-
-    if (!_.isEmpty(summaryTags[i].key) && !_.isEmpty(summaryTags[i].value) && summaryTags.length === (i + 1)) {
-      summaryTags.push({ key: "", value: "" });
-    }
-    this.setState({
-      summaryTags,
-    });
   }
 
   onItemDelete = (e, i) => {
@@ -88,10 +67,14 @@ class Step3SLO extends React.Component {
     const {
       submitSloSource,
       updateSlo,
+      updateTags,
       sloSource,
       sloFormDisabled,
       metricOptions,
       stepBack,
+      tags,
+      addTagsInput,
+      deleteTag,
     } = this.props;
 
     return (
@@ -161,7 +144,7 @@ class Step3SLO extends React.Component {
             </FormGroup>
             <FormGroup className="row" style={{ width: "100%" }}>
               <label htmlFor="slo-port" className="col-4">Port</label>
-              <Control.text type="number" id="slo-port" className="form-control col" model=".port" />
+              <Control.text type="number" id="slo-port" className="form-control col" model=".port" parser={val => _.toInteger(val)} />
             </FormGroup>
             
             <div style={{ marginRight: "15px" }}>
@@ -172,17 +155,17 @@ class Step3SLO extends React.Component {
         </Col>
         <Col sm={{ offset: 1 }} style={sloFormDisabled ? { opacity: 0.3 } : null}>
           <h3 className="mb-4">SLO Configuration</h3>
-          <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource)}>
+          <Form model="createAppForm.slo" onSubmit={updateSlo}>
             <fieldset disabled={sloFormDisabled}>
               <FormGroup className="row">
                 <label htmlFor="slo-metric" className="col-3">Metric</label>
-                <Control.select htmlFor="slo-metric" className="form-control col" model=".metric">
+                <Control.select htmlFor="slo-metric" className="form-control col" model=".metric.name">
                   { _.map(metricOptions, mt => <option key={mt} value={mt}>{ mt }</option>) }
                 </Control.select>
               </FormGroup>
               <FormGroup className="row">
                 <label htmlFor="slo-type" className="col-3">Type</label>
-                <Control.select id="slo-type" className="form-control col" model=".type">
+                <Control.select id="slo-type" className="form-control col" model=".metric.type">
                   <option value="latency">Latency</option>
                   <option value="throughput">Throughput</option>
                   <option value="execute_time">Execute-Time</option>
@@ -200,14 +183,20 @@ class Step3SLO extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
+                  { tags && tags.map((d, i) => (
+                    <tr key={i}>
+                      <td><Control.text className="form-control" placeholder="Key" model={`.metric.tags.[${i}].key`} /></td>
+                      <td><Control.text className="form-control" placeholder="Value" model={`.metric.tags.[${i}].value`} /></td>
+                      <td>
+                        <button onClick={() => deleteTag(i)}>x</button>
+                      </td>
+                    </tr>
+                  ))
+                  }
                   {
-                    this.state.summaryTags.map((d, i) => (
-                      <tr key={i} >
-                        <td><Input placeholder="New Key" value={d.key} onChange={e => this.onKeyChange(e, i)} /></td>
-                        <td><Input placeholder="New Value" value={d.value} onChange={e => this.onValueChange(e, i)} /></td>
-                        <td><button style={i === this.state.summaryTags.length - 1 ? { display: "none" } : null} onClick={e => this.onItemDelete(e, i)}>x</button></td>
-                      </tr>
-                    ))
+                    <tr>
+                      <td><Button outline color="primary" size="sm" onClick={() => addTagsInput()}>＋Add Tags</Button></td>
+                    </tr>
                   }
                 </tbody>
               </Table>
@@ -216,13 +205,13 @@ class Step3SLO extends React.Component {
                 <Col>
                   <FormGroup>
                     <label htmlFor="slo-value">Value</label>
-                    <Control.text id="slo-value" className="form-control" model=".value" />
+                    <Control.text id="slo-value" className="form-control" model=".threshold.value" />
                   </FormGroup>
                 </Col>
                 <Col>
                   <FormGroup>
                     <label htmlFor="slo-unit">Unit</label>
-                    <Control.text id="slo-unit" className="form-control" model=".unit" />
+                    <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
                   </FormGroup>
                 </Col>
               </Row>
@@ -242,11 +231,21 @@ const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
   metricOptions: forms.slo.$form.metricOptions,
   sloSource: createAppForm.sloSource,
   microservices: forms.microservices.$form.options,
+  tags: createAppForm.slo.metric.tags,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
   submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
-  updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign(slo, sloSource), stepNext)),
+  updateTags: (tag, newIndex) => {
+    dispatch(formActions.push("createAppForm.slo.metric.tags", tag));
+    dispatch(formActions.focus(`createAppForm.slo.metric.tags[${newIndex}].value`));
+  },
+  addTagsInput: () => dispatch(formActions.push("createAppForm.slo.metric.tags", { key: "", value: "" })),
+  deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
+  updateSlo: (slo) => {
+    console.log("slo", slo);
+    // dispatch(updateApp(_.assign(slo, sloSource, tags), stepNext));
+  },
 });
 
 export default connect(

@@ -23,11 +23,16 @@ export default reduceReducers(
       port: 7998,
     },
     slo: {
-      metric: "",
-      type: "latency",
-      summary: "",
-      value: 0,
-      unit: "ms",
+      threshold: {
+        type: "UB",
+        value: 0,
+        unit: "ms",
+      },
+      metric: {
+        name: "",
+        type: "latency",
+        tags: [],
+      },
     },
     management_features: [
       {
