@@ -17,8 +17,11 @@ const texts = {
   resize_node: "Resize Node",
 };
 
-const Step4ManagementFeatures = ({ management_features, stepBack, updateManageFeatures }) => (
-  <Form model="createAppForm.management_features" onSubmit={updateManageFeatures}>
+const Step4ManagementFeatures = ({ appId, management_features, stepBack, updateManageFeatures }) => (
+  <Form
+    model="createAppForm.management_features"
+    onSubmit={data => updateManageFeatures(data, appId)}
+  >
     { management_features.map(({ name, status, remediation_policy }, index) => (
       <Card key={name} className="mb-3">
         <CardBody>
@@ -85,12 +88,15 @@ Step4ManagementFeatures.propTypes = {
   updateManageFeatures: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ createAppForm: { management_features } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, management_features } }) => ({
+  appId: basicInfo.app_id,
   management_features,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  updateManageFeatures: manageFeatures => dispatch(updateApp(manageFeatures, stepNext)),
+  updateManageFeatures: (manageFeatures, appId) => {
+    dispatch(updateApp({ app_id: appId, management_features: manageFeatures }, stepNext));
+  },
 });
 
 export default connect(

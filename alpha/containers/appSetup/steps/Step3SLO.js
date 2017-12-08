@@ -65,9 +65,9 @@ class Step3SLO extends React.Component {
 
   render() {
     const {
+      appId,
       submitSloSource,
       updateSlo,
-      updateTags,
       sloSource,
       sloFormDisabled,
       metricOptions,
@@ -155,7 +155,7 @@ class Step3SLO extends React.Component {
         </Col>
         <Col sm={{ offset: 1 }} style={sloFormDisabled ? { opacity: 0.3 } : null}>
           <h3 className="mb-4">SLO Configuration</h3>
-          <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource)}>
+          <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource, appId)}>
             <fieldset disabled={sloFormDisabled}>
               <FormGroup className="row">
                 <label htmlFor="slo-metric" className="col-3">Metric</label>
@@ -179,25 +179,22 @@ class Step3SLO extends React.Component {
                   <tr>
                     <th>Key</th>
                     <th>Value</th>
-                    <th>{null}</th>
+                    <th />
                   </tr>
                 </thead>
                 <tbody>
-                  { tags && tags.map((d, i) => (
+                  {_.map(tags, (tag, i) => (
                     <tr key={i}>
                       <td><Control.text className="form-control" placeholder="Key" model={`.metric.tags.[${i}].key`} /></td>
                       <td><Control.text className="form-control" placeholder="Value" model={`.metric.tags.[${i}].value`} /></td>
                       <td>
-                        <button onClick={() => deleteTag(i)}>x</button>
+                        <Button onClick={() => deleteTag(i)}>x</Button>
                       </td>
                     </tr>
-                  ))
-                  }
-                  {
-                    <tr>
-                      <td><Button outline color="primary" size="sm" onClick={() => addTagsInput()}>＋Add Tags</Button></td>
-                    </tr>
-                  }
+                  ))}
+                  <tr>
+                    <td><Button outline color="primary" size="sm" onClick={addTagsInput}>＋Add Tags</Button></td>
+                  </tr>
                 </tbody>
               </Table>
 
@@ -217,7 +214,7 @@ class Step3SLO extends React.Component {
               </Row>
             </fieldset>
             <div className="float-right">
-              <Button type="submit" color="primary" disabled={sloFormDisabled} >Next</Button>
+              <Button type="submit" color="primary" disabled={sloFormDisabled}>Next</Button>
             </div>
           </Form>
         </Col>
@@ -227,22 +224,24 @@ class Step3SLO extends React.Component {
 }
 
 const mapStateToProps = ({ createAppForm, createAppForm: { forms } }) => ({
-  sloFormDisabled: _.size(forms.slo.$form.metricOptions) === 0,
+  appId: createAppForm.basicInfo.app_id,
+  sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions),
   metricOptions: forms.slo.$form.metricOptions,
   sloSource: createAppForm.sloSource,
-  microservices: forms.microservices.$form.options,
+  microservices: createAppForm.microservices,
   tags: createAppForm.slo.metric.tags,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
   submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
-  updateTags: (tag, newIndex) => {
-    dispatch(formActions.push("createAppForm.slo.metric.tags", tag));
-    dispatch(formActions.focus(`createAppForm.slo.metric.tags[${newIndex}].value`));
-  },
-  addTagsInput: () => dispatch(formActions.push("createAppForm.slo.metric.tags", { key: "", value: "" })),
+  addTagsInput: () => dispatch(formActions.push(
+    "createAppForm.slo.metric.tags",
+    { key: "", value: "" },
+  )),
   deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
-  updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign({ slo }, { sloSource }), stepNext)),
+  updateSlo: (slo, sloSource, appId) => {
+    dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
+  },
 });
 
 export default connect(
