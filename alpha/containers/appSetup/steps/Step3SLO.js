@@ -155,7 +155,7 @@ class Step3SLO extends React.Component {
         </Col>
         <Col sm={{ offset: 1 }} style={sloFormDisabled ? { opacity: 0.3 } : null}>
           <h3 className="mb-4">SLO Configuration</h3>
-          <Form model="createAppForm.slo" onSubmit={updateSlo}>
+          <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource)}>
             <fieldset disabled={sloFormDisabled}>
               <FormGroup className="row">
                 <label htmlFor="slo-metric" className="col-3">Metric</label>
@@ -242,10 +242,7 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
   },
   addTagsInput: () => dispatch(formActions.push("createAppForm.slo.metric.tags", { key: "", value: "" })),
   deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
-  updateSlo: (slo) => {
-    console.log("slo", slo);
-    // dispatch(updateApp(_.assign(slo, sloSource, tags), stepNext));
-  },
+  updateSlo: (slo, sloSource) => dispatch(updateApp(_.assign({ slo }, { sloSource }), stepNext)),
 });
 
 export default connect(
