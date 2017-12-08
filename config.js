@@ -19,7 +19,13 @@ let config = {
     configdbName: process.env.CONFIGDB_NAME || "configdb",
     metricdbName: process.env.METRICDB_NAME || "metricdb",
     mockdbName: process.env.CONFIGDB_NAME || "mockdb",
-  }
+  },
+  influx: {
+    host: process.env.INFLUXDB_HOST || "localhost",
+    port: process.env.INFLUXDB_PORT || 8086,
+    username: process.env.INFLUXDB_USERNAME || "root",
+    password: process.env.INFLUXDB_PASSWORD || "root",
+  },
 };
 
 config.analyzer.url = `http://${config.analyzer.host}:${config.analyzer.port}`;

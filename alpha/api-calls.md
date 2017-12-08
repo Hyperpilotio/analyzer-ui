@@ -125,10 +125,18 @@ Body:
                 "name": "statefulset1"
             }
         },
-        "metric": "some_metric_existing_in_prometheus",
-        "summary": "95p",
-        "value": 500,
-        "unit": "ms"
+        "metric": {
+            "name": "some_metric_existing_in_prometheus",
+            "type": "latency",
+            "tags": [
+                { "key": "summary", "value": "quantile_90" }
+            ]
+        },
+        "threshold": {
+            "type": "UB",
+            "unit": "ms",
+            "value": 500
+        }
     }
 }
 ```

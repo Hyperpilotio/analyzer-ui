@@ -9,7 +9,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import ManagedAppPage from "./ManagedAppPage";
-import { fetchApps, fetchEvents, removeApp } from "../actions";
+import { fetchApps, fetchDiagnostics, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
 
@@ -17,9 +17,9 @@ class DashboardPage extends React.Component {
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
     isFetchAppsLoading: PropTypes.bool.isRequired,
-    isFetchEventsLoading: PropTypes.bool.isRequired,
+    isFetchDiagnosticsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
-    fetchEvents: PropTypes.func.isRequired,
+    fetchDiagnostics: PropTypes.func.isRequired,
     removeApp: PropTypes.func.isRequired,
     apps: PropTypes.arrayOf(appPropType).isRequired,
     incidents: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
@@ -29,18 +29,21 @@ class DashboardPage extends React.Component {
 
   componentWillMount() {
     this.props.fetchApps();
-    this.props.fetchEvents();
+    this.props.fetchDiagnostics();
   }
 
   render() {
-    const { isFetchEventsLoading, isFetchAppsLoading } = this.props;
+    const {
+      results, incidents, problems,
+      isFetchDiagnosticsLoading, isFetchAppsLoading,
+    } = this.props;
     return (
       <div>
         <Switch>
           <Route
             path={`${this.props.match.path}/:appId`}
             render={({ match }) => {
-              const app = _.find(this.props.apps, { _id: match.params.appId });
+              const app = _.find(this.props.apps, { app_id: match.params.appId });
               if (_.isUndefined(app)) {
                 return null;
               }
@@ -48,8 +51,9 @@ class DashboardPage extends React.Component {
                 <ManagedAppPage
                   match={match}
                   app={app}
-                  incidents={this.props.incidents[app._id]}
-                  opportunities={this.props.opportunities[app._id]}
+                  result={_.find(results, { app_id: app.app_id })}
+                  incident={_.find(incidents, { app_id: app.app_id })}
+                  problems={_.filter(problems, { app_id: app.app_id })}
                 />
               );
             }}
@@ -68,7 +72,7 @@ class DashboardPage extends React.Component {
               </Row>
               <Row>
                 <DashboardAppsTable
-                  isLoading={isFetchAppsLoading || isFetchEventsLoading}
+                  isLoading={isFetchAppsLoading || isFetchDiagnosticsLoading}
                   {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
                 />
               </Row>
@@ -81,26 +85,26 @@ class DashboardPage extends React.Component {
 }
 
 const mapStateToProps = ({
-  ui: { isFetchAppsLoading, isFetchEventsLoading },
+  ui: { isFetchAppsLoading, isFetchDiagnosticsLoading },
   applications: { apps },
-  diagnosis: { incidents, risks, opportunities },
+  diagnosis: { incidents, problems, results },
 }) => ({
   apps,
   incidents,
-  risks,
-  opportunities,
+  problems,
+  results,
   isFetchAppsLoading,
-  isFetchEventsLoading,
+  isFetchDiagnosticsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
-  fetchEvents: () => dispatch(fetchEvents()),
+  fetchDiagnostics: () => dispatch(fetchDiagnostics()),
   removeApp: appId => dispatch(removeApp(appId)),
   resetAppForm: () => {
-    for (const form of ["basicInfo", "microservices", "sloSource", "slo", "management_features"]) {
-      dispatch(formActions.reset(`createAppForm.${form}`));
-    }
+    ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(
+      form => dispatch(formActions.reset(`createAppForm.${form}`)),
+    );
   },
 });
 

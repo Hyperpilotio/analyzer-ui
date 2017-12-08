@@ -40,13 +40,19 @@ const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, 
             );
           }
           let badge;
-          if (_.size(incidents[app._id]) !== 0) {
-            badge = (
-              <Badge className={_s.Badge} color="danger">
-                <FaTimesCircle className="mr-1" />
-                Incidents
-              </Badge>
-            );
+          badge = (
+            <Badge className={_s.Badge} color="danger">
+              <FaTimesCircle className="mr-1" />
+              Incidents
+            </Badge>
+          );
+          // if (_.size(incidents[app._id]) !== 0) {
+          //   badge = (
+          //     <Badge className={_s.Badge} color="danger">
+          //       <FaTimesCircle className="mr-1" />
+          //       Incidents
+          //     </Badge>
+          //   );
           // Hiding this section for only doing P0
           // } else if (_.size(risks[app._id]) !== 0) {
           //   badge = (
@@ -55,19 +61,19 @@ const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, 
           //       Risks
           //     </Badge>
           //   )
-          } else if (_.size(opportunities[app._id]) !== 0) {
-            badge = (
-              <Badge className={_s.Badge} color="success">
-                <FaLightbulbO className="mr-1" />
-                Opportunities
-              </Badge>
-            );
-          }
+          // } else if (_.size(opportunities[app._id]) !== 0) {
+          //   badge = (
+          //     <Badge className={_s.Badge} color="success">
+          //       <FaLightbulbO className="mr-1" />
+          //       Opportunities
+          //     </Badge>
+          //   );
+          // }
           return (
-            <Linked tag="tr" to={`/dashboard/${app._id}`} key={app._id}>
+            <Linked tag="tr" to={`/dashboard/${app.app_id}`} key={app.app_id}>
               <td>{ app.name }</td>
               <td>{ app.type }</td>
-              <td>{ _.size(app.services) }</td>
+              <td>{ _.size(app.microservices) }</td>
               <td>{ getSLODisplay(app.slo) }</td>
               <td>{ badge }</td>
               <td>{ app.state }</td>
