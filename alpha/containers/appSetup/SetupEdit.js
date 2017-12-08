@@ -15,6 +15,13 @@ import Step3SLO from "./steps/Step3SLO";
 import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
 
 class SetupEdit extends React.Component {
+  static propTypes = {
+    match: ReactRouterPropTypes.match.isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
+    prepareEditAppForm: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+  }
+
   componentWillMount() {
     const appId = this.props.match.params.appId;
     this.props.prepareEditAppForm(appId);
@@ -30,9 +37,9 @@ class SetupEdit extends React.Component {
   }
 
   handleSubmit = (app) => {
-    // TODO: 
+    // TODO:
     // 1. insert selected resources into analyzer DB
-    // 2. await and done add App   
+    // 2. await and done add App
     // 3. redirect to done page
 
     this.props.updateResources(app.services);
@@ -53,7 +60,6 @@ class SetupEdit extends React.Component {
       stepActions.stepNext = appId => history.push(`/apps/${appId}/edit/2`);
       stepActions.mode = "create";
       formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
-
     } else {
       if (step !== 1) {
         stepActions.stepBack = () => history.push(`/apps/${match.params.appId}/edit/${step - 1}`);
@@ -90,11 +96,6 @@ class SetupEdit extends React.Component {
     );
   }
 }
-
-SetupEdit.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired,
-  history: ReactRouterPropTypes.history.isRequired,
-};
 
 const mapStateToProps = ({ createAppForm, ui }) => ({
   createAppForm,

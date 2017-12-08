@@ -1,87 +1,189 @@
 import React from "react";
-import { Form, Control } from "react-redux-form";
-import { Row, Col, FormGroup, Button } from "reactstrap";
+import { Form, Control, actions as formActions } from "react-redux-form";
+import { Row, Col, FormGroup, Button, Table, Input } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { saveSloSourceConfig } from "../../../actions";
+import PropTypes from "prop-types";
+import FaClose from "react-icons/lib/fa/close";
+import FaPlus from "react-icons/lib/fa/plus";
+import { getKindDisplay } from "../../../lib/utils";
+import { updateApp, fetchMetrics } from "../../../actions";
 
-const Step3SLO = ({ submitSloSource, sloFormDisabled, metricOptions, stepBack, stepNext }) => (
-  <Row>
-    <Col sm={5}>
-      <Form onSubmit={submitSloSource} model="createAppForm.sloSource">
-        <FormGroup className="row">
-          <label className="col-4">APM type</label>
-          <Control.select className="form-control col" model=".APM_type">
-            <option value="prometheus">Prometheus</option>
-            <option value="statsd">StatsD</option>
-          </Control.select>
-        </FormGroup>
-        <FormGroup className="row">
-          <label className="col-4">Service Name</label>
-          <Control.text className="form-control col" model=".service_name" />
-        </FormGroup>
-        <FormGroup className="row">
-          <label className="col-4">Port</label>
-          <Control.text className="form-control col" model=".port" />
-        </FormGroup>
-        <Button type="submit" color="primary">Confirm</Button>
-      </Form>
-    </Col>
-    <Col sm={{ offset: 1 }}>
-      <Form model="createAppForm.slo" onSubmit={stepNext}>
-        <fieldset disabled={sloFormDisabled}>
-          <FormGroup className="row">
-            <label className="col-3">Metric</label>
-            <Control.select className="form-control col" model=".metric">
-              { _.map(metricOptions, mt => <option key={mt} value={mt}>{ mt }</option>) }
-            </Control.select>
-          </FormGroup>
-          <FormGroup className="row">
-            <label className="col-3">Type</label>
-            <Control.select className="form-control col" model=".type">
-              <option value="latency">Latency</option>
-              <option value="throughput">Throughput</option>
-              <option value="execute_time">Execute-Time</option>
-            </Control.select>
-          </FormGroup>
-          <FormGroup className="row">
-            <label className="col-3">Summary</label>
-            <Control.text className="form-control col" model=".summary" />
-          </FormGroup>
-          <Row>
-            <Col>
-              <FormGroup>
-                <label>Value</label>
-                <Control.text className="form-control" model=".value" />
-              </FormGroup>
-            </Col>
-            <Col>
-              <FormGroup>
-                <label>Unit</label>
-                <Control.text className="form-control" model=".unit" />
-              </FormGroup>
-            </Col>
-          </Row>
-        </fieldset>
-        <div className="float-right">
-          <Button onClick={stepBack} color="secondary" className="mr-2">Back</Button>
-          <Button type="submit" color="primary">Next</Button>
-        </div>
-      </Form>
-    </Col>
-  </Row>
-);
 
-const mapStateToProps = ({ createAppForm: { forms } }) => ({
-  sloFormDisabled: _.size(forms.slo.$form.metricOptions) === 0,
+class Step3SLO extends React.Component {
+  static propTypes = {
+    submitSloSource: PropTypes.func.isRequired,
+    updateSlo: PropTypes.func.isRequired,
+    sloFormDisabled: PropTypes.bool.isRequired,
+    metricOptions: PropTypes.array,
+    microservices: PropTypes.array,
+    tags: PropTypes.array,
+    sloSource: PropTypes.object,
+    stepBack: PropTypes.func.isRequired,
+    addTagsInput: PropTypes.func.isRequired,
+    deleteTag: PropTypes.func.isRequired,
+  };
+
+  render() {
+    const {
+      appId,
+      submitSloSource,
+      updateSlo,
+      microservices,
+      sloSource,
+      sloFormDisabled,
+      metricOptions,
+      stepBack,
+      slo,
+      addTagsInput,
+      deleteTag,
+    } = this.props;
+
+    return (
+      <Row>
+        <Col sm={6}>
+          <h3 className="mb-4">SLO Metrics Source</h3>
+          <Form onSubmit={submitSloSource} model="createAppForm.sloSource">
+            <FormGroup className="row w-100">
+              <label htmlFor="slo-apm-type" className="col-4">APM type</label>
+              <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
+                <option value="prometheus">Prometheus</option>
+                <option value="statsd">StatsD</option>
+              </Control.select>
+            </FormGroup>
+            <FormGroup className="row w-100">
+              <label htmlFor="slo-microservice" className="col-4">Endpoint Microservice</label>
+              <Control.select id="slo-microservice" className="form-control col" model=".service">
+                {_.map(microservices, ms => (
+                  <option
+                    key={ms.service_id}
+                    value={_.omit(ms, "service_id")}
+                  >
+                    {ms.namespace} | {getKindDisplay(ms.kind)} | {ms.name}
+                  </option>
+                ))}
+              </Control.select>
+            </FormGroup>
+            <FormGroup className="row w-100">
+              <label htmlFor="slo-port" className="col-4">Port</label>
+              <Control.text type="number" id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
+            </FormGroup>
+            
+            <Row className="w-100">
+              <Col>
+                <Button onClick={stepBack} color="secondary">Back</Button>
+              </Col>
+              <Col>
+                <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
+              </Col>
+            </Row>
+          </Form>
+        </Col>
+        <Col style={sloFormDisabled ? { opacity: 0.3 } : null}>
+          <h3 className="mb-4">SLO Configuration</h3>
+          <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource, appId)}>
+            <fieldset disabled={sloFormDisabled}>
+              <FormGroup className="row">
+                <label htmlFor="slo-metric" className="col-3">Metric</label>
+                <Control.select id="slo-metric" className="form-control col" model=".metric.name">
+                  <option value={null} disabled>Select Metric</option>
+                  {
+                    !_.isEmpty(metricOptions)
+                      ? _.map(metricOptions, mt => <option key={mt} value={mt}>{mt}</option>)
+                      : (
+                        _.get(slo, "metric.name")
+                          ? <option value={slo.metric.name}>{slo.metric.name}</option>
+                          : null
+                      )
+                  }
+                </Control.select>
+              </FormGroup>
+              <FormGroup className="row">
+                <label htmlFor="slo-type" className="col-3">Type</label>
+                <Control.select id="slo-type" className="form-control col" model=".metric.type">
+                  <option value="latency">Latency</option>
+                  <option value="throughput">Throughput</option>
+                  <option value="execute_time">Execute-Time</option>
+                </Control.select>
+              </FormGroup>
+              <FormGroup className="row">
+                <label htmlFor="slo-summary" className="col-3">Tags</label>
+              </FormGroup>
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {_.map(slo.metric.tags, (tag, i) => (
+                    <tr key={i}>
+                      <td><Control.text className="form-control" placeholder="Key" model={`.metric.tags.[${i}].key`} /></td>
+                      <td><Control.text className="form-control" placeholder="Value" model={`.metric.tags.[${i}].value`} /></td>
+                      <td>
+                        <FaClose onClick={() => sloFormDisabled ? null : deleteTag(i)} />
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td colSpan={2}>
+                      <Button outline color="primary" size="sm" onClick={addTagsInput}>
+                        <FaPlus /> Add Tags
+                      </Button>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+
+              <Row>
+                <Col>
+                  <FormGroup>
+                    <label htmlFor="slo-value">Value</label>
+                    <Control.text id="slo-value" className="form-control" model=".threshold.value" />
+                  </FormGroup>
+                </Col>
+                <Col>
+                  <FormGroup>
+                    <label htmlFor="slo-unit">Unit</label>
+                    <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
+                  </FormGroup>
+                </Col>
+              </Row>
+            </fieldset>
+            <div className="float-right">
+              <Button type="submit" color="primary" disabled={sloFormDisabled}>Next</Button>
+            </div>
+          </Form>
+        </Col>
+      </Row>
+    );
+  }
+}
+
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms } }) => ({
+  appId: basicInfo.app_id,
+  sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
   metricOptions: forms.slo.$form.metricOptions,
+  sloSource,
+  microservices,
+  slo,
 });
 
-const mapDispatchToProps = dispatch => ({
-  submitSloSource: sloSource => dispatch(saveSloSourceConfig(sloSource)),
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
+  submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
+  addTagsInput: () => dispatch(formActions.push(
+    "createAppForm.slo.metric.tags",
+    { key: "", value: "" },
+  )),
+  deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
+  updateSlo: (slo, sloSource, appId) => {
+    dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
+  },
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Step3SLO);

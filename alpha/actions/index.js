@@ -32,12 +32,36 @@ export const updateReduxApps = data => ({
   data,
 });
 
+export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {
+  const apps = getState().applications.apps;
+  const matchAppsItem = _.pick(
+    _.find(apps, { app_id: microservicesInfo.app_id }),
+    _.keys(microservicesInfo),
+  );
+  // update in DB and redux apps if they are different
+  if (!_.isEqual(microservicesInfo, matchAppsItem)) {
+    const response = await dispatch({
+      [RSAA]: {
+        endpoint: "/api/save-microservices",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(microservicesInfo),
+        types: types.UPDATE_MICROSERVICES,
+      },
+    });
+    dispatch(updateReduxApps(response.payload.data));
+    next(response.payload.data.app_id);
+  } else {
+    next(microservicesInfo.app_id);
+  }
+};
+
+
 export const updateApp = (app, next) => async (dispatch, getState) => {
   const apps = getState().applications.apps;
-  const appsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
-
+  const matchAppsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
   // update in DB and redux apps if they are different
-  if (!_.isEqual(app, appsItem)) {
+  if (!_.isEqual(app, matchAppsItem)) {
     const response = await dispatch({
       [RSAA]: {
         endpoint: "/api/update-app",
@@ -75,57 +99,17 @@ export const fetchAvailableServices = () => ({
   },
 });
 
-export const editSingleApp = appId => ({
-  type: types.EDIT_SINGLE_APP,
-  appId,
-});
-
-export const saveSloSourceConfig = sloSource => ({
+export const fetchMetrics = sloSource => ({
   [RSAA]: {
-    endpoint: "/mock/api/slo-source",
+    endpoint: "/api/get-metrics",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(sloSource),
-    types: types.SAVE_SLO_SOURCE,
+    types: types.FETCH_METRICS,
   },
 });
-
-export const submitSloConfig = data => ({
-  type: types.SUBMIT_SLO_CONFIG,
-  data,
-});
-
-export const updateSingleSloLoading = () => ({
-  type: types.UPDATE_SINGLE_SLO_LOADING,
-});
-
-export const updateSingleSloSuccess = status => ({
-  type: types.UPDATE_SINGLE_SLO_SUCCESS,
-  status,
-});
-
-export const updateSingleSloFail = () => ({
-  type: types.UPDATE_SINGLE_SLO_FAIL,
-});
-
-export const updateSingleSlo = () => async (dispatch) => {
-  dispatch(updateSingleSloLoading());
-
-  const res = await fetch("/api/update");
-  if (!res.ok) {
-    dispatch(updateSingleSloFail());
-    return;
-  }
-
-  const data = await res.json();
-  if (data.success) {
-    dispatch(updateSingleSloSuccess(data.applications));
-  } else {
-    dispatch(updateSingleSloFail());
-  }
-};
 
 export const beginHyperpiloting = () => ({
   [RSAA]: {

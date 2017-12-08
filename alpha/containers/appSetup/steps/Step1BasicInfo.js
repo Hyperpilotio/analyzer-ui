@@ -4,16 +4,15 @@ import { Form, Control } from "react-redux-form";
 import { connect } from "react-redux";
 import { updateApp, createApp } from "../../../actions";
 
-const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, stepNext }) => (
-  <Form model="createAppForm.basicInfo" onSubmit={data => submitBasicInfo(data, stepNext)}>
+const Step1BasicInfo = ({ cancelEdit, submitBasicInfo }) => (
+  <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
     <div className="form-group row">
-      <label className="col-2">APP Name</label>
-      <Control.text model=".name" className="form-control col" placeholder="Enter APP name" />
+      <label htmlFor="basic-app" className="col-2">APP Name</label>
+      <Control.text model=".name" id="basic-app" className="form-control col" placeholder="Enter APP name" />
     </div>
-
     <div className="form-group row">
-      <label className="col-2">Type</label>
-      <Control.select model=".type" className="form-control col">
+      <label htmlFor="basic-type" className="col-2">Type</label>
+      <Control.select model=".type" id="basic-type" className="form-control col">
         <option value="long-running">long-running</option>
         <option value="batch-processing">batch-processing</option>
       </Control.select>
@@ -29,11 +28,12 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, stepNext }) => (
 );
 
 Step1BasicInfo.propTypes = {
+  submitBasicInfo: PropTypes.func.isRequired,
   cancelEdit: PropTypes.func.isRequired,
   stepNext: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch, { stepNext, mode, appId }) => ({
+const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
   submitBasicInfo: (basicInfo) => {
     if (mode === "create") {
       dispatch(createApp(basicInfo, stepNext));
@@ -42,6 +42,5 @@ const mapDispatchToProps = (dispatch, { stepNext, mode, appId }) => ({
     }
   },
 });
-
 
 export default connect(null, mapDispatchToProps)(Step1BasicInfo);

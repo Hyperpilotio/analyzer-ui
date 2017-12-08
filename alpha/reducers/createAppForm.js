@@ -15,15 +15,24 @@ export default reduceReducers(
     microservices: [],
     sloSource: {
       APM_type: "prometheus",
-      service_name: "",
-      port: 9090,
+      service: {
+        namespace: "",
+        kind: "",
+        name: "",
+      },
+      port: 7998,
     },
     slo: {
-      metric: "",
-      type: "latency",
-      summary: "",
-      value: 0,
-      unit: "ms",
+      threshold: {
+        type: "UB",
+        value: 0,
+        unit: "ms",
+      },
+      metric: {
+        name: "",
+        type: "latency",
+        tags: [],
+      },
     },
     management_features: [
       {
@@ -64,7 +73,7 @@ export default reduceReducers(
         flattenResourcesData(action.payload.data),
         _.clone,
       );
-    case types.SAVE_SLO_SOURCE[SUCCESS]:
+    case types.FETCH_METRICS[SUCCESS]:
       return _.setWith(
         { ...state },
         "forms.slo.$form.metricOptions",

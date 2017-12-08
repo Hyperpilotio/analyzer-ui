@@ -1,17 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  Card, CardBody, CardFooter, CardTitle,
+  Card, CardBody, CardTitle,
   Table, FormGroup, Input, Button,
-  Pagination, PaginationItem, PaginationLink,
 } from "reactstrap";
 import _ from "lodash";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
-import { fetchAvailableServices } from "../../../actions";
+import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
+
 
 const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
@@ -30,27 +29,42 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
       </thead>
       <tbody style={tbodyStyle} className="d-block">
         { microservices.map(({ namespace, kind, name }) => (
-            <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
-              <td className="col">{ namespace }</td>
-              <td className="col">{ getDisplayKind(kind) }</td>
-              <td className="col">{ name }</td>
-              <td className="col">
-                { React.cloneElement(buttonElement, {
-                    onClick: () => buttonOnClick({ namespace, kind, name }),
-                  })
-                }
-              </td>
-            </tr>
-          ))
+          <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
+            <td className="col">{ namespace }</td>
+            <td className="col">{ getDisplayKind(kind) }</td>
+            <td className="col">{ name }</td>
+            <td className="col">
+              { React.cloneElement(buttonElement, {
+                onClick: () => buttonOnClick({ namespace, kind, name }),
+              })
+              }
+            </td>
+          </tr>
+        ))
         }
       </tbody>
     </Table>
   </div>
 );
 
+MicroservicesTable.propTypes = {
+  tbodyStyle: PropTypes.object.isRequired,
+  microservices: PropTypes.array.isRequired,
+  buttonElement: PropTypes.object.isRequired,
+  buttonOnClick: PropTypes.func.isRequired,
+};
+
 class Step2Microservices extends React.Component {
   static propTypes = {
-    cacheServices: PropTypes.func.isRequired,
+    // cacheServices: PropTypes.func.isRequired,
+    microservices: PropTypes.array.isRequired,
+    k8sMicroservices: PropTypes.array,
+    fetchMicroservices: PropTypes.func.isRequired,
+    addMicroservice: PropTypes.func.isRequired,
+    removeMicroservice: PropTypes.func.isRequired,
+    stepBack: PropTypes.func.isRequired,
+    updateMicroservices: PropTypes.func.isRequired,
+    stepNext: PropTypes.func.isRequired,
   }
 
   state = {
@@ -62,19 +76,11 @@ class Step2Microservices extends React.Component {
     this.props.fetchMicroservices();
   }
 
-  filterNamespace(event) {
-    this.setState({ namespaceFilter: event.target.value });
-  }
-
-  filterKind(event) {
-    this.setState({ kindFilter: event.target.value });
-  }
-
   get detectedMicroservices() {
     const excludeSelected = _.reduce(
       this.props.microservices,
       _.reject,
-      this.props.k8sMicroservices
+      this.props.k8sMicroservices,
     );
 
     const filter = {};
@@ -91,9 +97,22 @@ class Step2Microservices extends React.Component {
     return _.uniq(_.map(this.props.k8sMicroservices, "namespace"));
   }
 
+  filterNamespace(event) {
+    this.setState({ namespaceFilter: event.target.value });
+  }
+
+  filterKind(event) {
+    this.setState({ kindFilter: event.target.value });
+  }
+
   render() {
+    const {
+      appId,
+      updateMicroservices,
+    } = this.props;
+
     return (
-      <Form model="createAppForm.microservices" onSubmit={this.props.stepNext}>
+      <Form model="createAppForm.microservices" onSubmit={microservices => updateMicroservices(microservices, appId)}>
         {/* Selected Microservices */}
         <Card className={`${_s.selectedMicroservices} ${_s.card}`}>
           <CardBody>
@@ -122,24 +141,26 @@ class Step2Microservices extends React.Component {
               <div className="row">
                 {/* NameSpace */}
                 <FormGroup className="col">
-                  <label>Namespace</label>
+                  <label htmlFor="select-namespace">Namespace</label>
                   <Input
+                    id="select-namespace"
                     type="select"
                     onChange={::this.filterNamespace}
                     value={this.state.namespaceFilter}
                   >
                     <option value="all">All</option>
                     { this.namespaces.map(namespace => (
-                        <option key={namespace} value={namespace}>{ namespace }</option>
-                      ))
+                      <option key={namespace} value={namespace}>{ namespace }</option>
+                    ))
                     }
                   </Input>
                 </FormGroup>
 
                 {/* Kind */}
                 <FormGroup className="col">
-                  <label>Kind</label>
+                  <label htmlFor="select-kind">Kind</label>
                   <Input
+                    id="select-kind"
                     type="select"
                     onChange={::this.filterKind}
                     value={this.state.kindFilter}
@@ -169,20 +190,27 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { microservices, forms } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms } }) => ({
   microservices,
+  appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
 });
 
-const mapDispatchToProps = (dispatch, { microservices }) => ({
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
   removeMicroservice: ms => dispatch(
     modelActions.filter("createAppForm.microservices", added => !_.isEqual(added, ms)),
   ),
-  addMicroservice: ms => dispatch(modelActions.push("createAppForm.microservices", ms)),
+  addMicroservice: ms => dispatch(
+    modelActions.push("createAppForm.microservices", ms),
+  ),
   fetchMicroservices: () => dispatch(fetchAvailableServices()),
+  updateMicroservices: (microservices, appId) => dispatch(
+    updateMicroservices({ microservices, app_id: appId }, stepNext),
+  ),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Step2Microservices)
+)(Step2Microservices);
+
