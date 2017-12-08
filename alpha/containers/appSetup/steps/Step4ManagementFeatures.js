@@ -7,6 +7,7 @@ import {
 import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { updateApp } from "../../../actions";
 
 const texts = {
   interference_management: "Interference Management",
@@ -16,8 +17,8 @@ const texts = {
   resize_node: "Resize Node",
 };
 
-const Step4ManagementFeatures = ({ management_features, stepBack }) => (
-  <Form model="createAppForm.management_features">
+const Step4ManagementFeatures = ({ management_features, stepBack, updateManageFeatures }) => (
+  <Form model="createAppForm.management_features" onSubmit={updateManageFeatures}>
     { management_features.map(({ name, status, remediation_policy }, index) => (
       <Card key={name} className="mb-3">
         <CardBody>
@@ -81,10 +82,18 @@ const Step4ManagementFeatures = ({ management_features, stepBack }) => (
 Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
-};
+  updateManageFeatures: PropTypes.func.isRequired,
+}
 
 const mapStateToProps = ({ createAppForm: { management_features } }) => ({
   management_features,
 });
 
-export default connect(mapStateToProps)(Step4ManagementFeatures);
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
+  updateManageFeatures: manageFeatures => dispatch(updateApp(manageFeatures, stepNext)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Step4ManagementFeatures);
