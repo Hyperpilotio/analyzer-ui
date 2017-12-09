@@ -15,9 +15,9 @@ export default (state = initialState, action) => {
     data = action.payload.data;
     return {
       ...state,
-      results: _.unionBy(state.results, data.results, "app_id"),
-      incidents: _.unionBy(state.incidents, data.incidents, "id"),
-      problems: _.unionBy(state.problems, data.problems, "id"),
+      results: _.unionBy(data.results, state.results, "incident_id"),
+      incidents: _.unionBy(data.incidents, state.incidents, "incident_id"),
+      problems: _.unionBy(data.problems, state.problems, "problem_id"),
     };
   default:
     return state;

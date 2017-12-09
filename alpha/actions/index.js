@@ -119,9 +119,9 @@ export const beginHyperpiloting = () => ({
   },
 });
 
-export const fetchDiagnostics = () => ({
+export const fetchDiagnostics = appId => ({
   [RSAA]: {
-    endpoint: "/api/diagnostics",
+    endpoint: `/api/diagnostics/${appId}`,
     method: "GET",
     types: types.FETCH_DIAGNOSTICS,
   },

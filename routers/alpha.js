@@ -145,54 +145,35 @@ router.post("/api/influx-data", async (req, res) => {
   });
 });
 
-router.get("/api/diagnostics", async (req, res) => {
-  const apps = await request.get({
-    uri: `${config.analyzer.url}/api/apps`, json: true,
+router.get("/api/diagnostics/:appId", async (req, res) => {
+  const app = await request.get({
+    uri: `${config.analyzer.url}/api/apps/${req.params.appId}`, json: true,
   });
-  const activeApps = _.filter(apps.data, { state: "Active" });
-  const incidents = activeApps.map(app => ({
-    id: `incident-${_.toInteger(10000000 * Math.random())}`,
-    app_id: app.app_id,
-    type: "SLO_violation",
-    timestamp: moment(1511980560000),
-    duration: 5 * 60 * 1000,
-  }));
-  const problems = _.flatMap(incidents, incident => [
-    {
-      id: `problem-${incident.id}-1`,
-      app_id: incident.app_id,
-      incident_id: incident.id,
-      type: "over_utilization",
-      metric_name: "intel/docker/stats/cgroups/cpu_stats/cpu_usage/user_mode/over_utilization",
-      severity: 62,
-    },
-    {
-      id: `problem-${incident.id}-2`,
-      app_id: incident.app_id,
-      incident_id: incident.id,
-      type: "resource_bottleneck",
-      metric_name: "intel/psutil/net/all/bytes_recv/resource_bottleneck",
-      severity: 57,
-    },
-    {
-      id: `problem-${incident.id}-3`,
-      app_id: incident.app_id,
-      incident_id: incident.id,
-      type: "resource_bottleneck",
-      metric_name: "intel/psutil/net/all/bytes_sent/resource_bottleneck",
-      severity: 54,
-    },
-  ]);
-  const results = incidents.map(incident => ({
-    app_id: incident.app_id,
-    incident_id: incident.id,
-    top_related_problems: _.filter(problems, { incident_id: incident.id }).map(problem => ({
-      id: problem.id,
-      remediation_options: [],
+  const incident = await request.get({
+    uri: `${config.analyzer.url}/api/incidents`,
+    json: true,
+    body: { app_name: app.data.name },
+  });
+  const diagnosis = await request.get({
+    uri: `${config.analyzer.url}/api/diagnosis`,
+    json: true,
+    body: { app_name: app.data.name, incident_id: incident.data.incident_id },
+  });
+  const problems = await Promise.all(
+    diagnosis.data.top_related_problems.map(({ id }) => request.get({
+      uri: `${config.analyzer.url}/api/problems/${id}`,
+      json: true,
     })),
-  }));
+  );
 
-  res.json({ success: true, data: { incidents, problems, results } });
+  res.json({
+    success: true,
+    data: {
+      incidents: [incident.data],
+      results: [diagnosis.data],
+      problems: _.map(problems, "data"),
+    },
+  });
 });
 
 export default router;
