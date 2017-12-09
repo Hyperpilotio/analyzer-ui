@@ -10,9 +10,11 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
       <Table hover>
         <thead>
           <tr>
-            <th>Problem #</th>
+            <th>Ranking</th>
             <th>Type</th>
-            <th>Description</th>
+            <th>Severity</th>
+            <th>Correlation</th>
+            <th>Score</th>
           </tr>
         </thead>
         <tbody>
@@ -20,9 +22,11 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
             const problem = _.find(problems, { problem_id: id });
             return (
               <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
-                <th scope="row">#{ i + 1 }</th>
+                <th scope="row">{ problem.rank }</th>
                 <td>{ problem.type }</td>
-                <td>PLACEHOLDER</td>
+                <td>{ problem.analysis_result.severity }</td>
+                <td>{ problem.analysis_result.correlation }</td>
+                <td>{ problem.analysis_result.score }</td>
               </Linked>
             );
           })}
