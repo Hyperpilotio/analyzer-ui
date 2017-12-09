@@ -131,8 +131,8 @@ router.post("/api/influx-data", async (req, res) => {
   const tagsFilter = _.map(req.body.tags, ({ key, value }) => `AND "${key}" = '${value}' `);
   const query = `
     SELECT mean(value) AS value FROM "${req.body.metric}"
-    WHERE time <= ${req.body.start * 1000000}
-    AND time >= ${req.body.end * 1000000}
+    WHERE time >= ${req.body.start}
+    AND time <= ${req.body.end}
     ${tagsFilter}
     GROUP BY time(5s)
   `;

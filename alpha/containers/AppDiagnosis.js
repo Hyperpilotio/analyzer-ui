@@ -33,8 +33,8 @@ class AppDiagnosis extends React.Component {
               <SLOGraph
                 app={app}
                 timeRange={[
-                  moment(incident.timestamp),
-                  moment(incident.timestamp).subtract(incident.duration, "ms"),
+                  incident.timestamp - 300 * 1000 ** 3,
+                  incident.timestamp,
                 ]}
               />
             </Container>
