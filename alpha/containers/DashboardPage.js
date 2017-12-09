@@ -34,7 +34,7 @@ class DashboardPage extends React.Component {
 
   render() {
     const {
-      apps, results, incidents, problems,
+      applicationss, results, incidents, problems,
       isFetchDiagnosticsLoading, isFetchAppsLoading,
     } = this.props;
     return (
@@ -56,7 +56,7 @@ class DashboardPage extends React.Component {
               <Row>
                 <DashboardAppsTable
                   isLoading={isFetchAppsLoading}
-                  {..._.pick(this.props, ["apps", "incidents", "risks", "opportunities", "removeApp"])}
+                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
               </Row>
             </Container>
@@ -69,10 +69,10 @@ class DashboardPage extends React.Component {
 
 const mapStateToProps = ({
   ui: { isFetchAppsLoading, isFetchDiagnosticsLoading },
-  applications: { apps },
+  applications,
   diagnosis: { incidents, problems, results },
 }) => ({
-  apps,
+  applications,
   incidents,
   problems,
   results,

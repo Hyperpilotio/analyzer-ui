@@ -109,13 +109,13 @@ class AppDiagnosis extends React.Component {
   }
 }
 
-const mapStateToProps = ({ applications: { apps }, ui, diagnosis }, { match }) => {
-  const isAppLoading = _.isEmpty(apps) || ui.isFetchAppsLoading;
+const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
+  const isAppLoading = _.isEmpty(applications) || ui.isFetchAppsLoading;
   if (isAppLoading) {
     return { isAppLoading, isDiagnosticsLoading: true };
   }
 
-  const app = _.find(apps, { app_id: match.params.appId });
+  const app = _.find(applications, { app_id: match.params.appId });
   const appIncidents = _.filter(diagnosis.incidents, {labels: {app_name: app.name}});
   const isDiagnosticsLoading = ui.isFetchDiagnosticsLoading || _.isEmpty(appIncidents);
   if (isDiagnosticsLoading) {

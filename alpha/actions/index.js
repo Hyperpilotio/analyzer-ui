@@ -33,7 +33,7 @@ export const updateReduxApps = data => ({
 });
 
 export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {
-  const apps = getState().applications.apps;
+  const apps = getState().applications;
   const matchAppsItem = _.pick(
     _.find(apps, { app_id: microservicesInfo.app_id }),
     _.keys(microservicesInfo),
@@ -58,7 +58,7 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
 
 
 export const updateApp = (app, next) => async (dispatch, getState) => {
-  const apps = getState().applications.apps;
+  const apps = getState().applications;
   const matchAppsItem = _.pick(_.find(apps, { app_id: app.app_id }), _.keys(app));
   // update in DB and redux apps if they are different
   if (!_.isEqual(app, matchAppsItem)) {
@@ -80,10 +80,10 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
 
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
   const { applications, ui } = getState();
-  if (applications.apps.length === 0 && !ui.isFetchAppsLoading) {
+  if (applications.length === 0 && !ui.isFetchAppsLoading) {
     await dispatch(fetchApps());
   }
-  const app = _.find(getState().applications.apps, { app_id: appId });
+  const app = _.find(getState().applications, { app_id: appId });
   if (!_.isUndefined(app)) {
     _.forEach(appToForm(app), (value, part) => (
       dispatch(formActions.change(`createAppForm.${part}`, value))

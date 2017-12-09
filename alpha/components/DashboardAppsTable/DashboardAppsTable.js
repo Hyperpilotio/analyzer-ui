@@ -10,7 +10,7 @@ import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 
-const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, removeApp }) => (
+const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportunities, removeApp }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
       <tr>
@@ -25,7 +25,7 @@ const DashboardAppsTable = ({ isLoading, apps, incidents, risks, opportunities, 
     </thead>
     <tbody>
       { isLoading ? null :
-        apps.map((app) => {
+        applications.map((app) => {
           if (app.state === "Registered") {
             return (
               <Linked tag="tr" to={`/apps/${app.app_id}/edit/1`} key={app.app_id}>
