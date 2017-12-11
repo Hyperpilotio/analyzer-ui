@@ -136,7 +136,7 @@ router.post("/api/get-metrics", async (req, res) => {
 });
 
 router.post("/api/influx-data", async (req, res) => {
-  const tagsFilter = _.map(req.body.tags, ({ key, value }) => `AND "${key}" = '${value}' `);
+  const tagsFilter = _.map(req.body.tags, ({ key, value }) => `AND "${key}" = '${value}' `).join(" ");
   const query = `
     SELECT mean(value) AS value FROM "${req.body.metric}"
     WHERE time >= ${req.body.start}

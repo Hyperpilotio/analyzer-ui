@@ -24,19 +24,18 @@ class AppDiagnosis extends React.Component {
       app, result, incident, problems, match,
     } = this.props;
 
+    const timeRange = incident && [
+      incident.timestamp - 5 * 60 * 1000 ** 3,
+      incident.timestamp,
+    ];
+
     return (
       <div>
         {isAppLoading ? null : <AppInfoJumbotron app={app} />}
         {isDiagnosticsLoading ? null : (
           <div>
             <Container className="mb-3">
-              <SLOGraph
-                app={app}
-                timeRange={[
-                  incident.timestamp - 300 * 1000 ** 3,
-                  incident.timestamp,
-                ]}
-              />
+              <SLOGraph app={app} timeRange={timeRange} />
             </Container>
 
             <Switch>
@@ -49,57 +48,58 @@ class AppDiagnosis extends React.Component {
 
               <Route
                 path={`${match.path}/:problemId`}
-                render={({ match: { params: { problemId } } }) => (
-                  <Container>
-                    <Row className="mb-2">
-                      <SingleResourceGraph
-                        eventDoc={{
-                          metric_name: "intel/docker/stats/cgroups/blkio_stats/io_serviced_recursive/value",
-                          threshold: {
-                            type: "UB",
-                            value: 700,
-                          },
-                        }}
-                      />
-                      <InterferenceGraph />
-                    </Row>
-                    <Row className="mb-2">
-                      <h4 className="text-dark">{ problemId }: Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></h4>
-                    </Row>
-                    <Row>
-                      <Table hover>
-                        <thead>
-                          <tr>
-                            <th>Remediation #</th>
-                            <th>Description</th>
-                            <th>Mode</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>#1</td>
-                            <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
-                            <td>Semi-Auto</td>
-                          </tr>
-                          <tr>
-                            <td>#2</td>
-                            <td>
-                              Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge>
-                            </td>
-                            <td>Semi-Auto</td>
-                          </tr>
-                          <tr>
-                            <td>#3</td>
-                            <td>
-                              Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge>
-                            </td>
-                            <td>Manual</td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </Row>
-                  </Container>
-                )}
+                render={({ match: { params: { problemId } } }) => {
+                  const problem = _.find(problems, { problem_id: problemId });
+                  return (
+                    <Container>
+                      <Row className="mb-2">
+                        <Col>
+                          {problem.type === "resource_bottleneck"
+                            ? <SingleResourceGraph problem={problem} timeRange={timeRange} />
+                            : null
+                          }
+                          {problem.type === "vm_interference" ? <InterferenceGraph /> : null}
+                        </Col>
+                      </Row>
+                      <Row className="mb-2">
+                        <h4 className="text-dark">{ problemId }: Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></h4>
+                      </Row>
+                      {/* <Row>
+                        <Table hover>
+                          <thead>
+                            <tr>
+                              <th>Remediation #</th>
+                              <th>Description</th>
+                              <th>Mode</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>#1</td>
+                              <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
+                              <td>Semi-Auto</td>
+                            </tr>
+                            <tr>
+                              <td>#2</td>
+                              <td>
+                                Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge>
+                              </td>
+                              <td>Semi-Auto</td>
+                            </tr>
+                            <tr>
+                              <td>#3</td>
+                              <td>
+                                Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge>
+                              </td>
+                              <td>Manual</td>
+                            </tr>
+                          </tbody>
+                        </Table>
+                      </Row>
+                    */}
+                    </Container>
+                  );
+                }}
               />
             </Switch>
           </div>
