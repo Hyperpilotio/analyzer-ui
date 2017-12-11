@@ -28,8 +28,8 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
         </tr>
       </thead>
       <tbody style={tbodyStyle} className="d-block">
-        { microservices.map(({ namespace, kind, name }) => (
-          <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
+        { microservices.map(({ namespace, kind, name }, i) => (
+          <tr className="row m-0" key={`${namespace}-${kind}-${name}-${i}`}>
             <td className="col">{ namespace }</td>
             <td className="col">{ getDisplayKind(kind) }</td>
             <td className="col">{ name }</td>

@@ -9,7 +9,6 @@ import FaPlus from "react-icons/lib/fa/plus";
 import { getKindDisplay } from "../../../lib/utils";
 import { updateApp, fetchMetrics } from "../../../actions";
 
-
 class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
@@ -54,9 +53,9 @@ class Step3SLO extends React.Component {
             <FormGroup className="row w-100">
               <label htmlFor="slo-microservice" className="col-4">Endpoint Microservice</label>
               <Control.select id="slo-microservice" className="form-control col" model=".service">
-                {_.map(microservices, ms => (
+                {_.map(microservices, (ms,i) => (
                   <option
-                    key={ms.service_id}
+                    key={`${ms.service_id}-${i}`}
                     value={_.omit(ms, "service_id")}
                   >
                     {ms.namespace} | {getKindDisplay(ms.kind)} | {ms.name}
