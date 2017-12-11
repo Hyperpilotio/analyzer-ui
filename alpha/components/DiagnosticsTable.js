@@ -1,7 +1,10 @@
 import React from "react";
 import _ from "lodash";
+import { format } from "d3-format";
 import { Container, Row, Col, Table } from "reactstrap";
 import Linked from "~/commons/components/Linked";
+
+const numFormat = format(".2f");
 
 const DiagnosticsTable = ({ baseUrl, result, problems }) => (
   <Container>
@@ -18,15 +21,15 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
           </tr>
         </thead>
         <tbody>
-          {result.top_related_problems.map(({ id }, i) => {
+          {result.top_related_problems.map(({ id, rank }) => {
             const problem = _.find(problems, { problem_id: id });
             return (
               <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
-                <th scope="row">{ problem.rank }</th>
+                <th scope="row">{ rank }</th>
                 <td>{ problem.type }</td>
-                <td>{ problem.analysis_result.severity }</td>
-                <td>{ problem.analysis_result.correlation }</td>
-                <td>{ problem.analysis_result.score }</td>
+                <td>{ numFormat(problem.analysis_result.severity) }%</td>
+                <td>{ numFormat(problem.analysis_result.correlation) }</td>
+                <td>{ numFormat(problem.analysis_result.score) }%</td>
               </Linked>
             );
           })}
