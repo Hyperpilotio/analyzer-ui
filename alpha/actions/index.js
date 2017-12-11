@@ -125,14 +125,6 @@ export const fetchMetrics = sloSource => ({
   },
 });
 
-export const beginHyperpiloting = () => ({
-  [RSAA]: {
-    endpoint: "http://localhost:3007/begin",
-    method: "POST",
-    types: types.BEGIN_HYPERPILOTING,
-  },
-});
-
 export const fetchDiagnostics = appId => ({
   [RSAA]: {
     endpoint: `/api/diagnostics/${appId}`,

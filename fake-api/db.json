@@ -5,7 +5,7 @@
       {
         "_id": "59f1a327a1619a473de6c5ae",
         "name": "Hyperpilot Web",
-        "type": "long-running", 
+        "type": "long-running",
         "services": [
           {
             "name": "goddd",
@@ -58,7 +58,7 @@
       {
         "_id": "59f1a327a1619a473de6c5b0",
         "name": "kafka",
-        "type": "batch-processing", 
+        "type": "batch-processing",
         "services": [
           {
             "name": "kafka-serve",
@@ -75,7 +75,7 @@
             "state": "Running"
           }
         ],
-        "slo":{
+        "slo": {
           "metric": "hyperpilot/goddd/api_booking_service_request_latency_milliseconds",
           "type": "latency",
           "summary": "quantile_90",
@@ -147,7 +147,5 @@
       ]
     }
   },
-  "begin":{
-    "success": true
-  }
+  "begin": {}
 }
