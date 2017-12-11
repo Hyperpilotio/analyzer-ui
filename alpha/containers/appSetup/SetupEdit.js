@@ -76,6 +76,7 @@ class SetupEdit extends React.Component {
       } else if (step === 3) {
         formComponent = <Step3SLO {...stepActions} match={match} />;
       } else if (step === 4) {
+        stepActions.stepNext = () => history.push(`/apps/${match.params.appId}/edit/4`);
         formComponent = <Step4ManagementFeatures {...stepActions} match={match} />;
       }
     }

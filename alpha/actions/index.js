@@ -78,6 +78,20 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
   }
 };
 
+
+export const activeApp = app => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/active-app",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(app),
+      types: types.ACTIVE_APP,
+    },
+  });
+  dispatch(updateReduxApps(response.payload.data));
+};
+
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
   const { applications, ui } = getState();
   if (applications.length === 0 && !ui.isFetchAppsLoading) {

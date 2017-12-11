@@ -7,7 +7,7 @@ import {
 import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { updateApp } from "../../../actions";
+import { updateApp, activeApp } from "../../../actions";
 
 const texts = {
   interference_management: "Interference Management",
@@ -86,7 +86,7 @@ Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManageFeatures: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features } }) => ({
   appId: basicInfo.app_id,
@@ -96,6 +96,7 @@ const mapStateToProps = ({ createAppForm: { basicInfo, management_features } }) 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
   updateManageFeatures: (manageFeatures, appId) => {
     dispatch(updateApp({ app_id: appId, management_features: manageFeatures }, stepNext));
+    dispatch(activeApp({ app_id: appId, state: "Active" }));
   },
 });
 
