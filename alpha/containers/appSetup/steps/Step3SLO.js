@@ -53,9 +53,9 @@ class Step3SLO extends React.Component {
             <FormGroup className="row w-100">
               <label htmlFor="slo-microservice" className="col-4">Endpoint Microservice</label>
               <Control.select id="slo-microservice" className="form-control col" model=".service">
-                {_.map(microservices, (ms,i) => (
+                {_.map(microservices, ms => (
                   <option
-                    key={`${ms.service_id}-${i}`}
+                    key={`${ms.service_id}`}
                     value={_.omit(ms, "service_id")}
                   >
                     {ms.namespace} | {getKindDisplay(ms.kind)} | {ms.name}

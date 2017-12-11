@@ -9,28 +9,28 @@ import CheckMark from "../../components/CheckMark";
 import _s from "../style.scss";
 
 const SetupDone = ({
-  isActiveAppLoading,
+  isActivateAppLoading,
   appName,
 }) => (
   <Container className="effect-fade-in">
-    { isActiveAppLoading ?
+    { isActivateAppLoading ?
       <div className={`spinner-con loading ${_s.spinnerCon}`}>
         <Spinner />
       </div>
       : null
     }
-    { !isActiveAppLoading ?
+    { !isActivateAppLoading ?
       <div className={`check-con done ${_s.checkCon}`}>
         <CheckMark />
       </div>
       : null
     }
     {
-      isActiveAppLoading ?
+      isActivateAppLoading ?
         <h4 className={_s.wordLoading}>Setting up HyperPilot ...</h4> : null
     }
     {
-      !isActiveAppLoading ?
+      !isActivateAppLoading ?
         <div>
           <h4 className={_s.wordSuccess}>HyperPilot is now running for {appName}! </h4>
           <div className="row">
@@ -47,16 +47,16 @@ const SetupDone = ({
 );
 
 SetupDone.propTypes = {
-  isActiveAppLoading: PropTypes.bool.isRequired,
+  isActivateAppLoading: PropTypes.bool.isRequired,
   appName: AppPropType.string,
 };
 
 const mapStateToProps = ({
   createAppForm,
-  ui: { isActiveAppLoading },
+  ui: { isActivateAppLoading },
 }) => ({
   appName: createAppForm.basicInfo.name,
-  isActiveAppLoading,
+  isActivateAppLoading,
 });
 
 export default connect(

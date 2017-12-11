@@ -31,23 +31,6 @@ class SetupEdit extends React.Component {
     this.props.history.push("/dashboard");
   }
 
-  cacheServices = (services) => {
-    this.props.cacheServices(services);
-    this.props.history.push("/setup/add/3");
-  }
-
-  handleSubmit = (app) => {
-    // TODO:
-    // 1. insert selected resources into analyzer DB
-    // 2. await and done add App
-    // 3. redirect to done page
-
-    this.props.updateResources(app.services);
-    this.props.addApp(app);
-
-    this.props.history.push("/setup/done");
-  }
-
   render() {
     const { createAppForm, isLoading, match, history } = this.props;
     if (isLoading) return null;
@@ -76,7 +59,7 @@ class SetupEdit extends React.Component {
       } else if (step === 3) {
         formComponent = <Step3SLO {...stepActions} match={match} />;
       } else if (step === 4) {
-        stepActions.stepNext = () => history.push("/setup/done");
+        stepActions.stepNext = () => history.push(`/apps/${match.params.appId}/edit/done`);
         formComponent = <Step4ManagementFeatures {...stepActions} match={match} />;
       }
     }

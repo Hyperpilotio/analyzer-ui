@@ -79,14 +79,14 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
 };
 
 
-export const activeApp = app => async (dispatch) => {
+export const activateApp = app => async (dispatch) => {
   const response = await dispatch({
     [RSAA]: {
-      endpoint: "/api/active-app",
+      endpoint: "/api/activate-app",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(app),
-      types: types.ACTIVE_APP,
+      types: types.ACTIVATE_APP,
     },
   });
   dispatch(updateReduxApps(response.payload.data));

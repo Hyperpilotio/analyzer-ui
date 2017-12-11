@@ -37,10 +37,10 @@ router.post("/api/update-app", async (req, res) => {
   res.json({ success: true, ...response });
 });
 
-router.post("/api/active-app", async (req, res) => {
+router.post("/api/activate-app", async (req, res) => {
   const response = await request.put(
     `${config.analyzer.url}/api/apps/${req.body.app_id}`,
-    { body: _.omit(req.body, "app_id"), json: true },
+    { json: true },
   );
   res.json({ success: true, ...response });
 });
