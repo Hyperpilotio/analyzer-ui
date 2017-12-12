@@ -59,7 +59,7 @@ class Step3SLO extends React.Component {
                 value={`${sloSource.service.namespace}|${sloSource.service.kind}|${sloSource.service.name}`}
                 onChange={e => selectEndpointService(e.target.value)}
               >
-                <option value={null} disabled>Select a microservice</option>
+                <option value={null} disabled default>Select a microservice</option>
                 {_.map(microservices, ms => (
                   <option
                     key={ms.service_id}

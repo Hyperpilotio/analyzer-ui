@@ -22,7 +22,10 @@ export const appToForm = ({ app_id, name, type, slo, microservices, management_f
     _.assign(formData, { microservices });
   }
   if (!_.isUndefined(slo)) {
-    _.assign(formData, { sloSource: slo.source, slo: _.omit(slo, "source") });
+    if (_.has(slo, "source")) {
+      formData.sloSource = slo.source;
+    }
+    formData.slo = _.omit(slo, "source");
   }
   if (!_.isUndefined(management_features)) {
     _.assign(formData, { management_features });

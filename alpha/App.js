@@ -36,8 +36,8 @@ export default () => (
         <Switch>
           <Route path="/dashboard" component={DashboardPage} />
           <Route path="/apps/new" component={SetupEdit} />
-          <Route path="/apps/:appId/edit/:step" component={SetupEdit} />
           <Route path="/apps/:appId/edit/done" component={SetupDone} />
+          <Route path="/apps/:appId/edit/:step" component={SetupEdit} />
           <Redirect from="/" to="/dashboard" />
         </Switch>
       </div>
