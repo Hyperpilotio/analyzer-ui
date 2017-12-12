@@ -20,7 +20,7 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
         <th>SLO</th>
         <th>Issues detected</th>
         <th>State</th>
-        <th>Action</th>
+        <th />
       </tr>
     </thead>
     <tbody>
