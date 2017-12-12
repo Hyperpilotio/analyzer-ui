@@ -10,6 +10,7 @@ import DiagnosticsTable from "../components/DiagnosticsTable";
 import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
+import ProblemDescription from "../components/ProblemDescription";
 import { fetchDiagnostics } from "../actions";
 
 
@@ -35,73 +36,73 @@ class AppDiagnosis extends React.Component {
         {isDiagnosticsLoading ? null : (
           <div>
             <Container className="mb-3">
+              <h3 className="mb-3">Diagnosis Result of SLO Violation Incident</h3>
               <SLOGraph app={app} timeRange={timeRange} />
             </Container>
 
-            <Switch>
-              <Route
-                exact path={match.path}
-                render={({ match }) => (
-                  <DiagnosticsTable baseUrl={match.url} result={result} problems={problems} />
-                )}
-              />
-
-              <Route
-                path={`${match.path}/:problemId`}
-                render={({ match: { params: { problemId } } }) => {
-                  const problem = _.find(problems, { problem_id: problemId });
-                  return (
-                    <Container>
-                      <Row className="mb-2">
-                        <Col>
-                          {problem.type === "resource_bottleneck"
-                            ? <SingleResourceGraph problem={problem} timeRange={timeRange} />
-                            : null
-                          }
-                          {problem.type === "vm_interference" ? <InterferenceGraph /> : null}
-                        </Col>
-                      </Row>
-                      <Row className="mb-2">
-                        <h4 className="text-dark">{ problemId }: Resource type <Badge>memory</Badge> saturating on node <Badge>node-1</Badge></h4>
-                      </Row>
-                      {/* <Row>
-                        <Table hover>
-                          <thead>
-                            <tr>
-                              <th>Remediation #</th>
-                              <th>Description</th>
-                              <th>Mode</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>#1</td>
-                              <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
-                              <td>Semi-Auto</td>
-                            </tr>
-                            <tr>
-                              <td>#2</td>
-                              <td>
-                                Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge>
-                              </td>
-                              <td>Semi-Auto</td>
-                            </tr>
-                            <tr>
-                              <td>#3</td>
-                              <td>
-                                Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge>
-                              </td>
-                              <td>Manual</td>
-                            </tr>
-                          </tbody>
-                        </Table>
-                      </Row>
-                    */}
-                    </Container>
-                  );
-                }}
-              />
-            </Switch>
+            <Route
+              path={`${match.path}/:problemId`}
+              render={({ match: { params: { problemId } } }) => {
+                const problem = _.find(problems, { problem_id: problemId });
+                return (
+                  <Container>
+                    <Row className="mb-2">
+                      <Col>
+                        <h5>Problem #{_.find(result.top_related_problems, { id: problemId }).rank}: <ProblemDescription problem={problem} /></h5>
+                      </Col>
+                    </Row>
+                    <Row className="mb-2">
+                      <Col>
+                        {problem.type === "resource_bottleneck"
+                          ? <SingleResourceGraph problem={problem} timeRange={timeRange} />
+                          : null
+                        }
+                        {problem.type === "vm_interference" ? <InterferenceGraph /> : null}
+                      </Col>
+                    </Row>
+                    {/* <Row>
+                      <Table hover>
+                        <thead>
+                          <tr>
+                            <th>Remediation #</th>
+                            <th>Description</th>
+                            <th>Mode</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#1</td>
+                            <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
+                            <td>Semi-Auto</td>
+                          </tr>
+                          <tr>
+                            <td>#2</td>
+                            <td>
+                              Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge>
+                            </td>
+                            <td>Semi-Auto</td>
+                          </tr>
+                          <tr>
+                            <td>#3</td>
+                            <td>
+                              Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge>
+                            </td>
+                            <td>Manual</td>
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </Row>
+                  */}
+                  </Container>
+                );
+              }}
+            />
+            <Route
+              path={match.path}
+              render={({ match }) => (
+                <DiagnosticsTable baseUrl={match.url} result={result} problems={problems} />
+              )}
+            />
           </div>
         )}
       </div>

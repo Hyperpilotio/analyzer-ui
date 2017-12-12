@@ -38,11 +38,19 @@ export default connectRefetch(({ problem, timeRange }) => ({
     url: "/api/influx-data",
     method: "POST",
     body: JSON.stringify({
-      db: "derivedmetrics",
-      metric: problem.metric.name,
+      db: "snapaverage",
+      metric: _.initial(_.split(problem.metric.name, "/")).join("/"),
       tags: [
-        { key: "resource_type", value: problem.metric.type },
-        ..._.map(problem.labels, (value, key) => ({ key, value })),
+        ..._.map(problem.labels, (value, key) => {
+          switch (key) {
+          case "pod_name":
+            return {key: "io.kubernetes.pod.name", value};
+          case "node_name":
+            return {key: "nodename", value};
+          default:
+            console.error(`Unknown tag: ${key} = ${value}`);
+          }
+        }),
       ],
       start: timeRange[0],
       end: timeRange[1],

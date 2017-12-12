@@ -3,6 +3,7 @@ import _ from "lodash";
 import { format } from "d3-format";
 import { Container, Row, Col, Table } from "reactstrap";
 import Linked from "~/commons/components/Linked";
+import ProblemDescription from "./ProblemDescription";
 
 const numFormat = format(".2f");
 
@@ -26,7 +27,7 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
             return (
               <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
                 <th scope="row">{ rank }</th>
-                <td>{ problem.type }</td>
+                <td><ProblemDescription problem={problem} /></td>
                 <td>{ numFormat(problem.analysis_result.severity) }%</td>
                 <td>{ numFormat(problem.analysis_result.correlation) }</td>
                 <td>{ numFormat(problem.analysis_result.score) }%</td>
