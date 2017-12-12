@@ -32,6 +32,7 @@ class AppDiagnosis extends React.Component {
           <div>
             <Container className="mb-3">
               <h3 className="mb-3">Diagnosis Result of SLO Violation Incident</h3>
+              <p className="text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
               <SLOGraph incident={incident} />
             </Container>
 
