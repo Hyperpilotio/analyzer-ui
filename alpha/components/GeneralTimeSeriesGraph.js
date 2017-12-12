@@ -57,7 +57,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children }) => (
 
 GeneralTimeSeriesGraph.defaultProps = {
   width: 1400,
-  height: 450,
+  height: 400,
 };
 
 export default GeneralTimeSeriesGraph;
