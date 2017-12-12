@@ -16,8 +16,6 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
           <tr>
             <th>Ranking</th>
             <th>Description</th>
-            <th>Severity</th>
-            <th>Correlation</th>
             <th>Score</th>
           </tr>
         </thead>
@@ -28,9 +26,7 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
               <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
                 <th scope="row">{ rank }</th>
                 <td><ProblemDescription problem={problem} /></td>
-                <td>{ numFormat(problem.analysis_result.severity) }%</td>
-                <td>{ numFormat(problem.analysis_result.correlation) }</td>
-                <td>{ numFormat(problem.analysis_result.score) }%</td>
+                <td>{ numFormat(problem.over_score) }%</td>
               </Linked>
             );
           })}

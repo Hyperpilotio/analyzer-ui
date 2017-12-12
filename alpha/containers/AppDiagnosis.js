@@ -37,7 +37,7 @@ class AppDiagnosis extends React.Component {
           <div>
             <Container className="mb-3">
               <h3 className="mb-3">Diagnosis Result of SLO Violation Incident</h3>
-              <SLOGraph app={app} timeRange={timeRange} />
+              <SLOGraph incident={incident} />
             </Container>
 
             <Route

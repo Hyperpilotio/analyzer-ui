@@ -5,15 +5,15 @@ import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 
-const SLOGraph = ({ app: { slo }, influxFetch }) => {
+const SLOGraph = ({ incident: { metric, threshold }, influxFetch }) => {
   if (influxFetch.pending) {
     return null;
   }
   const data = influxFetch.value;
 
   return (
-    <GeneralTimeSeriesGraph yLabel={`${slo.metric.type} (${slo.threshold.unit})`}>
-      <TopRightLegend data={[{ name: slo.metric.name, symbol: { fill: "#5677fa" } }]} />
+    <GeneralTimeSeriesGraph yLabel={`${metric.type} (${threshold.unit})`}>
+      <TopRightLegend data={[{ name: metric.name, symbol: { fill: "#5677fa" } }]} />
       <VictoryArea
         style={{ data: {
           stroke: "#5677fa",
@@ -29,23 +29,23 @@ const SLOGraph = ({ app: { slo }, influxFetch }) => {
           line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
           label: { fill: "#ff8686", fontSize: "16px" },
         }}
-        threshold={slo.threshold.value}
+        threshold={threshold.value}
         label="SLO"
       />
     </GeneralTimeSeriesGraph>
   );
 };
 
-export default connectRefetch(({ app: { slo }, timeRange }) => ({
+export default connectRefetch(({ incident }) => ({
   influxFetch: {
     url: "/api/influx-data",
     method: "POST",
     body: JSON.stringify({
       db: "snap",
-      metric: slo.metric.name,
-      tags: slo.metric.tags,
-      start: timeRange[0].valueOf(),
-      end: timeRange[1].valueOf(),
+      metric: incident.metric.name,
+      tags: incident.metric.tags,
+      start: incident.timestamp - 5 * 60 * 1000 ** 3,
+      end: incident.timestamp,
     }),
   },
 }))(SLOGraph);
