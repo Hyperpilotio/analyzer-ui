@@ -14,7 +14,7 @@ export const fetchApps = () => ({
 });
 
 export const createApp = (basicInfo, next) => async (dispatch) => {
-  const payload = {
+  const response = await dispatch({
     [RSAA]: {
       endpoint: "/api/new-app",
       method: "POST",
@@ -22,8 +22,9 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
       body: JSON.stringify(basicInfo),
       types: types.CREATE_APP,
     },
-  };
-  const response = await dispatch(payload);
+  });
+  dispatch(updateReduxApps(response.payload.data));
+  dispatch(formActions.change("createAppForm.basicInfo.app_id", response.payload.data.app_id));
   next(response.payload.data.app_id);
 };
 
