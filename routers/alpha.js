@@ -40,7 +40,7 @@ router.post("/api/update-app", async (req, res) => {
 router.post("/api/activate-app", async (req, res) => {
   const response = await request.put(
     `${config.analyzer.url}/api/apps/${req.body.app_id}`,
-    { json: true },
+    { body: { state: "Active" }, json: true },
   );
   res.json({ success: true, ...response });
 });
