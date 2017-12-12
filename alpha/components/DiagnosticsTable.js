@@ -9,13 +9,13 @@ const numFormat = format(".2f");
 
 const DiagnosticsTable = ({ baseUrl, result, problems }) => (
   <Container>
-    <Row className="mb-2"><h4>Diagnostics:</h4></Row>
+    <Row className="mb-2"><h4>Related Problems:</h4></Row>
     <Row>
       <Table hover>
         <thead>
           <tr>
             <th>Ranking</th>
-            <th>Type</th>
+            <th>Description</th>
             <th>Severity</th>
             <th>Correlation</th>
             <th>Score</th>
