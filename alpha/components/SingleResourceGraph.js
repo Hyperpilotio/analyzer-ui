@@ -39,7 +39,7 @@ export default connectRefetch(({ problem, timeRange }) => ({
     method: "POST",
     body: JSON.stringify({
       db: "snapaverage",
-      metric: _.initial(_.split(problem.metric.name, "/")).join("/"),
+      metric: problem.metric.name,
       tags: [
         ..._.map(problem.labels, (value, key) => {
           switch (key) {
