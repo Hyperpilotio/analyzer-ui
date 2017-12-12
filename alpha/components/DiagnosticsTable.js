@@ -5,33 +5,35 @@ import { Container, Row, Col, Table } from "reactstrap";
 import Linked from "~/commons/components/Linked";
 import ProblemDescription from "./ProblemDescription";
 
-const numFormat = format(".2f");
-
 const DiagnosticsTable = ({ baseUrl, result, problems }) => (
-  <Container>
-    <Row className="mb-2"><h4>Related Problems:</h4></Row>
+  <Container className="mt-4">
+    <Row className="mb-2">
+      <Col><h4>Top Related Problems:</h4></Col>
+    </Row>
     <Row>
-      <Table hover>
-        <thead>
-          <tr>
-            <th>Ranking</th>
-            <th>Description</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {result.top_related_problems.map(({ id, rank }) => {
-            const problem = _.find(problems, { problem_id: id });
-            return (
-              <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
-                <th scope="row">{ rank }</th>
-                <td><ProblemDescription problem={problem} /></td>
-                <td>{ numFormat(problem.over_score) }</td>
-              </Linked>
-            );
-          })}
-        </tbody>
-      </Table>
+      <Col>
+        <Table hover>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Description</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {result.top_related_problems.map(({ id, rank }) => {
+              const problem = _.find(problems, { problem_id: id });
+              return (
+                <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
+                  <th scope="row">{ rank }</th>
+                  <td><ProblemDescription problem={problem} /></td>
+                  <td>{ format(".2f")(problem.over_score) }</td>
+                </Linked>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Col>
     </Row>
   </Container>
 );
