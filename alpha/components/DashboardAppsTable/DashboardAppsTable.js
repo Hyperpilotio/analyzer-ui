@@ -35,9 +35,19 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
                 <td />
                 <td />
                 <td>{ app.state }</td>
-                <td />
+                <td>
+                  <MdDelete
+                    className={_s.iconGrp}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeApp(app.app_id);
+                    }}
+                  />
+                </td>
               </Linked>
             );
+          } else if (app.state === "Unregistered") {
+            return null;
           }
           let badge;
           badge = (
@@ -83,7 +93,7 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
                   className={_s.iconGrp}
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeApp(app._id);
+                    removeApp(app.app_id);
                   }}
                 />
               </td>

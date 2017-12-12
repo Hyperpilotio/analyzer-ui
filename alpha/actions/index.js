@@ -146,14 +146,17 @@ export const addApp = app => ({
   },
 });
 
-export const removeApp = appId => ({
-  [RSAA]: {
-    endpoint: "/mock/api/remove",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+export const removeApp = appId => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/remove-app",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ app_id: appId }),
+      types: types.REMOVE_APP,
     },
-    body: JSON.stringify({ appId }),
-    types: types.REMOVE_APP,
-  },
-});
+  });
+  dispatch(updateReduxApps(response.payload.data));
+};

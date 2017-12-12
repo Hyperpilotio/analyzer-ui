@@ -16,14 +16,14 @@ router.use(mockdb);
 
 router.get("/api/apps", async (req, res) => {
   const response = await request.get({
-    uri: `${config.analyzer.url}/api/apps`, json: true,
+    uri: `${config.analyzer.url}/api/v1/apps`, json: true,
   });
   res.json({ success: true, ...response });
 });
 
 router.post("/api/new-app", async (req, res) => {
   const response = await request.post(
-    `${config.analyzer.url}/api/apps`,
+    `${config.analyzer.url}/api/v1/apps`,
     { body: req.body, json: true },
   );
   res.json({ success: true, ...response });
@@ -31,7 +31,7 @@ router.post("/api/new-app", async (req, res) => {
 
 router.post("/api/update-app", async (req, res) => {
   const response = await request.put(
-    `${config.analyzer.url}/api/apps/${req.body.app_id}`,
+    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}`,
     { body: _.omit(req.body, "app_id"), json: true },
   );
   res.json({ success: true, ...response });
@@ -39,7 +39,7 @@ router.post("/api/update-app", async (req, res) => {
 
 router.post("/api/activate-app", async (req, res) => {
   const response = await request.put(
-    `${config.analyzer.url}/api/apps/${req.body.app_id}/state`,
+    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}/state`,
     { body: { state: "Active" }, json: true },
   );
   res.json({ success: true, ...response });
@@ -60,7 +60,7 @@ router.get("/api/get-cluster-mapping", async (req, res) => {
 
 router.post("/api/save-microservices", async (req, res) => {
   const app = await request.get(
-    `${config.analyzer.url}/api/apps/${req.body.app_id}`,
+    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}`,
     { json: true },
   );
 
@@ -92,7 +92,7 @@ router.post("/api/save-microservices", async (req, res) => {
       specs.forEach(({ name, k8s_spec }) => {
         requestedResources.push({ namespace, kind, name });
         const registerRequest = request
-          .post(`${config.analyzer.url}/api/k8s_services`, { json: true, body: k8s_spec })
+          .post(`${config.analyzer.url}/api/v1/k8s_services`, { json: true, body: k8s_spec })
           .catch(err => err);
           // Analyzer will fail to insert into Mongo if any field key of k8s spec contains "."
           // Catching the errors here, but it should be fixed in analyzer so it won't happen
@@ -112,7 +112,7 @@ router.post("/api/save-microservices", async (req, res) => {
     }));
 
   const response = await request.post(
-    `${config.analyzer.url}/api/apps/${req.body.app_id}/microservices`,
+    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}/microservices`,
     { body: { microservices }, json: true },
   );
 
@@ -160,21 +160,21 @@ router.post("/api/influx-data", async (req, res) => {
 
 router.get("/api/diagnostics/:appId", async (req, res) => {
   const app = await request.get({
-    uri: `${config.analyzer.url}/api/apps/${req.params.appId}`, json: true,
+    uri: `${config.analyzer.url}/api/v1/apps/${req.params.appId}`, json: true,
   });
   const incident = await request.get({
-    uri: `${config.analyzer.url}/api/incidents`,
+    uri: `${config.analyzer.url}/api/v1/incidents`,
     json: true,
     body: { app_name: app.data.name },
   });
   const diagnosis = await request.get({
-    uri: `${config.analyzer.url}/api/diagnosis`,
+    uri: `${config.analyzer.url}/api/v1/diagnoses`,
     json: true,
     body: { app_name: app.data.name, incident_id: incident.data.incident_id },
   });
   const problems = await Promise.all(
     diagnosis.data.top_related_problems.map(({ id }) => request.get({
-      uri: `${config.analyzer.url}/api/problems/${id}`,
+      uri: `${config.analyzer.url}/api/v1/problems/${id}`,
       json: true,
     })),
   );
@@ -187,6 +187,14 @@ router.get("/api/diagnostics/:appId", async (req, res) => {
       problems: _.map(problems, "data"),
     },
   });
+});
+
+router.post("/api/remove-app", async (req, res) => {
+  const response = await request.put(
+    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}/state`,
+    { body: { state: "Unregistered" }, json: true },
+  );
+  res.json({ success: true, ...response });
 });
 
 export default router;
