@@ -3,7 +3,7 @@ import reduceReducers from "reduce-reducers";
 import _ from "lodash";
 import * as types from "../actions/types";
 import { flattenResourcesData } from "../lib/utils";
-import { SUCCESS } from "../constants/apiActions";
+import { SUCCESS, FAIL } from "../constants/apiActions";
 
 export default reduceReducers(
   combineForms({
@@ -80,6 +80,12 @@ export default reduceReducers(
         action.payload.metrics,
         _.clone,
       );
+    case types.FETCH_AVAILABLE_SERVICES[FAIL]:
+      console.error({
+        MESSAGE: action.payload.response.message,
+        CAUSE: "hyperpilot-perator is not running.",
+      });
+      return state;
     default:
       return state;
     }

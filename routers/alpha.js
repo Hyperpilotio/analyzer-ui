@@ -46,11 +46,17 @@ router.post("/api/activate-app", async (req, res) => {
 });
 
 router.get("/api/get-cluster-mapping", async (req, res) => {
-  const response = await request.get(
-    `${config.operator.url}/cluster/mapping`,
-    { body: ["services", "deployments", "statefulsets"], json: true },
-  );
-  res.json({ success: true, data: response });
+  try {
+    const response = await request.get(
+      `${config.operator.url}/cluster/mapping`,
+      { body: ["services", "deployments", "statefulsets"], json: true },
+    );
+    res.json({ success: true, data: response });
+  } catch (err) {
+    console.log(err);
+    res.status(500);
+    res.json({ message: err.message });
+  }
 });
 
 router.post("/api/save-microservices", async (req, res) => {
