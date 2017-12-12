@@ -197,9 +197,10 @@ const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms } })
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  removeMicroservice: ms => dispatch(
-    modelActions.filter("createAppForm.microservices", added => !_.isEqual(added, ms)),
-  ),
+  removeMicroservice: ms => dispatch(modelActions.filter(
+    "createAppForm.microservices",
+    added => !_.isEqual(_.omit(added, "service_id"), ms),
+  )),
   addMicroservice: ms => dispatch(
     modelActions.push("createAppForm.microservices", ms),
   ),

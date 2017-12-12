@@ -28,6 +28,7 @@ class Step3SLO extends React.Component {
     const {
       appId,
       submitSloSource,
+      selectEndpointService,
       updateSlo,
       microservices,
       sloSource,
@@ -53,16 +54,22 @@ class Step3SLO extends React.Component {
             </FormGroup>
             <FormGroup className="row w-100">
               <label htmlFor="slo-microservice" className="col-4">Endpoint Microservice</label>
-              <Control.select id="slo-microservice" className="form-control col" model=".service">
+              <select
+                id="slo-microservice"
+                className="form-control col"
+                value={`${sloSource.service.namespace}|${sloSource.service.kind}|${sloSource.service.name}`}
+                onChange={e => selectEndpointService(e.target.value)}
+              >
+                <option value={null} disabled>Select a microservice</option>
                 {_.map(microservices, ms => (
                   <option
                     key={ms.service_id}
-                    value={_.omit(ms, "service_id")}
+                    value={_.join([ms.namespace, ms.kind, ms.name], "|")}
                   >
                     {ms.namespace} | {getKindDisplay(ms.kind)} | {ms.name}
                   </option>
                 ))}
-              </Control.select>
+              </select>
             </FormGroup>
             <FormGroup className="row w-100">
               <label htmlFor="slo-port" className="col-4">Port</label>
@@ -172,6 +179,10 @@ const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microserv
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
+  selectEndpointService: serializedValue => dispatch(formActions.merge(
+    "createAppForm.sloSource.service",
+    _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
+  )),
   submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
   addTagsInput: () => dispatch(formActions.push(
     "createAppForm.slo.metric.tags",
