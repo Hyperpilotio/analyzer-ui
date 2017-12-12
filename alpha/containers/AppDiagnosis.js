@@ -51,7 +51,7 @@ class AppDiagnosis extends React.Component {
                       <Row className="mb-2">
                         <Col>
                           <SingleResourceGraph
-                            height={problem.metrics.length > 1 ? 300 : 450}
+                            height={problem.metrics.length > 1 ? 300 : 400}
                             problem={problem}
                             metric={metric}
                           />
