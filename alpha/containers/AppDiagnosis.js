@@ -25,11 +25,6 @@ class AppDiagnosis extends React.Component {
       app, result, incident, problems, match,
     } = this.props;
 
-    const timeRange = incident && [
-      incident.timestamp - 5 * 60 * 1000 ** 3,
-      incident.timestamp,
-    ];
-
     return (
       <div>
         {isAppLoading ? null : <AppInfoJumbotron app={app} />}
@@ -51,15 +46,17 @@ class AppDiagnosis extends React.Component {
                         <h5>Problem #{_.find(result.top_related_problems, { id: problemId }).rank}: <ProblemDescription problem={problem} /></h5>
                       </Col>
                     </Row>
-                    <Row className="mb-2">
-                      <Col>
-                        {problem.type === "resource_bottleneck"
-                          ? <SingleResourceGraph problem={problem} timeRange={timeRange} />
-                          : null
-                        }
-                        {problem.type === "vm_interference" ? <InterferenceGraph /> : null}
-                      </Col>
-                    </Row>
+                    {problem.metrics.map(metric => (
+                      <Row className="mb-2">
+                        <Col>
+                          <SingleResourceGraph
+                            height={problem.metrics.length > 1 ? 300 : 450}
+                            problem={problem}
+                            metric={metric}
+                          />
+                        </Col>
+                      </Row>
+                    ))}
                     {/* <Row>
                       <Table hover>
                         <thead>

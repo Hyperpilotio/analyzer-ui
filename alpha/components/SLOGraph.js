@@ -5,14 +5,14 @@ import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 
-const SLOGraph = ({ incident: { metric, threshold }, influxFetch }) => {
+const SLOGraph = ({ incident: { metric, threshold }, influxFetch, ...props }) => {
   if (influxFetch.pending) {
     return null;
   }
   const data = influxFetch.value;
 
   return (
-    <GeneralTimeSeriesGraph yLabel={`${metric.type} (${threshold.unit})`}>
+    <GeneralTimeSeriesGraph yLabel={`${metric.type} (${threshold.unit})`} {...props}>
       <TopRightLegend data={[{ name: metric.name, symbol: { fill: "#5677fa" } }]} />
       <VictoryArea
         style={{ data: {

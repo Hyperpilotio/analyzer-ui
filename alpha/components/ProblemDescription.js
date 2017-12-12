@@ -8,13 +8,13 @@ const ProblemDescription = ({ problem, ...props }) => {
   case "node_resource_bottleneck":
     return (
       <span {...props}>
-        <Badge>{ problem.description.resource }</Badge> resource bottleneck on node <Badge>{ problem.description.node_name }</Badge>
+        <Badge color="primary">{ problem.description.resource }</Badge> resource bottleneck on node <Badge color="info">{ problem.description.node_name }</Badge>
       </span>
     );
   case "container_interference":
     return (
       <span {...props}>
-        <Badge>{ problem.description.resource }</Badge> resource interference in container <Badge>{ problem.description.pod_name }</Badge>
+        <Badge color="primary">{ problem.description.resource }</Badge> resource interference in container <Badge color="success">{ problem.description.pod_name }</Badge>
       </span>
     );
   }

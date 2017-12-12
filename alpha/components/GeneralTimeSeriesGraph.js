@@ -4,15 +4,17 @@ import {
   VictoryAxis,
 } from "victory-chart";
 import { VictoryLabel } from "victory-core";
+import _ from "lodash";
 import moment from "moment";
+import { format } from "d3-format";
 import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesTooltipContainer from "./TimeSeriesTooltipContainer";
 import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
 
-const GeneralTimeSeriesGraph = ({ yLabel, children }) => (
+const GeneralTimeSeriesGraph = ({ yLabel, width, height, children }) => (
   <VictoryChart
-    width={1400}
-    height={450}
+    width={width}
+    height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
     style={{
       parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" },
@@ -23,6 +25,11 @@ const GeneralTimeSeriesGraph = ({ yLabel, children }) => (
   >
     <VictoryAxis
       dependentAxis
+      tickFormat={_.cond([
+        [x => x < 4, format(".2f")],
+        [x => x < 1000, format("d")],
+        [_.stubTrue, format(".2s")],
+      ])}
       style={{
         axis: { stroke: "none" },
         grid: { stroke: "#eef0fa" },
@@ -47,5 +54,10 @@ const GeneralTimeSeriesGraph = ({ yLabel, children }) => (
     { children }
   </VictoryChart>
 );
+
+GeneralTimeSeriesGraph.defaultProps = {
+  width: 1400,
+  height: 450,
+};
 
 export default GeneralTimeSeriesGraph;

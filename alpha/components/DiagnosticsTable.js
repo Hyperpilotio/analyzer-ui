@@ -26,7 +26,7 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
               <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
                 <th scope="row">{ rank }</th>
                 <td><ProblemDescription problem={problem} /></td>
-                <td>{ numFormat(problem.over_score) }%</td>
+                <td>{ numFormat(problem.over_score) }</td>
               </Linked>
             );
           })}
