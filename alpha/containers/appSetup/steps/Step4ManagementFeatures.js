@@ -7,7 +7,7 @@ import {
 import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { updateApp } from "../../../actions";
+import { updateApp, activateApp } from "../../../actions";
 
 const texts = {
   interference_management: "Interference Management",
@@ -17,10 +17,10 @@ const texts = {
   resize_node: "Resize Node",
 };
 
-const Step4ManagementFeatures = ({ appId, management_features, stepBack, updateManageFeatures }) => (
+const Step4ManagementFeatures = ({ appId, management_features, stepBack, updateManagementFeatures }) => (
   <Form
     model="createAppForm.management_features"
-    onSubmit={data => updateManageFeatures(data, appId)}
+    onSubmit={data => updateManagementFeatures(data, appId)}
   >
     { management_features.map(({ name, status, remediation_policy }, index) => (
       <Card key={name} className="mb-3">
@@ -85,8 +85,8 @@ const Step4ManagementFeatures = ({ appId, management_features, stepBack, updateM
 Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
-  updateManageFeatures: PropTypes.func.isRequired,
-}
+  updateManagementFeatures: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features } }) => ({
   appId: basicInfo.app_id,
@@ -94,8 +94,9 @@ const mapStateToProps = ({ createAppForm: { basicInfo, management_features } }) 
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  updateManageFeatures: (manageFeatures, appId) => {
-    dispatch(updateApp({ app_id: appId, management_features: manageFeatures }, stepNext));
+  updateManagementFeatures: (managementFeatures, appId) => {
+    dispatch(updateApp({ app_id: appId, management_features: managementFeatures }, stepNext));
+    dispatch(activateApp({ app_id: appId }));
   },
 });
 

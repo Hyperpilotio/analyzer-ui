@@ -79,6 +79,20 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
   }
 };
 
+
+export const activateApp = app => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/activate-app",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(app),
+      types: types.ACTIVATE_APP,
+    },
+  });
+  dispatch(updateReduxApps(response.payload.data));
+};
+
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
   const { applications, ui } = getState();
   if (applications.length === 0 && !ui.isFetchAppsLoading) {
@@ -109,14 +123,6 @@ export const fetchMetrics = sloSource => ({
     },
     body: JSON.stringify(sloSource),
     types: types.FETCH_METRICS,
-  },
-});
-
-export const beginHyperpiloting = () => ({
-  [RSAA]: {
-    endpoint: "http://localhost:3007/begin",
-    method: "POST",
-    types: types.BEGIN_HYPERPILOTING,
   },
 });
 

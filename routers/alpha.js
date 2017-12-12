@@ -37,6 +37,14 @@ router.post("/api/update-app", async (req, res) => {
   res.json({ success: true, ...response });
 });
 
+router.post("/api/activate-app", async (req, res) => {
+  const response = await request.put(
+    `${config.analyzer.url}/api/apps/${req.body.app_id}/state`,
+    { body: { state: "Active" }, json: true },
+  );
+  res.json({ success: true, ...response });
+});
+
 router.get("/api/get-cluster-mapping", async (req, res) => {
   const response = await request.get(
     `${config.operator.url}/cluster/mapping`,
