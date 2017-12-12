@@ -33,6 +33,7 @@ class Step3SLO extends React.Component {
       sloSource,
       sloFormDisabled,
       metricOptions,
+      updateThresholdType,
       stepBack,
       slo,
       addTagsInput,
@@ -106,7 +107,12 @@ class Step3SLO extends React.Component {
               </FormGroup>
               <FormGroup className="row">
                 <label htmlFor="slo-type" className="col-3">Type</label>
-                <Control.select id="slo-type" className="form-control col" model=".metric.type">
+                <Control.select
+                  id="slo-type"
+                  className="form-control col"
+                  model=".metric.type"
+                  onChange={e => updateThresholdType(e.target.value)}
+                >
                   <option value="latency">Latency</option>
                   <option value="throughput">Throughput</option>
                   <option value="execute_time">Execute-Time</option>
@@ -183,6 +189,10 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
     _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
   )),
   submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
+  updateThresholdType: metricType => dispatch(formActions.change(
+    "createAppForm.slo.threshold.type",
+    _.get({latency: "UB", execute_time: "UB", throughput: "LB"}, metricType),
+  )),
   addTagsInput: () => dispatch(formActions.push(
     "createAppForm.slo.metric.tags",
     { key: "", value: "" },
