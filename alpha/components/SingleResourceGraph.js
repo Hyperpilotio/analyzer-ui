@@ -17,7 +17,7 @@ const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
   const stats = metric.analysis_result;
 
   return (
-    <GeneralTimeSeriesGraph yLabel={`Correlation: ${f(stats.correlation)}, Severity: ${f(stats.severity)}, Score: ${f(stats.score)}`} {...props}>
+    <GeneralTimeSeriesGraph yLabel={`Correlation: ${f(stats.correlation)}, Severity: ${f(stats.severity)}, Score: ${f(stats.score)}\n \nThreshold: ${metric.threshold.value} ${metric.threshold.unit}`} {...props}>
       <TopRightLegend data={[{ name: metric.name, symbol: { fill: "#b8e986" } }]} />
       <VictoryArea
         style={{ data: { stroke: "#b8e986", strokeWidth: "1.5px", fill: "rgba(184, 233, 134, 0.19)" } }}
@@ -25,14 +25,16 @@ const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
         name={metric.name}
         isData
       />
-      <ThresholdLine
-        style={{
-          line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
-          label: { fill: "#ff8686", fontSize: "16px" },
-        }}
-        threshold={metric.threshold.value}
-        label={metric.threshold.type === "LB" ? "Lower\nBound" : "Upper\nBound"}
-      />
+      {metric.threshold.value > _.max(_.map(data.values, 1)) ? null : (
+        <ThresholdLine
+          style={{
+            line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
+            label: { fill: "#ff8686", fontSize: "16px" },
+          }}
+          threshold={metric.threshold.value}
+          label={metric.threshold.type === "LB" ? "Lower\nBound" : "Upper\nBound"}
+        />
+      )}
     </GeneralTimeSeriesGraph>
   );
 };
