@@ -298,7 +298,7 @@
                                 "containers": [
                                     {
                                         "name": "analyzer",
-                                        "image": "gcr.io\/hyperpilot-test\/analyzer",
+                                        "image": "hyperpilot\/analyzer:alpha-adrian",
                                         "imagePullPolicy": "Always",
                                         "ports": [
                                             {
