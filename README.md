@@ -1,6 +1,26 @@
 # analyzer-ui
 
-This repository consists of two JavaScript apps:
+## Deploying
+
+1. Initialize Cluster
+    - Start deployer
+    - `./deploy-gcp.sh <username>`
+2. Restore mongo data
+    - cd into the root directory of analyzer
+    - `kubectl port-forward -n hyperpilot $(kubectl get pods -n hyperpilot | grep 'mongo-serve', awk '{print $1;}') 27017:27017`
+    - In another window, do `mongo mongo-service/create-dbuser.js`
+    - `mongoimport -d resultdb -c diagnoses workloads/diagnoses.json`
+    - `mongoimport -d resultdb -c incidents workloads/incident-0001.json`
+    - `mongoimport -d resultdb -c problems workloads/problems-incident-0001`
+    - After all, it's ok to stop forwarding 27017 port
+3. Restore influx data
+    - Assume there's a backed up data in your locally running influx (using `hyperpilot-demo/hyperpilot_influx_restore.sh`)
+    - Run `./restore_influx.sh` (Assuming there's an influx running on localhost:8086), this is going to take some time, it can be about 20 mins.
+
+
+
+This repository consists of three JavaScript apps:
+- alpha
 - interference-analysis
 - sizing-analysis
 
@@ -10,20 +30,20 @@ This repository consists of two JavaScript apps:
 
 ### Instructions (with yarn)
 - `yarn install`
-- `yarn dev-sizing` (or `yarn dev`) to start developing sizing analysis UI
-- OR `yarn dev-interference` to start developing interference analysis UI
+- `yarn dev-server` to start webpack fro server side code
+- `yarn dev` to start dev server
 
 #### With npm
 - `npm install`
-- `npm run dev-sizing` (or `npm run dev`) to start developing sizing analysis UI
-- `npm run dev-interference` to start developing interference analysis UI
+- `npm run server-dev` to start webpack for server side code
+- `npm run dev` to start server with webpack dev mode and client code webpack bundling
 
 ### Configurations
 These apps will have to be connected with analyzer service, you can configure the URL of analyzer service inside `config.json` (default assuming analyzer running at `localhost:5000`)
 
 ### Building (production bundle)
 - `yarn build` or `npm run build`
-- `yarn serve-interference` or `yarn serve-sizing` to serve the app
+- `yarn serve` to serve the app
 
 ### Files description:
 - `package.json`: Dependencies and useful scripts

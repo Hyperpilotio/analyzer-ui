@@ -1,0 +1,574 @@
+{
+    "name": "analyzer-ui",
+    "region": "asia-east1-a",
+    "clusterType": "GCP",
+    "nodeMapping": [
+        {
+            "task": "influxsrv",
+            "id": 1
+        },
+        {
+            "task": "mongo",
+            "id": 2
+        },
+        {
+            "task": "pathfinder",
+            "id": 1
+        },
+        {
+            "task": "goddd",
+            "id": 2
+        },
+        {
+            "task": "mongo-serve",
+            "id": 3
+        },
+        {
+            "task": "analyzer",
+            "id": 1
+        },
+        {
+            "task": "analyzer-ui",
+            "id": 2
+        },
+        {
+            "task": "hyperpilot-operator",
+            "id": 3
+        }
+    ],
+    "clusterDefinition": {
+        "nodes": [
+            {
+                "instanceType": "n1-standard-2",
+                "id": 1
+            },
+            {
+                "instanceType": "n1-standard-2",
+                "id": 2
+            },
+            {
+                "instanceType": "n1-standard-2",
+                "id": 3
+            }
+        ]
+    },
+    "kubernetes": {
+        "secrets": [
+            {
+                "apiVersion": "v1",
+                "kind": "Secret",
+                "metadata": {
+                    "name": "myregistrykey",
+                    "namespace": "hyperpilot"
+                },
+                "type": "kubernetes.io\/dockerconfigjson",
+                "data": {
+                    ".dockerconfigjson": "ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7CgkJCSJhdXRoIjogImFIbHdaWEp3YVd4dmRIVnpaWEk2YUhsd1pYSXhNak09IgoJCX0KCX0KfQ=="
+                }
+            }
+        ],
+        "taskDefinitions": [
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "influxsrv"
+                        },
+                        "name": "influxsrv",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "influxsrv"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "influxsrv",
+                                "volumes": [
+                                    {
+                                        "hostPath": {
+                                            "path": "~/influx_data"
+                                        },
+                                        "name": "influx-data"
+                                    }
+                                ],
+                                "containers": [
+                                    {
+                                        "env": [
+                                            {
+                                                "name": "ADMIN_USER",
+                                                "value": "root"
+                                            },
+                                            {
+                                                "name": "PRE_CREATE_DB",
+                                                "value": "snap;spark;snapaverage"
+                                            },
+                                            {
+                                                "name": "INFLUXDB_INIT_PWD",
+                                                "value": "default"
+                                            }
+                                        ],
+                                        "image": "hyperpilot\/influx:1.3.6",
+                                        "name": "influxsrv",
+                                        "ports": [
+                                            {
+                                                "containerPort": 8083,
+                                                "hostPort": 8083,
+                                                "protocol": "TCP"
+                                            },
+                                            {
+                                                "containerPort": 8086,
+                                                "hostPort": 8086,
+                                                "protocol": "TCP"
+                                            },
+                                            {
+                                                "containerPort": 8088,
+                                                "hostPort": 8088,
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "volumeMounts": [
+                                            {
+                                                "mountPath": "\/var\/lib\/influxdb",
+                                                "name": "influx-data"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "influxsrv",
+                "portTypes": [
+                    1,
+                    1,
+                    1
+                ]
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "mongo-serve"
+                        },
+                        "name": "mongo-serve",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "mongo-serve"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "mongo-serve"
+                                }
+                            },
+                            "spec": {
+                                "volumes": [
+                                    {
+                                        "hostPath": {
+                                            "path": "~/hyperpilot/mongo_data"
+                                        },
+                                        "name": "mongo-data"
+                                    }
+                                ],
+                                "containers": [
+                                    {
+                                        "volumeMounts": [
+                                            {
+                                                "mountPath": "\/data\/db",
+                                                "name": "mongo-data"
+                                            }
+                                        ],
+                                        "image": "mongo",
+                                        "name": "mongo-serve",
+                                        "ports": [
+                                            {
+                                                "containerPort": 27017,
+                                                "hostPort": 27017,
+                                                "protocol": "TCP"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "mongo-serve"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "hyperpilot-operator"
+                        },
+                        "name": "hyperpilot-operator",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "hyperpilot-operator"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "hyperpilot-operator"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "hyperpilot-operator",
+                                "containers": [
+                                    {
+                                        "name": "hyperpilot-operator",
+                                        "image": "hyperpilot\/hyperpilot-operator",
+                                        "imagePullPolicy": "Always",
+                                        "env": [
+                                            {
+                                                "name": "HP_POLLANALYZERENABLE",
+                                                "value": "false"
+                                            },
+                                            {
+                                                "name": "HP_CONTROLLERS",
+                                                "value": "NodeSpecController"
+                                            }
+                                        ],
+                                        "ports": [
+                                            {
+                                                "containerPort": 8080,
+                                                "hostPort": 8080
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "myregistrykey"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "hyperpilot-operator"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "analyzer"
+                        },
+                        "name": "analyzer",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "analyzer"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "analyzer"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "analyzer",
+                                "containers": [
+                                    {
+                                        "name": "analyzer",
+                                        "image": "gcr.io\/hyperpilot-test\/analyzer",
+                                        "imagePullPolicy": "Always",
+                                        "ports": [
+                                            {
+                                                "containerPort": 5000,
+                                                "hostPort": 5000
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "myregistrykey"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "analyzer"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "analyzer-ui"
+                        },
+                        "name": "analyzer-ui",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "analyzer-ui"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "analyzer-ui"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "analyzer-ui",
+                                "containers": [
+                                    {
+                                        "name": "analyzer-ui",
+                                        "image": "hyperpilot\/analyzer-ui:alpha",
+                                        "imagePullPolicy": "Always",
+                                        "env": [
+                                            {
+                                                "name": "ANALYZER_HOST",
+                                                "value": "analyzer"
+                                            },
+                                            {
+                                                "name": "ANALYZER_PORT",
+                                                "value": "5000"
+                                            },
+                                            {
+                                                "name": "INFLUXDB_HOST",
+                                                "value": "influxsrv"
+                                            },
+                                            {
+                                                "name": "OPERATOR_HOST",
+                                                "value": "hyperpilot-operator"
+                                            }
+                                        ],
+                                        "ports": [
+                                            {
+                                                "containerPort": 3000,
+                                                "hostPort": 3000
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "analyzer-ui"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "pathfinder"
+                        },
+                        "name": "pathfinder",
+                        "namespace": "default"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "pathfinder"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "pathfinder"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "pathfinder",
+                                "containers": [
+                                    {
+                                        "image": "hyperpilot\/pathfinder",
+                                        "name": "pathfinder",
+                                        "env": [
+                                            {
+                                                "value": "http:\/\/influxsrv.hyperpilot:8086",
+                                                "name": "INFLUXDB_URL"
+                                            },
+                                            {
+                                                "value": "root",
+                                                "name": "INFLUXDB_USERNAME"
+                                            },
+                                            {
+                                                "value": "default",
+                                                "name": "INFLUXDB_PASSWORD"
+                                            }
+                                        ],
+                                        "ports": [
+                                            {
+                                                "containerPort": 8080,
+                                                "hostPort": 8080
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "pathfinder"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "goddd",
+                            "hyperpilot.io/qos": "true"
+                        },
+                        "name": "goddd",
+                        "namespace": "default"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "goddd"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "goddd",
+                                    "hyperpilot.io/qos": "true"
+                                }
+                            },
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "env": [
+                                            {
+                                                "name": "BOOKING_MAXAGE",
+                                                "value": "5"
+                                            },
+                                            {
+                                                "name": "NO_PADDING",
+                                                "value": "True"
+                                            },
+                                            {
+                                                "name": "ROUTINGSERVICE_URL",
+                                                "value": "http:\/\/pathfinder:8080"
+                                            },
+                                            {
+                                                "name": "MONGO_MAXPOOLSIZE",
+                                                "value": "120"
+                                            },
+                                            {
+                                                "name": "MONGODB_URL",
+                                                "value": "mongo:27017"
+                                            },
+                                            {
+                                                "name": "DB_NAME",
+                                                "value": "goddd"
+                                            }
+                                        ],
+                                        "image": "hyperpilot\/goddd",
+                                        "name": "goddd",
+                                        "imagePullPolicy": "Always",
+                                        "ports": [
+                                            {
+                                                "containerPort": 8080,
+                                                "hostPort": 8080
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "goddd"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "mongo"
+                        },
+                        "name": "mongo"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "mongo"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "mongo"
+                                }
+                            },
+                            "spec": {
+                                "volumes": [
+                                    {
+                                        "hostPath": {
+                                            "path": "~/mongo_data"
+                                        },
+                                        "name": "mongo-data"
+                                    }
+                                ],
+                                "containers": [
+                                    {
+                                        "volumeMounts": [
+                                            {
+                                                "mountPath": "\/data\/db",
+                                                "name": "mongo-data"
+                                            }
+                                        ],
+                                        "image": "mongo",
+                                        "name": "mongo",
+                                        "ports": [
+                                            {
+                                                "containerPort": 27017,
+                                                "hostPort": 27017,
+                                                "protocol": "TCP"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "mongo"
+            }
+        ]
+    }
+}
