@@ -45,6 +45,11 @@ export default reduceReducers(
             constraints: {},
           },
           {
+            action_name: "resize_container",
+            mode: "Manual",
+            constraints: {},
+          },
+         {
             action_name: "resize_node",
             mode: "Manual",
             constraints: {},
@@ -54,7 +59,23 @@ export default reduceReducers(
       {
         name: "bottleneck_management",
         status: "Enabled",
-        remediation_policy: [],
+        remediation_policy: [
+          {
+            action_name: "resize_container",
+            mode: "Manual",
+            constraints: {},
+          },
+          {
+            action_name: "resize_node",
+            mode: "Manual",
+            constraints: {},
+          },
+          {
+            action_name: "scale_service",
+            mode: "Manual",
+            constraints: {},
+          },
+        ],
       },
       {
         name: "efficiency_management",
