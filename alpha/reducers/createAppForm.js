@@ -83,7 +83,7 @@ export default reduceReducers(
     case types.FETCH_AVAILABLE_SERVICES[FAIL]:
       console.error({
         MESSAGE: action.payload.response.message,
-        CAUSE: "hyperpilot-perator is not running.",
+        CAUSE: "hyperpilot-operator is not running.",
       });
       return state;
     default:
