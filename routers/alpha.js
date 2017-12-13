@@ -4,15 +4,10 @@ import { InfluxDB } from "influx";
 import _ from "lodash";
 import moment from "moment";
 import config from "../config";
-import resources from "./resources";
-import mockdb from "./mockdb";
 
 const router = express();
 
 const influxClient = new InfluxDB(config.influx);
-
-router.use(resources);
-router.use(mockdb);
 
 router.get("/api/apps", async (req, res) => {
   const response = await request.get({
