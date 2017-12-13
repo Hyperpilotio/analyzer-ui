@@ -87,7 +87,7 @@ router.post("/api/save-microservices", async (req, res) => {
       specs.forEach(({ name, k8s_spec }) => {
         requestedResources.push({ namespace, kind, name });
         const registerRequest = request
-          .post(`${config.analyzer.url}/api/v1/k8s_services`, { json: true, body: k8s_spec })
+          .post(`${config.analyzer.url}/api/v1/k8s_services`, { json: true, body: { spec: JSON.stringify(k8s_spec) } })
           .catch(err => err);
           // Analyzer will fail to insert into Mongo if any field key of k8s spec contains "."
           // Catching the errors here, but it should be fixed in analyzer so it won't happen
