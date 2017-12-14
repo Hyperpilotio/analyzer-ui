@@ -11,29 +11,27 @@ const DiagnosticsTable = ({ baseUrl, result, problems }) => (
       <Col><h4>Top Related Problems:</h4></Col>
     </Row>
     <Row>
-      <Col>
-        <Table hover>
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Description</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.top_related_problems.map(({ id, rank }) => {
-              const problem = _.find(problems, { problem_id: id });
-              return (
-                <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
-                  <th scope="row">{ rank }</th>
-                  <td><ProblemDescription problem={problem} /></td>
-                  <td>{ format(".2f")(problem.overall_score) }</td>
-                </Linked>
-              );
-            })}
-          </tbody>
-        </Table>
-      </Col>
+      <Table className="no-padding-adjust" hover>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Description</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {result.top_related_problems.map(({ id, rank }) => {
+            const problem = _.find(problems, { problem_id: id });
+            return (
+              <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
+                <th scope="row">{ rank }</th>
+                <td><ProblemDescription problem={problem} /></td>
+                <td>{ format(".2f")(problem.overall_score) }</td>
+              </Linked>
+            );
+          })}
+        </tbody>
+      </Table>
     </Row>
   </Container>
 );

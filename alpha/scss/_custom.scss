@@ -17,6 +17,17 @@ $theme-colors: (
   }
 }
 
+.table.no-padding-adjust {
+  th, td {
+    &:first-child {
+      padding-left: 1em;
+    }
+    &:last-child {
+      padding-right: 1em;
+    }
+  }
+}
+
 // dropdown
 .show > .dropdown-menu {
   display: block;

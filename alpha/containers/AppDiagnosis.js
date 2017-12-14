@@ -48,7 +48,7 @@ class AppDiagnosis extends React.Component {
                       </Col>
                     </Row>
                     {problem.metrics.map(metric => (
-                      <Row className="mb-2">
+                      <Row key={metric.name} className="mb-2">
                         <Col>
                           <SingleResourceGraph
                             height={problem.metrics.length > 1 ? 300 : 400}

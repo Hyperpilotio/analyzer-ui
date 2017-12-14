@@ -3,18 +3,22 @@ import _ from "lodash";
 import { Badge } from "reactstrap";
 
 
-const ProblemDescription = ({ problem, ...props }) => {
-  switch (problem.description.type) {
+const Resource = ({ name }) => <Badge color="primary">{ name }</Badge>
+const Node = ({ name }) => <Badge color="info">{ name }</Badge>
+const Pod = ({ name }) => <Badge color="success">{ name }</Badge>
+
+const ProblemDescription = ({ problem: { description }, ...props }) => {
+  switch (description.type) {
   case "node_resource_bottleneck":
     return (
       <span {...props}>
-        <Badge color="primary">{ problem.description.resource }</Badge> resource bottleneck on node <Badge color="info">{ problem.description.node_name }</Badge>
+        <Resource name={description.resource} /> resource bottleneck on <Node name={description.node_name} />
       </span>
     );
   case "container_interference":
     return (
       <span {...props}>
-        <Badge color="primary">{ problem.description.resource }</Badge> resource interference in container <Badge color="success">{ problem.description.pod_name }</Badge>
+        <Resource name={description.resource} /> resource interference in container <Pod name={description.pod_name} /> on node <Node name={description.node_name} />
       </span>
     );
   }
