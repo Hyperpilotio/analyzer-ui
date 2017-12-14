@@ -49,7 +49,7 @@ export default reduceReducers(
             mode: "Manual",
             constraints: {},
           },
-         {
+          {
             action_name: "resize_node",
             mode: "Manual",
             constraints: {},
@@ -94,6 +94,11 @@ export default reduceReducers(
         flattenResourcesData(action.payload.data),
         _.clone,
       );
+    case types.FETCH_AVAILABLE_SERVICES[FAIL]:
+      console.error({
+        MESSAGE: action.payload.response.message,
+      });
+      return state;
     case types.FETCH_METRICS[SUCCESS]:
       return _.setWith(
         { ...state },
@@ -101,12 +106,6 @@ export default reduceReducers(
         action.payload.metrics,
         _.clone,
       );
-    case types.FETCH_AVAILABLE_SERVICES[FAIL]:
-      console.log("action.payload",action.payload.toString());
-      console.error({
-        MESSAGE: action.payload.response.message,
-      });
-      return state;
     default:
       return state;
     }
