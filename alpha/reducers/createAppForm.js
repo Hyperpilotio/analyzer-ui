@@ -102,9 +102,9 @@ export default reduceReducers(
         _.clone,
       );
     case types.FETCH_AVAILABLE_SERVICES[FAIL]:
+      console.log("action.payload",action.payload.toString());
       console.error({
         MESSAGE: action.payload.response.message,
-        CAUSE: "hyperpilot-operator is not running.",
       });
       return state;
     default:

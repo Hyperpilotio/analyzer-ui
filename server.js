@@ -3,6 +3,7 @@ import morgan from "morgan";
 import path from "path";
 import bodyParser from "body-parser";
 import webpackConfig from "./webpack.client.config";
+import errHandler from "./routers/errHandler";
 
 const server = express();
 server.use(morgan("dev"));
