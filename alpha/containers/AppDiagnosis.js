@@ -10,7 +10,7 @@ import DiagnosticsTable from "../components/DiagnosticsTable";
 import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
-import ProblemDescription from "../components/ProblemDescription";
+import { ProblemDescription } from "../components/TextDescriptions";
 import { fetchDiagnostics } from "../actions";
 
 
@@ -43,8 +43,11 @@ class AppDiagnosis extends React.Component {
                 return (
                   <Container>
                     <Row className="mb-2">
+                      <Col sm="auto">
+                        <h5>Problem #{_.find(result.top_related_problems, { id: problemId }).rank}:</h5>
+                      </Col>
                       <Col>
-                        <h5>Problem #{_.find(result.top_related_problems, { id: problemId }).rank}: <ProblemDescription problem={problem} /></h5>
+                        <ProblemDescription problem={problem} />
                       </Col>
                     </Row>
                     {problem.metrics.map(metric => (
@@ -58,47 +61,20 @@ class AppDiagnosis extends React.Component {
                         </Col>
                       </Row>
                     ))}
-                    {/* <Row>
-                      <Table hover>
-                        <thead>
-                          <tr>
-                            <th>Remediation #</th>
-                            <th>Description</th>
-                            <th>Mode</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>#1</td>
-                            <td>Move container <Badge>goddd</Badge> to node <Badge>node-1</Badge></td>
-                            <td>Semi-Auto</td>
-                          </tr>
-                          <tr>
-                            <td>#2</td>
-                            <td>
-                              Throttle request type <Badge>net</Badge> on container <Badge>goddd</Badge>
-                            </td>
-                            <td>Semi-Auto</td>
-                          </tr>
-                          <tr>
-                            <td>#3</td>
-                            <td>
-                              Resize node <Badge>node-1</Badge> to instance type <Badge>t2.xlarge</Badge>
-                            </td>
-                            <td>Manual</td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </Row>
-                  */}
                   </Container>
                 );
               }}
             />
+
             <Route
-              path={match.path}
-              render={({ match }) => (
-                <DiagnosticsTable baseUrl={match.url} result={result} problems={problems} />
+              path={`${match.path}/:problemId?`}
+              render={({ match: { params } }) => (
+                <DiagnosticsTable
+                  selectedProblem={params.problemId}
+                  baseUrl={match.url}
+                  result={result}
+                  problems={problems}
+                />
               )}
             />
           </div>
