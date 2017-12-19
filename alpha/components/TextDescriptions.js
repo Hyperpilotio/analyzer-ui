@@ -19,7 +19,7 @@ export const ProblemDescription = ({ problem: { description }, ...props }) => {
   case "container_interference":
     return (
       <span {...props}>
-        <Resource name={description.resource} /> interference in <Pod name={description.pod_name} /> on <Node name={description.node_name} />
+        <Resource name={description.resource} /> interference from <Pod name={description.pod_name} /> on <Node name={description.node_name} />
       </span>
     );
   default:
