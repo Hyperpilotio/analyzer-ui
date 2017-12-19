@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { SUCCESS, FAIL } from "../constants/apiActions";
+import { SUCCESS } from "../constants/apiActions";
 import * as types from "../actions/types";
 
 const initialState = {
@@ -19,11 +19,6 @@ export default (state = initialState, action) => {
       incidents: _.unionBy(data.incidents, state.incidents, "incident_id"),
       problems: _.unionBy(data.problems, state.problems, "problem_id"),
     };
-  case types.FETCH_DIAGNOSTICS[FAIL]:
-    console.error({
-      MESSAGE: action.payload.response.message,
-    });
-    return state;
   default:
     return state;
   }

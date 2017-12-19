@@ -3,7 +3,7 @@ import reduceReducers from "reduce-reducers";
 import _ from "lodash";
 import * as types from "../actions/types";
 import { flattenResourcesData } from "../lib/utils";
-import { SUCCESS, FAIL } from "../constants/apiActions";
+import { SUCCESS } from "../constants/apiActions";
 
 export default reduceReducers(
   combineForms({
@@ -94,11 +94,6 @@ export default reduceReducers(
         flattenResourcesData(action.payload.data),
         _.clone,
       );
-    case types.FETCH_AVAILABLE_SERVICES[FAIL]:
-      console.error({
-        MESSAGE: action.payload.response.message,
-      });
-      return state;
     case types.FETCH_METRICS[SUCCESS]:
       return _.setWith(
         { ...state },
