@@ -3,7 +3,7 @@ import reduceReducers from "reduce-reducers";
 import _ from "lodash";
 import * as types from "../actions/types";
 import { flattenResourcesData } from "../lib/utils";
-import { SUCCESS, FAIL } from "../constants/apiActions";
+import { SUCCESS } from "../constants/apiActions";
 
 export default reduceReducers(
   combineForms({
@@ -45,6 +45,11 @@ export default reduceReducers(
             constraints: {},
           },
           {
+            action_name: "resize_container",
+            mode: "Manual",
+            constraints: {},
+          },
+          {
             action_name: "resize_node",
             mode: "Manual",
             constraints: {},
@@ -54,7 +59,23 @@ export default reduceReducers(
       {
         name: "bottleneck_management",
         status: "Enabled",
-        remediation_policy: [],
+        remediation_policy: [
+          {
+            action_name: "resize_container",
+            mode: "Manual",
+            constraints: {},
+          },
+          {
+            action_name: "resize_node",
+            mode: "Manual",
+            constraints: {},
+          },
+          {
+            action_name: "scale_service",
+            mode: "Manual",
+            constraints: {},
+          },
+        ],
       },
       {
         name: "efficiency_management",
@@ -80,12 +101,6 @@ export default reduceReducers(
         action.payload.metrics,
         _.clone,
       );
-    case types.FETCH_AVAILABLE_SERVICES[FAIL]:
-      console.error({
-        MESSAGE: action.payload.response.message,
-        CAUSE: "hyperpilot-perator is not running.",
-      });
-      return state;
     default:
       return state;
     }

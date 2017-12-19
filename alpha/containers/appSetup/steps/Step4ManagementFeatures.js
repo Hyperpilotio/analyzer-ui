@@ -14,7 +14,9 @@ const texts = {
   bottleneck_management: "Bottleneck Management",
   efficiency_management: "Efficiency Management",
   move_container: "Move Container",
+  resize_container: "Resize Container",
   resize_node: "Resize Node",
+  scale_service: "Scale Service",
 };
 
 const Step4ManagementFeatures = ({ appId, management_features, stepBack, updateManagementFeatures }) => (

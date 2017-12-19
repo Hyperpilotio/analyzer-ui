@@ -29,7 +29,12 @@ export default (state = initialState, action) => {
       [uiFieldName]: false,
     };
   case FAIL:
-    console.error(`${name} failed`, action);
+    console.error(`${actionName} failed:`);
+    if (action.payload.name === "ApiError") {
+      console.error(action.payload.response);
+    } else {
+      console.error(action.payload);
+    }
     return state;
   default:
     return state;

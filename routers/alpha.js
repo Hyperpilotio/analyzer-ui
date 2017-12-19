@@ -9,10 +9,38 @@ const router = express();
 
 const influxClient = new InfluxDB(config.influx);
 
+const asyncMiddleware = fn => async (req, res, next) => {
+  try {
+    await fn(req, res, next);
+  } catch (e) {
+    res.status(500).json({
+      success: false,
+      message: e.message,
+    });
+  }
+};
+
+["get", "post"].forEach(method => {
+  router[method] = _.wrap(
+    ::router[method],
+    (register, ...args) => {
+      if (args.length === 2) {
+        const [path, fn] = args;
+        if (_.isString(path) && _.isFunction(fn)) {
+          return register(path, asyncMiddleware(fn));
+        }
+      }
+      return register(...args);
+    },
+  );
+});
+
+
 router.get("/api/apps", async (req, res) => {
-  const response = await request.get({
-    uri: `${config.analyzer.url}/api/v1/apps`, json: true,
-  });
+  const response = await request.get(
+    {
+      uri: `${config.analyzer.url}/api/v1/apps`, json: true,
+    });
   res.json({ success: true, ...response });
 });
 
@@ -41,16 +69,11 @@ router.post("/api/activate-app", async (req, res) => {
 });
 
 router.get("/api/get-cluster-mapping", async (req, res) => {
-  try {
-    const response = await request.get(
-      `${config.operator.url}/cluster/mapping`,
-      { body: ["services", "deployments", "statefulsets"], json: true },
-    );
-    res.json({ success: true, data: response });
-  } catch (err) {
-    res.status(500);
-    res.json({ message: err.message });
-  }
+  const response = await request.get(
+    `${config.operator.url}/cluster/mapping`,
+    { body: ["services", "deployments", "statefulsets"], json: true },
+  );
+  res.json({ success: true, data: response });
 });
 
 router.post("/api/save-microservices", async (req, res) => {
