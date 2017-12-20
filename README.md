@@ -17,7 +17,7 @@
     - Assume there's a backed up data in your locally running influx (using `hyperpilot-demo/hyperpilot_influx_restore.sh`)
     - Run `./restore_influx.sh` (Assuming there's an influx running on localhost:8086), this is going to take some time, it can be about 20 mins.
 
-
+---
 
 This repository consists of three JavaScript apps:
 - alpha
