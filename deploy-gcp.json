@@ -1,6 +1,6 @@
 {
     "name": "analyzer-ui",
-    "region": "asia-east1-a",
+    "region": "us-west1-a",
     "clusterType": "GCP",
     "nodeMapping": [
         {
