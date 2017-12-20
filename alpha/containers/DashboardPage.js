@@ -9,7 +9,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import AppDiagnosis from "./AppDiagnosis";
-import { fetchApps, fetchDiagnostics, removeApp } from "../actions";
+import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
 
@@ -18,7 +18,8 @@ class DashboardPage extends React.Component {
     // match: ReactRouterPropTypes.match.isRequired,
     // isFetchAppsLoading: PropTypes.bool.isRequired,
     // isFetchDiagnosticsLoading: PropTypes.bool.isRequired,
-    // fetchApps: PropTypes.func.isRequired,
+    fetchApps: PropTypes.func.isRequired,
+    fetchIncidents: PropTypes.func.isRequired,
     // fetchDiagnostics: PropTypes.func.isRequired,
     // removeApp: PropTypes.func.isRequired,
     // apps: PropTypes.arrayOf(appPropType).isRequired,
@@ -29,6 +30,7 @@ class DashboardPage extends React.Component {
 
   componentWillMount() {
     this.props.fetchApps();
+    this.props.fetchIncidents();
     // this.props.fetchDiagnostics();
   }
 
@@ -82,6 +84,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
+  fetchIncidents: () => dispatch(fetchIncidents()),
   fetchDiagnostics: () => dispatch(fetchDiagnostics()),
   removeApp: appId => dispatch(removeApp(appId)),
   resetAppForm: () => {

@@ -126,6 +126,14 @@ export const fetchMetrics = sloSource => ({
   },
 });
 
+export const fetchIncidents = () => ({
+  [RSAA]: {
+    endpoint: "/api/incidents",
+    method: "GET",
+    types: types.FETCH_INCIDENTS,
+  },
+});
+
 export const fetchDiagnostics = appId => ({
   [RSAA]: {
     endpoint: `/api/diagnostics/${appId}`,

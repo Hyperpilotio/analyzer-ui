@@ -220,4 +220,10 @@ router.post("/api/remove-app", async (req, res) => {
   res.json({ success: true, ...response });
 });
 
+router.get("/api/incidents", (req, res) => {
+  res.json({ success: true,
+    data: ["incident"],
+  });
+});
+
 export default router;
