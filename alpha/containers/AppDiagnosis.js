@@ -91,7 +91,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   }
 
   const app = _.find(applications, { app_id: match.params.appId });
-  const appIncidents = _.filter(diagnosis.incidents, {labels: {app_name: app.name}});
+  const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
   const isDiagnosticsLoading = ui.isFetchDiagnosticsLoading || _.isEmpty(appIncidents);
   if (isDiagnosticsLoading) {
     return { app, isAppLoading, isDiagnosticsLoading };
@@ -100,7 +100,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   const mostRecentIncident = _.maxBy(appIncidents, "timestamp");
   const result = _.find(diagnosis.results, { incident_id: mostRecentIncident.incident_id });
   const problems = result.top_related_problems.map(
-    ({ id }) => _.find(diagnosis.problems, { problem_id: id })
+    ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
   );
   return { app, incident: mostRecentIncident, result, problems };
 };
