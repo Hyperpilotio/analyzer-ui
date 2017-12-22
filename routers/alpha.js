@@ -20,7 +20,7 @@ const asyncMiddleware = fn => async (req, res, next) => {
   }
 };
 
-["get", "post"].forEach(method => {
+["get", "post"].forEach((method) => {
   router[method] = _.wrap(
     ::router[method],
     (register, ...args) => {
@@ -41,7 +41,28 @@ router.get("/api/apps", async (req, res) => {
     {
       uri: `${config.analyzer.url}/api/v1/apps`, json: true,
     });
-  res.json({ success: true, ...response });
+
+  const promises = [];
+  response.data.forEach(({ name }) => {
+    const incidentRequest = request.get({
+      uri: `${config.analyzer.url}/api/v1/incidents`,
+      json: true,
+      body: { app_name: name },
+    }).catch(err => ({
+      data: { incident_id: null, message: err.message },
+    }),
+    );
+    promises.push(incidentRequest);
+  });
+
+  const incidentResponses = await Promise.all(promises);
+  const responseWithIncident = _.merge(
+    response.data, _.flatMap(
+      incidentResponses, o => ({ incident: o.data }),
+    ),
+  );
+
+  res.json({ success: true, data: responseWithIncident });
 });
 
 router.post("/api/new-app", async (req, res) => {
@@ -120,7 +141,6 @@ router.post("/api/save-microservices", async (req, res) => {
   });
 
   const registerServiceResponses = await Promise.all(promises);
-
   const microservices = _
     .zip(requestedResources, registerServiceResponses)
     .filter(([, response]) => _.has(response, "data"))
@@ -213,27 +233,6 @@ router.post("/api/remove-app", async (req, res) => {
     { body: { state: "Unregistered" }, json: true },
   );
   res.json({ success: true, ...response });
-});
-
-router.get("/api/incidents", (req, res) => {
-  res.json({ success: true,
-    data: [{
-      id: "incident-xxx-xxx",
-      app_name: "tech-demo",
-    }, {
-      id: "risk-xxx-xxx",
-      app_name: "app",
-    }, {
-      id: "opportunity-xxx-xxx",
-      app_name: "adrian",
-    }, {
-      id: "incident-xxx-xxx",
-      app_name: "box4",
-    }, {
-      id: "opportunity-xxx-xxx",
-      app_name: "toby",
-    }],
-  });
 });
 
 export default router;
