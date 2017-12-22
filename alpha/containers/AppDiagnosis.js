@@ -3,6 +3,7 @@ import _ from "lodash";
 import moment from "moment";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
+import PropTypes from "prop-types";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
 import Linked from "~/commons/components/Linked";
 import AppInfoJumbotron from "../components/AppInfoJumbotron";
@@ -15,6 +16,13 @@ import { fetchDiagnostics } from "../actions";
 
 
 class AppDiagnosis extends React.Component {
+  static propTypes = {
+    fetchDiagnostics: PropTypes.func.isRequired,
+    isAppLoading: PropTypes.bool.isRequired,
+    isDiagnosticsLoading: PropTypes.bool.isRequired,
+    
+  }
+
   componentWillMount() {
     this.props.fetchDiagnostics();
   }
@@ -91,7 +99,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   }
 
   const app = _.find(applications, { app_id: match.params.appId });
-  const appIncidents = _.filter(diagnosis.incidents, {labels: {app_name: app.name}});
+  const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
   const isDiagnosticsLoading = ui.isFetchDiagnosticsLoading || _.isEmpty(appIncidents);
   if (isDiagnosticsLoading) {
     return { app, isAppLoading, isDiagnosticsLoading };
@@ -100,7 +108,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   const mostRecentIncident = _.maxBy(appIncidents, "timestamp");
   const result = _.find(diagnosis.results, { incident_id: mostRecentIncident.incident_id });
   const problems = result.top_related_problems.map(
-    ({ id }) => _.find(diagnosis.problems, { problem_id: id })
+    ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
   );
   return { app, incident: mostRecentIncident, result, problems };
 };

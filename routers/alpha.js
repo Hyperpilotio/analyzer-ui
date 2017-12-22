@@ -20,7 +20,7 @@ const asyncMiddleware = fn => async (req, res, next) => {
   }
 };
 
-["get", "post"].forEach(method => {
+["get", "post"].forEach((method) => {
   router[method] = _.wrap(
     ::router[method],
     (register, ...args) => {
@@ -41,7 +41,28 @@ router.get("/api/apps", async (req, res) => {
     {
       uri: `${config.analyzer.url}/api/v1/apps`, json: true,
     });
-  res.json({ success: true, ...response });
+
+  const promises = [];
+  response.data.forEach(({ name }) => {
+    const incidentRequest = request.get({
+      uri: `${config.analyzer.url}/api/v1/incidents`,
+      json: true,
+      body: { app_name: name },
+    }).catch(() => ({
+      data: { incident_id: null },
+    }),
+    );
+    promises.push(incidentRequest);
+  });
+
+  const incidentResponses = await Promise.all(promises);
+
+  const responseWithIncident = _.merge(
+    response.data, _.flatMap(
+      incidentResponses, item => ({ hasIncident: !_.isNull(item.data.incident_id) }),
+    ),
+  );
+  res.json({ success: true, data: responseWithIncident });
 });
 
 router.post("/api/new-app", async (req, res) => {
@@ -120,7 +141,6 @@ router.post("/api/save-microservices", async (req, res) => {
   });
 
   const registerServiceResponses = await Promise.all(promises);
-
   const microservices = _
     .zip(requestedResources, registerServiceResponses)
     .filter(([, response]) => _.has(response, "data"))

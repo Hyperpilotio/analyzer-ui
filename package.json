@@ -17,7 +17,8 @@
     "server-dev-interference": "ANALYSIS_APP=interference-analysis webpack --config webpack.server.config.js --watch",
     "server-dev-sizing": "ANALYSIS_APP=sizing-analysis webpack --config webpack.server.config.js --watch",
     "server-dev": "webpack --config webpack.server.config.js --watch",
-    "fake-api": "json-server -w ./fake-api/db.json -r ./fake-api/router.json -m ./fake-api/singular.js -d 1500 -p 3007"
+    "fake-api": "json-server -w ./fake-api/db.json -r ./fake-api/router.json -m ./fake-api/singular.js -d 1500 -p 3007",
+    "test": "jest"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -39,6 +40,7 @@
     "file-loader": "^0.11.2",
     "git-revision-webpack-plugin": "^2.5.1",
     "html-webpack-plugin": "^2.29.0",
+    "jest": "^22.0.3",
     "json-server": "^0.12.1",
     "json-server-fix-statuscode": "^0.8.8",
     "loglevel": "^1.4.1",

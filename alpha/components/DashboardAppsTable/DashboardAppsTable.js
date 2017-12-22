@@ -4,13 +4,17 @@ import { Table, Badge } from "reactstrap";
 import FaTimesCircle from "react-icons/lib/fa/times-circle";
 import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import _ from "lodash";
+import PropTypes from "prop-types";
 import MdDelete from "react-icons/lib/md/cancel";
 import Linked from "~/commons/components/Linked";
-import { getSLODisplay } from "../../lib/utils";
+import { getSLODisplay, getProblemType } from "../../lib/utils";
 import _s from "./style.scss";
 
 
-const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportunities, removeApp }) => (
+const DashboardAppsTable = ({
+  isLoading, applications, incidents, 
+  risks, opportunities, removeApp 
+}) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
       <tr>
@@ -49,13 +53,15 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
           } else if (app.state === "Unregistered") {
             return null;
           }
-          let badge;
-          badge = (
-            <Badge className={_s.Badge} color="danger">
-              <FaTimesCircle className="mr-1" />
-              Incidents
-            </Badge>
-          );
+
+          const badge = app.hasIncident ?
+            (
+              <Badge className={_s.Badge} color="danger" >
+                <FaTimesCircle className="mr-1" />
+                Incidents
+              </Badge>
+
+            ) : null;
           // if (_.size(incidents[app._id]) !== 0) {
           //   badge = (
           //     <Badge className={_s.Badge} color="danger">
@@ -105,5 +111,10 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
   </Table>
 );
 
+DashboardAppsTable.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+
+
+};
 
 export default DashboardAppsTable;
