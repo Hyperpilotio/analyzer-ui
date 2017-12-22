@@ -177,7 +177,7 @@ class Step3SLO extends React.Component {
 const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms } }) => ({
   appId: basicInfo.app_id,
   sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
-  metricOptions: forms.slo.$form.metricOptions,
+  metricOptions: _.sortBy(forms.slo.$form.metricOptions),
   sloSource,
   microservices,
   slo,
