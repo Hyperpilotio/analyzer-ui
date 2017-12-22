@@ -9,6 +9,7 @@ import FaCaretDown from "react-icons/lib/fa/caret-down";
 import Linked from "~/commons/components/Linked";
 import AppInfoJumbotron from "../components/AppInfoJumbotron";
 import DiagnosticsTable from "../components/DiagnosticsTable";
+import RemediationsTable from "./RemediationsTable";
 import ChartGroup from "../components/ChartGroup";
 import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
@@ -93,7 +94,6 @@ class AppDiagnosis extends React.Component {
                     </Row>
                     <Row>
                       <ChartGroup className="mb-3">
-                        <ResourceGraphTitle problem={problem} />
                         {problem.metrics.map(metric => (
                           <Row key={metric.name} className="mb-2">
                             <Col>
@@ -105,20 +105,34 @@ class AppDiagnosis extends React.Component {
                             </Col>
                           </Row>
                         ))}
+                        <ResourceGraphTitle problem={problem} />
                       </ChartGroup>
                     </Row>
                   </Container>
                 );
               }}
             />
-            <Container>
+
+            <Container className="mb-4">
               <Row>
                 <ChartGroup>
-                  <h4 className="text-center">Latency v.s. SLO</h4>
                   <SLOGraph incident={incident} />
+                  <h5 className="text-center mb-3">
+                    {_.words(app.slo.metric.type).map(_.capitalize).join(" ")} v.s. SLO
+                  </h5>
                 </ChartGroup>
               </Row>
             </Container>
+
+            <Route
+              path={`${match.path}/:problemId`}
+              render={({ match: { params: { problemId } } }) => (
+                <RemediationsTable
+                  problem={_.find(problems, { problem_id: problemId })}
+                  remediations={_.find(result.top_related_problems, { id: problemId }).remediation_options}
+                />
+              )}
+            />
           </div>
         )}
       </div>

@@ -70,13 +70,13 @@ export const ResourceGraphTitle = ({ problem }) => {
   if (_.has(desc, "pod_name")) {
     return (
       <h5 className="text-center">
-        <Resource name={desc.resource} /> Usage in <Pod name={desc.pod_name} />
+        <Resource name={desc.resource} /> usage in <Pod name={desc.pod_name} />
       </h5>
     );
   } else if (_.has(desc, "node_name")) {
     return (
       <h5 className="text-center">
-        <Resource name={desc.resource} /> Usage on <Node name={desc.node_name} />
+        <Resource name={desc.resource} /> usage on <Node name={desc.node_name} />
       </h5>
     )
   }
