@@ -72,7 +72,10 @@ router.get("/api/get-cluster-mapping", async (req, res) => {
     `${config.operator.url}/cluster/mapping`,
     { body: ["services", "deployments", "statefulsets"], json: true },
   );
-  res.json({ success: true, data: response });
+  res.json({
+    success: true,
+    data: _.reject(response, { namespace: "kube-system" }),
+  });
 });
 
 router.post("/api/save-microservices", async (req, res) => {
