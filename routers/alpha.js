@@ -48,20 +48,20 @@ router.get("/api/apps", async (req, res) => {
       uri: `${config.analyzer.url}/api/v1/incidents`,
       json: true,
       body: { app_name: name },
-    }).catch(err => ({
-      data: { incident_id: null, message: err.message },
+    }).catch(() => ({
+      data: { incident_id: null },
     }),
     );
     promises.push(incidentRequest);
   });
 
   const incidentResponses = await Promise.all(promises);
+
   const responseWithIncident = _.merge(
     response.data, _.flatMap(
-      incidentResponses, o => ({ incident: o.data }),
+      incidentResponses, item => ({ hasIncident: !_.isNull(item.data.incident_id) }),
     ),
   );
-
   res.json({ success: true, data: responseWithIncident });
 });
 
