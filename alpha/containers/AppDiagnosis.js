@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { Toggle } from "react-powerplug";
 import FaCaretDown from "react-icons/lib/fa/caret-down";
+import PropTypes from "prop-types";
 import Linked from "~/commons/components/Linked";
 import AppInfoJumbotron from "../components/AppInfoJumbotron";
 import DiagnosticsTable from "../components/DiagnosticsTable";
@@ -20,6 +21,12 @@ import { fetchDiagnostics } from "../actions";
 
 
 class AppDiagnosis extends React.Component {
+  static propTypes = {
+    fetchDiagnostics: PropTypes.func.isRequired,
+    isAppLoading: PropTypes.bool.isRequired,
+    isDiagnosticsLoading: PropTypes.bool.isRequired,
+  }
+
   componentWillMount() {
     this.props.fetchDiagnostics();
   }

@@ -42,3 +42,32 @@ export const formToApp = ({ basicInfo, microservices, sloSource, slo, management
   },
   management_features,
 });
+
+
+export const getProblemType = (incidents, app_name) => {
+  const problem = _.find(incidents, { app_name });
+
+  if (problem) {
+    const name = problem.id.split("-")[0];
+    let color;
+    if (name === "incident") {
+      color = "danger";
+    } else if (name === "risk") {
+      color = "warning";
+    } else if (name === "opportunity") {
+      color = "success";
+    }
+
+    return {
+      name,
+      color,
+      isExist: true,
+    };
+  }
+
+  return {
+    name: null,
+    color: null,
+    isExist: false,
+  };
+};
