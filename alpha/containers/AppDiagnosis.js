@@ -3,6 +3,7 @@ import _ from "lodash";
 import moment from "moment";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
+import PropTypes from "prop-types";
 import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
 import Linked from "~/commons/components/Linked";
 import AppInfoJumbotron from "../components/AppInfoJumbotron";
@@ -15,6 +16,13 @@ import { fetchDiagnostics } from "../actions";
 
 
 class AppDiagnosis extends React.Component {
+  static propTypes = {
+    fetchDiagnostics: PropTypes.func.isRequired,
+    isAppLoading: PropTypes.bool.isRequired,
+    isDiagnosticsLoading: PropTypes.bool.isRequired,
+    
+  }
+
   componentWillMount() {
     this.props.fetchDiagnostics();
   }

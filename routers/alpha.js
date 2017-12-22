@@ -217,7 +217,22 @@ router.post("/api/remove-app", async (req, res) => {
 
 router.get("/api/incidents", (req, res) => {
   res.json({ success: true,
-    data: ["incident"],
+    data: [{
+      id: "incident-xxx-xxx",
+      app_name: "tech-demo",
+    }, {
+      id: "risk-xxx-xxx",
+      app_name: "app",
+    }, {
+      id: "opportunity-xxx-xxx",
+      app_name: "adrian",
+    }, {
+      id: "incident-xxx-xxx",
+      app_name: "box4",
+    }, {
+      id: "opportunity-xxx-xxx",
+      app_name: "toby",
+    }],
   });
 });
 

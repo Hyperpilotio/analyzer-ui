@@ -1,7 +1,8 @@
 import React from "react";
 import _ from "lodash";
 import { Container, Row, Col, Jumbotron, Badge } from "reactstrap";
-import { getSLODisplay } from "../lib/utils";
+import { getSLODisplay, getProblemType } from "../lib/utils";
+import FaTimesCircle from "react-icons/lib/fa/times-circle";
 
 const getBadge = (incidents, opportunities) => {
   if (!_.isEmpty(incidents)) {
