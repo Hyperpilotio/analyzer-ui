@@ -3,7 +3,8 @@ import _ from "lodash";
 import moment from "moment";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
-import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Table, Badge, Jumbotron, Container } from "reactstrap";
+import { Link } from "react-router-dom";
+import { Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { Toggle } from "react-powerplug";
 import FaCaretDown from "react-icons/lib/fa/caret-down";
 import Linked from "~/commons/components/Linked";
@@ -34,6 +35,30 @@ class AppDiagnosis extends React.Component {
         {isAppLoading ? null : <AppInfoJumbotron app={app} />}
         {isDiagnosticsLoading ? null : (
           <div>
+            <Container>
+              <Breadcrumb>
+                <BreadcrumbItem><Link to="/dashboard">Apps</Link></BreadcrumbItem>
+                <Switch>
+                  <Route exact path={match.path}>
+                    <BreadcrumbItem active>{ app.name }</BreadcrumbItem>
+                  </Route>
+                  <Route>
+                    <BreadcrumbItem>
+                      <Link to={`/dashboard/${app.app_id}`}>{ app.name }</Link>
+                    </BreadcrumbItem>
+                  </Route>
+                </Switch>
+                <Route
+                  path={`${match.path}/:problemId`}
+                  render={({ match: { params: { problemId } } }) => (
+                    <BreadcrumbItem active>
+                      Problem #{ _.find(result.top_related_problems, { id: problemId }).rank }
+                    </BreadcrumbItem>
+                  )}
+                />
+              </Breadcrumb>
+            </Container>
+
             <Container className="clearfix mb-3">
               <h3 className="float-left mb-3">Diagnosis Result of SLO Violation Incident</h3>
               <p className="float-right text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
