@@ -8,6 +8,7 @@ import FaClose from "react-icons/lib/fa/close";
 import FaPlus from "react-icons/lib/fa/plus";
 import { getKindDisplay } from "../../../lib/utils";
 import { updateApp, fetchMetrics } from "../../../actions";
+import SLOModal from "../../../components/SLOModal";
 
 class Step3SLO extends React.Component {
   static propTypes = {
@@ -22,6 +23,24 @@ class Step3SLO extends React.Component {
     addTagsInput: PropTypes.func.isRequired,
     deleteTag: PropTypes.func.isRequired,
   };
+
+  state = {
+    modalState: false,
+  }
+
+  toggleModal = () => {
+    this.setState({
+      modalState: !this.state.modalState,
+    });
+  }
+
+  submitSLO = () => {
+    this.props.submitSloSource().then((res) => {
+      if (!res.payload.response.success) {
+        this.toggleModal();
+      }
+    });
+  }
 
   render() {
     const {
@@ -44,7 +63,7 @@ class Step3SLO extends React.Component {
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={submitSloSource} model="createAppForm.sloSource">
+          <Form onSubmit={this.submitSLO} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
@@ -85,6 +104,7 @@ class Step3SLO extends React.Component {
               <Col>
                 <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
               </Col>
+              <SLOModal modalState={this.state.modalState} toggle={this.toggleModal} />
             </Row>
           </Form>
         </Col>
@@ -197,10 +217,10 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
     "createAppForm.sloSource.service",
     _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
   )),
-  submitSloSource: sloSource => dispatch(fetchMetrics(sloSource)),
+  submitSloSource: sloSource => (dispatch(fetchMetrics(sloSource))),
   updateThresholdType: metricType => dispatch(formActions.change(
     "createAppForm.slo.threshold.type",
-    _.get({latency: "UB", execute_time: "UB", throughput: "LB"}, metricType),
+    _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
   )),
   addTagsInput: () => dispatch(formActions.push(
     "createAppForm.slo.metric.tags",
