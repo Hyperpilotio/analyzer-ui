@@ -30,7 +30,7 @@ class DashboardPage extends React.Component {
 
   componentWillMount() {
     this.props.fetchApps();
-    this.props.fetchIncidents();
+    // this.props.fetchIncidents();
     // this.props.fetchDiagnostics();
   }
 
