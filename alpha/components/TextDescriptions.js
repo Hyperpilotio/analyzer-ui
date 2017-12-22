@@ -32,9 +32,14 @@ export const RemediationDescription = ({ option, ...props }) => {
   case "upgrade_node":
     return (
       <span {...props}>
-        Upgrade <Node name={option.metadata.node_name} /> to <Instance name={option.spec.instance_type} />
+        Upgrade <Node name={option.metadata.node_name} /> for {option.spec.level_up} level
       </span>
     );
+    // return (
+    //   <span {...props}>
+    //     Upgrade <Node name={option.metadata.node_name} /> to <Instance name={option.spec.instance_type} />
+    //   </span>
+    // );
   case "move_pod":
     return (
       <span {...props}>
@@ -42,15 +47,37 @@ export const RemediationDescription = ({ option, ...props }) => {
       </span>
     );
   case "throttle_container":
-    if (_.has(option.spec, "resources_limits_cpu")) {
-      option.spec = { resources: { limits: { cpu: option.spec.resources_limits_cpu } } };
-    }
+    // if (_.has(option.spec, "resources_limits_cpu")) {
+    //   option.spec = { resources: { limits: { cpu: option.spec.resources_limits_cpu } } };
+    // }
+    // return (
+    //   <span {...props}>
+    //     Throttle <Resource name={_.first(_.keys(option.spec.resources.limits))} /> of <Pod name={option.metadata.pod_name} /> to {_.first(_.values(option.spec.resources.limits))}
+    //   </span>
+    // );
     return (
       <span {...props}>
-        Throttle <Resource name={_.first(_.keys(option.spec.resources.limits))} /> of <Pod name={option.metadata.pod_name} /> to {_.first(_.values(option.spec.resources.limits))}
+        Throttle <Pod name={option.metadata.pod_name} /> to limit {option.spec.resource_limits_ratio} of the original
       </span>
-    );
+    )
   default:
     return <span {...props}>{ JSON.stringify(option) }</span>;
+  }
+};
+
+export const ResourceGraphTitle = ({ problem }) => {
+  const desc = problem.description;
+  if (_.has(desc, "pod_name")) {
+    return (
+      <h5 className="text-center">
+        <Resource name={desc.resource} /> Usage in <Pod name={desc.pod_name} />
+      </h5>
+    );
+  } else if (_.has(desc, "node_name")) {
+    return (
+      <h5 className="text-center">
+        <Resource name={desc.resource} /> Usage on <Node name={desc.node_name} />
+      </h5>
+    )
   }
 };

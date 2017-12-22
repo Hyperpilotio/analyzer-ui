@@ -3,14 +3,17 @@ import _ from "lodash";
 import moment from "moment";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
-import { Row, Col, Table, Badge, Jumbotron, Container } from "reactstrap";
+import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Table, Badge, Jumbotron, Container } from "reactstrap";
+import { Toggle } from "react-powerplug";
+import FaCaretDown from "react-icons/lib/fa/caret-down";
 import Linked from "~/commons/components/Linked";
 import AppInfoJumbotron from "../components/AppInfoJumbotron";
 import DiagnosticsTable from "../components/DiagnosticsTable";
+import ChartGroup from "../components/ChartGroup";
 import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
-import { ProblemDescription } from "../components/TextDescriptions";
+import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescriptions";
 import { fetchDiagnostics } from "../actions";
 
 
@@ -30,44 +33,13 @@ class AppDiagnosis extends React.Component {
         {isAppLoading ? null : <AppInfoJumbotron app={app} />}
         {isDiagnosticsLoading ? null : (
           <div>
-            <Container className="mb-3">
-              <h3 className="mb-3">Diagnosis Result of SLO Violation Incident</h3>
-              <p className="text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
-              <SLOGraph incident={incident} />
+            <Container className="clearfix mb-3">
+              <h3 className="float-left mb-3">Diagnosis Result of SLO Violation Incident</h3>
+              <p className="float-right text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
             </Container>
 
             <Route
-              path={`${match.path}/:problemId`}
-              render={({ match: { params: { problemId } } }) => {
-                const problem = _.find(problems, { problem_id: problemId });
-                return (
-                  <Container>
-                    <Row className="mb-2">
-                      <Col sm="auto">
-                        <h5>Problem #{_.find(result.top_related_problems, { id: problemId }).rank}:</h5>
-                      </Col>
-                      <Col>
-                        <ProblemDescription problem={problem} />
-                      </Col>
-                    </Row>
-                    {problem.metrics.map(metric => (
-                      <Row key={metric.name} className="mb-2">
-                        <Col>
-                          <SingleResourceGraph
-                            height={problem.metrics.length > 1 ? 300 : 400}
-                            problem={problem}
-                            metric={metric}
-                          />
-                        </Col>
-                      </Row>
-                    ))}
-                  </Container>
-                );
-              }}
-            />
-
-            <Route
-              path={`${match.path}/:problemId?`}
+              exact path={match.path}
               render={({ match: { params } }) => (
                 <DiagnosticsTable
                   selectedProblem={params.problemId}
@@ -77,6 +49,76 @@ class AppDiagnosis extends React.Component {
                 />
               )}
             />
+
+            <Route
+              path={`${match.path}/:problemId`}
+              render={({ match: { params: { problemId } } }) => {
+                const problem = _.find(problems, { problem_id: problemId });
+                return (
+                  <Container>
+                    <Row className="mb-3">
+                      <Toggle initial={false}>
+                        {({ on, toggle }) => (
+                          <Dropdown isOpen={on} toggle={toggle}>
+                            <DropdownToggle color="outline-dark">
+                              <h5 className="mb-0">
+                                <Row>
+                                  <Col sm="auto">
+                                    Problem #{_.find(result.top_related_problems, { id: problemId }).rank}:
+                                  </Col>
+                                  <Col>
+                                    <ProblemDescription problem={problem} />
+                                    <FaCaretDown className="ml-2" />
+                                  </Col>
+                                </Row>
+                              </h5>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                              {_.reject(result.top_related_problems, { id: problemId }).map(relatedProblem => (
+                                <DropdownItem key={relatedProblem.id}>
+                                  <Linked tag={Row} to={`${match.url}/${relatedProblem.id}`}>
+                                    <Col sm="auto">
+                                      Problem #{ relatedProblem.rank }:
+                                    </Col>
+                                    <Col>
+                                      <ProblemDescription problem={_.find(problems, { problem_id: relatedProblem.id })} />
+                                    </Col>
+                                  </Linked>
+                                </DropdownItem>
+                              ))}
+                            </DropdownMenu>
+                          </Dropdown>
+                        )}
+                      </Toggle>
+                    </Row>
+                    <Row>
+                      <ChartGroup className="mb-3">
+                        <ResourceGraphTitle problem={problem} />
+                        {problem.metrics.map(metric => (
+                          <Row key={metric.name} className="mb-2">
+                            <Col>
+                              <SingleResourceGraph
+                                height={problem.metrics.length > 1 ? 300 : 400}
+                                problem={problem}
+                                metric={metric}
+                              />
+                            </Col>
+                          </Row>
+                        ))}
+                      </ChartGroup>
+                    </Row>
+                  </Container>
+                );
+              }}
+            />
+            <Container>
+              <Row>
+                <ChartGroup>
+                  <h4 className="text-center">Latency v.s. SLO</h4>
+                  <SLOGraph incident={incident} />
+                </ChartGroup>
+              </Row>
+            </Container>
           </div>
         )}
       </div>
