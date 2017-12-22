@@ -58,12 +58,11 @@ const DashboardAppsTable = ({
             return null;
           }
 
-          const problem = getProblemType(incidents, app.name);
-          const badge = problem.isExist ?
+          const badge = app.hasIncident ?
             (
-              <Badge className={_s.Badge} color={problem.color} >
+              <Badge className={_s.Badge} color="danger" >
                 <FaTimesCircle className="mr-1" />
-                {problem.name}
+                Incidents
               </Badge>
 
             ) : null;

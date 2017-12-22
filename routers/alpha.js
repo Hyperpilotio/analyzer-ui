@@ -70,19 +70,19 @@ router.get("/api/apps", async (req, res) => {
 
   const promises = [];
   response.data.forEach(({ app_id, name }) => {
-    const incidentRequest = (
-      makeRequest("get", "analyzer", `/api/v1/apps/${app_id}/incidents`)
-    ).catch(err => ({ data: { incident_id: null, message: err.message } }));
+    const incidentRequest = makeRequest("get", "analyzer", `/api/v1/apps/${app_id}/incidents`).catch(
+      err => ({ data: { incident_id: null } })
+    );
     promises.push(incidentRequest);
   });
 
   const incidentResponses = await Promise.all(promises);
+
   const responseWithIncident = _.merge(
     response.data, _.flatMap(
-      incidentResponses, o => ({ incident: o.data }),
+      incidentResponses, item => ({ hasIncident: !_.isNull(item.data.incident_id) }),
     ),
   );
-
   res.json({ success: true, data: responseWithIncident });
 });
 
