@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Control, actions as formActions } from "react-redux-form";
-import { Row, Col, FormGroup, Button, Table, Input } from "reactstrap";
+import { Row, Col, FormGroup, Button, Table } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";

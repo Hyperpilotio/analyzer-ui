@@ -2,7 +2,6 @@ import express from "express";
 import request from "request-promise-native";
 import { InfluxDB } from "influx";
 import _ from "lodash";
-import moment from "moment";
 import config from "../config";
 
 const router = express();
@@ -20,7 +19,7 @@ const asyncMiddleware = fn => async (req, res, next) => {
   }
 };
 
-["get", "post"].forEach(method => {
+["get", "post"].forEach((method) => {
   router[method] = _.wrap(
     ::router[method],
     (register, ...args) => {
