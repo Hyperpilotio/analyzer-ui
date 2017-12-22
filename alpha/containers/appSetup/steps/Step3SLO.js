@@ -73,7 +73,7 @@ class Step3SLO extends React.Component {
             </FormGroup>
             <FormGroup className="row w-100">
               <label htmlFor="slo-port" className="col-4">Port</label>
-              <Control.text type="number" id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
+              <Control.text id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
             </FormGroup>
             
             <Row className="w-100">
@@ -159,7 +159,14 @@ class Step3SLO extends React.Component {
                 <Col>
                   <FormGroup>
                     <label htmlFor="slo-unit">Unit</label>
-                    <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
+                    {slo.metric.type === "throughput"
+                      ? <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
+                      : (
+                        <Control.select className="form-control" model=".threshold.unit">
+                          <option value="ms">ms</option>
+                        </Control.select>
+                      )
+                    }
                   </FormGroup>
                 </Col>
               </Row>
