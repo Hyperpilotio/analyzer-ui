@@ -10,6 +10,12 @@ const Instance = ({ name }) => <Badge color="warning">Instance Type: { name }</B
 
 export const ProblemDescription = ({ problem: { description }, ...props }) => {
   switch (description.type) {
+    case "container_over_utilization":
+      return (
+        <span {...props}>
+          <Resource name={description.resource} /> over-utilization in <Pod name={description.pod_name} /> on <Node name={description.node_name} />
+        </span>
+      );
   case "node_resource_bottleneck":
     return (
       <span {...props}>
@@ -29,17 +35,34 @@ export const ProblemDescription = ({ problem: { description }, ...props }) => {
 
 export const RemediationDescription = ({ option, ...props }) => {
   switch (option.action) {
+  // This commented section is for handling the remediation descriptions according to Alpha 2
+  // Analyzer API document, the uncommented ones are for handling the actual results produced by
+  // analyzer at the moment. But eventually analyzer should produce results that matches the API
+  // spec, thus I'm keeping this section of code commented.
+  // case "upgrade_node":
+  //   return (
+  //     <span {...props}>
+  //       Upgrade <Node name={option.metadata.node_name} /> to <Instance name={option.spec.instance_type} />
+  //     </span>
+  //   );
+  // case "throttle_container":
+  //   return (
+  //     <span {...props}>
+  //       Throttle <Resource name={_.first(_.keys(option.spec.resources.limits))} /> of <Pod name={option.metadata.pod_name} /> to {_.first(_.values(option.spec.resources.limits))}
+  //     </span>
+  //   );
+  // case "upsize_container":
+  //   return (
+  //     <span {...props}>
+  //       Upsize <Resource name={_.first(_.keys(option.spec.resources.limits))} /> of <Pod name={option.metadata.pod_name} /> to {_.first(_.values(option.spec.resources.limits))}
+  //     </span>
+  //   );
   case "upgrade_node":
     return (
       <span {...props}>
         Upgrade <Node name={option.metadata.node_name} /> for {option.spec.level_up} level
       </span>
     );
-    // return (
-    //   <span {...props}>
-    //     Upgrade <Node name={option.metadata.node_name} /> to <Instance name={option.spec.instance_type} />
-    //   </span>
-    // );
   case "move_pod":
     return (
       <span {...props}>
@@ -47,19 +70,17 @@ export const RemediationDescription = ({ option, ...props }) => {
       </span>
     );
   case "throttle_container":
-    // if (_.has(option.spec, "resources_limits_cpu")) {
-    //   option.spec = { resources: { limits: { cpu: option.spec.resources_limits_cpu } } };
-    // }
-    // return (
-    //   <span {...props}>
-    //     Throttle <Resource name={_.first(_.keys(option.spec.resources.limits))} /> of <Pod name={option.metadata.pod_name} /> to {_.first(_.values(option.spec.resources.limits))}
-    //   </span>
-    // );
     return (
       <span {...props}>
-        Throttle <Pod name={option.metadata.pod_name} /> to limit {option.spec.resource_limits_ratio} of the original
+        Throttle <Pod name={option.metadata.pod_name} /> to request {option.spec.resource_limits_ratio} of the original resource request
       </span>
-    )
+    );
+  case "upsize_container":
+    return (
+      <span {...props}>
+        Upsize <Pod name={option.metadata.pod_name} /> to request {option.spec.resource_limits_ratio} of the original resource request
+      </span>
+    );
   default:
     return <span {...props}>{ JSON.stringify(option) }</span>;
   }
