@@ -2,7 +2,19 @@ import express from "express";
 import request from "request-promise-native";
 import { InfluxDB } from "influx";
 import _ from "lodash";
+import winston from "winston";
 import config from "../config";
+
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(info => `[${_.toUpper(info.level)}] ${info.timestamp} - ${info.message}`)
+  ),
+  transports: [
+    new winston.transports.Console(),
+  ],
+});
 
 const router = express();
 
@@ -34,44 +46,49 @@ const asyncMiddleware = fn => async (req, res, next) => {
   );
 });
 
+const makeRequest = async (method, service, path, params) => {
+  try {
+    return await request[method]({
+      uri: `${config[service].url}${path}`,
+      json: true,
+      ...params,
+    });
+  } catch (e) {
+    console.log(e);
+    logger.error(`${_.toUpper(method)} ${config[service].url}${path} failed: ${e.message}`);
+    throw e;
+  }
+};
+
 
 router.get("/api/apps", async (req, res) => {
-  const response = await request.get(
-    {
-      uri: `${config.analyzer.url}/api/v1/apps`, json: true,
-    });
+  const response = await makeRequest("get", "analyzer", "/api/v1/apps");
   res.json({ success: true, ...response });
 });
 
 router.post("/api/new-app", async (req, res) => {
-  const response = await request.post(
-    `${config.analyzer.url}/api/v1/apps`,
-    { body: req.body, json: true },
-  );
+  const response = await makeRequest("post", "analyzer", "/api/v1/apps", { body: req.body });
   res.json({ success: true, ...response });
 });
 
 router.post("/api/update-app", async (req, res) => {
-  const response = await request.put(
-    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}`,
-    { body: _.omit(req.body, "app_id"), json: true },
-  );
+  const response = await makeRequest("put", "analyzer", `/api/v1/apps/${req.body.app_id}`, {
+    body: _.omit(req.body, "app_id"),
+  });
   res.json({ success: true, ...response });
 });
 
 router.post("/api/activate-app", async (req, res) => {
-  const response = await request.put(
-    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}/state`,
-    { body: { state: "Active" }, json: true },
-  );
+  const response = await makeRequest("put", "analyzer", `/api/v1/apps/${req.body.app_id}/state`, {
+    body: { state: "Active" },
+  });
   res.json({ success: true, ...response });
 });
 
 router.get("/api/get-cluster-mapping", async (req, res) => {
-  const response = await request.get(
-    `${config.operator.url}/cluster/mapping`,
-    { body: ["services", "deployments", "statefulsets"], json: true },
-  );
+  const response = await makeRequest("get", "operator", "/cluster/mapping", {
+    body: ["services", "deployments", "statefulsets"],
+  });
   res.json({
     success: true,
     data: _.reject(response, { namespace: "kube-system" }),
@@ -79,10 +96,7 @@ router.get("/api/get-cluster-mapping", async (req, res) => {
 });
 
 router.post("/api/save-microservices", async (req, res) => {
-  const app = await request.get(
-    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}`,
-    { json: true },
-  );
+  const app = await makeRequest("get", "analyzer", `/api/v1/apps/${req.body.app_id}`);
 
   const newServices = _.reduce(
     _.get(app, "microservices", []),
@@ -99,10 +113,7 @@ router.post("/api/save-microservices", async (req, res) => {
     [],
   );
 
-  const k8sSpecs = await request.get(
-    `${config.operator.url}/cluster/specs`,
-    { body: specRequestBody, json: true },
-  );
+  const k8sSpecs = await makeRequest("get", "operator", "/cluster/specs", { body: specRequestBody });
 
   const requestedResources = [];
   const promises = [];
@@ -111,11 +122,11 @@ router.post("/api/save-microservices", async (req, res) => {
     _.forEach(kinds, (specs, kind) => {
       specs.forEach(({ name, k8s_spec }) => {
         requestedResources.push({ namespace, kind, name });
-        const registerRequest = request
-          .post(`${config.analyzer.url}/api/v1/k8s_services`, { json: true, body: { spec: JSON.stringify(k8s_spec) } })
-          .catch(err => err);
-          // Analyzer will fail to insert into Mongo if any field key of k8s spec contains "."
-          // Catching the errors here, but it should be fixed in analyzer so it won't happen
+        const registerRequest = makeRequest("post", "analyzer", "/api/v1/k8s_services", {
+          body: { spec: JSON.stringify(k8s_spec) },
+        }).catch(err => err);
+        // Analyzer will fail to insert into Mongo if any field key of k8s spec contains "."
+        // Catching the errors here, but it should be fixed in analyzer so it won't happen
         promises.push(registerRequest);
       });
     });
@@ -131,9 +142,9 @@ router.post("/api/save-microservices", async (req, res) => {
       service_id: response.data,
     }));
 
-  const response = await request.post(
-    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}/microservices`,
-    { body: { microservices }, json: true },
+  const response = await makeRequest(
+    "post", "analyzer", `/api/v1/apps/${req.body.app_id}/microservices`,
+    { body: { microservices } },
   );
 
   res.json({ success: true, ...response });
@@ -145,8 +156,7 @@ router.post("/api/get-metrics", async (req, res) => {
     deployments: "deployment",
     statefulsets: "statefulset",
   };
-  const response = await request.get(`${config.operator.url}/cluster/appmetrics`, {
-    json: true,
+  const response = await makeRequest("get", "operator", "/cluster/appmetrics", {
     body: {
       namespace: source.service.namespace,
       k8sType: _.get(kindTypeMap, source.service.kind),
@@ -179,24 +189,17 @@ router.post("/api/influx-data", async (req, res) => {
 });
 
 router.get("/api/diagnostics/:appId", async (req, res) => {
-  const app = await request.get({
-    uri: `${config.analyzer.url}/api/v1/apps/${req.params.appId}`, json: true,
-  });
-  const incident = await request.get({
-    uri: `${config.analyzer.url}/api/v1/incidents`,
-    json: true,
+  const app = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}`);
+  const incident = await makeRequest("get", "analyzer", "/api/v1/incidents", {
     body: { app_name: app.data.name },
   });
-  const diagnosis = await request.get({
-    uri: `${config.analyzer.url}/api/v1/diagnoses`,
-    json: true,
+  const diagnosis = await makeRequest("get", "/api/v1/diagnoses", {
     body: { app_name: app.data.name, incident_id: incident.data.incident_id },
-  });
+  })
   const problems = await Promise.all(
-    diagnosis.data.top_related_problems.map(({ id }) => request.get({
-      uri: `${config.analyzer.url}/api/v1/problems/${id}`,
-      json: true,
-    })),
+    diagnosis.data.top_related_problems.map(
+      ({ id }) => makeRequest("get", "analyzer", `/api/v1/problems/${id}`),
+    ),
   );
 
   res.json({
@@ -210,9 +213,8 @@ router.get("/api/diagnostics/:appId", async (req, res) => {
 });
 
 router.post("/api/remove-app", async (req, res) => {
-  const response = await request.put(
-    `${config.analyzer.url}/api/v1/apps/${req.body.app_id}/state`,
-    { body: { state: "Unregistered" }, json: true },
+  const response = await makeRequest("put", "analyzer", `/api/v1/apps/${req.body.app_id}/state`,
+    { body: { state: "Unregistered" } },
   );
   res.json({ success: true, ...response });
 });
