@@ -26,19 +26,21 @@ class Step3SLO extends React.Component {
 
   state = {
     modalState: false,
+    errorMessage: null,
   }
 
-  toggleModal = () => {
-    this.setState({
-      modalState: !this.state.modalState,
-    });
+  toggleModal = (isOpen, errorMessage) => {
+    this.setState(
+      {
+        modalState: _.isNull(isOpen) ? isOpen : !this.state.modalState,
+        errorMessage,
+      },
+    );
   }
 
   submitSLO = () => {
     this.props.submitSloSource().then((res) => {
-      if (!res.payload.response.success) {
-        this.toggleModal();
-      }
+      this.toggleModal(!res.payload.response.success, res.payload.response.message);
     });
   }
 
@@ -58,6 +60,11 @@ class Step3SLO extends React.Component {
       addTagsInput,
       deleteTag,
     } = this.props;
+
+    const {
+      modalState,
+      errorMessage,
+    } = this.state;
 
     return (
       <Row>
@@ -104,7 +111,7 @@ class Step3SLO extends React.Component {
               <Col>
                 <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
               </Col>
-              <SLOModal modalState={this.state.modalState} toggle={this.toggleModal} />
+              <SLOModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} />
             </Row>
           </Form>
         </Col>
