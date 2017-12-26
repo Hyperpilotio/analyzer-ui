@@ -54,7 +54,6 @@ const makeRequest = async (method, service, path, params) => {
       ...params,
     });
   } catch (e) {
-    console.log(e);
     logger.error(`${_.toUpper(method)} ${config[service].url}${path} failed: ${e.message}`);
     throw e;
   }
