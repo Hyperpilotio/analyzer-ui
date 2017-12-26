@@ -87,17 +87,15 @@ class AppDiagnosis extends React.Component {
                         {({ on, toggle }) => (
                           <Dropdown isOpen={on} toggle={toggle}>
                             <DropdownToggle color="outline-dark">
-                              <h5 className="mb-0">
                                 <Row>
-                                  <Col sm="auto">
+                                  <Col className="pr-0" sm="auto">
                                     Problem #{_.find(result.top_related_problems, { id: problemId }).rank}:
                                   </Col>
                                   <Col>
                                     <ProblemDescription problem={problem} />
-                                    <FaCaretDown className="ml-2" />
+                                    <FaCaretDown className="ml-1" />
                                   </Col>
                                 </Row>
-                              </h5>
                             </DropdownToggle>
                             <DropdownMenu>
                               {_.reject(result.top_related_problems, { id: problemId }).map(relatedProblem => (
