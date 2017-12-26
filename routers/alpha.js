@@ -54,7 +54,12 @@ const makeRequest = async (method, service, path, params) => {
       ...params,
     });
   } catch (e) {
-    logger.error(`${_.toUpper(method)} ${config[service].url}${path} failed: ${e.message}`);
+    let message = `${_.toUpper(method)} ${config[service].url}${path} failed:\n`;
+    message = message.concat(`Message: ${e.message}`);
+    if (_.has(params, "body")) {
+      message = message.concat(`\nRequest body: ${JSON.stringify(params.body)}`);
+    }
+    logger.error(message);
     throw e;
   }
 };
