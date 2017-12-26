@@ -8,6 +8,7 @@ import { Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownIt
 import { Toggle } from "react-powerplug";
 import FaCaretDown from "react-icons/lib/fa/caret-down";
 import PropTypes from "prop-types";
+import ReactTimeout from "react-timeout";
 import Linked from "~/commons/components/Linked";
 import AppInfoJumbotron from "../components/AppInfoJumbotron";
 import DiagnosticsTable from "../components/DiagnosticsTable";
@@ -17,7 +18,9 @@ import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
 import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescriptions";
-import { fetchDiagnostics } from "../actions";
+import { fetchDiagnostics, updateIncidents } from "../actions";
+import { getProblemType } from "../lib/utils";
+import ErrorModal from "../components/ErrorModal";
 
 
 class AppDiagnosis extends React.Component {
@@ -25,10 +28,18 @@ class AppDiagnosis extends React.Component {
     fetchDiagnostics: PropTypes.func.isRequired,
     isAppLoading: PropTypes.bool.isRequired,
     isDiagnosticsLoading: PropTypes.bool.isRequired,
+    setInterval: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
-    this.props.fetchDiagnostics();
+    const {
+      fetchDiagnostics,
+      updateIncidents,
+      incident,
+    } = this.props;
+
+    fetchDiagnostics();
+    this.props.setInterval(() => updateIncidents(this.props.incident), 5000);
   }
 
   render() {
@@ -36,7 +47,6 @@ class AppDiagnosis extends React.Component {
       isAppLoading, isDiagnosticsLoading,
       app, result, incident, problems, match,
     } = this.props;
-
     return (
       <div>
         {isAppLoading ? null : <AppInfoJumbotron app={app} />}
@@ -165,6 +175,7 @@ class AppDiagnosis extends React.Component {
             />
           </div>
         )}
+        <ErrorModal modalState errorMessage="123" toggle={this.toggleModal} />
       </div>
     );
   }
@@ -188,11 +199,13 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   const problems = result.top_related_problems.map(
     ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
   );
+
   return { app, incident: mostRecentIncident, result, problems };
 };
 
 const mapDispatchToProps = (dispatch, { match }) => ({
   fetchDiagnostics: () => dispatch(fetchDiagnostics(match.params.appId)),
+  updateIncidents: incident => dispatch(updateIncidents(incident)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppDiagnosis);
+export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(AppDiagnosis));

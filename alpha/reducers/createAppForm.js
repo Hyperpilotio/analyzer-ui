@@ -101,6 +101,13 @@ export default reduceReducers(
         action.payload.metrics,
         _.clone,
       );
+    case types.DISABLE_SLO_CONFIGURATION:
+      return _.setWith(
+        { ...state },
+        "forms.slo.$form.metricOptions",
+        [],
+        _.clone,
+      );
     default:
       return state;
     }

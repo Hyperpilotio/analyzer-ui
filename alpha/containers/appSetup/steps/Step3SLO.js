@@ -6,15 +6,18 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import FaClose from "react-icons/lib/fa/close";
 import FaPlus from "react-icons/lib/fa/plus";
+import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
+import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics } from "../../../actions";
-import SLOModal from "../../../components/SLOModal";
+import { updateApp, fetchMetrics, disableSLOConfiguration } from "../../../actions";
+import ErrorModal from "../../../components/ErrorModal";
 
 class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
     sloFormDisabled: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
     tags: PropTypes.array,
@@ -22,6 +25,8 @@ class Step3SLO extends React.Component {
     stepBack: PropTypes.func.isRequired,
     addTagsInput: PropTypes.func.isRequired,
     deleteTag: PropTypes.func.isRequired,
+    disableConfiguration: PropTypes.func.isRequired,
+
   };
 
   state = {
@@ -38,10 +43,11 @@ class Step3SLO extends React.Component {
     );
   }
 
-  submitSLO = () => {
-    this.props.submitSloSource().then((res) => {
+  async submitSLO(sloSource) {
+    const res = await this.props.submitSloSource(sloSource);
+    if (!_.isUndefined(res.payload.response)) {
       this.toggleModal(!res.payload.response.success, res.payload.response.message);
-    });
+    }
   }
 
   render() {
@@ -59,6 +65,8 @@ class Step3SLO extends React.Component {
       slo,
       addTagsInput,
       deleteTag,
+      disableConfiguration,
+      isLoading,
     } = this.props;
 
     const {
@@ -70,7 +78,7 @@ class Step3SLO extends React.Component {
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={this.submitSLO} model="createAppForm.sloSource">
+          <Form onSubmit={::this.submitSLO} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
@@ -109,9 +117,12 @@ class Step3SLO extends React.Component {
                 <Button onClick={stepBack} color="secondary">Back</Button>
               </Col>
               <Col>
-                <Button type="submit" color="primary" className="float-right" >Confirm Source</Button>
+                <Button type="submit" color="primary" className="float-right" >
+                  { isLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
+                  Confirm Source
+                </Button>
               </Col>
-              <SLOModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} />
+              <ErrorModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} disableConfiguration={disableConfiguration} />
             </Row>
           </Form>
         </Col>
@@ -210,13 +221,15 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui }) => ({
   appId: basicInfo.app_id,
   sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),
+  isLoading: ui.isFetchMetricsLoading,
   sloSource,
   microservices,
   slo,
+  
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
@@ -237,6 +250,7 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
   updateSlo: (slo, sloSource, appId) => {
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
   },
+  disableConfiguration: () => dispatch(disableSLOConfiguration()),
 });
 
 export default connect(
