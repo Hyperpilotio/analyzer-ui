@@ -193,12 +193,9 @@ router.post("/api/influx-data", async (req, res) => {
 });
 
 router.get("/api/diagnostics/:appId", async (req, res) => {
-  const app = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}`);
-  const incident = await makeRequest("get", "analyzer", "/api/v1/incidents", {
-    body: { app_name: app.data.name },
-  });
-  const diagnosis = await makeRequest("get", "/api/v1/diagnoses", {
-    body: { app_name: app.data.name, incident_id: incident.data.incident_id },
+  const incident = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/incidents`);
+  const diagnosis = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/diagnosis`, {
+    body: { incident_id: incident.data.incident_id },
   })
   const problems = await Promise.all(
     diagnosis.data.top_related_problems.map(
