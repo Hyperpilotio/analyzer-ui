@@ -34,41 +34,4 @@ ErrorModal.propTypes = {
   disableConfiguration: PropTypes.func.isRequired,
 };
 
-// class ErrorModal extends React.Component {
-//   static propTypes = {
-//     modalState: PropTypes.bool.isRequired,
-//     className: PropTypes.string.isRequired,
-//     errorMessage: PropTypes.string.isRequired,
-//     toggle: PropTypes.func.isRequired,
-//     disableConfiguration: PropTypes.func.isRequired,
-//   }
-
-//   render() {
-//     const {
-//       modalState,
-//       className,
-//       toggle,
-//       errorMessage,
-//       disableConfiguration,
-//     } = this.props;
-//     return (
-//       <div>
-//         <Modal isOpen={modalState} toggle={toggle} className={className}>
-//           <ModalHeader>Something wrong</ModalHeader>
-//           <ModalBody>
-//             <p>{errorMessage}</p>
-//           </ModalBody>
-//           <ModalFooter>
-//             <Button
-//               color="primary"
-//               onClick={() => { toggle(false); disableConfiguration(); }}
-//             >
-//               OK</Button>{" "}
-//           </ModalFooter>
-//         </Modal>
-//       </div>
-//     );
-//   }
-// }
-
 export default ErrorModal;
