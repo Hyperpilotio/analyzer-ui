@@ -9,7 +9,7 @@ import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics, disableSLOConfiguration } from "../../../actions";
+import { updateApp, fetchMetrics } from "../../../actions";
 import ErrorModal from "../../../components/ErrorModal";
 
 class Step3SLO extends React.Component {
@@ -122,7 +122,7 @@ class Step3SLO extends React.Component {
                   Confirm Source
                 </Button>
               </Col>
-              <ErrorModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} disableConfiguration={disableConfiguration} />
+              <ErrorModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} />
             </Row>
           </Form>
         </Col>
