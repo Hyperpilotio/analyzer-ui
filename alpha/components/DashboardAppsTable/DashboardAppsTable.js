@@ -8,7 +8,7 @@ import MdDelete from "react-icons/lib/md/delete";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import Linked from "~/commons/components/Linked";
-import { getSLODisplay, getProblemType } from "../../lib/utils";
+import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 
