@@ -103,7 +103,7 @@ router.post("/api/save-microservices", async (req, res) => {
   const app = await makeRequest("get", "analyzer", `/api/v1/apps/${req.body.app_id}`);
 
   const newServices = _.reduce(
-    _.get(app, "microservices", []),
+    _.get(app.data, "microservices", []),
     (result, existing) => _.reject(result, _.omit(existing, "service_id")),
     req.body.microservices,
   );
