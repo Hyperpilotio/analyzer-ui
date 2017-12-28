@@ -175,7 +175,6 @@ class AppDiagnosis extends React.Component {
             />
           </div>
         )}
-        <ErrorModal modalState errorMessage="123" toggle={this.toggleModal} />
       </div>
     );
   }
