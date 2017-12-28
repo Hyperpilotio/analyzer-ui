@@ -18,11 +18,11 @@ const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
 
   return (
     <GeneralTimeSeriesGraph yLabel={`Correlation: ${f(stats.correlation)}, Severity: ${f(stats.severity)}, Score: ${f(stats.score)}\n \nThreshold: ${metric.threshold.value} ${metric.threshold.unit}`} {...props}>
-      <TopRightLegend data={[{ name: metric.name, symbol: { fill: "#b8e986" } }]} />
+      <TopRightLegend data={[{ name: metric.source, symbol: { fill: "#b8e986" } }]} />
       <VictoryArea
         style={{ data: { stroke: "#b8e986", strokeWidth: "1.5px", fill: "rgba(184, 233, 134, 0.19)" } }}
         data={data.values.map(([date, value]) => ({ x: new Date(date), y: value }))}
-        name={metric.name}
+        name={metric.source}
         isData
       />
       {metric.threshold.value > _.max(_.map(data.values, 1)) ? null : (
@@ -45,7 +45,7 @@ export default connectRefetch(({ problem, metric }) => ({
     method: "POST",
     body: JSON.stringify({
       db: "snapaverage",
-      metric: metric.name,
+      metric: metric.source,
       tags: _.filter([
         { key: "nodename", value: _.get(problem, "description.node_name") },
         { key: "io.kubernetes.pod.name", value: _.get(problem, "description.pod_name") },
