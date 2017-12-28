@@ -52,7 +52,7 @@ module.exports = {
         test: /\.js?$/,
         loader: "babel-loader",
         query: {
-          presets: ["es2015", "react", "stage-0"],
+          presets: ["env", "stage-0", "react"],
           plugins: _.filter([
             IS_PROD ? null : "react-hot-loader/babel",
             "lodash",
