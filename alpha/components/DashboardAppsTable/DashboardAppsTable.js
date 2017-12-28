@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { Table, Badge } from "reactstrap";
 import FaTimesCircle from "react-icons/lib/fa/times-circle";
 import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
+import FaEdit from "react-icons/lib/fa/edit";
+import MdDelete from "react-icons/lib/md/delete";
 import _ from "lodash";
-import MdDelete from "react-icons/lib/md/cancel";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
@@ -36,6 +37,9 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
                 <td />
                 <td>{ app.state }</td>
                 <td>
+                  <Link to={`/apps/${app.app_id}/edit/1`}>
+                    <FaEdit className={_s.iconGrp} />
+                  </Link>
                   <MdDelete
                     className={_s.iconGrp}
                     onClick={(e) => {
@@ -88,7 +92,9 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
               <td>{ badge }</td>
               <td>{ app.state }</td>
               <td>
-                {/* TODO: call delete item API */}
+                <Link onClick={e => e.stopPropagation()} className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
+                  <FaEdit className={_s.iconGrp} />
+                </Link>
                 <MdDelete
                   className={_s.iconGrp}
                   onClick={(e) => {

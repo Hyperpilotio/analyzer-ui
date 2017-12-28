@@ -19,7 +19,12 @@ const texts = {
   scale_service: "Scale Service",
 };
 
-const Step4ManagementFeatures = ({ appId, management_features, stepBack, updateManagementFeatures }) => (
+const Step4ManagementFeatures = ({
+  appId,
+  management_features,
+  stepBack,
+  updateManagementFeatures
+}) => (
   <Form
     model="createAppForm.management_features"
     onSubmit={data => updateManagementFeatures(data, appId)}

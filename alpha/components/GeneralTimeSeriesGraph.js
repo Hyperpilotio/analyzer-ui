@@ -16,9 +16,6 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children }) => (
     width={width}
     height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
-    style={{
-      parent: { background: "#f7f9fc", border: "1px solid #e2e8fb", borderRadius: "4px" },
-    }}
     containerComponent={<TimeSeriesTooltipContainer
       labelComponent={<DefaultDisabledTooltip flyoutComponent={<MultiPointFlyout />} />}
     />}

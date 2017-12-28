@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Control, actions as formActions } from "react-redux-form";
-import { Row, Col, FormGroup, Button, Table, Input } from "reactstrap";
+import { Row, Col, FormGroup, Button, Table } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
@@ -60,7 +60,9 @@ class Step3SLO extends React.Component {
                 value={`${sloSource.service.namespace}|${sloSource.service.kind}|${sloSource.service.name}`}
                 onChange={e => selectEndpointService(e.target.value)}
               >
-                <option value={null} disabled default>Select a microservice</option>
+                {/* The default value would be "||" because that's the value the above expression in
+                  "value" prop of select would evaluate to if there's nothing in sloSource.service filled */}
+                <option value="||" disabled>Select a microservice</option>
                 {_.map(microservices, ms => (
                   <option
                     key={ms.service_id}
@@ -73,7 +75,7 @@ class Step3SLO extends React.Component {
             </FormGroup>
             <FormGroup className="row w-100">
               <label htmlFor="slo-port" className="col-4">Port</label>
-              <Control.text type="number" id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
+              <Control.text id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
             </FormGroup>
             
             <Row className="w-100">
@@ -159,7 +161,14 @@ class Step3SLO extends React.Component {
                 <Col>
                   <FormGroup>
                     <label htmlFor="slo-unit">Unit</label>
-                    <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
+                    {slo.metric.type === "throughput"
+                      ? <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
+                      : (
+                        <Control.select className="form-control" model=".threshold.unit">
+                          <option value="ms">ms</option>
+                        </Control.select>
+                      )
+                    }
                   </FormGroup>
                 </Col>
               </Row>
@@ -177,7 +186,7 @@ class Step3SLO extends React.Component {
 const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms } }) => ({
   appId: basicInfo.app_id,
   sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
-  metricOptions: forms.slo.$form.metricOptions,
+  metricOptions: _.sortBy(forms.slo.$form.metricOptions),
   sloSource,
   microservices,
   slo,

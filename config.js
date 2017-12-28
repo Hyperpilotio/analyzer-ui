@@ -1,15 +1,15 @@
 let config = {
   analyzer: {
     host: process.env.ANALYZER_HOST || "localhost",
-    port: process.env.ANALYZER_PORT || 5000
+    port: process.env.ANALYZER_PORT || 5000,
   },
   workloadProfiler: {
     host: process.env.WORKLOAD_PROFILER_HOST || "localhost",
-    port: process.env.WORKLOAD_PROFILER_PORT || 7779
+    port: process.env.WORKLOAD_PROFILER_PORT || 7779,
   },
   operator: {
     host: process.env.OPERATOR_HOST || "localhost",
-    port: process.env.OPERATOR_PORT || 8080
+    port: process.env.OPERATOR_PORT || 8080,
   },
   mongo: {
     host: process.env.MONGO_HOST || "localhost",
