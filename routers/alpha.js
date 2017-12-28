@@ -67,7 +67,23 @@ const makeRequest = async (method, service, path, params) => {
 
 router.get("/api/apps", async (req, res) => {
   const response = await makeRequest("get", "analyzer", "/api/v1/apps");
-  res.json({ success: true, ...response });
+
+  const promises = [];
+  response.data.forEach(({ app_id, name }) => {
+    const incidentRequest = makeRequest("get", "analyzer", `/api/v1/apps/${app_id}/incidents`).catch(
+      err => ({ data: { incident_id: null } })
+    );
+    promises.push(incidentRequest);
+  });
+
+  const incidentResponses = await Promise.all(promises);
+
+  const responseWithIncident = _.merge(
+    response.data, _.flatMap(
+      incidentResponses, item => ({ hasIncident: !_.isNull(item.data.incident_id) }),
+    ),
+  );
+  res.json({ success: true, data: responseWithIncident });
 });
 
 router.post("/api/new-app", async (req, res) => {
@@ -137,7 +153,6 @@ router.post("/api/save-microservices", async (req, res) => {
   });
 
   const registerServiceResponses = await Promise.all(promises);
-
   const microservices = _
     .zip(requestedResources, registerServiceResponses)
     .filter(([, response]) => _.has(response, "data"))

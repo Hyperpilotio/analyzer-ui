@@ -35,7 +35,10 @@ export default (state = initialState, action) => {
     } else {
       console.error(action.payload);
     }
-    return state;
+    return {
+      ...state,
+      [uiFieldName]: false,
+    };
   default:
     return state;
   }

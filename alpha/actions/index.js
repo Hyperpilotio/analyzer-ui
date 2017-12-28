@@ -126,6 +126,14 @@ export const fetchMetrics = sloSource => ({
   },
 });
 
+export const fetchIncidents = () => ({
+  [RSAA]: {
+    endpoint: "/api/incidents",
+    method: "GET",
+    types: types.FETCH_INCIDENTS,
+  },
+});
+
 export const fetchDiagnostics = appId => ({
   [RSAA]: {
     endpoint: `/api/diagnostics/${appId}`,
@@ -160,3 +168,13 @@ export const removeApp = appId => async (dispatch) => {
   });
   dispatch(updateReduxApps(response.payload.data));
 };
+
+
+export const updateIncidents = incident => ({
+  type: types.UPDATE_INCIDENTS,
+  data: incident,
+});
+
+export const disableSLOConfiguration = () => ({
+  type: types.DISABLE_SLO_CONFIGURATION,
+});

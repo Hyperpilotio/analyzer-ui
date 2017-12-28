@@ -16,8 +16,7 @@
     "lint": "eslint sizing-analysis commons alpha webpack.client.config.js webpack.server.config.js server.js routers",
     "server-dev-interference": "ANALYSIS_APP=interference-analysis webpack --config webpack.server.config.js --watch",
     "server-dev-sizing": "ANALYSIS_APP=sizing-analysis webpack --config webpack.server.config.js --watch",
-    "server-dev": "webpack --config webpack.server.config.js --watch",
-    "fake-api": "json-server -w ./fake-api/db.json -r ./fake-api/router.json -m ./fake-api/singular.js -d 1500 -p 3007"
+    "server-dev": "webpack --config webpack.server.config.js --watch"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -80,7 +79,6 @@
     "react-dom": "^15.6.2",
     "react-hot-loader": "next",
     "react-icons": "^2.2.5",
-    "react-modal": "^3.1.0",
     "react-powerplug": "^0.1.2",
     "react-redux": "^5.0.5",
     "react-redux-form": "^1.15.0",
@@ -90,6 +88,7 @@
     "react-router-prop-types": "^0.0.1",
     "react-spinkit": "^3.0.0",
     "react-style-proptype": "^3.0.0",
+    "react-timeout": "^1.0.1",
     "reactstrap": "5.0.0-alpha.3",
     "reduce-reducers": "^0.1.2",
     "redux": "^3.7.2",

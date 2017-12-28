@@ -3,13 +3,11 @@ import _ from "lodash";
 import { Container, Row, Col, Jumbotron, Badge } from "reactstrap";
 import { getSLODisplay } from "../lib/utils";
 
-const getBadge = (incidents, opportunities) => {
-  if (!_.isEmpty(incidents)) {
-    return <Badge color="danger"><h6 className="mb-0">Incidents</h6></Badge>;
-  } else if (!_.isEmpty(opportunities)) {
-    return <Badge color="success"><h6 className="mb-0">Opportunities</h6></Badge>;
-  }
-  return <Badge color="secondary"><h6 className="mb-0">OK</h6></Badge>;
+const getBadge = (hasIncident) => {
+  return hasIncident ?
+    <Badge color="danger"><h6 className="mb-0">Incidents</h6></Badge>
+    :
+    <Badge color="success"><h6 className="mb-0">None</h6></Badge>;
 };
 
 const AppInfoJumbotron = ({ app }) => (
@@ -27,7 +25,7 @@ const AppInfoJumbotron = ({ app }) => (
           <Row className="mb-3">
             <Col md={3}>
               <span className="text-muted d-block">Detected</span>
-              { getBadge(" ") }
+              { getBadge(app.hasIncident)}
             </Col>
             <Col md={3}>
               <span className="text-muted">Services</span>

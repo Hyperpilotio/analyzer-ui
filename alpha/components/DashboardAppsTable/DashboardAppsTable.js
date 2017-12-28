@@ -6,12 +6,16 @@ import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import FaEdit from "react-icons/lib/fa/edit";
 import MdDelete from "react-icons/lib/md/delete";
 import _ from "lodash";
+import PropTypes from "prop-types";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 
-const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportunities, removeApp }) => (
+const DashboardAppsTable = ({
+  isLoading, applications, incidents, 
+  risks, opportunities, removeApp 
+}) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
       <tr>
@@ -37,7 +41,7 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
                 <td />
                 <td>{ app.state }</td>
                 <td>
-                  <Link to={`/apps/${app.app_id}/edit/1`}>
+                  <Link className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
                     <FaEdit className={_s.iconGrp} />
                   </Link>
                   <MdDelete
@@ -53,13 +57,15 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
           } else if (app.state === "Unregistered") {
             return null;
           }
-          let badge;
-          badge = (
-            <Badge className={_s.Badge} color="danger">
-              <FaTimesCircle className="mr-1" />
-              Incidents
-            </Badge>
-          );
+
+          const badge = app.hasIncident ?
+            (
+              <Badge className={_s.Badge} color="danger" >
+                <FaTimesCircle className="mr-1" />
+                Incidents
+              </Badge>
+
+            ) : null;
           // if (_.size(incidents[app._id]) !== 0) {
           //   badge = (
           //     <Badge className={_s.Badge} color="danger">
@@ -111,5 +117,8 @@ const DashboardAppsTable = ({ isLoading, applications, incidents, risks, opportu
   </Table>
 );
 
+DashboardAppsTable.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+};
 
 export default DashboardAppsTable;

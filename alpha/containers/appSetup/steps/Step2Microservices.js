@@ -6,11 +6,11 @@ import {
 } from "reactstrap";
 import _ from "lodash";
 import { connect } from "react-redux";
+import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
 import { app as appPropType } from "../../../constants/propTypes";
-
 
 const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
@@ -65,6 +65,7 @@ class Step2Microservices extends React.Component {
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
     stepNext: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
   }
 
   state = {
@@ -78,7 +79,7 @@ class Step2Microservices extends React.Component {
 
   get detectedMicroservices() {
     const excludeSelected = _.reduce(
-      this.props.microservices,
+      _.map(this.props.microservices, ms => _.omit(ms, "service_id")),
       _.reject,
       this.props.k8sMicroservices,
     );
@@ -109,6 +110,7 @@ class Step2Microservices extends React.Component {
     const {
       appId,
       updateMicroservices,
+      isLoading,
     } = this.props;
 
     return (
@@ -183,17 +185,21 @@ class Step2Microservices extends React.Component {
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
-          <Button type="submit" color="primary">Next</Button>
+          <Button type="submit" color="primary">
+            { isLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
+            Next
+          </Button>
         </div>
       </Form>
     );
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui }) => ({
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
+  isLoading: ui.isUpdateMicroservicesLoading,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
