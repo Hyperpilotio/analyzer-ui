@@ -18,7 +18,7 @@ import SLOGraph from "../components/SLOGraph";
 import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
 import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescriptions";
-import { fetchDiagnostics, updateIncidents } from "../actions";
+import { fetchDiagnostics } from "../actions";
 import { getProblemType } from "../lib/utils";
 import ErrorModal from "../components/ErrorModal";
 
@@ -34,12 +34,10 @@ class AppDiagnosis extends React.Component {
   componentWillMount() {
     const {
       fetchDiagnostics,
-      updateIncidents,
       incident,
     } = this.props;
 
     fetchDiagnostics();
-    this.props.setInterval(() => updateIncidents(this.props.incident), 5000);
   }
 
   render() {
@@ -204,7 +202,6 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
 
 const mapDispatchToProps = (dispatch, { match }) => ({
   fetchDiagnostics: () => dispatch(fetchDiagnostics(match.params.appId)),
-  updateIncidents: incident => dispatch(updateIncidents(incident)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(AppDiagnosis));

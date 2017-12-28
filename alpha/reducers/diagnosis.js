@@ -25,17 +25,6 @@ export default (state = initialState, action) => {
       ...state,
       incidents: data,
     };
-
-  case types.UPDATE_INCIDENTS:
-    data = action.data;
-    return {
-      ...state,
-      incidents: state.incidents.map((item) => {
-        console.log("item",item,action);
-        item.timestamp = item.incident_id === data.incident_id ? (parseInt(item.timestamp)+90000000000000).toString() : item.timestamp;
-        return item;
-      }),
-    };
   default:
     return state;
   }

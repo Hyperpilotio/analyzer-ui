@@ -169,12 +169,6 @@ export const removeApp = appId => async (dispatch) => {
   dispatch(updateReduxApps(response.payload.data));
 };
 
-
-export const updateIncidents = incident => ({
-  type: types.UPDATE_INCIDENTS,
-  data: incident,
-});
-
 export const disableSLOConfiguration = () => ({
   type: types.DISABLE_SLO_CONFIGURATION,
 });
