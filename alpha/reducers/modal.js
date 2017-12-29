@@ -15,8 +15,8 @@ export default (state = initialState, action) => {
     };
   case types.OPEN_DELETE_MODAL:
     return {
-      ...state,
       ...action.state,
+      isOpen: true,
       modalType: modalTypes.DELETE_MODAL,
     };
   default:

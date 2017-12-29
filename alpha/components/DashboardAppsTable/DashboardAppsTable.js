@@ -15,7 +15,7 @@ import * as modalTypes from "../../constants/modalTypes";
 
 const DashboardAppsTable = ({
   isLoading, applications, incidents, 
-  removeApp, toggleModal,
+  removeApp, openModal,
 }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
@@ -49,7 +49,9 @@ const DashboardAppsTable = ({
                     className={_s.iconGrp}
                     onClick={(e) => {
                       e.stopPropagation();
-                      removeApp(app.app_id);
+                      openModal(true, app.app_id);
+                      console.log("open");
+                      {/* removeApp(app.app_id); */}
                     }}
                   />
                 </td>
@@ -106,7 +108,7 @@ const DashboardAppsTable = ({
                   className={_s.iconGrp}
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleModal(true, app.app_id, modalTypes.DELETE_MODAL);
+                    openModal(true, app.app_id);
                     {/* removeApp(app.app_id); */}
                   }}
                 />
@@ -124,7 +126,7 @@ DashboardAppsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   incidents: PropTypes.array.isRequired,
   removeApp: PropTypes.func.isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default DashboardAppsTable;

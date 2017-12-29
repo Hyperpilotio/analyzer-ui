@@ -9,7 +9,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import AppDiagnosis from "./AppDiagnosis";
-import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp, toggleModal } from "../actions";
+import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp, openDeleteModal } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 
 
@@ -38,7 +38,7 @@ class DashboardPage extends React.Component {
     const {
       applicationss, results, incidents, problems,
       isFetchDiagnosticsLoading, isFetchAppsLoading,
-      toggleDashboardModal,
+      openModal,
     } = this.props;
     return (
       <div>
@@ -59,7 +59,7 @@ class DashboardPage extends React.Component {
               <Row>
                 <DashboardAppsTable
                   isLoading={isFetchAppsLoading}
-                  toggleModal={(isOpen, appId) => toggleDashboardModal(isOpen, appId)}
+                  openModal={(isOpen, appId) => openModal(isOpen, appId)}
                   {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
               </Row>
@@ -94,7 +94,7 @@ const mapDispatchToProps = dispatch => ({
       form => dispatch(formActions.reset(`createAppForm.${form}`)),
     );
   },
-  toggleDashboardModal: (isOpen, appId) => dispatch(toggleModal({ isOpen, appId })),
+  openModal: (isOpen, appId) => dispatch(openDeleteModal({ isOpen, appId })),
 });
 
 export default connect(
