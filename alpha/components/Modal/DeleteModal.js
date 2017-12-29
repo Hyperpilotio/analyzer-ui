@@ -15,15 +15,12 @@ const DeleteModal = ({ closeModal, removeTheApp, appId }) => (
         color="secondary"
         onClick={closeModal}
       >Cancel</Button>
-
       <Button
         color="primary"
-        onClick={
-          () => {
-            removeTheApp(appId);
-            closeModal();
-          }
-        }
+        onClick={() => {
+          removeTheApp(appId);
+          closeModal();
+        }}
       >Yes</Button>
     </ModalFooter>
   </div>
@@ -32,10 +29,11 @@ const DeleteModal = ({ closeModal, removeTheApp, appId }) => (
 DeleteModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   removeTheApp: PropTypes.func.isRequired,
+  appId: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  appId: state.modal.appId,
+const mapStateToProps = ({ modal: { props } }) => ({
+  appId: props.appId,
 });
 
 const mapDispatchToProps = dispatch => ({
