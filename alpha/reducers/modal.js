@@ -14,16 +14,10 @@ export default (state = initialState, action) => {
       ...state,
       isOpen: !state.isOpen,
     };
-  case types.OPEN_DELETE_MODAL:
+  case types.OPEN_MODAL:
     return {
       isOpen: true,
-      modalType: modalTypes.DELETE_MODAL,
-      props: action.props,
-    };
-  case types.OPEN_ERROR_MODAL:
-    return {
-      isOpen: true,
-      modalType: modalTypes.ERROR_MODAL,
+      modalType: action.modalType,
       props: action.props,
     };
   default:
