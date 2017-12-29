@@ -9,8 +9,9 @@ import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics, openErrorModal } from "../../../actions";
-import CommonModal from "../../../components/CommonModal";
+import { updateApp, fetchMetrics } from "../../../actions";
+import withModal from "../../../lib/withModal";
+import * as modalTypes from "../../../constants/modalTypes";
 
 class Step3SLO extends React.Component {
   static propTypes = {
@@ -31,8 +32,13 @@ class Step3SLO extends React.Component {
 
   async submitSLO(sloSource) {
     const res = await this.props.submitSloSource(sloSource);
-    if (!_.isUndefined(res.payload.response)) {
-      this.props.openModal(!res.payload.response.success, "Fetch metrics error", res.payload.response.message);
+    if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
+      this.props.openModal(
+        modalTypes.ERROR_MODAL,
+        {
+          title: "Fetch metrics error",
+          message: res.payload.response.message,
+        });
     }
   }
 
@@ -103,7 +109,6 @@ class Step3SLO extends React.Component {
                   Confirm Source
                 </Button>
               </Col>
-              <CommonModal />
             </Row>
           </Form>
         </Col>
@@ -232,10 +237,9 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
   },
   disableConfiguration: () => dispatch(disableSLOConfiguration()),
-  openModal: (isOpen, title, message) => dispatch(openErrorModal({ isOpen, title, message })),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Step3SLO);
+)(withModal(Step3SLO));

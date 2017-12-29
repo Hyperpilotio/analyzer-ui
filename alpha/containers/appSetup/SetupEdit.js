@@ -14,6 +14,7 @@ import Step2Microservices from "./steps/Step2Microservices";
 import Step3SLO from "./steps/Step3SLO";
 import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
 
+
 class SetupEdit extends React.Component {
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
@@ -28,6 +29,7 @@ class SetupEdit extends React.Component {
   }
 
   cancelEdit = () => {
+
     this.props.history.push("/dashboard");
   }
 
@@ -88,6 +90,7 @@ const mapStateToProps = ({ createAppForm, ui }) => ({
 
 const mapDispatchToProps = dispatch => ({
   prepareEditAppForm: appId => dispatch(prepareEditAppForm(appId)),
+
 });
 
 export default connect(

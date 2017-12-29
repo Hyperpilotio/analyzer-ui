@@ -9,6 +9,7 @@ import rootReducer from "./reducers";
 import DashboardPage from "./containers/DashboardPage";
 import SetupEdit from "./containers/appSetup/SetupEdit";
 import SetupDone from "./containers/appSetup/SetupDone";
+import CommonModal from "./components/CommonModal";
 
 const store = createStore(
   rootReducer,
@@ -40,6 +41,7 @@ export default () => (
           <Route path="/apps/:appId/edit/:step" component={SetupEdit} />
           <Redirect from="/" to="/dashboard" />
         </Switch>
+        <CommonModal />
       </div>
     </Router>
   </Provider>
