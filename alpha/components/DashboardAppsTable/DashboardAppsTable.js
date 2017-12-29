@@ -10,11 +10,12 @@ import PropTypes from "prop-types";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
-
+import CommonModal from "../CommonModal";
+import * as modalTypes from "../../constants/modalTypes";
 
 const DashboardAppsTable = ({
   isLoading, applications, incidents, 
-  risks, opportunities, removeApp 
+  removeApp, toggleModal,
 }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
@@ -105,7 +106,8 @@ const DashboardAppsTable = ({
                   className={_s.iconGrp}
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeApp(app.app_id);
+                    toggleModal(true, app.app_id, modalTypes.DELETE_MODAL);
+                    {/* removeApp(app.app_id); */}
                   }}
                 />
               </td>
@@ -113,12 +115,16 @@ const DashboardAppsTable = ({
           );
         })
       }
+      <CommonModal />
     </tbody>
   </Table>
 );
 
 DashboardAppsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
+  incidents: PropTypes.array.isRequired,
+  removeApp: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };
 
 export default DashboardAppsTable;

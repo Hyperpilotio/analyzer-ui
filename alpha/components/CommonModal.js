@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Modal } from "reactstrap";
 import PropTypes from "prop-types";
 import { toggleModal, removeApp } from "../actions";
 import * as modalTypes from "../constants/modalTypes";
@@ -23,12 +23,17 @@ const CommonModal = ({
   default:
     modalElement = <div />;
   }
-  return modalElement;
+  return (
+    <Modal isOpen={isOpen} toggle={toggle}>
+      {modalElement}
+    </Modal>
+  );
 };
 
 CommonModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  modalType: PropTypes.string.isRequired,
   toggle: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ modal }) => ({

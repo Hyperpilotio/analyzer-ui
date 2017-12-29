@@ -2,35 +2,31 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import { toggleModal } from "../../actions";
+import { toggleModal, removeApp } from "../../actions";
 
-
-const DeleteModal = ({ toggle }) => (
+const DeleteModal = ({ toggleTheModal, removeAppInModal }) => (
   <div>
-    <Modal isOpen={isOpen} toggle={toggle}>
-      <ModalHeader>Delete app</ModalHeader>
-      <ModalBody>
-        <p>Are you sure you want to delete this app?</p>
-      </ModalBody>
-      <ModalFooter>
-        <Button
-          color="secondary"
-          onClick={removeApp()}
-        >Cancel</Button>
+    <ModalHeader>Delete app</ModalHeader>
+    <ModalBody>
+      <p>Are you sure you want to delete this app?</p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        color="secondary"
+        onClick={toggleTheModal}
+      >Cancel</Button>
 
-        {/* <Button
-          color="primary"
-          onClick={() => {
-            onSubmit();
-          }}
-        >Yes</Button> */}
-      </ModalFooter>
-    </Modal>
+      <Button
+        color="primary"
+        onClick={removeAppInModal}
+      >Yes</Button>
+    </ModalFooter>
   </div>
 );
 
 DeleteModal.propTypes = {
-  toggle: PropTypes.func.isRequired,
+  toggleTheModal: PropTypes.func.isRequired,
+  removeAppInModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -38,9 +34,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggle: dispatch(toggleModal()),
+  toggleTheModal: dispatch(toggleModal()),
+  removeAppInModal: dispatch(removeApp()),
 });
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(DeleteModal);
