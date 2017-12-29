@@ -20,7 +20,7 @@ const ErrorModal = ({
           color="primary"
           onClick={() => { toggle(false); disableConfiguration(); }}
         >
-          OK</Button>{" "}
+          OK</Button>
       </ModalFooter>
     </Modal>
   </div>
