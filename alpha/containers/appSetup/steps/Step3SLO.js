@@ -9,8 +9,8 @@ import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics } from "../../../actions";
-import ErrorModal from "../../../components/ErrorModal";
+import { updateApp, fetchMetrics, openErrorModal } from "../../../actions";
+import CommonModal from "../../../components/CommonModal";
 
 class Step3SLO extends React.Component {
   static propTypes = {
@@ -26,27 +26,13 @@ class Step3SLO extends React.Component {
     addTagsInput: PropTypes.func.isRequired,
     deleteTag: PropTypes.func.isRequired,
     disableConfiguration: PropTypes.func.isRequired,
-
+    openModal: PropTypes.func.isRequired,
   };
-
-  state = {
-    modalState: false,
-    errorMessage: null,
-  }
-
-  toggleModal = (isOpen, errorMessage) => {
-    this.setState(
-      {
-        modalState: _.isNull(isOpen) ? isOpen : !this.state.modalState,
-        errorMessage,
-      },
-    );
-  }
 
   async submitSLO(sloSource) {
     const res = await this.props.submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response)) {
-      this.toggleModal(!res.payload.response.success, res.payload.response.message);
+      this.props.openModal(!res.payload.response.success, "Fetch metrics error", res.payload.response.message);
     }
   }
 
@@ -68,11 +54,6 @@ class Step3SLO extends React.Component {
       disableConfiguration,
       isLoading,
     } = this.props;
-
-    const {
-      modalState,
-      errorMessage,
-    } = this.state;
 
     return (
       <Row>
@@ -122,7 +103,7 @@ class Step3SLO extends React.Component {
                   Confirm Source
                 </Button>
               </Col>
-              <ErrorModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} />
+              <CommonModal />
             </Row>
           </Form>
         </Col>
@@ -251,6 +232,7 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
   },
   disableConfiguration: () => dispatch(disableSLOConfiguration()),
+  openModal: (isOpen, title, message) => dispatch(openErrorModal({ isOpen, title, message })),
 });
 
 export default connect(

@@ -179,7 +179,12 @@ export const toggleModal = () => ({
   type: types.TOGGLE_MODAL,
 });
 
-export const openDeleteModal = state => ({
+export const openDeleteModal = props => ({
   type: types.OPEN_DELETE_MODAL,
-  state,
+  props,
+});
+
+export const openErrorModal = props => ({
+  type: types.OPEN_ERROR_MODAL,
+  props,
 });

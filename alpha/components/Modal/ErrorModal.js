@@ -1,19 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { ModalHeader, ModalBody, ModalFooter, Button} from "reactstrap";
+import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import { toggleModal } from "../../actions/index";
 
-const ErrorModal = () => (
+const ErrorModal = ({ title, message, closeModal }) => (
   <div>
-    <ModalHeader>Something wrong</ModalHeader>
+    <ModalHeader>{title}</ModalHeader>
     <ModalBody>
-      <p>{123}</p>
+      <p>{message}</p>
     </ModalBody>
     <ModalFooter>
       <Button
         color="primary"
-        onClick={toggle}
+        onClick={closeModal}
       >
         OK</Button>
     </ModalFooter>
@@ -21,18 +21,19 @@ const ErrorModal = () => (
 );
 
 ErrorModal.propTypes = {
-
-
+  title: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  ...state,
+const mapStateToProps = ({ modal: { props } }) => ({
+  title: props.title,
+  message: props.message,
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggle: dispatch(toggleModal()),
+  closeModal: () => dispatch(toggleModal()),
 });
-
 
 export default connect(
   mapStateToProps,

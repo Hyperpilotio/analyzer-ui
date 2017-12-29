@@ -50,8 +50,6 @@ const DashboardAppsTable = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       openModal(true, app.app_id);
-                      console.log("open");
-                      {/* removeApp(app.app_id); */}
                     }}
                   />
                 </td>
@@ -109,7 +107,6 @@ const DashboardAppsTable = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     openModal(true, app.app_id);
-                    {/* removeApp(app.app_id); */}
                   }}
                 />
               </td>
