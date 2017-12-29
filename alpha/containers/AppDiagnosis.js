@@ -19,8 +19,6 @@ import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
 import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescriptions";
 import { fetchDiagnostics } from "../actions";
-import { getProblemType } from "../lib/utils";
-import ErrorModal from "../components/ErrorModal";
 
 
 class AppDiagnosis extends React.Component {

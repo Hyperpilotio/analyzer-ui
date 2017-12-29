@@ -75,6 +75,19 @@
   }
 }
 
+
+// form-group in steps
+.inputRow{
+  margin-bottom: 1rem;
+}
+.formGroup{
+  margin-bottom: 0px !important;
+}
+.errorMessage{
+  color: #ff8686;
+}
+
+
 @-webkit-keyframes rotating /* Safari and Chrome */ {
   from {
     -webkit-transform: rotate(0deg);
