@@ -172,3 +172,14 @@ export const removeApp = appId => async (dispatch) => {
 export const disableSLOConfiguration = () => ({
   type: types.DISABLE_SLO_CONFIGURATION,
 });
+
+
+// Modal
+export const toggleModal = () => ({
+  type: types.TOGGLE_MODAL,
+});
+
+export const openDeleteModal = state => ({
+  type: types.OPEN_DELETE_MODAL,
+  state,
+});
