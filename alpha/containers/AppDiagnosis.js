@@ -28,7 +28,12 @@ class AppDiagnosis extends React.Component {
     fetchDiagnostics: PropTypes.func.isRequired,
     isAppLoading: PropTypes.bool.isRequired,
     isDiagnosticsLoading: PropTypes.bool.isRequired,
-    setInterval: PropTypes.func.isRequired,
+    setTimeout: PropTypes.func.isRequired,
+    refreshInterval: PropTypes.number,
+  }
+
+  static defaultProps = {
+    refreshInterval: 30 * 1000,
   }
 
   componentWillMount() {
@@ -38,6 +43,15 @@ class AppDiagnosis extends React.Component {
     } = this.props;
 
     fetchDiagnostics();
+  }
+
+  componentDidMount() {
+    this.props.setTimeout(::this.refetchDiagnostics, this.props.refreshInterval);
+  }
+
+  async refetchDiagnostics() {
+    await this.props.fetchDiagnostics();
+    this.props.setTimeout(::this.refetchDiagnostics, this.props.refreshInterval);
   }
 
   render() {
@@ -186,7 +200,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
 
   const app = _.find(applications, { app_id: match.params.appId });
   const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
-  const isDiagnosticsLoading = ui.isFetchDiagnosticsLoading || _.isEmpty(appIncidents);
+  const isDiagnosticsLoading = _.isEmpty(appIncidents);
   if (isDiagnosticsLoading) {
     return { app, isAppLoading, isDiagnosticsLoading };
   }
