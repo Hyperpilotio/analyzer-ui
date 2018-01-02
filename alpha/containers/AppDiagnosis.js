@@ -4,7 +4,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem, Alert } from "reactstrap";
 import { Toggle } from "react-powerplug";
 import FaCaretDown from "react-icons/lib/fa/caret-down";
 import PropTypes from "prop-types";
@@ -89,8 +89,22 @@ class AppDiagnosis extends React.Component {
             </Container>
 
             <Container className="clearfix mb-3">
-              <h3 className="float-left mb-3">Diagnosis Result of SLO Violation Incident</h3>
-              <p className="float-right text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
+              <Row>
+                <Col className="mr-auto" sm="auto">
+                  <h3 className="mb-3">Diagnosis Result of SLO Violation Incident</h3>
+                </Col>
+                <Col sm="auto">
+                  <p className="text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
+                </Col>
+              </Row>
+              { incident.state === "Resolved"
+                ? <Row>
+                    <Col>
+                      <Alert color="success">This incident has been resolved!</Alert>
+                    </Col>
+                  </Row>
+                : null
+              }
             </Container>
 
             <Route
