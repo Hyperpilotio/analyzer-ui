@@ -169,10 +169,15 @@ export const removeApp = appId => async (dispatch) => {
   dispatch(updateReduxApps(response.payload.data));
 };
 
-export const disableSLOConfiguration = () => ({
-  type: types.DISABLE_SLO_CONFIGURATION,
+
+export const emptyMetricOptions = () => ({
+  type: types.EMPTY_METRIC_OPTIONS,
 });
 
+export const toggleRightSideState = bool => ({
+  type: types.TOGGLE_RIGHT_SIDE_STATE,
+  bool,
+});
 
 // Modal
 export const toggleModal = () => ({
