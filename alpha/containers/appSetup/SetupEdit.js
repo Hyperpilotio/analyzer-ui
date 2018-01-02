@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 import _ from "lodash";
+import { actions } from "react-redux-form";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { prepareEditAppForm } from "../../actions";
 import { editStepNames } from "../../constants/models";
@@ -42,6 +43,15 @@ class SetupEdit extends React.Component {
     );
   }
 
+  openMicroservicesErrorModal = (res) => {
+    this.props.openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Fetch metrics error",
+        message: res.payload.response.message,
+      });
+  }
+
   render() {
     const { createAppForm, isLoading, match, history } = this.props;
     if (isLoading) return null;
@@ -66,7 +76,7 @@ class SetupEdit extends React.Component {
         stepActions.mode = "edit";
         formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
       } else if (step === 2) {
-        formComponent = <Step2Microservices {...stepActions} />;
+        formComponent = <Step2Microservices {...stepActions} openMicroservicesErrorModal={res => this.openMicroservicesErrorModal(res)} />;
       } else if (step === 3) {
         formComponent = <Step3SLO {...stepActions} match={match} />;
       } else if (step === 4) {

@@ -55,6 +55,7 @@ MicroservicesTable.propTypes = {
 };
 
 class Step2Microservices extends React.Component {
+
   static propTypes = {
     // cacheServices: PropTypes.func.isRequired,
     microservices: PropTypes.array.isRequired,
@@ -66,6 +67,12 @@ class Step2Microservices extends React.Component {
     updateMicroservices: PropTypes.func.isRequired,
     stepNext: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    openMicroservicesErrorModal: PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.startFetchingMicroservices = this.startFetchingMicroservices.bind(this);
   }
 
   state = {
@@ -74,7 +81,7 @@ class Step2Microservices extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchMicroservices();
+    this.startFetchingMicroservices();
   }
 
   get detectedMicroservices() {
@@ -104,6 +111,13 @@ class Step2Microservices extends React.Component {
 
   filterKind(event) {
     this.setState({ kindFilter: event.target.value });
+  }
+
+  async startFetchingMicroservices() {
+    const res = await this.props.fetchMicroservices();
+    if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
+      this.props.openMicroservicesErrorModal(res);
+    }
   }
 
   render() {
