@@ -33,7 +33,7 @@ class SetupEdit extends React.Component {
   cancelEdit = (e) => {
     e.preventDefault();
     this.props.openModal(
-      modalTypes.ERROR_MODAL,
+      modalTypes.ACTION_MODAL,
       {
         title: "Cancel configuration",
         message: "Are you sure you wnat to cancel the configuration ?",

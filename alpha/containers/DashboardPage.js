@@ -9,8 +9,10 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import AppDiagnosis from "./AppDiagnosis";
-import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp, openDeleteModal } from "../actions";
+import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
+import withModal from "../lib/withModal";
+import * as modalTypes from "../constants/modalTypes";
 
 
 class DashboardPage extends React.Component {
@@ -20,6 +22,7 @@ class DashboardPage extends React.Component {
     // isFetchDiagnosticsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
     fetchIncidents: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
     // fetchDiagnostics: PropTypes.func.isRequired,
     // removeApp: PropTypes.func.isRequired,
     // apps: PropTypes.arrayOf(appPropType).isRequired,
@@ -32,6 +35,17 @@ class DashboardPage extends React.Component {
     this.props.fetchApps();
     // this.props.fetchIncidents();
     // this.props.fetchDiagnostics();
+  }
+
+  removeApp = (appId) => {
+    this.props.openModal(
+      modalTypes.ACTION_MODAL,
+      {
+        title: "Delete app",
+        message: "Are you sure you wnat to delete this app ?",
+        onSubmit: () => { removeApp(appId); },
+      },
+    );
   }
 
   render() {
@@ -59,7 +73,7 @@ class DashboardPage extends React.Component {
               <Row>
                 <DashboardAppsTable
                   isLoading={isFetchAppsLoading}
-                  openModal={(isOpen, appId) => openModal(isOpen, appId)}
+                  openRemoveModal={appId => this.removeApp(appId)}
                   {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
               </Row>
@@ -94,10 +108,9 @@ const mapDispatchToProps = dispatch => ({
       form => dispatch(formActions.reset(`createAppForm.${form}`)),
     );
   },
-  openModal: (isOpen, appId) => dispatch(openDeleteModal({ isOpen, appId })),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DashboardPage);
+)(withModal(DashboardPage));

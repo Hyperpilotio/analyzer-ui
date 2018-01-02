@@ -4,8 +4,8 @@ import { Modal } from "reactstrap";
 import PropTypes from "prop-types";
 import { toggleModal, removeApp } from "../actions";
 import * as modalTypes from "../constants/modalTypes";
-import DeleteModal from "./Modal/DeleteModal";
-import ErrorModal from "./Modal/ErrorModal";
+import ActionModal from "./Modal/ActionModal";
+import HintModal from "./Modal/HintModal";
 
 const CommonModal = ({
   isOpen,
@@ -14,17 +14,17 @@ const CommonModal = ({
 }) => {
   let modalElement = null;
   switch (modalType) {
-  case modalTypes.ERROR_MODAL:
-    modalElement = <ErrorModal />;
+  case modalTypes.ACTION_MODAL:
+    modalElement = <ActionModal toggle={toggle} />;
     break;
-  case modalTypes.DELETE_MODAL:
-    modalElement = <DeleteModal />;
+  case modalTypes.HINT_MODAL:
+    modalElement = <HintModal toggle={toggle} />;
     break;
   default:
     modalElement = <div />;
   }
   return (
-    <Modal isOpen={isOpen} toggle={toggle}>
+    <Modal isOpen={isOpen}>
       {modalElement}
     </Modal>
   );
