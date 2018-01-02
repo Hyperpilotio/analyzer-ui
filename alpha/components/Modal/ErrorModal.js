@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import { toggleModal } from "../../actions/index";
 
-const ErrorModal = ({ title, message, closeModal }) => (
+const ErrorModal = ({ title, message, closeModal, onSubmit }) => (
   <div>
     <ModalHeader>{title}</ModalHeader>
     <ModalBody>
@@ -13,7 +13,10 @@ const ErrorModal = ({ title, message, closeModal }) => (
     <ModalFooter>
       <Button
         color="primary"
-        onClick={closeModal}
+        onClick={() => {
+          onSubmit();
+          closeModal();
+        }}
       >
         OK</Button>
     </ModalFooter>
@@ -24,11 +27,13 @@ ErrorModal.propTypes = {
   title: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ modal: { props } }) => ({
   title: props.title,
   message: props.message,
+  onSubmit: props.onSubmit,
 });
 
 const mapDispatchToProps = dispatch => ({

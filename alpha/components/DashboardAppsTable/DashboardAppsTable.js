@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
-import CommonModal from "../CommonModal";
 import * as modalTypes from "../../constants/modalTypes";
 
 const DashboardAppsTable = ({
@@ -114,7 +113,6 @@ const DashboardAppsTable = ({
           );
         })
       }
-      <CommonModal />
     </tbody>
   </Table>
 );
@@ -123,7 +121,6 @@ DashboardAppsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   incidents: PropTypes.array.isRequired,
   removeApp: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
 };
 
 export default DashboardAppsTable;
