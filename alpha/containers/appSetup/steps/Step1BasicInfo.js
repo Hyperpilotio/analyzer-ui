@@ -12,7 +12,8 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo }) => (
       <div className={`form-group row ${_s.formGroup}`}>
         <label htmlFor="basic-app" className="col-2">APP Name</label>
         <Control.text
-          model=".name" id="basic-app"
+          model=".name"
+          id="basic-app"
           className="form-control col"
           placeholder="Enter APP name"
           validators={{ required: val => val && val.length }}
@@ -61,4 +62,7 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
   },
 });
 
-export default connect(null, mapDispatchToProps)(Step1BasicInfo);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Step1BasicInfo);

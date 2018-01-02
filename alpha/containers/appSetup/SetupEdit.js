@@ -13,7 +13,8 @@ import Step1BasicInfo from "./steps/Step1BasicInfo";
 import Step2Microservices from "./steps/Step2Microservices";
 import Step3SLO from "./steps/Step3SLO";
 import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
-
+import withModal from "../../lib/withModal";
+import * as modalTypes from "../../constants/modalTypes";
 
 class SetupEdit extends React.Component {
   static propTypes = {
@@ -21,6 +22,7 @@ class SetupEdit extends React.Component {
     history: ReactRouterPropTypes.history.isRequired,
     prepareEditAppForm: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    openModal: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -28,9 +30,16 @@ class SetupEdit extends React.Component {
     this.props.prepareEditAppForm(appId);
   }
 
-  cancelEdit = () => {
-
-    this.props.history.push("/dashboard");
+  cancelEdit = (e) => {
+    e.preventDefault();
+    this.props.openModal(
+      modalTypes.ERROR_MODAL,
+      {
+        title: "Cancel configuration",
+        message: "Are you sure you wnat to cancel the configuration ?",
+        onSubmit: () => { this.props.history.push("/dashboard"); },
+      },
+    );
   }
 
   render() {
@@ -96,4 +105,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SetupEdit);
+)(withModal(SetupEdit));
