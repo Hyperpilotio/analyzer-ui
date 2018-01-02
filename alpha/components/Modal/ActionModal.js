@@ -1,10 +1,12 @@
+/*
+* This modal provide an onSubmit function
+*/
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import { toggleModal, removeApp } from "../../actions";
 
-const CancelModal = ({ title, message, closeModal, removeTheApp, appId }) => (
+const ActionModal = ({ title, message, toggle, onSubmit }) => (
   <div>
     <ModalHeader>{title}</ModalHeader>
     <ModalBody>
@@ -13,37 +15,34 @@ const CancelModal = ({ title, message, closeModal, removeTheApp, appId }) => (
     <ModalFooter>
       <Button
         color="secondary"
-        onClick={closeModal}
+        onClick={() => {
+          toggle();
+        }}
       >Cancel</Button>
       <Button
         color="primary"
         onClick={() => {
-          removeTheApp(appId);
-          closeModal();
+          onSubmit();
+          toggle();
         }}
       >Yes</Button>
     </ModalFooter>
   </div>
 );
 
-CancelModal.propTypes = {
+ActionModal.propTypes = {
   title: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
-  closeModal: PropTypes.func.isRequired,
-  removeTheApp: PropTypes.func.isRequired,
-  appId: PropTypes.string.isRequired,
+  toggle: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ modal: { props } }) => ({
-  appId: props.appId,
-});
-
-const mapDispatchToProps = dispatch => ({
-  closeModal: () => dispatch(toggleModal()),
-  removeTheApp: appId => dispatch(removeApp(appId)),
+  title: props.title,
+  message: props.message,
+  onSubmit: props.onSubmit,
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(CancelModal);
+)(ActionModal);

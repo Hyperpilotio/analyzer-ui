@@ -1,10 +1,12 @@
+/*
+* This modal only shows hint
+*/
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import { toggleModal } from "../../actions/index";
 
-const ErrorModal = ({ title, message, closeModal, onSubmit }) => (
+const HintModal = ({ title, message, toggle }) => (
   <div>
     <ModalHeader>{title}</ModalHeader>
     <ModalBody>
@@ -14,8 +16,7 @@ const ErrorModal = ({ title, message, closeModal, onSubmit }) => (
       <Button
         color="primary"
         onClick={() => {
-          onSubmit();
-          closeModal();
+          toggle();
         }}
       >
         OK</Button>
@@ -23,11 +24,10 @@ const ErrorModal = ({ title, message, closeModal, onSubmit }) => (
   </div>
 );
 
-ErrorModal.propTypes = {
+HintModal.propTypes = {
   title: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
-  closeModal: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  toggle: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ modal: { props } }) => ({
@@ -36,11 +36,6 @@ const mapStateToProps = ({ modal: { props } }) => ({
   onSubmit: props.onSubmit,
 });
 
-const mapDispatchToProps = dispatch => ({
-  closeModal: () => dispatch(toggleModal()),
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(ErrorModal);
+)(HintModal);

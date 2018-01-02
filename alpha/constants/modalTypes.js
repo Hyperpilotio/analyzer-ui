@@ -1,3 +1,3 @@
-export const ERROR_MODAL = "error";
-export const DELETE_MODAL = "delete";
-export const OPEN_MODAL = "open";
+export const ACTION_MODAL = "action";
+export const HINT_MODAL = "hint";
+

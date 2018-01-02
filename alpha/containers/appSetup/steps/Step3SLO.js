@@ -34,7 +34,7 @@ class Step3SLO extends React.Component {
     const res = await this.props.submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
       this.props.openModal(
-        modalTypes.ERROR_MODAL,
+        modalTypes.HINT_MODAL,
         {
           title: "Fetch metrics error",
           message: res.payload.response.message,
