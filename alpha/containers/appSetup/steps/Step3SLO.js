@@ -9,7 +9,7 @@ import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics } from "../../../actions";
+import { updateApp, fetchMetrics, toggleRightSideState, emptyMetricOptions } from "../../../actions";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
@@ -26,19 +26,34 @@ class Step3SLO extends React.Component {
     stepBack: PropTypes.func.isRequired,
     addTagsInput: PropTypes.func.isRequired,
     deleteTag: PropTypes.func.isRequired,
-    disableConfiguration: PropTypes.func.isRequired,
+    toggleRightSide: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.submitSLO = this.submitSLO.bind(this);
+  }
 
   async submitSLO(sloSource) {
     const res = await this.props.submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
+      // disable right side when getting metrics fail
+      this.props.toggleRightSide(false);
       this.props.openModal(
-        modalTypes.HINT_MODAL,
+        modalTypes.ACTION_MODAL,
         {
           title: "Fetch metrics error",
-          message: res.payload.response.message,
+          message: `${res.payload.response.message}`,
+          question: "Do you want to use your original configuration ?",
+          cancelWord: "Try another metrics source",
+          onSubmit: () => {
+            this.props.toggleRightSide(true);
+            this.props.restoreService(_.find(this.props.applications, { app_id: this.props.appId }).slo.source);
+          },
         });
+    } else if (res.payload.success) {
+      this.props.toggleRightSide(true);
     }
   }
 
@@ -57,7 +72,6 @@ class Step3SLO extends React.Component {
       slo,
       addTagsInput,
       deleteTag,
-      disableConfiguration,
       isLoading,
     } = this.props;
 
@@ -65,7 +79,7 @@ class Step3SLO extends React.Component {
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={::this.submitSLO} model="createAppForm.sloSource">
+          <Form onSubmit={this.submitSLO} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
@@ -98,7 +112,6 @@ class Step3SLO extends React.Component {
               <label htmlFor="slo-port" className="col-4">Port</label>
               <Control.text id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
             </FormGroup>
-            
             <Row className="w-100">
               <Col>
                 <Button onClick={stepBack} color="secondary">Back</Button>
@@ -207,15 +220,15 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
   appId: basicInfo.app_id,
-  sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
+  sloFormDisabled: forms.slo.$form.isDisable || false,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),
   isLoading: ui.isFetchMetricsLoading,
   sloSource,
   microservices,
   slo,
-  
+  applications,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
@@ -236,7 +249,16 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
   updateSlo: (slo, sloSource, appId) => {
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
   },
-  disableConfiguration: () => dispatch(disableSLOConfiguration()),
+  toggleRightSide: (bool) => {
+    dispatch(toggleRightSideState(bool));
+    if (!bool) {
+      dispatch(emptyMetricOptions());
+    }
+  },
+  restoreService: originalSloSource => (dispatch(formActions.change(
+    "createAppForm.sloSource",
+    originalSloSource,
+  ))),
 });
 
 export default connect(
