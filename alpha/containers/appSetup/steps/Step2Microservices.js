@@ -6,6 +6,7 @@ import {
 } from "reactstrap";
 import _ from "lodash";
 import { connect } from "react-redux";
+import Spinner from "react-spinkit";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
@@ -15,7 +16,7 @@ const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
 );
 
-const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOnClick }) => (
+const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOnClick, isFetchAvailableServicesLoading }) => (
   <div className={_s.MicroservicesTable}>
     <Table>
       <thead className="text-secondary">
@@ -26,22 +27,31 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
           <th className="col" />
         </tr>
       </thead>
-      <tbody style={tbodyStyle} className="d-block">
-        { microservices.map(({ namespace, kind, name }) => (
-          <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
-            <td className="col">{ namespace }</td>
-            <td className="col">{ getDisplayKind(kind) }</td>
-            <td className="col">{ name }</td>
-            <td className="col">
-              { React.cloneElement(buttonElement, {
-                onClick: () => buttonOnClick({ namespace, kind, name }),
-              })
-              }
-            </td>
-          </tr>
-        ))
-        }
-      </tbody>
+      {
+        isFetchAvailableServicesLoading ?
+          <tbody style={tbodyStyle} className="d-block">
+            <tr className={_s.loaderTr}><td colSpan="7" className={_s.loaderTd}><div className={_s.loaderCon}>
+              <Spinner fadeIn="quarter" name="pacman" />
+            </div></td></tr>
+          </tbody>
+          :
+          <tbody style={tbodyStyle} className="d-block">
+            { microservices.map(({ namespace, kind, name }) => (
+              <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
+                <td className="col">{ namespace }</td>
+                <td className="col">{ getDisplayKind(kind) }</td>
+                <td className="col">{ name }</td>
+                <td className="col">
+                  { React.cloneElement(buttonElement, {
+                    onClick: () => buttonOnClick({ namespace, kind, name }),
+                  })
+                  }
+                </td>
+              </tr>
+            ))
+            }
+          </tbody>
+      }   
     </Table>
   </div>
 );
@@ -124,6 +134,7 @@ class Step2Microservices extends React.Component {
       appId,
       updateMicroservices,
       isLoading,
+      isFetchAvailableServicesLoading,
     } = this.props;
 
     return (
@@ -193,6 +204,7 @@ class Step2Microservices extends React.Component {
               microservices={this.detectedMicroservices}
               buttonElement={<Button size="sm" color="success">Add</Button>}
               buttonOnClick={this.props.addMicroservice}
+              isFetchAvailableServicesLoading={isFetchAvailableServicesLoading}
             />
           </CardBody>
         </Card>
@@ -212,6 +224,7 @@ const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, u
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
+  isFetchAvailableServicesLoading: ui.isFetchAvailableServicesLoading,
   isLoading: ui.isUpdateMicroservicesLoading,
 });
 

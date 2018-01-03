@@ -87,6 +87,17 @@
   color: #ff8686;
 }
 
+// loader
+.loaderTr{ 
+  display: block; 
+}
+.loaderTd{ 
+  text-align: center;
+  display: block; 
+}
+.loaderCon {
+  display: inline-block;
+}
 
 @-webkit-keyframes rotating /* Safari and Chrome */ {
   from {
