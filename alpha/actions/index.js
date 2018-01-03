@@ -3,7 +3,20 @@ import _ from "lodash";
 import { actions as formActions } from "react-redux-form";
 import * as types from "./types";
 import { appToForm } from "../lib/utils";
+import * as modalTypes from "../constants/modalTypes";
 
+
+// --------  Modal  ----------------
+export const toggleModal = () => ({
+  type: types.TOGGLE_MODAL,
+});
+
+export const openModal = (modalType, props) => ({
+  type: types.OPEN_MODAL,
+  modalType,
+  props,
+});
+//----------------------------------
 
 export const fetchApps = () => ({
   [RSAA]: {
@@ -11,6 +24,12 @@ export const fetchApps = () => ({
     method: "GET",
     types: types.FETCH_APPS,
   },
+});
+
+
+export const updateReduxApps = data => ({
+  type: types.UPDATE_REDUX_APPS,
+  data,
 });
 
 export const createApp = (basicInfo, next) => async (dispatch) => {
@@ -23,15 +42,22 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
       types: types.CREATE_APP,
     },
   });
+
+  // Open modal when creating fail
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Create app error",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+
   dispatch(updateReduxApps(response.payload.data));
   dispatch(formActions.change("createAppForm.basicInfo.app_id", response.payload.data.app_id));
   next(response.payload.data.app_id);
 };
-
-export const updateReduxApps = data => ({
-  type: types.UPDATE_REDUX_APPS,
-  data,
-});
 
 export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {
   const apps = getState().applications;
@@ -73,6 +99,16 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
       },
     });
     dispatch(updateReduxApps(response.payload.data));
+    // Open modal when updating fail
+    if (!response.payload.success) {
+      dispatch(openModal(
+        modalTypes.HINT_MODAL,
+        {
+          title: "Update app error",
+          message: response.payload.response.message,
+        },
+      ));
+    }
     next(response.payload.data.app_id);
   } else {
     next(app.app_id);
@@ -142,18 +178,6 @@ export const fetchDiagnostics = appId => ({
   },
 });
 
-export const addApp = app => ({
-  [RSAA]: {
-    endpoint: "/mock/api/add",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(app),
-    types: types.ADD_APP,
-  },
-});
-
 export const removeApp = appId => async (dispatch) => {
   const response = await dispatch({
     [RSAA]: {
@@ -179,13 +203,3 @@ export const toggleRightSideState = bool => ({
   bool,
 });
 
-// Modal
-export const toggleModal = () => ({
-  type: types.TOGGLE_MODAL,
-});
-
-export const openModal = (modalType, props) => ({
-  type: types.OPEN_MODAL,
-  modalType,
-  props,
-});

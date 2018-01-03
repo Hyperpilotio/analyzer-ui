@@ -49,7 +49,8 @@ class SetupEdit extends React.Component {
       {
         title: "Fetch microservices error",
         message: res.payload.response.message,
-      });
+      },
+    );
   }
 
   render() {
