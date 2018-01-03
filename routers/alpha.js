@@ -111,7 +111,7 @@ router.get("/api/get-cluster-mapping", async (req, res) => {
   });
   res.json({
     success: true,
-    data: _.reject(response, { namespace: "kube-system" }),
+    data: _.reject(response, ms => _.includes(["kube-system", "hyperpilot"], ms.namespace)),
   });
 });
 
