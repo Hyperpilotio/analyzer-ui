@@ -18,13 +18,26 @@ export const openModal = (modalType, props) => ({
 });
 //----------------------------------
 
-export const fetchApps = () => ({
-  [RSAA]: {
-    endpoint: "/api/apps",
-    method: "GET",
-    types: types.FETCH_APPS,
-  },
-});
+export const fetchApps = () => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/apps",
+      method: "GET",
+      types: types.FETCH_APPS,
+    },
+  });
+
+  // Open modal when fetching apps fail
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Fetch apps error",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+};
 
 
 export const updateReduxApps = data => ({
