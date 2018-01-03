@@ -47,7 +47,7 @@ class SetupEdit extends React.Component {
     this.props.openModal(
       modalTypes.HINT_MODAL,
       {
-        title: "Fetch metrics error",
+        title: "Fetch microservices error",
         message: res.payload.response.message,
       });
   }

@@ -32,19 +32,19 @@ class Step3SLO extends React.Component {
 
   constructor(props) {
     super(props);
-    this.submitSLO = this.submitSLO.bind(this);
+    this.submitSLOSource = this.submitSLOSource.bind(this);
   }
-
-  async submitSLO(sloSource) {
+  // Stage 1 (Left Side)
+  async submitSLOSource(sloSource) {
     const res = await this.props.submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
-      // disable right side when getting metrics fail
+      // disable right side when fetching metrics fail
       this.props.toggleRightSide(false);
       this.props.openModal(
         modalTypes.ACTION_MODAL,
         {
           title: "Fetch metrics error",
-          message: `${res.payload.response.message}`,
+          message: res.payload.response.message,
           question: "Do you want to use your original configuration ?",
           cancelWord: "Try another metrics source",
           onSubmit: () => {
@@ -57,6 +57,7 @@ class Step3SLO extends React.Component {
     }
   }
 
+  // TODO: Stage 2 (Right Side) : open modal when fail to update app
   render() {
     const {
       appId,
@@ -79,7 +80,7 @@ class Step3SLO extends React.Component {
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={this.submitSLO} model="createAppForm.sloSource">
+          <Form onSubmit={this.submitSLOSource} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
