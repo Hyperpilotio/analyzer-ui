@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Table, Badge } from "reactstrap";
+import { Row, Table, Badge } from "reactstrap";
 import FaTimesCircle from "react-icons/lib/fa/times-circle";
 import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import FaEdit from "react-icons/lib/fa/edit";
 import MdDelete from "react-icons/lib/md/delete";
 import _ from "lodash";
 import PropTypes from "prop-types";
+import Spinner from "react-spinkit";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
@@ -30,7 +31,15 @@ const DashboardAppsTable = ({
       </tr>
     </thead>
     <tbody>
-      { isLoading ? null :
+      { isLoading ?
+        <tr>
+          <td colSpan="7" style={{ textAlign: "center" }}>
+            <div className={_s.loaderCon}>
+              <Spinner fadeIn="quarter" name="pacman" className={_s.loader} />
+            </div>
+          </td>
+        </tr>
+        :
         applications.map((app) => {
           if (app.state === "Registered") {
             return (

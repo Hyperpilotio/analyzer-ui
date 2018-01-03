@@ -10,12 +10,27 @@
   }
 }
 
-.iconGrp{
+.iconGrp {
 
   color: map-get($theme-colors,primary);
 
-  &:hover{
+  &:hover {
     transform: scale(1.4);
     transition: all .4s ease-out;
   }
 }
+
+.loaderCon {
+  display: inline-block;
+}
+
+// .loader {
+  // > div:first-of-type, div:nth-child(2) {
+  //   @each $side in (top, left, bottom) {
+  //     border-#{$side}: 25px solid map-get($theme-colors, primary) !important;
+  //   }
+  // }
+  // > div:nth-child(n+3) {
+  //   background-color: map-get($theme-colors, primary) !important;
+  // }
+// }
