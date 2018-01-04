@@ -66,10 +66,10 @@ const makeRequest = async (method, service, path, params) => {
 
 
 router.get("/api/apps", async (req, res) => {
-  const response = await makeRequest("get", "analyzer", "/api/v1/apps");
+  const activeAppsResponse = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");
 
   const promises = [];
-  response.data.forEach(({ app_id, name }) => {
+  activeAppsResponse.data.forEach(({ app_id, name }) => {
     const incidentRequest = makeRequest("get", "analyzer", `/api/v1/apps/${app_id}/incidents`).catch(
       err => ({ data: { incident_id: null } })
     );
@@ -79,11 +79,14 @@ router.get("/api/apps", async (req, res) => {
   const incidentResponses = await Promise.all(promises);
 
   const responseWithIncident = _.merge(
-    response.data, _.flatMap(
+    activeAppsResponse.data, _.flatMap(
       incidentResponses, item => ({ hasIncident: !_.isNull(item.data.incident_id) }),
     ),
   );
-  res.json({ success: true, data: responseWithIncident });
+
+  const registeredAppsResponse = await makeRequest("get", "analyzer", "/api/v1/apps?state=Registered");
+
+  res.json({ success: true, data: [...responseWithIncident, ...registeredAppsResponse.data] });
 });
 
 router.post("/api/new-app", async (req, res) => {
