@@ -24,9 +24,17 @@ const asyncMiddleware = fn => async (req, res, next) => {
   try {
     await fn(req, res, next);
   } catch (e) {
+    let message = e.message;
+    if (e.name === "StatusCodeError") {
+      if (_.has(e.response.body, "cause")) {
+        message = e.response.body.cause;
+      } else if (_.has(e.response.body, "error")) {
+        message = e.response.body.error;
+      }
+    }
     res.status(500).json({
       success: false,
-      message: e.message,
+      message,
     });
   }
 };
