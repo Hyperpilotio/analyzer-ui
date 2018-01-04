@@ -31,7 +31,7 @@ class Step3SLO extends React.Component {
   };
 
   componentWillMount() {
-    if (_.isEmpty(this.props.metricOptions)) {
+    if (_.isEmpty(this.props.microservices)) {
       this.props.setRightSideEditability(false);
     }
   }
