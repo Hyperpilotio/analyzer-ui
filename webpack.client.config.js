@@ -54,6 +54,7 @@ module.exports = {
         query: {
           presets: ["env", "stage-0", "react"],
           plugins: _.filter([
+            "transform-decorators-legacy",
             IS_PROD ? null : "react-hot-loader/babel",
             "lodash",
           ]),
