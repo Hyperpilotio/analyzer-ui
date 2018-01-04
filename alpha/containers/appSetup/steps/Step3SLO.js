@@ -30,9 +30,10 @@ class Step3SLO extends React.Component {
     openModal: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.submitSLOSource = this.submitSLOSource.bind(this);
+  componentWillMount() {
+    if (_.isEmpty(this.props.metricOptions)) {
+      this.props.setRightSideEditability(false);
+    }
   }
   // Stage 1 (Left Side)
   async submitSLOSource(sloSource) {

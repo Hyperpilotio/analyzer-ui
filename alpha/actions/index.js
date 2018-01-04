@@ -155,13 +155,26 @@ export const prepareEditAppForm = appId => async (dispatch, getState) => {
   }
 };
 
-export const fetchAvailableServices = () => ({
-  [RSAA]: {
-    endpoint: "/api/get-cluster-mapping",
-    method: "GET",
-    types: types.FETCH_AVAILABLE_SERVICES,
-  },
-});
+export const fetchAvailableServices = () => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/get-cluster-mapping",
+      method: "GET",
+      types: types.FETCH_AVAILABLE_SERVICES,
+    },
+  });
+
+  // Open modal when fetching available services fail
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Fetch microservices error",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+};
 
 export const fetchMetrics = sloSource => ({
   [RSAA]: {
