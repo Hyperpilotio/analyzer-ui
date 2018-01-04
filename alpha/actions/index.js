@@ -56,7 +56,7 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
     },
   });
 
-  // Open modal when creating fail
+  // Open error modal
   if (!response.payload.success) {
     dispatch(openModal(
       modalTypes.HINT_MODAL,
@@ -89,6 +89,18 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
         types: types.UPDATE_MICROSERVICES,
       },
     });
+
+    // Open error modal
+    if (!response.payload.success) {
+      dispatch(openModal(
+        modalTypes.HINT_MODAL,
+        {
+          title: "Update microservices fail",
+          message: response.payload.response.message,
+        },
+      ));
+    }
+
     dispatch(updateReduxApps(response.payload.data));
     next(response.payload.data.app_id);
   } else {
@@ -112,7 +124,8 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
       },
     });
     dispatch(updateReduxApps(response.payload.data));
-    // Open modal when updating fail
+
+    // Open error modal
     if (!response.payload.success) {
       dispatch(openModal(
         modalTypes.HINT_MODAL,
@@ -139,6 +152,18 @@ export const activateApp = app => async (dispatch) => {
       types: types.ACTIVATE_APP,
     },
   });
+
+  // Open error modal
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Activate app fail",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+
   dispatch(updateReduxApps(response.payload.data));
 };
 
@@ -164,7 +189,7 @@ export const fetchAvailableServices = () => async (dispatch) => {
     },
   });
 
-  // Open modal when fetching available services fail
+  // Open error modal
   if (!response.payload.success) {
     dispatch(openModal(
       modalTypes.HINT_MODAL,
@@ -176,33 +201,70 @@ export const fetchAvailableServices = () => async (dispatch) => {
   }
 };
 
-export const fetchMetrics = sloSource => ({
-  [RSAA]: {
-    endpoint: "/api/get-metrics",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+export const fetchMetrics = sloSource => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/get-metrics",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sloSource),
+      types: types.FETCH_METRICS,
     },
-    body: JSON.stringify(sloSource),
-    types: types.FETCH_METRICS,
-  },
-});
+  });
 
-export const fetchIncidents = () => ({
-  [RSAA]: {
-    endpoint: "/api/incidents",
-    method: "GET",
-    types: types.FETCH_INCIDENTS,
-  },
-});
+  // Open error modal
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Fetch metrics error",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+};
 
-export const fetchDiagnostics = appId => ({
-  [RSAA]: {
-    endpoint: `/api/diagnostics/${appId}`,
-    method: "GET",
-    types: types.FETCH_DIAGNOSTICS,
-  },
-});
+export const fetchIncidents = () => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/incidents",
+      method: "GET",
+      types: types.FETCH_INCIDENTS,
+    },
+  });
+  // Open error modal
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Fetch incidents error",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+};
+
+export const fetchDiagnostics = appId => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: `/api/diagnostics/${appId}`,
+      method: "GET",
+      types: types.FETCH_DIAGNOSTICS,
+    },
+  });
+  // Open error modal
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Fetch diagnostics error",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+};
 
 export const removeApp = appId => async (dispatch) => {
   const response = await dispatch({
@@ -216,6 +278,18 @@ export const removeApp = appId => async (dispatch) => {
       types: types.REMOVE_APP,
     },
   });
+
+  // Open error modal
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Remove app fail",
+        message: response.payload.response.message,
+      },
+    ));
+  }
+
   dispatch(updateReduxApps(response.payload.data));
 };
 
