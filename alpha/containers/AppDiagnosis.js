@@ -4,7 +4,12 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import {
+  Container, Row, Col,
+  Dropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  Breadcrumb, BreadcrumbItem,
+  Alert,
+} from "reactstrap";
 import { Toggle } from "react-powerplug";
 import FaCaretDown from "react-icons/lib/fa/caret-down";
 import PropTypes from "prop-types";
@@ -21,12 +26,45 @@ import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescri
 import { fetchDiagnostics } from "../actions";
 
 
-class AppDiagnosis extends React.Component {
+const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
+  const isAppLoading = _.isEmpty(applications) || ui.isFetchAppsLoading;
+  if (isAppLoading) {
+    return { isAppLoading, isDiagnosticsLoading: true };
+  }
+
+  const app = _.find(applications, { app_id: match.params.appId });
+  const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
+  const isDiagnosticsLoading = _.isEmpty(appIncidents);
+  if (isDiagnosticsLoading) {
+    return { app, isAppLoading, isDiagnosticsLoading };
+  }
+
+  const mostRecentIncident = _.maxBy(appIncidents, "timestamp");
+  const result = _.find(diagnosis.results, { incident_id: mostRecentIncident.incident_id });
+  const problems = result.top_related_problems.map(
+    ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
+  );
+
+  return { app, incident: mostRecentIncident, result, problems };
+};
+
+const mapDispatchToProps = (dispatch, { match }) => ({
+  fetchDiagnostics: () => dispatch(fetchDiagnostics(match.params.appId)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+@ReactTimeout
+export default class AppDiagnosis extends React.Component {
   static propTypes = {
     fetchDiagnostics: PropTypes.func.isRequired,
     isAppLoading: PropTypes.bool.isRequired,
     isDiagnosticsLoading: PropTypes.bool.isRequired,
-    setInterval: PropTypes.func.isRequired,
+    setTimeout: PropTypes.func.isRequired,
+    refreshInterval: PropTypes.number,
+  }
+
+  static defaultProps = {
+    refreshInterval: 30 * 1000,
   }
 
   componentWillMount() {
@@ -36,6 +74,15 @@ class AppDiagnosis extends React.Component {
     } = this.props;
 
     fetchDiagnostics();
+  }
+
+  componentDidMount() {
+    this.props.setTimeout(::this.refetchDiagnostics, this.props.refreshInterval);
+  }
+
+  async refetchDiagnostics() {
+    await this.props.fetchDiagnostics();
+    this.props.setTimeout(::this.refetchDiagnostics, this.props.refreshInterval);
   }
 
   render() {
@@ -73,8 +120,22 @@ class AppDiagnosis extends React.Component {
             </Container>
 
             <Container className="clearfix mb-3">
-              <h3 className="float-left mb-3">Diagnosis Result of SLO Violation Incident</h3>
-              <p className="float-right text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
+              <Row>
+                <Col className="mr-auto" sm="auto">
+                  <h3 className="mb-3">Diagnosis Result of SLO Violation Incident</h3>
+                </Col>
+                <Col sm="auto">
+                  <p className="text-muted">Time: { moment(incident.timestamp / (1000 ** 2)).format("lll") }</p>
+                </Col>
+              </Row>
+              { incident.state === "Resolved"
+                ? <Row>
+                    <Col>
+                      <Alert color="success">This incident has been resolved!</Alert>
+                    </Col>
+                  </Row>
+                : null
+              }
             </Container>
 
             <Route
@@ -175,31 +236,3 @@ class AppDiagnosis extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
-  const isAppLoading = _.isEmpty(applications) || ui.isFetchAppsLoading;
-  if (isAppLoading) {
-    return { isAppLoading, isDiagnosticsLoading: true };
-  }
-
-  const app = _.find(applications, { app_id: match.params.appId });
-  const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
-  const isDiagnosticsLoading = ui.isFetchDiagnosticsLoading || _.isEmpty(appIncidents);
-  if (isDiagnosticsLoading) {
-    return { app, isAppLoading, isDiagnosticsLoading };
-  }
-
-  const mostRecentIncident = _.maxBy(appIncidents, "timestamp");
-  const result = _.find(diagnosis.results, { incident_id: mostRecentIncident.incident_id });
-  const problems = result.top_related_problems.map(
-    ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
-  );
-
-  return { app, incident: mostRecentIncident, result, problems };
-};
-
-const mapDispatchToProps = (dispatch, { match }) => ({
-  fetchDiagnostics: () => dispatch(fetchDiagnostics(match.params.appId)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ReactTimeout(AppDiagnosis));
