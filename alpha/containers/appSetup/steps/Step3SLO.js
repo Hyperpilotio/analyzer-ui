@@ -9,7 +9,7 @@ import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics, toggleRightSideState, emptyMetricOptions } from "../../../actions";
+import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } from "../../../actions";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
@@ -26,7 +26,7 @@ class Step3SLO extends React.Component {
     stepBack: PropTypes.func.isRequired,
     addTagsInput: PropTypes.func.isRequired,
     deleteTag: PropTypes.func.isRequired,
-    toggleRightSide: PropTypes.func.isRequired,
+    setRightSideEditability: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
 
@@ -39,7 +39,7 @@ class Step3SLO extends React.Component {
     const res = await this.props.submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
       // disable right side when fetching metrics fail
-      this.props.toggleRightSide(false);
+      this.props.setRightSideEditability(false);
       this.props.openModal(
         modalTypes.ACTION_MODAL,
         {
@@ -48,12 +48,12 @@ class Step3SLO extends React.Component {
           question: "Do you want to use your original configuration?",
           cancelWord: "Try another metrics source",
           onSubmit: () => {
-            this.props.toggleRightSide(true);
+            this.props.setRightSideEditability(true);
             this.props.restoreService(_.find(this.props.applications, { app_id: this.props.appId }).slo.source);
           },
         });
     } else if (res.payload.success) {
-      this.props.toggleRightSide(true);
+      this.props.setRightSideEditability(true);
     }
   }
 
@@ -250,9 +250,9 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
   updateSlo: (slo, sloSource, appId) => {
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
   },
-  toggleRightSide: (bool) => {
-    dispatch(toggleRightSideState(bool));
-    if (!bool) {
+  setRightSideEditability: (isEditable) => {
+    dispatch(setSloConfigEditability(isEditable));
+    if (!isEditable) {
       dispatch(emptyMetricOptions());
     }
   },

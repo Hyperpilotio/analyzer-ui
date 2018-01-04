@@ -211,8 +211,8 @@ export const emptyMetricOptions = () => ({
   type: types.EMPTY_METRIC_OPTIONS,
 });
 
-export const toggleRightSideState = isDisable => ({
+export const setSloConfigEditability = isEditable => ({
   type: types.TOGGLE_RIGHT_SIDE_STATE,
-  isDisable,
+  isEditable,
 });
 
