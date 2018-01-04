@@ -36,11 +36,20 @@ class Step3SLO extends React.Component {
   }
   // Stage 1 (Left Side)
   async submitSLOSource(sloSource) {
-    const res = await this.props.submitSloSource(sloSource);
+    const {
+      submitSloSource,
+      setRightSideEditability,
+      openModal,
+      restoreService,
+      applications,
+      appId,
+    } = this.props;
+
+    const res = await submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
       // disable right side when fetching metrics fail
-      this.props.setRightSideEditability(false);
-      this.props.openModal(
+      setRightSideEditability(false);
+      openModal(
         modalTypes.ACTION_MODAL,
         {
           title: "Fetch metrics error",
@@ -48,16 +57,15 @@ class Step3SLO extends React.Component {
           question: "Do you want to use your original configuration?",
           cancelWord: "Try another metrics source",
           onSubmit: () => {
-            this.props.setRightSideEditability(true);
-            this.props.restoreService(_.find(this.props.applications, { app_id: this.props.appId }).slo.source);
+            setRightSideEditability(true);
+            restoreService(applications, appId);
           },
         });
     } else if (res.payload.success) {
-      this.props.setRightSideEditability(true);
+      setRightSideEditability(true);
     }
   }
 
-  // TODO: Stage 2 (Right Side) : open modal when fail to update app
   render() {
     const {
       appId,
@@ -256,10 +264,12 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
       dispatch(emptyMetricOptions());
     }
   },
-  restoreService: originalSloSource => (dispatch(formActions.change(
-    "createAppForm.sloSource",
-    originalSloSource,
-  ))),
+  restoreService: (applications, appId) => {
+    dispatch(formActions.change(
+      "createAppForm.sloSource",
+      _.find(applications, { app_id: appId }).slo.source,
+    ));
+  },
 });
 
 export default connect(
