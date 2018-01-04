@@ -28,16 +28,15 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
         </tr>
       </thead>
       <tbody style={tbodyStyle} className="d-block">
-      {
-        isFetchAvailableServicesLoading ?
-            <tr className={_s.loaderTr}>
-              <td colSpan="7" className={_s.loaderTd}>
-                <div className={_s.loaderCon}>
-                  <Spinner fadeIn="quarter" name="pacman" />
-                </div>
-              </td>
-            </tr>
-          : microservices.map(({ namespace, kind, name }) => (
+        { isFetchAvailableServicesLoading ?
+          <tr className={_s.loaderTr}>
+            <td colSpan="7" className={_s.loaderTd}>
+              <div className={_s.loaderCon}>
+                <Spinner fadeIn="quarter" name="pacman" />
+              </div>
+            </td>
+          </tr> :
+          microservices.map(({ namespace, kind, name }) => (
             <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
               <td className="col">{ namespace }</td>
               <td className="col">{ getDisplayKind(kind) }</td>
@@ -50,7 +49,7 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
               </td>
             </tr>
           ))
-      }   
+        }
       </tbody>
     </Table>
   </div>
@@ -76,12 +75,6 @@ class Step2Microservices extends React.Component {
     updateMicroservices: PropTypes.func.isRequired,
     stepNext: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    openMicroservicesErrorModal: PropTypes.func.isRequired,
-  }
-
-  constructor(props) {
-    super(props);
-    this.startFetchingMicroservices = this.startFetchingMicroservices.bind(this);
   }
 
   state = {
@@ -90,7 +83,7 @@ class Step2Microservices extends React.Component {
   }
 
   componentWillMount() {
-    this.startFetchingMicroservices();
+    this.props.fetchMicroservices();
   }
 
   get detectedMicroservices() {
@@ -120,13 +113,6 @@ class Step2Microservices extends React.Component {
 
   filterKind(event) {
     this.setState({ kindFilter: event.target.value });
-  }
-
-  async startFetchingMicroservices() {
-    const res = await this.props.fetchMicroservices();
-    if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
-      this.props.openMicroservicesErrorModal(res);
-    }
   }
 
   render() {

@@ -43,16 +43,6 @@ class SetupEdit extends React.Component {
     );
   }
 
-  openMicroservicesErrorModal = (res) => {
-    this.props.openModal(
-      modalTypes.HINT_MODAL,
-      {
-        title: "Fetch microservices error",
-        message: res.payload.response.message,
-      },
-    );
-  }
-
   render() {
     const { createAppForm, isLoading, match, history } = this.props;
     if (isLoading) return null;
@@ -77,7 +67,7 @@ class SetupEdit extends React.Component {
         stepActions.mode = "edit";
         formComponent = <Step1BasicInfo {...stepActions} cancelEdit={this.cancelEdit} />;
       } else if (step === 2) {
-        formComponent = <Step2Microservices {...stepActions} openMicroservicesErrorModal={res => this.openMicroservicesErrorModal(res)} />;
+        formComponent = <Step2Microservices {...stepActions} />;
       } else if (step === 3) {
         formComponent = <Step3SLO {...stepActions} match={match} />;
       } else if (step === 4) {
@@ -110,7 +100,6 @@ const mapStateToProps = ({ createAppForm, ui }) => ({
 
 const mapDispatchToProps = dispatch => ({
   prepareEditAppForm: appId => dispatch(prepareEditAppForm(appId)),
-
 });
 
 export default connect(

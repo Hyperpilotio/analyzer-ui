@@ -13,7 +13,7 @@ import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp } from "../actio
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
-
+import _s from "./style.scss";
 
 class DashboardPage extends React.Component {
   static propTypes = {
@@ -78,6 +78,14 @@ class DashboardPage extends React.Component {
                   openRemoveModal={appId => this.openRemoveModal(appId)}
                   {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
+                { _.reject(this.props.applications, { state: "Unregistered" }).length <= 0 && !isFetchAppsLoading ?
+                  <div className={_s.noData}>
+                    <span>
+                      No applications managed by HyperPilot, click on "Add" button to add them.
+                    </span>
+                  </div>
+                  : null
+                }
               </Row>
             </Container>
           </Route>
