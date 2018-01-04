@@ -31,8 +31,11 @@ class Step3SLO extends React.Component {
   };
 
   componentWillMount() {
-    if (_.isEmpty(this.props.microservices)) {
+    // Hide SLO configuration when it's creating a new app and never saved SLO
+    if (_.isEmpty(_.get(this.props.savedApp, "slo.metric.name"))) {
       this.props.setRightSideEditability(false);
+    } else {
+      this.props.setRightSideEditability(true);
     }
   }
   // Stage 1 (Left Side)
@@ -41,8 +44,7 @@ class Step3SLO extends React.Component {
       submitSloSource,
       setRightSideEditability,
       openModal,
-      restoreService,
-      applications,
+      restoreSloSourceConfig,
       appId,
     } = this.props;
 
@@ -59,7 +61,7 @@ class Step3SLO extends React.Component {
           cancelWord: "Try another metrics source",
           onSubmit: () => {
             setRightSideEditability(true);
-            restoreService(applications, appId);
+            restoreSloSourceConfig(savedApp.slo.source);
           },
         });
     } else if (res.payload.success) {
@@ -231,6 +233,7 @@ class Step3SLO extends React.Component {
 }
 
 const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
+  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),
@@ -238,7 +241,6 @@ const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microserv
   sloSource,
   microservices,
   slo,
-  applications,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
@@ -265,12 +267,10 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
       dispatch(emptyMetricOptions());
     }
   },
-  restoreService: (applications, appId) => {
-    dispatch(formActions.change(
-      "createAppForm.sloSource",
-      _.find(applications, { app_id: appId }).slo.source,
-    ));
-  },
+  restoreSloSourceConfig: originalSloSource => dispatch(formActions.change(
+    "createAppForm.sloSource",
+    originalSloSource,
+  )),
 });
 
 export default connect(
