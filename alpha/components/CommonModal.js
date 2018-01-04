@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Modal } from "reactstrap";
 import PropTypes from "prop-types";
-import { toggleModal, removeApp } from "../actions";
+import { toggleModal } from "../actions";
 import * as modalTypes from "../constants/modalTypes";
 import ActionModal from "./Modal/ActionModal";
 import HintModal from "./Modal/HintModal";
@@ -42,7 +42,6 @@ const mapStateToProps = ({ modal }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  removeApp: appId => dispatch(removeApp(appId)),
   toggle: () => dispatch(toggleModal()),
 });
 

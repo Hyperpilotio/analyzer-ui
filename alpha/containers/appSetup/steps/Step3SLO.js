@@ -45,7 +45,7 @@ class Step3SLO extends React.Component {
         {
           title: "Fetch metrics error",
           message: res.payload.response.message,
-          question: "Do you want to use your original configuration ?",
+          question: "Do you want to use your original configuration?",
           cancelWord: "Try another metrics source",
           onSubmit: () => {
             this.props.toggleRightSide(true);
@@ -223,7 +223,7 @@ class Step3SLO extends React.Component {
 
 const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
   appId: basicInfo.app_id,
-  sloFormDisabled: forms.slo.$form.isDisable || false,
+  sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),
   isLoading: ui.isFetchMetricsLoading,
   sloSource,
