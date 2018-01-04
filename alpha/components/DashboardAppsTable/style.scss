@@ -10,12 +10,16 @@
   }
 }
 
-.iconGrp{
+.iconGrp {
 
   color: map-get($theme-colors,primary);
 
-  &:hover{
+  &:hover {
     transform: scale(1.4);
     transition: all .4s ease-out;
   }
+}
+
+.loaderCon {
+  display: inline-block;
 }

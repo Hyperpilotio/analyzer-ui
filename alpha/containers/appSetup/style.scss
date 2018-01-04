@@ -75,6 +75,30 @@
   }
 }
 
+
+// form-group in steps
+.inputRow{
+  margin-bottom: 1rem;
+}
+.formGroup{
+  margin-bottom: 0px !important;
+}
+.errorMessage{
+  color: #ff8686;
+}
+
+// loader
+.loaderTr{ 
+  display: block; 
+}
+.loaderTd{ 
+  text-align: center;
+  display: block; 
+}
+.loaderCon {
+  display: inline-block;
+}
+
 @-webkit-keyframes rotating /* Safari and Chrome */ {
   from {
     -webkit-transform: rotate(0deg);
@@ -109,4 +133,13 @@
   -ms-animation: rotating 2s linear infinite;
   -o-animation: rotating 2s linear infinite;
   animation: rotating 2s linear infinite;
+}
+.container{
+  text-align: center;
+  height: 100%;
+}
+
+.loaderCon {
+  display: inline-block;
+  margin-top: 20%;
 }

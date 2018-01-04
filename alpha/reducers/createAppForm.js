@@ -101,11 +101,18 @@ export default reduceReducers(
         action.payload.metrics,
         _.clone,
       );
-    case types.DISABLE_SLO_CONFIGURATION:
+    case types.EMPTY_METRIC_OPTIONS:
       return _.setWith(
         { ...state },
         "forms.slo.$form.metricOptions",
         [],
+        _.clone,
+      );
+    case types.SET_SLO_CONFIG_EDITABILITY:
+      return _.setWith(
+        { ...state },
+        "forms.slo.$form.isDisable",
+        !action.isEditable,
         _.clone,
       );
     default:

@@ -11,7 +11,9 @@ import DashboardAppsTable from "../components/DashboardAppsTable";
 import AppDiagnosis from "./AppDiagnosis";
 import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
-
+import withModal from "../lib/withModal";
+import * as modalTypes from "../constants/modalTypes";
+import _s from "./style.scss";
 
 class DashboardPage extends React.Component {
   static propTypes = {
@@ -20,6 +22,9 @@ class DashboardPage extends React.Component {
     // isFetchDiagnosticsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
     fetchIncidents: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    removeAppInModal: PropTypes.func.isRequired,
+    resetAppForm: PropTypes.func.isRequired,
     // fetchDiagnostics: PropTypes.func.isRequired,
     // removeApp: PropTypes.func.isRequired,
     // apps: PropTypes.arrayOf(appPropType).isRequired,
@@ -34,10 +39,22 @@ class DashboardPage extends React.Component {
     // this.props.fetchDiagnostics();
   }
 
+  openRemoveModal = (appId) => {
+    this.props.openModal(
+      modalTypes.ACTION_MODAL,
+      {
+        title: "Delete app",
+        message: "Are you sure you want to delete this app?",
+        onSubmit: () => { this.props.removeAppInModal(appId); },
+      },
+    );
+  }
+
   render() {
     const {
       applicationss, results, incidents, problems,
       isFetchDiagnosticsLoading, isFetchAppsLoading,
+      openModal,
     } = this.props;
     return (
       <div>
@@ -58,8 +75,17 @@ class DashboardPage extends React.Component {
               <Row>
                 <DashboardAppsTable
                   isLoading={isFetchAppsLoading}
+                  openRemoveModal={appId => this.openRemoveModal(appId)}
                   {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
+                { _.reject(this.props.applications, { state: "Unregistered" }).length <= 0 && !isFetchAppsLoading ?
+                  <div className={_s.noData}>
+                    <span>
+                      No applications managed by HyperPilot, click on "Add" button to add them.
+                    </span>
+                  </div>
+                  : null
+                }
               </Row>
             </Container>
           </Route>
@@ -86,7 +112,7 @@ const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
   fetchIncidents: () => dispatch(fetchIncidents()),
   fetchDiagnostics: () => dispatch(fetchDiagnostics()),
-  removeApp: appId => dispatch(removeApp(appId)),
+  removeAppInModal: appId => dispatch(removeApp(appId)),
   resetAppForm: () => {
     ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(
       form => dispatch(formActions.reset(`createAppForm.${form}`)),
@@ -97,4 +123,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DashboardPage);
+)(withModal(DashboardPage));

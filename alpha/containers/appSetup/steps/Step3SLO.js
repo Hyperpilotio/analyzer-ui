@@ -9,8 +9,9 @@ import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
-import { updateApp, fetchMetrics } from "../../../actions";
-import ErrorModal from "../../../components/ErrorModal";
+import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } from "../../../actions";
+import withModal from "../../../lib/withModal";
+import * as modalTypes from "../../../constants/modalTypes";
 
 class Step3SLO extends React.Component {
   static propTypes = {
@@ -25,28 +26,46 @@ class Step3SLO extends React.Component {
     stepBack: PropTypes.func.isRequired,
     addTagsInput: PropTypes.func.isRequired,
     deleteTag: PropTypes.func.isRequired,
-    disableConfiguration: PropTypes.func.isRequired,
-
+    setRightSideEditability: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
   };
 
-  state = {
-    modalState: false,
-    errorMessage: null,
+  componentWillMount() {
+    // Hide SLO configuration when it's creating a new app and never saved SLO
+    if (_.isEmpty(_.get(this.props.savedApp, "slo.metric.name"))) {
+      this.props.setRightSideEditability(false);
+    } else {
+      this.props.setRightSideEditability(true);
+    }
   }
+  // Stage 1 (Left Side)
+  async onSubmitConfirmingSource(sloSource) {
+    const {
+      submitSloSource,
+      setRightSideEditability,
+      openModal,
+      restoreSloSourceConfig,
+      appId,
+    } = this.props;
 
-  toggleModal = (isOpen, errorMessage) => {
-    this.setState(
-      {
-        modalState: _.isNull(isOpen) ? isOpen : !this.state.modalState,
-        errorMessage,
-      },
-    );
-  }
-
-  async submitSLO(sloSource) {
-    const res = await this.props.submitSloSource(sloSource);
-    if (!_.isUndefined(res.payload.response)) {
-      this.toggleModal(!res.payload.response.success, res.payload.response.message);
+    const res = await submitSloSource(sloSource);
+    if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
+      // disable right side when fetching metrics fail
+      setRightSideEditability(false);
+      openModal(
+        modalTypes.ACTION_MODAL,
+        {
+          title: "Fetch metrics error",
+          message: res.payload.response.message,
+          question: "Do you want to use your original configuration?",
+          cancelWord: "Try another metrics source",
+          onSubmit: () => {
+            setRightSideEditability(true);
+            restoreSloSourceConfig(savedApp.slo.source);
+          },
+        });
+    } else if (res.payload.success) {
+      setRightSideEditability(true);
     }
   }
 
@@ -65,20 +84,14 @@ class Step3SLO extends React.Component {
       slo,
       addTagsInput,
       deleteTag,
-      disableConfiguration,
       isLoading,
     } = this.props;
-
-    const {
-      modalState,
-      errorMessage,
-    } = this.state;
 
     return (
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={::this.submitSLO} model="createAppForm.sloSource">
+          <Form onSubmit={::this.onSubmitConfirmingSource} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
@@ -111,7 +124,6 @@ class Step3SLO extends React.Component {
               <label htmlFor="slo-port" className="col-4">Port</label>
               <Control.text id="slo-port" className="form-control col" model=".port" parser={_.toInteger} />
             </FormGroup>
-            
             <Row className="w-100">
               <Col>
                 <Button onClick={stepBack} color="secondary">Back</Button>
@@ -122,7 +134,6 @@ class Step3SLO extends React.Component {
                   Confirm Source
                 </Button>
               </Col>
-              <ErrorModal modalState={modalState} errorMessage={errorMessage} toggle={this.toggleModal} />
             </Row>
           </Form>
         </Col>
@@ -221,15 +232,15 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
+  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
-  sloFormDisabled: _.isEmpty(forms.slo.$form.metricOptions) && !_.get(slo, "metric.name"),
+  sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),
   isLoading: ui.isFetchMetricsLoading,
   sloSource,
   microservices,
   slo,
-  
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
@@ -250,10 +261,19 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
   updateSlo: (slo, sloSource, appId) => {
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
   },
-  disableConfiguration: () => dispatch(disableSLOConfiguration()),
+  setRightSideEditability: (isEditable) => {
+    dispatch(setSloConfigEditability(isEditable));
+    if (!isEditable) {
+      dispatch(emptyMetricOptions());
+    }
+  },
+  restoreSloSourceConfig: originalSloSource => dispatch(formActions.change(
+    "createAppForm.sloSource",
+    originalSloSource,
+  )),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Step3SLO);
+)(withModal(Step3SLO));

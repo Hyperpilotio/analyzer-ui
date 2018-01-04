@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 import _ from "lodash";
+import { actions } from "react-redux-form";
+import Spinner from "react-spinkit";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { prepareEditAppForm } from "../../actions";
 import { editStepNames } from "../../constants/models";
@@ -13,6 +15,10 @@ import Step1BasicInfo from "./steps/Step1BasicInfo";
 import Step2Microservices from "./steps/Step2Microservices";
 import Step3SLO from "./steps/Step3SLO";
 import Step4ManagementFeatures from "./steps/Step4ManagementFeatures";
+import withModal from "../../lib/withModal";
+import * as modalTypes from "../../constants/modalTypes";
+import _s from "./style.scss";
+
 
 class SetupEdit extends React.Component {
   static propTypes = {
@@ -20,6 +26,7 @@ class SetupEdit extends React.Component {
     history: ReactRouterPropTypes.history.isRequired,
     prepareEditAppForm: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    openModal: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -27,14 +34,29 @@ class SetupEdit extends React.Component {
     this.props.prepareEditAppForm(appId);
   }
 
-  cancelEdit = () => {
-    this.props.history.push("/dashboard");
+  cancelEdit = (e) => {
+    e.preventDefault();
+    this.props.openModal(
+      modalTypes.ACTION_MODAL,
+      {
+        title: "Cancel configuration",
+        message: "Are you sure you want to cancel the configuration?",
+        onSubmit: () => { this.props.history.push("/dashboard"); },
+      },
+    );
   }
 
   render() {
     const { createAppForm, isLoading, match, history } = this.props;
-    if (isLoading) return null;
-
+    if (isLoading) {
+      return (
+        <Container className={_s.container}>
+          <div className={_s.loaderCon}>
+            <Spinner fadeIn="quarter" name="pacman" />
+          </div>
+        </Container>
+      );
+    }
     let formComponent = <Redirect to="/dashboard" />;
     const stepActions = {};
     const step = _.toInteger(match.params.step) || 1;
@@ -93,4 +115,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SetupEdit);
+)(withModal(SetupEdit));

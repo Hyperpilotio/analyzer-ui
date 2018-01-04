@@ -1,20 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Table, Badge } from "reactstrap";
+import { Row, Table, Badge } from "reactstrap";
 import FaTimesCircle from "react-icons/lib/fa/times-circle";
 import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import FaEdit from "react-icons/lib/fa/edit";
 import MdDelete from "react-icons/lib/md/delete";
 import _ from "lodash";
 import PropTypes from "prop-types";
+import Spinner from "react-spinkit";
 import Linked from "~/commons/components/Linked";
 import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
-
+import * as modalTypes from "../../constants/modalTypes";
+import withModal from "../../lib/withModal";
 
 const DashboardAppsTable = ({
-  isLoading, applications, incidents, 
-  risks, opportunities, removeApp 
+  isLoading, applications,
+  incidents, openRemoveModal,
 }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
@@ -29,7 +31,15 @@ const DashboardAppsTable = ({
       </tr>
     </thead>
     <tbody>
-      { isLoading ? null :
+      { isLoading ?
+        <tr>
+          <td colSpan="7" style={{ textAlign: "center" }}>
+            <div className={_s.loaderCon}>
+              <Spinner fadeIn="quarter" name="pacman" className={_s.loader} />
+            </div>
+          </td>
+        </tr>
+        :
         applications.map((app) => {
           if (app.state === "Registered") {
             return (
@@ -48,7 +58,7 @@ const DashboardAppsTable = ({
                     className={_s.iconGrp}
                     onClick={(e) => {
                       e.stopPropagation();
-                      removeApp(app.app_id);
+                      openRemoveModal(app.app_id);
                     }}
                   />
                 </td>
@@ -105,7 +115,7 @@ const DashboardAppsTable = ({
                   className={_s.iconGrp}
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeApp(app.app_id);
+                    openRemoveModal(app.app_id);
                   }}
                 />
               </td>
@@ -119,6 +129,8 @@ const DashboardAppsTable = ({
 
 DashboardAppsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
+  incidents: PropTypes.array.isRequired,
+  removeApp: PropTypes.func.isRequired,
 };
 
-export default DashboardAppsTable;
+export default (DashboardAppsTable);
