@@ -34,6 +34,9 @@ const asyncMiddleware = fn => async (req, res, next) => {
         message = e.response.body.error;
       }
     }
+    if (!e.alreadyLogged) {
+      logger.error(e);
+    }
     res.status(500).json({
       success: false,
       message,
@@ -70,6 +73,7 @@ const makeRequest = async (method, service, path, params) => {
       message = message.concat(`\nRequest body: ${JSON.stringify(params.body)}`);
     }
     logger.error(message);
+    e.alreadyLogged = true;
     throw e;
   }
 };
