@@ -25,11 +25,14 @@ const SLOGraph = ({ incident: { metric, threshold }, influxFetch, ...props }) =>
         isData
       />
       <ThresholdLine
+        area
         style={{
           line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
           label: { fill: "#ff8686", fontSize: "16px" },
+          area: { fill: "#ff8686", fillOpacity: 0.1 },
         }}
         threshold={threshold.value}
+        type={threshold.type}
         label="SLO"
       />
     </GeneralTimeSeriesGraph>
