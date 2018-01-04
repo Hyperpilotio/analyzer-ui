@@ -37,7 +37,7 @@ class SetupEdit extends React.Component {
       modalTypes.ACTION_MODAL,
       {
         title: "Cancel configuration",
-        message: "Are you sure you wnat to cancel the configuration ?",
+        message: "Are you sure you want to cancel the configuration?",
         onSubmit: () => { this.props.history.push("/dashboard"); },
       },
     );

@@ -15,9 +15,7 @@ const HintModal = ({ title, message, toggle }) => (
     <ModalFooter>
       <Button
         color="primary"
-        onClick={() => {
-          toggle();
-        }}
+        onClick={toggle}
       >
         OK</Button>
     </ModalFooter>

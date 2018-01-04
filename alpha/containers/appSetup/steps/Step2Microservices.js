@@ -27,31 +27,31 @@ const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOn
           <th className="col" />
         </tr>
       </thead>
+      <tbody style={tbodyStyle} className="d-block">
       {
         isFetchAvailableServicesLoading ?
-          <tbody style={tbodyStyle} className="d-block">
-            <tr className={_s.loaderTr}><td colSpan="7" className={_s.loaderTd}><div className={_s.loaderCon}>
-              <Spinner fadeIn="quarter" name="pacman" />
-            </div></td></tr>
-          </tbody>
-          :
-          <tbody style={tbodyStyle} className="d-block">
-            { microservices.map(({ namespace, kind, name }) => (
-              <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
-                <td className="col">{ namespace }</td>
-                <td className="col">{ getDisplayKind(kind) }</td>
-                <td className="col">{ name }</td>
-                <td className="col">
-                  { React.cloneElement(buttonElement, {
-                    onClick: () => buttonOnClick({ namespace, kind, name }),
-                  })
-                  }
-                </td>
-              </tr>
-            ))
-            }
-          </tbody>
+            <tr className={_s.loaderTr}>
+              <td colSpan="7" className={_s.loaderTd}>
+                <div className={_s.loaderCon}>
+                  <Spinner fadeIn="quarter" name="pacman" />
+                </div>
+              </td>
+            </tr>
+          : microservices.map(({ namespace, kind, name }) => (
+            <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
+              <td className="col">{ namespace }</td>
+              <td className="col">{ getDisplayKind(kind) }</td>
+              <td className="col">{ name }</td>
+              <td className="col">
+                { React.cloneElement(buttonElement, {
+                  onClick: () => buttonOnClick({ namespace, kind, name }),
+                })
+                }
+              </td>
+            </tr>
+          ))
       }   
+      </tbody>
     </Table>
   </div>
 );

@@ -211,8 +211,8 @@ export const emptyMetricOptions = () => ({
   type: types.EMPTY_METRIC_OPTIONS,
 });
 
-export const toggleRightSideState = bool => ({
+export const toggleRightSideState = isDisable => ({
   type: types.TOGGLE_RIGHT_SIDE_STATE,
-  bool,
+  isDisable,
 });
 

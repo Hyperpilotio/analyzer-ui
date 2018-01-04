@@ -23,6 +23,8 @@ class DashboardPage extends React.Component {
     fetchApps: PropTypes.func.isRequired,
     fetchIncidents: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
+    removeAppInModal: PropTypes.func.isRequired,
+    resetAppForm: PropTypes.func.isRequired,
     // fetchDiagnostics: PropTypes.func.isRequired,
     // removeApp: PropTypes.func.isRequired,
     // apps: PropTypes.arrayOf(appPropType).isRequired,
@@ -37,13 +39,13 @@ class DashboardPage extends React.Component {
     // this.props.fetchDiagnostics();
   }
 
-  removeApp = (appId) => {
+  openRemoveModal = (appId) => {
     this.props.openModal(
       modalTypes.ACTION_MODAL,
       {
         title: "Delete app",
-        message: "Are you sure you wnat to delete this app ?",
-        onSubmit: () => { removeApp(appId); },
+        message: "Are you sure you want to delete this app?",
+        onSubmit: () => { this.props.removeAppInModal(appId); },
       },
     );
   }
@@ -73,7 +75,7 @@ class DashboardPage extends React.Component {
               <Row>
                 <DashboardAppsTable
                   isLoading={isFetchAppsLoading}
-                  openRemoveModal={appId => this.removeApp(appId)}
+                  openRemoveModal={appId => this.openRemoveModal(appId)}
                   {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
               </Row>
@@ -102,7 +104,7 @@ const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
   fetchIncidents: () => dispatch(fetchIncidents()),
   fetchDiagnostics: () => dispatch(fetchDiagnostics()),
-  removeApp: appId => dispatch(removeApp(appId)),
+  removeAppInModal: appId => dispatch(removeApp(appId)),
   resetAppForm: () => {
     ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(
       form => dispatch(formActions.reset(`createAppForm.${form}`)),

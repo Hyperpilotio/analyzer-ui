@@ -112,7 +112,7 @@ export default reduceReducers(
       return _.setWith(
         { ...state },
         "forms.slo.$form.isDisable",
-        !action.bool,
+        !action.isDisable,
         _.clone,
       );
     default:
