@@ -108,11 +108,11 @@ export default reduceReducers(
         [],
         _.clone,
       );
-    case types.TOGGLE_RIGHT_SIDE_STATE:
+    case types.SET_SLO_CONFIG_EDITABILITY:
       return _.setWith(
         { ...state },
         "forms.slo.$form.isDisable",
-        !action.isDisable,
+        !action.isEditable,
         _.clone,
       );
     default:

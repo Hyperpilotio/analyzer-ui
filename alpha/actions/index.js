@@ -212,7 +212,7 @@ export const emptyMetricOptions = () => ({
 });
 
 export const setSloConfigEditability = isEditable => ({
-  type: types.TOGGLE_RIGHT_SIDE_STATE,
+  type: types.SET_SLO_CONFIG_EDITABILITY,
   isEditable,
 });
 
