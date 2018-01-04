@@ -224,6 +224,8 @@ export const fetchMetrics = sloSource => async (dispatch) => {
       },
     ));
   }
+
+  return response;
 };
 
 export const fetchIncidents = () => async (dispatch) => {

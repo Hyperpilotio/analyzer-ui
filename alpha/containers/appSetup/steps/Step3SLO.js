@@ -36,7 +36,7 @@ class Step3SLO extends React.Component {
     }
   }
   // Stage 1 (Left Side)
-  async submitSLOSource(sloSource) {
+  async onSubmitConfirmingSource(sloSource) {
     const {
       submitSloSource,
       setRightSideEditability,
@@ -89,7 +89,7 @@ class Step3SLO extends React.Component {
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={this.submitSLOSource} model="createAppForm.sloSource">
+          <Form onSubmit={::this.onSubmitConfirmingSource} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
