@@ -1,16 +1,17 @@
+@import "commons/styles/variables";
+
 $theme-colors: (
-  "primary": #5677fa,
-  "light": #f7f9fc,
-  "dark": #1c293c,
-  "success": #7ed321,
-  "info": #78c1fa,
-  "danger": #ff8686,
-  "warning": #fdbd39,
+  "primary": $color-primary,
+  "light": $color-light,
+  "dark": $color-dark,
+  "success": $color-success,
+  "info": $color-info,
+  "danger": $color-danger,
+  "warning": $color-warning,
 );
 
-// loaders
-$primary-color: map-get($theme-colors,primary);
-@import '~loaders.css/src/loaders';
+// Setting $primary-color for loaders.css
+$primary-color: $color-primary;
 
 // table
 .table th, .table td {
@@ -38,6 +39,3 @@ $primary-color: map-get($theme-colors,primary);
   display: block;
   position: absolute;
 }
-
-
-// radio-button
