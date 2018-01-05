@@ -4,6 +4,7 @@
 .ChartGroup:global(.card) {
   background: $color-light;
   border: 1px solid #e2e8fb;
+  width: 100%;
 
   :global(.card-body) {
     padding-top: 0;
