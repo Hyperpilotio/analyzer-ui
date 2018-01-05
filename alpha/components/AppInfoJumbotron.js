@@ -1,14 +1,8 @@
 import React from "react";
 import _ from "lodash";
-import { Container, Row, Col, Jumbotron, Badge } from "reactstrap";
+import { Container, Row, Col, Jumbotron } from "reactstrap";
+import AppStatusBadge from "./AppStatusBadge";
 import { getSLODisplay } from "../lib/utils";
-
-const getBadge = (hasIncident) => {
-  return hasIncident ?
-    <Badge color="danger"><h6 className="mb-0">Incidents</h6></Badge>
-    :
-    <Badge color="success"><h6 className="mb-0">None</h6></Badge>;
-};
 
 const AppInfoJumbotron = ({ app }) => (
   <Jumbotron className="border border-right-0 border-left-0 bg-white" fluid>
@@ -25,7 +19,7 @@ const AppInfoJumbotron = ({ app }) => (
           <Row className="mb-3">
             <Col md={3}>
               <span className="text-muted d-block">Detected</span>
-              { getBadge(app.hasIncident)}
+              <AppStatusBadge app={app} />
             </Col>
             <Col md={3}>
               <span className="text-muted">Services</span>
