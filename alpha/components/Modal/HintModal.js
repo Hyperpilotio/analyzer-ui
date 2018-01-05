@@ -2,15 +2,14 @@
 * This modal only shows hint
 */
 import React from "react";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 
-const HintModal = ({ title, message, toggle }) => (
+const HintModal = ({ title, message, messages, toggle }) => (
   <div>
     <ModalHeader>{title}</ModalHeader>
     <ModalBody>
-      <p>{message}</p>
+      { message ? <p>{ message }</p> : messages.map((m, i) => <p key={i}>{ m }</p>) }
     </ModalBody>
     <ModalFooter>
       <Button
@@ -24,16 +23,14 @@ const HintModal = ({ title, message, toggle }) => (
 
 HintModal.propTypes = {
   title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
+  messages: PropTypes.arrayOf(PropTypes.string),
   toggle: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ modal: { props } }) => ({
-  title: props.title,
-  message: props.message,
-  onSubmit: props.onSubmit,
-});
+HintModal.defaultProps = {
+  message: null,
+  messages: [],
+};
 
-export default connect(
-  mapStateToProps,
-)(HintModal);
+export default HintModal;

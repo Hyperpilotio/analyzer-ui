@@ -10,15 +10,16 @@ import HintModal from "./Modal/HintModal";
 const CommonModal = ({
   isOpen,
   modalType,
+  props,
   toggle,
 }) => {
   let modalElement = null;
   switch (modalType) {
   case modalTypes.ACTION_MODAL:
-    modalElement = <ActionModal toggle={toggle} />;
+    modalElement = <ActionModal {...props} toggle={toggle} />;
     break;
   case modalTypes.HINT_MODAL:
-    modalElement = <HintModal toggle={toggle} />;
+    modalElement = <HintModal {...props} toggle={toggle} />;
     break;
   default:
     modalElement = <div />;
@@ -33,13 +34,11 @@ const CommonModal = ({
 CommonModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   modalType: PropTypes.string.isRequired,
+  props: PropTypes.object,
   toggle: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ modal }) => ({
-  isOpen: modal.isOpen,
-  modalType: modal.modalType,
-});
+const mapStateToProps = ({ modal }) => modal;
 
 const mapDispatchToProps = dispatch => ({
   toggle: () => dispatch(toggleModal()),
