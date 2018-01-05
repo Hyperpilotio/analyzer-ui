@@ -3,7 +3,7 @@ import * as modalTypes from "../constants/modalTypes";
 
 const initialState = {
   isOpen: false,
-  modalType: modalTypes.HINT_MODAL,
+  modalType: "",
   props: {},
 };
 
