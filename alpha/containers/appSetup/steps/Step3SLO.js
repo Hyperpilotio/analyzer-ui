@@ -215,6 +215,7 @@ class Step3SLO extends React.Component {
                       : (
                         <Control.select className="form-control" model=".threshold.unit">
                           <option value="ms">ms</option>
+                          <option value="seconds">seconds</option>
                         </Control.select>
                       )
                     }
