@@ -45,25 +45,34 @@ class Step3SLO extends React.Component {
       setRightSideEditability,
       openModal,
       restoreSloSourceConfig,
+      savedApp,
       appId,
     } = this.props;
 
     const res = await submitSloSource(sloSource);
     if (!_.isUndefined(res.payload.response && !res.payload.response.success)) {
-      // disable right side when fetching metrics fail
-      setRightSideEditability(false);
-      openModal(
-        modalTypes.ACTION_MODAL,
-        {
-          title: "Fetch metrics error",
-          message: res.payload.response.message,
-          question: "Do you want to use your original configuration?",
-          cancelWord: "Try another metrics source",
-          onSubmit: () => {
-            setRightSideEditability(true);
-            restoreSloSourceConfig(savedApp.slo.source);
+      if (!_.isEmpty(_.get(savedApp, "slo"))) {
+        // disable right side when fetching metrics fail
+        setRightSideEditability(false);
+        openModal(
+          modalTypes.ACTION_MODAL,
+          {
+            title: "Failed to fetch metrics",
+            message: res.payload.response.message,
+            question: "Do you want to use your original configuration?",
+            cancelWord: "Try another metrics source",
+            onSubmit: () => {
+              setRightSideEditability(true);
+              restoreSloSourceConfig(savedApp.slo.source);
+            },
           },
+        );
+      } else {
+        openModal(modalTypes.HINT_MODAL, {
+          title: "Failed to fetch metrics",
+          messages: [res.payload.response.message, "Please try another metric source"],
         });
+      }
     } else if (res.payload.success) {
       setRightSideEditability(true);
     }
