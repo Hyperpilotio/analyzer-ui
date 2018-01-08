@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { actions as formActions } from "react-redux-form";
 import ReactRouterPropTypes from "react-router-prop-types";
+import ReactTimeout from "react-timeout";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import AppDiagnosis from "./AppDiagnosis";
@@ -15,17 +16,54 @@ import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
 import _s from "./style.scss";
 
-class DashboardPage extends React.Component {
+
+const mapStateToProps = ({
+  ui: { isFetchAppsLoading, isFetchDiagnosticsLoading },
+  applications,
+  diagnosis: { incidents, problems, results },
+}) => ({
+  applications,
+  incidents,
+  problems,
+  results,
+  isFetchAppsLoading,
+  isFetchDiagnosticsLoading,
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchApps: () => dispatch(fetchApps()),
+  removeAppInModal: appId => dispatch(removeApp(appId)),
+  resetAppForm: () => {
+    ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(
+      form => dispatch(formActions.reset(`createAppForm.${form}`)),
+    );
+  },
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+@ReactTimeout
+@withModal
+export default class DashboardPage extends React.Component {
   static propTypes = {
     // match: ReactRouterPropTypes.match.isRequired,
     fetchApps: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     removeAppInModal: PropTypes.func.isRequired,
     resetAppForm: PropTypes.func.isRequired,
+    refreshInterval: PropTypes.number,
+  }
+
+  static defaultProps = {
+    refreshInterval: 30 * 1000,
   }
 
   componentWillMount() {
+    this.refetchApps();
+  }
+
+  async refetchApps() {
     this.props.fetchApps();
+    this.props.setTimeout(::this.refetchApps, this.props.refreshInterval)
   }
 
   openRemoveModal = (appId) => {
@@ -83,31 +121,3 @@ class DashboardPage extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({
-  ui: { isFetchAppsLoading, isFetchDiagnosticsLoading },
-  applications,
-  diagnosis: { incidents, problems, results },
-}) => ({
-  applications,
-  incidents,
-  problems,
-  results,
-  isFetchAppsLoading,
-  isFetchDiagnosticsLoading,
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchApps: () => dispatch(fetchApps()),
-  removeAppInModal: appId => dispatch(removeApp(appId)),
-  resetAppForm: () => {
-    ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(
-      form => dispatch(formActions.reset(`createAppForm.${form}`)),
-    );
-  },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withModal(DashboardPage));

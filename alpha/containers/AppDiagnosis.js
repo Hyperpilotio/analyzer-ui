@@ -27,7 +27,7 @@ import { fetchDiagnostics } from "../actions";
 
 
 const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
-  const isAppLoading = _.isEmpty(applications) || ui.isFetchAppsLoading;
+  const isAppLoading = _.isEmpty(applications);
   if (isAppLoading) {
     return { isAppLoading, isDiagnosticsLoading: true };
   }
@@ -75,16 +75,7 @@ export default class AppDiagnosis extends React.Component {
   }
 
   componentWillMount() {
-    const {
-      fetchDiagnostics,
-      incident,
-    } = this.props;
-
-    fetchDiagnostics();
-  }
-
-  componentDidMount() {
-    this.props.setTimeout(::this.refetchDiagnostics, this.props.refreshInterval);
+    this.refetchDiagnostics();
   }
 
   async refetchDiagnostics() {
