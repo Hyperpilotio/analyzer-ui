@@ -98,7 +98,6 @@ const DashboardAppsTable = ({
 DashboardAppsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   incidents: PropTypes.array.isRequired,
-  removeApp: PropTypes.func.isRequired,
 };
 
 export default (DashboardAppsTable);

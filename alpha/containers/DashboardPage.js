@@ -65,7 +65,7 @@ class DashboardPage extends React.Component {
                 <DashboardAppsTable
                   isLoading={isFetchAppsLoading}
                   openRemoveModal={appId => this.openRemoveModal(appId)}
-                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
+                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities"])}
                 />
                 { _.reject(this.props.applications, { state: "Unregistered" }).length <= 0 && !isFetchAppsLoading ?
                   <div className={_s.noData}>

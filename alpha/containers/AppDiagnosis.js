@@ -45,7 +45,14 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
     ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
   );
 
-  return { app, incident: mostRecentIncident, result, problems };
+  return {
+    app,
+    incident: mostRecentIncident,
+    result,
+    problems,
+    isAppLoading: false,
+    isDiagnosticsLoading: false,
+  };
 };
 
 const mapDispatchToProps = (dispatch, { match }) => ({
