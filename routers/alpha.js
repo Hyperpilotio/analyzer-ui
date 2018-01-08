@@ -191,6 +191,7 @@ router.post("/api/get-metrics", async (req, res) => {
   const kindTypeMap = {
     deployments: "deployment",
     statefulsets: "statefulset",
+    services: "service",
   };
   const response = await makeRequest("get", "operator", "/cluster/appmetrics", {
     body: {
