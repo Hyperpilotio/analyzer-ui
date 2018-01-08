@@ -5,7 +5,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 
-const HintModal = ({ title, message, messages, toggle }) => (
+const HintModal = ({ title, message, messages, onClose, toggle }) => (
   <div>
     <ModalHeader>{title}</ModalHeader>
     <ModalBody>
@@ -14,7 +14,7 @@ const HintModal = ({ title, message, messages, toggle }) => (
     <ModalFooter>
       <Button
         color="primary"
-        onClick={toggle}
+        onClick={() => [onClose, toggle].forEach(f => f())}
       >
         OK</Button>
     </ModalFooter>
@@ -25,12 +25,14 @@ HintModal.propTypes = {
   title: PropTypes.string.isRequired,
   message: PropTypes.string,
   messages: PropTypes.arrayOf(PropTypes.string),
+  onClose: PropTypes.func,
   toggle: PropTypes.func.isRequired,
 };
 
 HintModal.defaultProps = {
   message: null,
   messages: [],
+  onClose: () => {},
 };
 
 export default HintModal;

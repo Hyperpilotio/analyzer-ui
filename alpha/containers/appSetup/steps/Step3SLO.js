@@ -71,6 +71,7 @@ class Step3SLO extends React.Component {
         openModal(modalTypes.HINT_MODAL, {
           title: "Failed to fetch metrics",
           messages: [res.payload.response.message, "Please try another metric source"],
+          onClose: () => setRightSideEditability(false),
         });
       }
     } else if (res.payload.success) {
