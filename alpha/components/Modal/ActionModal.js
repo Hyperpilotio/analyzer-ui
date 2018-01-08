@@ -3,7 +3,6 @@
 */
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 
 const ActionModal = ({ title, message, question, cancelWord, submitWord, toggle, onSubmit }) => (
@@ -47,15 +46,4 @@ ActionModal.defaultProps = {
   submitWord: "Yes",
 };
 
-const mapStateToProps = ({ modal: { props } }) => ({
-  title: props.title,
-  message: props.message,
-  question: props.question,
-  cancelWord: props.cancelWord,
-  submitWord: props.submitWord,
-  onSubmit: props.onSubmit,
-});
-
-export default connect(
-  mapStateToProps,
-)(ActionModal);
+export default ActionModal;

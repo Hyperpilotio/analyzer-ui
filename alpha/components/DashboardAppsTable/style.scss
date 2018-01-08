@@ -1,4 +1,4 @@
-@import "../../scss/_custom.scss";
+@import "commons/styles/variables";
 
 .DashboardAppsTable {
   .Badge {
@@ -12,7 +12,7 @@
 
 .iconGrp {
 
-  color: map-get($theme-colors,primary);
+  color: $color-primary;
 
   &:hover {
     transform: scale(1.4);

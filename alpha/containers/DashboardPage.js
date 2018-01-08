@@ -9,7 +9,7 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
 import AppDiagnosis from "./AppDiagnosis";
-import { fetchApps, fetchIncidents, fetchDiagnostics, removeApp } from "../actions";
+import { fetchApps, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
@@ -18,25 +18,14 @@ import _s from "./style.scss";
 class DashboardPage extends React.Component {
   static propTypes = {
     // match: ReactRouterPropTypes.match.isRequired,
-    // isFetchAppsLoading: PropTypes.bool.isRequired,
-    // isFetchDiagnosticsLoading: PropTypes.bool.isRequired,
     fetchApps: PropTypes.func.isRequired,
-    fetchIncidents: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     removeAppInModal: PropTypes.func.isRequired,
     resetAppForm: PropTypes.func.isRequired,
-    // fetchDiagnostics: PropTypes.func.isRequired,
-    // removeApp: PropTypes.func.isRequired,
-    // apps: PropTypes.arrayOf(appPropType).isRequired,
-    // incidents: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
-    // risks: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
-    // opportunities: PropTypes.objectOf(PropTypes.arrayOf(eventPropType)).isRequired,
   }
 
   componentWillMount() {
     this.props.fetchApps();
-    // this.props.fetchIncidents();
-    // this.props.fetchDiagnostics();
   }
 
   openRemoveModal = (appId) => {
@@ -110,8 +99,6 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
-  fetchIncidents: () => dispatch(fetchIncidents()),
-  fetchDiagnostics: () => dispatch(fetchDiagnostics()),
   removeAppInModal: appId => dispatch(removeApp(appId)),
   resetAppForm: () => {
     ["basicInfo", "microservices", "sloSource", "slo", "management_features"].forEach(

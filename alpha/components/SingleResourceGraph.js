@@ -27,11 +27,14 @@ const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
       />
       {metric.threshold.value > _.max(_.map(data.values, 1)) ? null : (
         <ThresholdLine
+          area
           style={{
             line: { stroke: "#ff8686", strokeDasharray: "5,5", strokeWidth: "2px" },
             label: { fill: "#ff8686", fontSize: "16px" },
+            area: { fill: "#ff8686", fillOpacity: 0.1 },
           }}
           threshold={metric.threshold.value}
+          type={metric.threshold.type}
           label={metric.threshold.type === "LB" ? "Lower\nBound" : "Upper\nBound"}
         />
       )}

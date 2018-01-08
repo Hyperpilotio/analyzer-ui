@@ -34,6 +34,9 @@ const asyncMiddleware = fn => async (req, res, next) => {
         message = e.response.body.error;
       }
     }
+    if (!e.alreadyLogged) {
+      logger.error(e);
+    }
     res.status(500).json({
       success: false,
       message,
@@ -70,6 +73,7 @@ const makeRequest = async (method, service, path, params) => {
       message = message.concat(`\nRequest body: ${JSON.stringify(params.body)}`);
     }
     logger.error(message);
+    e.alreadyLogged = true;
     throw e;
   }
 };
@@ -89,9 +93,9 @@ router.get("/api/apps", async (req, res) => {
   const incidentResponses = await Promise.all(promises);
 
   const responseWithIncident = _.merge(
-    activeAppsResponse.data, _.flatMap(
-      incidentResponses, item => ({ hasIncident: !_.isNull(item.data.incident_id) }),
-    ),
+    activeAppsResponse.data, _.flatMap(incidentResponses, item => ({
+      hasIncident: !_.isNull(item.data.incident_id) && item.data.state !== "Resolved",
+    })),
   );
 
   const registeredAppsResponse = await makeRequest("get", "analyzer", "/api/v1/apps?state=Registered");

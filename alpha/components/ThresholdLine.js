@@ -1,12 +1,27 @@
 import React from "react";
-import { Line, VictoryLabel } from "victory-core";
+import _ from "lodash";
+import { Line, Area, VictoryLabel } from "victory-core";
 
-const ThresholdLine = ({ range, scale, threshold, label, marginLeft, style }) => {
+const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft, style }) => {
   const yPos = scale.y(threshold);
   const [x1, x2] = range.x;
   return (
     <g>
       <Line x1={x1} x2={x2} y1={yPos} y2={yPos} style={style.line} />
+      { area ?
+        <Area
+          interpolation="linear"
+          scale={scale}
+          data={
+            [0, 1].map(i => ({
+              _x: scale.x.domain()[i],
+              _y: threshold,
+              _y0: scale.y.domain()[_.toInteger(type === "UB")],
+            }))
+          }
+          style={{ stroke: "none", ...style.area }}
+        /> : null
+      }
       <VictoryLabel style={style.label} text={label} x={x2 + marginLeft} y={yPos} />
     </g>
   );
@@ -15,6 +30,8 @@ const ThresholdLine = ({ range, scale, threshold, label, marginLeft, style }) =>
 ThresholdLine.defaultProps = {
   label: "",
   marginLeft: 10,
+  area: false,
+  type: "UB",
 };
 
 export default ThresholdLine;
