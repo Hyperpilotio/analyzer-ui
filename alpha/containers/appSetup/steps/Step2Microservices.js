@@ -90,9 +90,8 @@ class Step2Microservices extends React.Component {
     const excludeSelected = _.reduce(
       _.map(this.props.microservices, ms => _.omit(ms, "service_id")),
       _.reject,
-      this.props.k8sMicroservices,
+      this.props.k8sMicroservices, // initialValue
     );
-
     const filter = {};
     if (this.state.namespaceFilter !== "all") {
       filter.namespace = this.state.namespaceFilter;
