@@ -13,11 +13,22 @@ import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } 
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
+const tagsList = [
+  { keyIndex: 1, key: "method", value: "assign_to_route" },
+  { keyIndex: 2, key: "quantile", value: "0.75" },
+  { keyIndex: 3, key: "method", value: "list_locations" },
+  { keyIndex: 4, key: "method", value: "book" },
+  { keyIndex: 5, key: "method", value: "list_cargos" },
+  { keyIndex: 6, key: "quantile", value: "0.1" },
+  { keyIndex: 7, key: "quantile", value: "0.9" },
+  { keyIndex: 8, key: "quantile", value: "0.99" },
+];
+
 class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
-    sloFormDisabled: PropTypes.bool.isRequired,
+    // sloFormDisabled: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
@@ -151,6 +162,8 @@ class Step3SLO extends React.Component {
           <h3 className="mb-4">SLO Configuration</h3>
           <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource, appId)}>
             <fieldset disabled={sloFormDisabled}>
+
+              {/* -------- Metric -------- */}
               <FormGroup className="row">
                 <label htmlFor="slo-metric" className="col-3">Metric</label>
                 <Control.select id="slo-metric" className="form-control col" model=".metric.name">
@@ -166,6 +179,8 @@ class Step3SLO extends React.Component {
                   }
                 </Control.select>
               </FormGroup>
+
+              {/* -------- Type -------- */}
               <FormGroup className="row">
                 <label htmlFor="slo-type" className="col-3">Type</label>
                 <Control.select
@@ -179,6 +194,7 @@ class Step3SLO extends React.Component {
                   <option value="execute_time">Execute-Time</option>
                 </Control.select>
               </FormGroup>
+              {/* -------- Tags -------- */}
               <FormGroup className="row">
                 <label htmlFor="slo-summary" className="col-3">Tags</label>
               </FormGroup>
@@ -193,8 +209,49 @@ class Step3SLO extends React.Component {
                 <tbody>
                   {_.map(slo.metric.tags, (tag, i) => (
                     <tr key={i}>
-                      <td><Control.text className="form-control" placeholder="Key" model={`.metric.tags.[${i}].key`} /></td>
-                      <td><Control.text className="form-control" placeholder="Value" model={`.metric.tags.[${i}].value`} /></td>
+                      <td>
+                        <Control.select
+                          className="form-control"
+                          placeholder="Key"
+                          model={`.metric.tags.[${i}].key`}
+                        >
+                          <option value={null} disabled>Tag key</option>
+                          {
+                            !_.isEmpty(tagsList)
+                              ? _.map(_.uniqBy(tagsList,"key"), tg => <option key={tg.keyIndex} value={tg.key}>{tg.key}</option>)
+                              : (
+                                _.get(slo, "metric.tags[0].key")
+                                  ? <option value={slo.tags[0].key}>{slo.tags[0].key}</option>
+                                  : null
+                              )
+                          }
+                        </Control.select>
+                      </td>
+                      <td>
+                        <Control.select
+                          className="form-control"
+                          placeholder="Value"
+                          model={`.metric.tags.[${i}].value`}
+                          disabled={slo.metric.tags[i].key === ""}
+                        >
+                          <option value={null} disabled>Tag value</option>
+                          {
+                            !_.isEmpty(tagsList)
+                            ? _.map(
+                                _.filter(
+                                  tagsList,
+                                  _.matches({ key: slo.metric.tags[i].key})
+                                ),
+                                tg => <option value={tg.value}>{tg.value}</option>
+                              )
+                            : (
+                              _.get(slo, "metric.tags[0].value")
+                                ? <option value={slo.metric.tags[0].value}>{slo.metric.tags[0].value}</option>
+                                : null
+                            )
+                          }
+                        </Control.select>
+                      </td>
                       <td>
                         <FaClose onClick={() => sloFormDisabled ? null : deleteTag(i)} />
                       </td>
@@ -202,14 +259,14 @@ class Step3SLO extends React.Component {
                   ))}
                   <tr>
                     <td colSpan={2}>
-                      <Button outline color="primary" size="sm" onClick={addTagsInput}>
+                      <Button outline color="primary" size="sm" onClick={() => addTagsInput(slo)}>
                         <FaPlus /> Add Tags
                       </Button>
                     </td>
                   </tr>
                 </tbody>
               </Table>
-
+              {/* -------- Unit -------- */}
               <Row>
                 <Col>
                   <FormGroup>
@@ -264,10 +321,17 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
     "createAppForm.slo.threshold.type",
     _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
   )),
-  addTagsInput: () => dispatch(formActions.push(
-    "createAppForm.slo.metric.tags",
-    { key: "", value: "" },
-  )),
+  addTagsInput: (slo) => {
+    dispatch(formActions.change(
+      "createAppForm.slo.metric.tags",
+      _.uniqBy(slo.metric.tags, "value"),
+    ));
+
+    dispatch(formActions.push(
+      "createAppForm.slo.metric.tags",
+      { key: "", value: "" },
+    ));
+  },
   deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
   updateSlo: (slo, sloSource, appId) => {
     dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
