@@ -11,6 +11,7 @@ import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
+import AsyncButton from "../../../components/Button/AsyncButton";
 
 const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
@@ -74,7 +75,9 @@ class Step2Microservices extends React.Component {
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
     stepNext: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool.isRequired,
+    isUpdateMicroservicesLoading: PropTypes.bool.isRequired,
+    isFetchAvailableServicesLoading: PropTypes.bool.isRequired,
+    isUpdateAppLoading: PropTypes.bool.isRequired,
   }
 
   state = {
@@ -118,8 +121,9 @@ class Step2Microservices extends React.Component {
     const {
       appId,
       updateMicroservices,
-      isLoading,
+      isUpdateMicroservicesLoading,
       isFetchAvailableServicesLoading,
+      isUpdateAppLoading,
     } = this.props;
 
     return (
@@ -195,22 +199,24 @@ class Step2Microservices extends React.Component {
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
-          <Button type="submit" color="primary">
-            { isLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
-            Next
-          </Button>
+          <AsyncButton
+            isLoading={isUpdateMicroservicesLoading || isUpdateAppLoading}
+            color="primary"
+            text="Next"
+          />
         </div>
       </Form>
     );
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { isFetchAvailableServicesLoading, isUpdateMicroservicesLoading, isUpdateAppLoading } }) => ({
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  isFetchAvailableServicesLoading: ui.isFetchAvailableServicesLoading,
-  isLoading: ui.isUpdateMicroservicesLoading,
+  isFetchAvailableServicesLoading,
+  isUpdateMicroservicesLoading,
+  isUpdateAppLoading,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

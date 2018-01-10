@@ -10,6 +10,7 @@ import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
 import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } from "../../../actions";
+import AsyncButton from "../../../components/Button/AsyncButton";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
@@ -29,7 +30,8 @@ class Step3SLO extends React.Component {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
     // sloFormDisabled: PropTypes.bool.isRequired,
-    isLoading: PropTypes.bool.isRequired,
+    isFetchMetricsLoading: PropTypes.bool.isRequired,
+    isUpdateAppLoading: PropTypes.bool.isRequired,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
     tags: PropTypes.array,
@@ -105,7 +107,8 @@ class Step3SLO extends React.Component {
       slo,
       addTagsInput,
       deleteTag,
-      isLoading,
+      isFetchMetricsLoading,
+      isUpdateAppLoading,
     } = this.props;
 
     return (
@@ -151,7 +154,7 @@ class Step3SLO extends React.Component {
               </Col>
               <Col>
                 <Button type="submit" color="primary" className="float-right" >
-                  { isLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
+                  { isFetchMetricsLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
                   Confirm Source
                 </Button>
               </Col>
@@ -291,7 +294,12 @@ class Step3SLO extends React.Component {
               </Row>
             </fieldset>
             <div className="float-right">
-              <Button type="submit" color="primary" disabled={sloFormDisabled}>Next</Button>
+              <AsyncButton
+                isDisabled={sloFormDisabled}
+                isLoading={isUpdateAppLoading}
+                color="primary"
+                text="Next"
+              />
             </div>
           </Form>
         </Col>
@@ -300,12 +308,17 @@ class Step3SLO extends React.Component {
   }
 }
 
+<<<<<<< HEAD
 const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
   savedApp: _.find(applications, { app_id: basicInfo.app_id }),
+=======
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui: { isFetchMetricsLoading, isUpdateAppLoading }, applications }) => ({
+>>>>>>> add async button component
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),
-  isLoading: ui.isFetchMetricsLoading,
+  isFetchMetricsLoading,
+  isUpdateAppLoading,
   sloSource,
   microservices,
   slo,

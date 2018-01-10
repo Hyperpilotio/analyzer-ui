@@ -8,6 +8,7 @@ import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateApp, activateApp } from "../../../actions";
+import AsyncButton from "../../../components/Button/AsyncButton";
 
 const texts = {
   interference_management: "Interference Management",
@@ -23,7 +24,9 @@ const Step4ManagementFeatures = ({
   appId,
   management_features,
   stepBack,
-  updateManagementFeatures
+  updateManagementFeatures,
+  isUpdateAppLoading,
+  isActivateAppLoading,
 }) => (
   <Form
     model="createAppForm.management_features"
@@ -84,7 +87,11 @@ const Step4ManagementFeatures = ({
     }
     <div className="float-right">
       <Button color="secondary" className="mr-2" onClick={stepBack}>Back</Button>
-      <Button color="success" type="submit">Begin Hyperpiloting</Button>
+      <AsyncButton
+        isLoading={isUpdateAppLoading || isActivateAppLoading}
+        color="success"
+        text="Begin Hyperpiloting"
+      />
     </div>
   </Form>
 );
@@ -93,11 +100,15 @@ Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManagementFeatures: PropTypes.func.isRequired,
+  isUpdateAppLoading: PropTypes.bool.isRequired,
+  isActivateAppLoading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ createAppForm: { basicInfo, management_features } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui: { isUpdateAppLoading, isActivateAppLoading } }) => ({
   appId: basicInfo.app_id,
   management_features,
+  isUpdateAppLoading,
+  isActivateAppLoading,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
