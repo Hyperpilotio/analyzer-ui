@@ -43,9 +43,9 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 @ReactTimeout
 @withModal
-export default class DashboardPage extends React.Component {
+export default class GrandDashboard extends React.Component {
   static propTypes = {
-    // match: ReactRouterPropTypes.match.isRequired,
+    match: ReactRouterPropTypes.match.isRequired,
     fetchApps: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     removeAppInModal: PropTypes.func.isRequired,
