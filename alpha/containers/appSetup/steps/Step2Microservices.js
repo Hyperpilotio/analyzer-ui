@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   Card, CardBody, CardTitle,
-  Table, FormGroup, Input, Button,
+  Table, FormGroup, Input,
 } from "reactstrap";
 import _ from "lodash";
 import { connect } from "react-redux";
@@ -11,7 +11,7 @@ import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
-import AsyncButton from "../../../components/Button/AsyncButton";
+import Button from "../../../components/Button";
 
 const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
@@ -199,11 +199,10 @@ class Step2Microservices extends React.Component {
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
-          <AsyncButton
+          <Button
             isLoading={isUpdateMicroservicesLoading || isUpdateAppLoading}
             color="primary"
-            text="Next"
-          />
+          >Next</Button>
         </div>
       </Form>
     );

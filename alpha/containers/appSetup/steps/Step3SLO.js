@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Control, actions as formActions } from "react-redux-form";
-import { Row, Col, FormGroup, Button, Table } from "reactstrap";
+import { Row, Col, FormGroup, Table } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
 import { getKindDisplay } from "../../../lib/utils";
 import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } from "../../../actions";
-import AsyncButton from "../../../components/Button/AsyncButton";
+import Button from "../../../components/Button";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
@@ -294,12 +294,11 @@ class Step3SLO extends React.Component {
               </Row>
             </fieldset>
             <div className="float-right">
-              <AsyncButton
+              <Button
                 isDisabled={sloFormDisabled}
                 isLoading={isUpdateAppLoading}
                 color="primary"
-                text="Next"
-              />
+              >Next</Button>
             </div>
           </Form>
         </Col>
@@ -308,12 +307,8 @@ class Step3SLO extends React.Component {
   }
 }
 
-<<<<<<< HEAD
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
-  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
-=======
 const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui: { isFetchMetricsLoading, isUpdateAppLoading }, applications }) => ({
->>>>>>> add async button component
+  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions),

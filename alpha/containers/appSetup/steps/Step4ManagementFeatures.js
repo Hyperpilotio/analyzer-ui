@@ -1,14 +1,14 @@
 import React from "react";
 import { Form, Control } from "react-redux-form";
 import {
-  Row, Col, Button, Table, Collapse,
+  Row, Col, Table, Collapse,
   Card, CardTitle, CardBody,
 } from "reactstrap";
 import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateApp, activateApp } from "../../../actions";
-import AsyncButton from "../../../components/Button/AsyncButton";
+import Button from "../../../components/Button";
 
 const texts = {
   interference_management: "Interference Management",
@@ -87,11 +87,12 @@ const Step4ManagementFeatures = ({
     }
     <div className="float-right">
       <Button color="secondary" className="mr-2" onClick={stepBack}>Back</Button>
-      <AsyncButton
+      <Button
         isLoading={isUpdateAppLoading || isActivateAppLoading}
         color="success"
-        text="Begin Hyperpiloting"
-      />
+      >
+      Begin Hyperpiloting
+      </Button>
     </div>
   </Form>
 );

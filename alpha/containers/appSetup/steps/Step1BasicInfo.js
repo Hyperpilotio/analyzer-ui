@@ -5,7 +5,8 @@ import { Row } from "reactstrap";
 import { connect } from "react-redux";
 import _s from "../style.scss";
 import { updateApp, createApp } from "../../../actions";
-import AsyncButton from "../../../components/Button/AsyncButton";
+import HPButton from "../../../components/Button";
+// import HPButton from "~/commons/components/Button/Button";
 
 const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpdateAppLoading }) => (
   <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
@@ -43,11 +44,10 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpd
       <Control.reset model="createAppForm.basicInfo" className="btn btn-secondary mr-2">
         Reset
       </Control.reset>
-      <AsyncButton
+      <HPButton
         isLoading={isCreateAppLoading || isUpdateAppLoading}
-        text="Next"
         color="primary"
-      />
+      >Next</HPButton>
     </div>
   </Form>
 );
