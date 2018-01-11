@@ -86,7 +86,11 @@ const Step4ManagementFeatures = ({
     ))
     }
     <div className="float-right">
-      <Button color="secondary" className="mr-2" onClick={stepBack}>Back</Button>
+      <Button
+        color="secondary"
+        className="mr-2"
+        onClick={stepBack}
+      >Back</Button>
       <Button
         isLoading={isUpdateAppLoading || isActivateAppLoading}
         color="success"

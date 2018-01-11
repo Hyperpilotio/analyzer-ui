@@ -14,17 +14,6 @@ import Button from "../../../components/Button";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
-const tagsList = [
-  { keyIndex: 1, key: "method", value: "assign_to_route" },
-  { keyIndex: 2, key: "quantile", value: "0.75" },
-  { keyIndex: 3, key: "method", value: "list_locations" },
-  { keyIndex: 4, key: "method", value: "book" },
-  { keyIndex: 5, key: "method", value: "list_cargos" },
-  { keyIndex: 6, key: "quantile", value: "0.1" },
-  { keyIndex: 7, key: "quantile", value: "0.9" },
-  { keyIndex: 8, key: "quantile", value: "0.99" },
-];
-
 class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
@@ -42,6 +31,10 @@ class Step3SLO extends React.Component {
     setRightSideEditability: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
   };
+
+  state={
+    isTagsEmpty: true,
+  }
 
   componentWillMount() {
     // Hide SLO configuration when it's creating a new app and never saved SLO
@@ -91,6 +84,13 @@ class Step3SLO extends React.Component {
       setRightSideEditability(true);
     }
   }
+
+  changeMetricName = (e) => {
+    this.setState({
+      isTagsEmpty: _.find(this.props.metricOptions, { name: e.target.value }).tags.length <= 0,
+    });
+  }
+
 
   render() {
     const {
@@ -169,11 +169,16 @@ class Step3SLO extends React.Component {
               {/* -------- Metric -------- */}
               <FormGroup className="row">
                 <label htmlFor="slo-metric" className="col-3">Metric</label>
-                <Control.select id="slo-metric" className="form-control col" model=".metric.name">
+                <Control.select
+                  id="slo-metric"
+                  className="form-control col"
+                  model=".metric.name"
+                  onChange={e => this.changeMetricName(e)}
+                >
                   <option value={null} disabled>Select Metric</option>
                   {
                     !_.isEmpty(metricOptions)
-                      ? _.map(metricOptions, mt => <option key={mt} value={mt}>{mt}</option>)
+                      ? _.map(metricOptions, mt => <option key={mt.name} value={mt.name}>{mt.name}</option>)
                       : (
                         _.get(slo, "metric.name")
                           ? <option value={slo.metric.name}>{slo.metric.name}</option>
@@ -217,11 +222,15 @@ class Step3SLO extends React.Component {
                           className="form-control"
                           placeholder="Key"
                           model={`.metric.tags.[${i}].key`}
+                          disabled={_.find(metricOptions, { name: slo.metric.name }).tags.length <= 0}
                         >
                           <option value={null} disabled>Tag key</option>
                           {
-                            !_.isEmpty(tagsList)
-                              ? _.map(_.uniqBy(tagsList,"key"), tg => <option key={tg.keyIndex} value={tg.key}>{tg.key}</option>)
+                            !_.isEmpty(metricOptions)
+                              ?  _.map(
+                                  _.find(metricOptions,{name: slo.metric.name }).tags,
+                                  tg => <option key={tg.name} value={tg.name}>{tg.name}</option>
+                                )
                               : (
                                 _.get(slo, "metric.tags[0].key")
                                   ? <option value={slo.tags[0].key}>{slo.tags[0].key}</option>
@@ -240,12 +249,9 @@ class Step3SLO extends React.Component {
                           <option value={null} disabled>Tag value</option>
                           {
                             !_.isEmpty(tagsList)
-                            ? _.map(
-                                _.filter(
-                                  tagsList,
-                                  _.matches({ key: slo.metric.tags[i].key})
-                                ),
-                                tg => <option value={tg.value}>{tg.value}</option>
+                            ?  _.map(
+                                _.find(metricOptions,{name: slo.metric.name }).tags,
+                                tg => <option key={tg} value={tg}>{tg}</option>
                               )
                             : (
                               _.get(slo, "metric.tags[0].value")
@@ -262,7 +268,13 @@ class Step3SLO extends React.Component {
                   ))}
                   <tr>
                     <td colSpan={2}>
-                      <Button outline color="primary" size="sm" onClick={() => addTagsInput(slo)}>
+                      <Button
+                        outline
+                        color="primary"
+                        size="sm"
+                        onClick={addTagsInput}
+                        isDisabled={this.state.isTagsEmpty}
+                      >
                         <FaPlus /> Add Tags
                       </Button>
                     </td>
@@ -329,12 +341,7 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
     "createAppForm.slo.threshold.type",
     _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
   )),
-  addTagsInput: (slo) => {
-    dispatch(formActions.change(
-      "createAppForm.slo.metric.tags",
-      _.uniqBy(slo.metric.tags, "value"),
-    ));
-
+  addTagsInput: () => {
     dispatch(formActions.push(
       "createAppForm.slo.metric.tags",
       { key: "", value: "" },

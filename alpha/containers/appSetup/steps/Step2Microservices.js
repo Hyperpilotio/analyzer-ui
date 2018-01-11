@@ -7,7 +7,6 @@ import {
 import _ from "lodash";
 import { connect } from "react-redux";
 import Spinner from "react-spinkit";
-import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";

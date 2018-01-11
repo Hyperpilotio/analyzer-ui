@@ -1,12 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Form, Control, Errors } from "react-redux-form";
-import { Row } from "reactstrap";
 import { connect } from "react-redux";
 import _s from "../style.scss";
 import { updateApp, createApp } from "../../../actions";
-import HPButton from "../../../components/Button";
-// import HPButton from "~/commons/components/Button/Button";
+import Button from "../../../components/Button";
 
 const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpdateAppLoading }) => (
   <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
@@ -44,10 +42,10 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpd
       <Control.reset model="createAppForm.basicInfo" className="btn btn-secondary mr-2">
         Reset
       </Control.reset>
-      <HPButton
+      <Button
         isLoading={isCreateAppLoading || isUpdateAppLoading}
         color="primary"
-      >Next</HPButton>
+      >Next</Button>
     </div>
   </Form>
 );
