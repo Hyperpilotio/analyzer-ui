@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Form, Control, Errors } from "react-redux-form";
-import { Row } from "reactstrap";
 import { connect } from "react-redux";
 import _s from "../style.scss";
 import { updateApp, createApp } from "../../../actions";
+import Button from "../../../components/Button";
 
-const Step1BasicInfo = ({ cancelEdit, submitBasicInfo }) => (
+const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpdateAppLoading }) => (
   <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
     <div className={_s.inputRow}>
       <div className={`form-group row ${_s.formGroup}`}>
@@ -42,7 +42,10 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo }) => (
       <Control.reset model="createAppForm.basicInfo" className="btn btn-secondary mr-2">
         Reset
       </Control.reset>
-      <button className="btn btn-primary" type="submit">Next</button>
+      <Button
+        isLoading={isCreateAppLoading || isUpdateAppLoading}
+        color="primary"
+      >Next</Button>
     </div>
   </Form>
 );
@@ -50,7 +53,14 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo }) => (
 Step1BasicInfo.propTypes = {
   submitBasicInfo: PropTypes.func.isRequired,
   cancelEdit: PropTypes.func.isRequired,
+  isCreateAppLoading: PropTypes.bool.isRequired,
+  isUpdateAppLoading: PropTypes.bool.isRequired,
 };
+
+const mapStateToProps = ({ ui: { isCreateAppLoading, isUpdateAppLoading } }) => ({
+  isCreateAppLoading,
+  isUpdateAppLoading,
+});
 
 const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
   submitBasicInfo: (basicInfo) => {
@@ -63,6 +73,6 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(Step1BasicInfo);

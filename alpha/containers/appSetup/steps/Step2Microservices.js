@@ -2,15 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   Card, CardBody, CardTitle,
-  Table, FormGroup, Input, Button,
+  Table, FormGroup, Input,
 } from "reactstrap";
 import _ from "lodash";
 import { connect } from "react-redux";
 import Spinner from "react-spinkit";
-import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import _s from "../style.scss";
+import Button from "../../../components/Button";
 
 const getDisplayKind = kind => (
   _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
@@ -74,7 +74,9 @@ class Step2Microservices extends React.Component {
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
     stepNext: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool.isRequired,
+    isUpdateMicroservicesLoading: PropTypes.bool.isRequired,
+    isFetchAvailableServicesLoading: PropTypes.bool.isRequired,
+    isUpdateAppLoading: PropTypes.bool.isRequired,
   }
 
   state = {
@@ -90,9 +92,8 @@ class Step2Microservices extends React.Component {
     const excludeSelected = _.reduce(
       _.map(this.props.microservices, ms => _.omit(ms, "service_id")),
       _.reject,
-      this.props.k8sMicroservices,
+      this.props.k8sMicroservices, // initialValue
     );
-
     const filter = {};
     if (this.state.namespaceFilter !== "all") {
       filter.namespace = this.state.namespaceFilter;
@@ -119,8 +120,9 @@ class Step2Microservices extends React.Component {
     const {
       appId,
       updateMicroservices,
-      isLoading,
+      isUpdateMicroservicesLoading,
       isFetchAvailableServicesLoading,
+      isUpdateAppLoading,
     } = this.props;
 
     return (
@@ -196,22 +198,23 @@ class Step2Microservices extends React.Component {
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
-          <Button type="submit" color="primary">
-            { isLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
-            Next
-          </Button>
+          <Button
+            isLoading={isUpdateMicroservicesLoading || isUpdateAppLoading}
+            color="primary"
+          >Next</Button>
         </div>
       </Form>
     );
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { isFetchAvailableServicesLoading, isUpdateMicroservicesLoading, isUpdateAppLoading } }) => ({
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  isFetchAvailableServicesLoading: ui.isFetchAvailableServicesLoading,
-  isLoading: ui.isUpdateMicroservicesLoading,
+  isFetchAvailableServicesLoading,
+  isUpdateMicroservicesLoading,
+  isUpdateAppLoading,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
