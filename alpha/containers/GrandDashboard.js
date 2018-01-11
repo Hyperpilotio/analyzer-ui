@@ -78,11 +78,6 @@ export default class GrandDashboard extends React.Component {
   }
 
   render() {
-    const {
-      applicationss, results, incidents, problems,
-      isFetchDiagnosticsLoading, isFetchAppsLoading,
-      openModal,
-    } = this.props;
     return (
       <div>
         <Switch>
@@ -101,11 +96,11 @@ export default class GrandDashboard extends React.Component {
               </Row>
               <Row>
                 <DashboardAppsTable
-                  isLoading={isFetchAppsLoading}
+                  isLoading={this.props.isFetchAppsLoading}
                   openRemoveModal={appId => this.openRemoveModal(appId)}
                   {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities"])}
                 />
-                { _.reject(this.props.applications, { state: "Unregistered" }).length <= 0 && !isFetchAppsLoading ?
+                { _.reject(this.props.applications, { state: "Unregistered" }).length === 0 && !this.props.isFetchAppsLoading ?
                   <div className={_s.noData}>
                     <span>
                       No applications managed by HyperPilot, click on "Add" button to add them.
