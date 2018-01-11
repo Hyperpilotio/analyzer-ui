@@ -10,7 +10,7 @@ const initialState = _.mapValues(
 );
 
 export default (state = initialState, action) => {
-  const actionName = _.findKey(actionTypes, types => types.includes(action.type));
+  const actionName = _.findKey(RSAATypes, types => types.includes(action.type));
 
   if (_.isUndefined(actionName)) {
     return state;
