@@ -24,6 +24,7 @@ import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
 import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescriptions";
 import { fetchDiagnostics } from "../actions";
+import { withAutoBreadcrumb, AutoBreadcrumbItem } from "./AutoBreadcrumb";
 
 
 const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
@@ -61,6 +62,7 @@ const mapDispatchToProps = (dispatch, { match }) => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @ReactTimeout
+@withAutoBreadcrumb
 export default class AppDiagnosis extends React.Component {
   static propTypes = {
     fetchDiagnostics: PropTypes.func.isRequired,
@@ -94,27 +96,9 @@ export default class AppDiagnosis extends React.Component {
         {isDiagnosticsLoading ? null : (
           <div>
             <Container>
-              <Breadcrumb>
-                <BreadcrumbItem><Link to="/dashboard">Apps</Link></BreadcrumbItem>
-                <Switch>
-                  <Route exact path={match.path}>
-                    <BreadcrumbItem active>{ app.name }</BreadcrumbItem>
-                  </Route>
-                  <Route>
-                    <BreadcrumbItem>
-                      <Link to={`/dashboard/${app.app_id}`}>{ app.name }</Link>
-                    </BreadcrumbItem>
-                  </Route>
-                </Switch>
-                <Route
-                  path={`${match.path}/:problemId`}
-                  render={({ match: { params: { problemId } } }) => (
-                    <BreadcrumbItem active>
-                      Problem #{ _.find(result.top_related_problems, { id: problemId }).rank }
-                    </BreadcrumbItem>
-                  )}
-                />
-              </Breadcrumb>
+              { this.props.breadcrumb }
+              <AutoBreadcrumbItem link="/dashboard" text="Apps" />
+              <AutoBreadcrumbItem link={`/dashboard/${app.app_id}`} text={app.name} />
             </Container>
 
             <Container className="clearfix mb-3">
