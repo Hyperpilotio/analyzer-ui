@@ -229,7 +229,7 @@ class Step3SLO extends React.Component {
                             !_.isEmpty(metricOptions)
                               ?  _.map(
                                   _.find(metricOptions,{name: slo.metric.name }).tags,
-                                  tg => <option key={tg.name} value={tg.name}>{tg.name}</option>
+                                  tg => <option key={tg.key} value={tg.key}>{tg.key}</option>
                                 )
                               : (
                                 _.get(slo, "metric.tags[0].key")
@@ -248,10 +248,16 @@ class Step3SLO extends React.Component {
                         >
                           <option value={null} disabled>Tag value</option>
                           {
-                            !_.isEmpty(tagsList)
+                            !_.isEmpty(metricOptions)
                             ?  _.map(
-                                _.find(metricOptions,{name: slo.metric.name }).tags,
-                                tg => <option key={tg} value={tg}>{tg}</option>
+                                _.get(_.find(
+                                  _.find(
+                                    metricOptions,
+                                    {name: slo.metric.name }
+                                  ).tags,
+                                  {key: slo.metric.tags[i].key}
+                                ), "values"),
+                                val => <option value={val}>{val}</option>
                               )
                             : (
                               _.get(slo, "metric.tags[0].value")
