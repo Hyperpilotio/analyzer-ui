@@ -32,11 +32,11 @@ class Step3SLO extends React.Component {
     openModal: PropTypes.func.isRequired,
   };
 
-  state={
+  state = {
     isTagsEmpty: true,
   }
 
-  componentWillMount() {
+  determineRightSideEditability() {
     // Hide SLO configuration when it's creating a new app and never saved SLO
     if (_.isEmpty(_.get(this.props.savedApp, "slo.metric.name"))) {
       this.props.setRightSideEditability(false);
@@ -44,6 +44,24 @@ class Step3SLO extends React.Component {
       this.props.setRightSideEditability(true);
     }
   }
+
+  shouldDetermineEditability = false
+
+  componentWillMount() {
+    if (_.isNull(this.props.appId)) {
+      this.shouldDetermineEditability = true;
+    } else {
+      this.determineRightSideEditability();
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.shouldDetermineEditability) {
+      this.shouldDetermineEditability = false;
+      this.determineRightSideEditability();
+    }
+  }
+
   // Stage 1 (Left Side)
   async onSubmitConfirmingSource(sloSource) {
     const {
@@ -85,12 +103,19 @@ class Step3SLO extends React.Component {
     }
   }
 
-  changeMetricName = (e) => {
+  onChangeMetricName(e) {
+    const selectedMetric = _.find(this.props.metricOptions, { name: e.target.value }) || {};
+
     this.setState({
-      isTagsEmpty: _.find(this.props.metricOptions, { name: e.target.value }).tags.length <= 0,
+      isTagsEmpty: _.isEmpty(selectedMetric.tags),
+    });
+
+    _.forEach(this.props.slo.metric.tags, ({ key, value }, i) => {
+      if (!_.includes(_.map(selectedMetric.tags, "key"), key)) {
+        this.props.deleteTag(i);
+      }
     });
   }
-
 
   render() {
     const {
@@ -110,6 +135,10 @@ class Step3SLO extends React.Component {
       isFetchMetricsLoading,
       isUpdateAppLoading,
     } = this.props;
+
+    const selectedMetric = _.find(metricOptions, { name: slo.metric.name }) || {};
+    // The below line is a workaround for operator's bug described in https://github.com/Hyperpilotio/hyperpilot-operator/issues/35
+    selectedMetric.tags && (selectedMetric.tags = _.uniqBy(selectedMetric.tags, "key"));
 
     return (
       <Row>
@@ -173,17 +202,12 @@ class Step3SLO extends React.Component {
                   id="slo-metric"
                   className="form-control col"
                   model=".metric.name"
-                  onChange={e => this.changeMetricName(e)}
+                  onChange={::this.onChangeMetricName}
                 >
                   <option value={null} disabled>Select Metric</option>
-                  {
-                    !_.isEmpty(metricOptions)
-                      ? _.map(metricOptions, mt => <option key={mt.name} value={mt.name}>{mt.name}</option>)
-                      : (
-                        _.get(slo, "metric.name")
-                          ? <option value={slo.metric.name}>{slo.metric.name}</option>
-                          : null
-                      )
+                  { !_.isEmpty(metricOptions) ?
+                    _.map(metricOptions, mt => <option key={mt.name} value={mt.name}>{mt.name}</option>) :
+                    _.get(slo, "metric.name") && <option value={slo.metric.name}>{slo.metric.name}</option>
                   }
                 </Control.select>
               </FormGroup>
@@ -222,20 +246,14 @@ class Step3SLO extends React.Component {
                           className="form-control"
                           placeholder="Key"
                           model={`.metric.tags.[${i}].key`}
-                          disabled={_.find(metricOptions, { name: slo.metric.name }).tags.length <= 0}
                         >
                           <option value={null} disabled>Tag key</option>
-                          {
-                            !_.isEmpty(metricOptions)
-                              ?  _.map(
-                                  _.find(metricOptions,{name: slo.metric.name }).tags,
-                                  tg => <option key={tg.key} value={tg.key}>{tg.key}</option>
-                                )
-                              : (
-                                _.get(slo, "metric.tags[0].key")
-                                  ? <option value={slo.tags[0].key}>{slo.tags[0].key}</option>
-                                  : null
-                              )
+                          { !_.isEmpty(metricOptions) ?
+                            _.map(
+                              selectedMetric.tags,
+                              ({ key }) => <option key={key} value={key}>{key}</option>
+                            ) :
+                            <option value={tag.key}>{tag.key}</option>
                           }
                         </Control.select>
                       </td>
@@ -244,26 +262,14 @@ class Step3SLO extends React.Component {
                           className="form-control"
                           placeholder="Value"
                           model={`.metric.tags.[${i}].value`}
-                          disabled={slo.metric.tags[i].key === ""}
                         >
                           <option value={null} disabled>Tag value</option>
-                          {
-                            !_.isEmpty(metricOptions)
-                            ?  _.map(
-                                _.get(_.find(
-                                  _.find(
-                                    metricOptions,
-                                    {name: slo.metric.name }
-                                  ).tags,
-                                  {key: slo.metric.tags[i].key}
-                                ), "values"),
-                                val => <option value={val}>{val}</option>
-                              )
-                            : (
-                              _.get(slo, "metric.tags[0].value")
-                                ? <option value={slo.metric.tags[0].value}>{slo.metric.tags[0].value}</option>
-                                : null
-                            )
+                          { !_.isEmpty(metricOptions) ?
+                            _.map(
+                              _.get(_.find(selectedMetric.tags, {key: tag.key}), "values"),
+                              val => <option key={val} value={val}>{val}</option>
+                            ) :
+                            <option value={tag.value}>{tag.value}</option>
                           }
                         </Control.select>
                       </td>
@@ -329,7 +335,7 @@ const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microserv
   savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
-  metricOptions: _.sortBy(forms.slo.$form.metricOptions),
+  metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
   isFetchMetricsLoading,
   isUpdateAppLoading,
   sloSource,
