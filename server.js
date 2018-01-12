@@ -1,4 +1,5 @@
 import express from "express";
+import _ from "lodash";
 import morgan from "morgan";
 import path from "path";
 import bodyParser from "body-parser";
@@ -11,7 +12,29 @@ server.use(bodyParser.json());
 const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
-server.use(require(`./routers/${ANALYSIS_APP}`).default); // eslint-disable-line import/no-dynamic-require
+
+let routersRequireContext = require.context("./routers/"); // Using require.context for HMR's need
+server.use(routersRequireContext(`./${ANALYSIS_APP}`).default);
+
+if (isDev && module.hot) {
+  /* eslint-disable no-underscore-dangle */
+  // Replace the registration name of the router middleware we just `use`d from "mounted_app" to "alpha_router", in order to locate and replace them when there's an HMR
+  server._router.stack[server._router.stack.length - 1].name = `${ANALYSIS_APP}_router`;
+
+  module.hot.accept(routersRequireContext.id, () => {
+    routersRequireContext = require.context("./routers/");
+
+    // Locate the router middleware and take it out
+    const routerIndex = _.findIndex(server._router.stack, { name: `${ANALYSIS_APP}_router` });
+    server._router.stack.splice(routerIndex, 1);
+
+    server.use(routersRequireContext(`./${ANALYSIS_APP}`).default);
+
+    server._router.stack.splice(routerIndex, 0, server._router.stack.pop()); // Move it to the original position
+    server._router.stack[routerIndex].name = `${ANALYSIS_APP}_router`;
+  });
+  /* eslint-enable */
+}
 
 if (isDev) {
   /* eslint-disable global-require, import/no-extraneous-dependencies */

@@ -1,8 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const webpack = require("webpack");
 /* eslint-enable */
+const _ = require("lodash");
 const path = require("path");
 const fs = require("fs");
+
+const IS_PROD = process.env.NODE_ENV === "production";
 
 const nodeModules = {};
 fs.readdirSync("node_modules")
@@ -12,10 +15,11 @@ fs.readdirSync("node_modules")
   });
 
 module.exports = {
-  entry: [
+  entry: _.filter([
+    IS_PROD ? null : "webpack/hot/poll?1000",
     "babel-polyfill",
     "./server.js",
-  ],
+  ]),
   target: "node",
   node: {
     __dirname: true,
@@ -36,8 +40,10 @@ module.exports = {
       },
     ],
   },
-  plugins: [
+  plugins: _.filter([
     new webpack.BannerPlugin({ banner: "require('source-map-support').install();", raw: true, entryOnly: false }),
-  ],
+    new webpack.NamedModulesPlugin(),
+    IS_PROD ? null : new webpack.HotModuleReplacementPlugin(),
+  ]),
   externals: nodeModules,
 };
