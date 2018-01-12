@@ -205,9 +205,17 @@ class Step3SLO extends React.Component {
                   onChange={::this.onChangeMetricName}
                 >
                   <option value={null} disabled>Select Metric</option>
-                  { !_.isEmpty(metricOptions) ?
-                    _.map(metricOptions, mt => <option key={mt.name} value={mt.name}>{mt.name}</option>) :
-                    _.get(slo, "metric.name") && <option value={slo.metric.name}>{slo.metric.name}</option>
+                  {
+                    !_.isEmpty(metricOptions)
+                      ? _.map(
+                          metricOptions,
+                          mt => <option key={mt.name} value={mt.name}>{mt.name}</option>
+                        )
+                      : (
+                        _.get(slo, "metric.name")
+                          ? <option value={slo.metric.name}>{slo.metric.name}</option>
+                          : null
+                      )
                   }
                 </Control.select>
               </FormGroup>
