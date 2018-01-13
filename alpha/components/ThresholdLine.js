@@ -3,6 +3,9 @@ import _ from "lodash";
 import { Line, Area, VictoryLabel } from "victory-core";
 
 const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft, style }) => {
+  if (!_.inRange(threshold, ...scale.y.domain())) {
+    return <g />;
+  }
   const yPos = scale.y(threshold);
   const [x1, x2] = range.x;
   return (
@@ -16,7 +19,7 @@ const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft,
             [0, 1].map(i => ({
               _x: scale.x.domain()[i],
               _y: threshold,
-              _y0: scale.y.domain()[_.toInteger(type === "UB")],
+              _y0: type === "UB" ? _.max([scale.y.domain()[1], threshold]) : _.min([scale.y.domain()[0], threshold]),
             }))
           }
           style={{ stroke: "none", ...style.area }}
