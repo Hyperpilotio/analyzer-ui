@@ -9,7 +9,8 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import ReactTimeout from "react-timeout";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
-import AppDiagnosis from "./AppDiagnosis";
+// import AppDiagnosis from "./AppDiagnosis";
+import AppDashboard from "./AppDashboard";
 import { fetchApps, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
 import withModal from "../lib/withModal";
@@ -81,7 +82,7 @@ export default class GrandDashboard extends React.Component {
     return (
       <div>
         <Switch>
-          <Route path={`${this.props.match.path}/:appId`} component={AppDiagnosis} />
+          <Route path={`${this.props.match.path}/:appId`} component={AppDashboard} />
           <Route exact path={this.props.match.path}>
             <Container>
               <Row className="pt-4 pb-3">
