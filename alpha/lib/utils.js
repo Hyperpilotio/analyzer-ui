@@ -1,4 +1,5 @@
 import _ from "lodash";
+import moment from "moment";
 
 export const getSLODisplay = ({ metric, threshold }) => (
   `${metric.type} ${threshold.type === "UB" ? "<" : ">"} ${threshold.value} ${threshold.unit}`
@@ -42,3 +43,11 @@ export const formToApp = ({ basicInfo, microservices, sloSource, slo, management
   },
   management_features,
 });
+
+_.assign(moment.prototype, {
+  tsNano() {
+    return this.valueOf() * (1000 ** 2);
+  }
+});
+
+export const tsToMoment = tsNano => moment(tsNano / (1000 ** 2));
