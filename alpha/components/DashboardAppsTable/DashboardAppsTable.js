@@ -24,7 +24,7 @@ const DashboardAppsTable = ({
         <th>Type</th>
         <th>Services</th>
         <th>SLO</th>
-        <th>Issues detected</th>
+        <th>App Status</th>
         <th>State</th>
         <th />
       </tr>
