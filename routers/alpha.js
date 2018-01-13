@@ -225,6 +225,25 @@ router.post("/api/influx-data", async (req, res) => {
   });
 });
 
+router.get("/api/apps/:appId/incidents/last", async (req, res) => {
+  try {
+    const incident = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/incidents`);
+    res.json({
+      success: true,
+      data: incident.data,
+    });
+  } catch (e) {
+    if (e.name === "StatusCodeError" && e.statusCode === 404) {
+      res.json({
+        success: true,
+        data: null,
+      });
+    } else {
+      throw e;
+    }
+  }
+});
+
 router.get("/api/diagnostics/:appId", async (req, res) => {
   const incident = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/incidents`);
   const diagnosis = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/diagnosis`, {
