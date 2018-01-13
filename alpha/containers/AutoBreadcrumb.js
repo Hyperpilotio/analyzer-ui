@@ -43,20 +43,18 @@ export const withAutoBreadcrumb = WrappedComponent => class extends React.Compon
   static childContextTypes = {
     portalUpdate: PropTypes.func,
     portalRegister: PropTypes.func,
-    portalUnregister: PropTypes.func,
+    portalDeregister: PropTypes.func,
   }
 
   getChildContext() {
     return {
       portalUpdate: this.portalUpdate,
       portalRegister: this.portalRegister,
-      portalUnregister: this.portalUnregister,
+      portalDeregister: this.portalDeregister,
     };
   }
 
-  componentWillMount() {
-    VictoryContainer.prototype.componentWillMount.apply(this);
-  }
+  componentWillMount = VictoryContainer.prototype.componentWillMount
 
   render() {
     return (
