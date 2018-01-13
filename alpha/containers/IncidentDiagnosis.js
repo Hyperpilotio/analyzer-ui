@@ -21,7 +21,7 @@ import SingleResourceGraph from "../components/SingleResourceGraph";
 import InterferenceGraph from "../components/InterferenceGraph";
 import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescriptions";
 import { AutoBreadcrumbItem } from "./AutoBreadcrumb";
-import { fetchDiagnostics } from "../actions";
+import { fetchDiagnosis } from "../actions";
 import { tsToMoment } from "../lib/utils";
 
 const mapStateToProps = ({ applications, ui, diagnosis }, { app, match }) => {
@@ -40,15 +40,15 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { app, match }) => {
   return { incident, result, problems, isDiagnosticsLoading: false };
 };
 
-const mapDispatchToProps = (dispatch, { app, match }) => ({
-  fetchDiagnostics: () => dispatch(fetchDiagnostics(match.params.appId)),
+const mapDispatchToProps = (dispatch, { match: { params } }) => ({
+  fetchDiagnosis: () => dispatch(fetchDiagnosis(params.appId, params.incidentId)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 @ReactTimeout
 export default class IncidentDiagnosis extends React.Component {
   static propTypes = {
-    fetchDiagnostics: PropTypes.func.isRequired,
+    fetchDiagnosis: PropTypes.func.isRequired,
     isDiagnosticsLoading: PropTypes.bool.isRequired,
     setTimeout: PropTypes.func.isRequired,
     refreshInterval: PropTypes.number,
@@ -59,12 +59,12 @@ export default class IncidentDiagnosis extends React.Component {
   }
 
   componentWillMount() {
-    this.refetchDiagnostics();
+    this.refetchDiagnosis();
   }
 
-  async refetchDiagnostics() {
-    await this.props.fetchDiagnostics();
-    this.props.setTimeout(::this.refetchDiagnostics, this.props.refreshInterval);
+  async refetchDiagnosis() {
+    await this.props.fetchDiagnosis();
+    this.props.setTimeout(::this.refetchDiagnosis, this.props.refreshInterval);
   }
 
   render() {
@@ -80,7 +80,7 @@ export default class IncidentDiagnosis extends React.Component {
           <div>
             <AutoBreadcrumbItem
               link={match.url}
-              text={`${incident.type} (${incidentTime.toNow()})`}
+              text={`${incident.type} (${incidentTime.fromNow()})`}
             />
 
             <Container className="clearfix mb-3">

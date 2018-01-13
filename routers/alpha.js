@@ -244,6 +244,24 @@ router.get("/api/apps/:appId/incidents/last", async (req, res) => {
   }
 });
 
+router.get("/api/apps/:appId/incidents/:incidentId/diagnosis", async (req, res) => {
+  const diagnosis = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/diagnosis`, {
+    body: { incident_id: req.params.incidentId },
+  });
+  const problems = await Promise.all(
+    diagnosis.data.top_related_problems.map(
+      ({ id }) => makeRequest("get", "analyzer", `/api/v1/problems/${id}`),
+    ),
+  );
+  res.json({
+    success: true,
+    data: {
+      diagnosis: diagnosis.data,
+      problems: _.map(problems, "data"),
+    },
+  });
+});
+
 router.get("/api/diagnostics/:appId", async (req, res) => {
   const incident = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/incidents`);
   const diagnosis = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/diagnosis`, {
