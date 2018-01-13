@@ -12,6 +12,7 @@ import SLOGraph from "../components/SLOGraph";
 import IncidentDiagnosis from "./IncidentDiagnosis";
 import { fetchAppLatestIncident } from "../actions";
 import { withAutoBreadcrumb, AutoBreadcrumbItem } from "./AutoBreadcrumb";
+import { tsToMoment } from "../lib/utils";
 
 
 const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
@@ -56,48 +57,59 @@ export default class AppDashboard extends React.Component {
 
   render() {
     const { match, isAppLoading, app, isIncidentLoading, latestIncident } = this.props;
+    if (isAppLoading) {
+      return <div />;
+    }
     return (
       <div>
-        {isAppLoading ? null : <AppInfoJumbotron app={app} />}
-        {isAppLoading ? null : (
-          <div>
-            <Container>{ this.props.breadcrumb }</Container>
-            <AutoBreadcrumbItem link="/dashboard" text="Apps" />
-            <AutoBreadcrumbItem link={match.url} text={app.name} />
+        <AppInfoJumbotron app={app} />
+        <div>
+          <Container>{ this.props.breadcrumb }</Container>
+          <AutoBreadcrumbItem link="/dashboard" text="Apps" />
+          <AutoBreadcrumbItem link={match.url} text={app.name} />
 
-            <Route exact path={match.url} render={() => (
-              <Container className="mb-4">
-                <Row>
-                  {!isIncidentLoading && latestIncident === null ?
-                    <h5>{ app.name } is currently healthy</h5> :
-                    (isIncidentLoading ?
-                      <h5>Loading...</h5> :
+          <Route exact path={match.url} render={() => (
+            <Container className="mb-4">
+              <Row className="mb-2">
+                <Col>
+                  {!isIncidentLoading && _.isNull(latestIncident) ? <h5>{ app.name } is currently healthy</h5> : null}
+                  {isIncidentLoading && _.isNull(latestIncident) ? <h5>Loading...</h5> : null}
+                  {_.get(latestIncident, "state") === "Active" ? (
+                    <h5>
                       <Link to={`${match.url}/incidents/${latestIncident.incident_id}`}>
-                        View the latest incident { latestIncident.type }
+                        View the current incident: { latestIncident.type } ({ tsToMoment(latestIncident.timestamp).fromNow() })
                       </Link>
-                    )
-                  }
-                </Row>
-                <Row>
-                  <ChartGroup>
-                    <SLOGraph
-                      slo={app.slo}
-                      start={moment().subtract(10, "m").tsNano()}
-                      end={moment().tsNano()}
-                    />
-                    <h5 className="text-center mb-3">
-                      {_.words(app.slo.metric.type).map(_.capitalize).join(" ")} v.s. SLO
                     </h5>
-                  </ChartGroup>
-                </Row>
-              </Container>
-            )} />
-            <Route
-              path={`${this.props.match.path}/incidents/:incidentId`}
-              render={({ match }) => <IncidentDiagnosis app={app} match={match} />}
-            />
-          </div>
-        )}
+                  ) : null}
+                  {_.get(latestIncident, "state") === "Resolved" ? (
+                    <h5>
+                      <span className="mr-2">{ app.name } is currently healthy.</span>
+                      <Link to={`${match.url}/incidents/${latestIncident.incident_id}`}>
+                        View last incident: { latestIncident.type } ({ tsToMoment(latestIncident.timestamp).fromNow() })
+                      </Link>
+                    </h5>
+                  ) : null}
+                </Col>
+              </Row>
+              <Row>
+                <ChartGroup>
+                  <SLOGraph
+                    slo={app.slo}
+                    start={moment().subtract(10, "m").tsNano()}
+                    end={moment().tsNano()}
+                  />
+                  <h5 className="text-center mb-3">
+                    {_.words(app.slo.metric.type).map(_.capitalize).join(" ")} v.s. SLO
+                  </h5>
+                </ChartGroup>
+              </Row>
+            </Container>
+          )} />
+          <Route
+            path={`${this.props.match.path}/incidents/:incidentId`}
+            render={({ match }) => <IncidentDiagnosis app={app} match={match} />}
+          />
+        </div>
       </div>
     );
   }
