@@ -9,7 +9,6 @@ import ReactRouterPropTypes from "react-router-prop-types";
 import ReactTimeout from "react-timeout";
 import { Container, Row, Col } from "reactstrap";
 import DashboardAppsTable from "../components/DashboardAppsTable";
-// import AppDiagnosis from "./AppDiagnosis";
 import AppDashboard from "./AppDashboard";
 import { fetchApps, removeApp } from "../actions";
 import { app as appPropType, event as eventPropType } from "../constants/propTypes";
