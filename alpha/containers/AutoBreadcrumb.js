@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
-import { Portal, VictoryPortal, VictoryContainer } from "victory-core";
+import { Portal, VictoryPortal } from "victory-core";
 
 export class AutoBreadcrumb extends Portal {
   static displayName = "AutoBreadcrumb"
@@ -54,7 +54,15 @@ export const withAutoBreadcrumb = WrappedComponent => class extends React.Compon
     };
   }
 
-  componentWillMount = VictoryContainer.prototype.componentWillMount
+  componentWillMount() {
+    this.savePortalRef = (portal) => {
+      this.portalRef = portal;
+      return portal;
+    };
+    this.portalUpdate = (key, el) => this.portalRef.portalUpdate(key, el);
+    this.portalRegister = () => this.portalRef.portalRegister();
+    this.portalDeregister = (key) => _.invoke(this.portalRef, "portalDeregister", key);
+  }
 
   render() {
     return (
