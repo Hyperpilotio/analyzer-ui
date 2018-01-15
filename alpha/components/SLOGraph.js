@@ -1,19 +1,20 @@
 import React from "react";
 import { VictoryArea } from "victory-chart";
 import { connect as connectRefetch } from "react-refetch";
+import _ from "lodash";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 
-const SLOGraph = ({ incident: { metric, threshold }, influxFetch, ...props }) => {
+const SLOGraph = ({ slo, influxFetch, ...props }) => {
+  let data = influxFetch.value;
   if (influxFetch.pending) {
-    return null;
+    data = { name: slo.metric.name, values: [] };
   }
-  const data = influxFetch.value;
-
-  return (
-    <GeneralTimeSeriesGraph yLabel={`${metric.type} (${threshold.unit})`} {...props}>
-      <TopRightLegend data={[{ name: metric.name, symbol: { fill: "#5677fa" } }]} />
+  let dataArea = null;
+  if (!_.isNull(data)) {
+    data.values = _.reject(data.values, { 1: null });
+    dataArea = (
       <VictoryArea
         style={{ data: {
           stroke: "#5677fa",
@@ -24,6 +25,13 @@ const SLOGraph = ({ incident: { metric, threshold }, influxFetch, ...props }) =>
         name={data.name}
         isData
       />
+    );
+  }
+
+  return (
+    <GeneralTimeSeriesGraph yLabel={`${slo.metric.type} (${slo.threshold.unit})`} {...props}>
+      <TopRightLegend data={[{ name: slo.metric.name, symbol: { fill: "#5677fa" } }]} />
+      { dataArea }
       <ThresholdLine
         area
         style={{
@@ -31,24 +39,24 @@ const SLOGraph = ({ incident: { metric, threshold }, influxFetch, ...props }) =>
           label: { fill: "#ff8686", fontSize: "16px" },
           area: { fill: "#ff8686", fillOpacity: 0.1 },
         }}
-        threshold={threshold.value}
-        type={threshold.type}
+        threshold={slo.threshold.value}
+        type={slo.threshold.type}
         label="SLO"
       />
     </GeneralTimeSeriesGraph>
   );
 };
 
-export default connectRefetch(({ incident }) => ({
+export default connectRefetch(({ slo, start, end }) => ({
   influxFetch: {
     url: "/api/influx-data",
     method: "POST",
     body: JSON.stringify({
       db: "snap",
-      metric: incident.metric.name,
-      tags: incident.metric.tags,
-      start: incident.timestamp - 5 * 60 * 1000 ** 3,
-      end: incident.timestamp,
+      metric: slo.metric.name,
+      tags: slo.metric.tags,
+      start,
+      end,
     }),
   },
 }))(SLOGraph);

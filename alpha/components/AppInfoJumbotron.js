@@ -18,7 +18,7 @@ const AppInfoJumbotron = ({ app }) => (
         <Col>
           <Row className="mb-3">
             <Col md={3}>
-              <span className="text-muted d-block">Detected</span>
+              <span className="text-muted d-block">App Status</span>
               <AppStatusBadge app={app} />
             </Col>
             <Col md={3}>

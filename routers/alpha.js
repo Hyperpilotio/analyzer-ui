@@ -191,6 +191,7 @@ router.post("/api/get-metrics", async (req, res) => {
   const kindTypeMap = {
     deployments: "deployment",
     statefulsets: "statefulset",
+    services: "service",
   };
   const response = await makeRequest("get", "operator", "/cluster/appmetrics", {
     body: {
@@ -221,6 +222,43 @@ router.post("/api/influx-data", async (req, res) => {
     name: req.body.metric,
     columns: ["time", "value"],
     values: _.map(result, d => [d.time, d.value]),
+  });
+});
+
+router.get("/api/apps/:appId/incidents/last", async (req, res) => {
+  try {
+    const incident = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/incidents`);
+    res.json({
+      success: true,
+      data: incident.data,
+    });
+  } catch (e) {
+    if (e.name === "StatusCodeError" && e.statusCode === 404) {
+      res.json({
+        success: true,
+        data: null,
+      });
+    } else {
+      throw e;
+    }
+  }
+});
+
+router.get("/api/apps/:appId/incidents/:incidentId/diagnosis", async (req, res) => {
+  const diagnosis = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/diagnosis`, {
+    body: { incident_id: req.params.incidentId },
+  });
+  const problems = await Promise.all(
+    diagnosis.data.top_related_problems.map(
+      ({ id }) => makeRequest("get", "analyzer", `/api/v1/problems/${id}`),
+    ),
+  );
+  res.json({
+    success: true,
+    data: {
+      diagnosis: diagnosis.data,
+      problems: _.map(problems, "data"),
+    },
   });
 });
 

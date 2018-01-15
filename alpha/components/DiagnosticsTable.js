@@ -35,7 +35,7 @@ const DiagnosticsTable = ({ selectedProblem, baseUrl, result, problems }) => (
                     </Row>
                     <ListGroup>
                       {remediation_options.map((option, i) => (
-                        <ListGroupItem>
+                        <ListGroupItem key={i}>
                           <Row>
                             <Col sm="auto">{i + 1}. </Col>
                             <Col><RemediationDescription option={option} /></Col>

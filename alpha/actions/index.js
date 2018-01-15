@@ -228,14 +228,15 @@ export const fetchMetrics = sloSource => async (dispatch) => {
   return response;
 };
 
-export const fetchIncidents = () => async (dispatch) => {
+export const fetchAppLatestIncident = appId => async (dispatch) => {
   const response = await dispatch({
     [RSAA]: {
-      endpoint: "/api/incidents",
+      endpoint: `/api/apps/${appId}/incidents/last`,
       method: "GET",
-      types: types.FETCH_INCIDENTS,
+      types: types.FETCH_APP_LATEST_INCIDENT,
     },
   });
+
   // Open error modal
   if (!response.payload.success) {
     dispatch(openModal(
@@ -248,12 +249,12 @@ export const fetchIncidents = () => async (dispatch) => {
   }
 };
 
-export const fetchDiagnostics = appId => async (dispatch) => {
+export const fetchDiagnosis = (appId, incidentId) => async (dispatch) => {
   const response = await dispatch({
     [RSAA]: {
-      endpoint: `/api/diagnostics/${appId}`,
+      endpoint: `/api/apps/${appId}/incidents/${incidentId}/diagnosis`,
       method: "GET",
-      types: types.FETCH_DIAGNOSTICS,
+      types: types.FETCH_DIAGNOSIS,
     },
   });
   // Open error modal
@@ -261,7 +262,7 @@ export const fetchDiagnostics = appId => async (dispatch) => {
     dispatch(openModal(
       modalTypes.HINT_MODAL,
       {
-        title: "Fetch diagnostics error",
+        title: "Fetch diagnosis error",
         message: response.payload.response.message,
       },
     ));
