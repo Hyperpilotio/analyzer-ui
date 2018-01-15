@@ -6,6 +6,7 @@ import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 
+
 const SLOGraph = ({ slo, influxFetch, ...props }) => {
   let data = influxFetch.value;
   if (influxFetch.pending) {
@@ -47,7 +48,7 @@ const SLOGraph = ({ slo, influxFetch, ...props }) => {
   );
 };
 
-export default connectRefetch(({ slo, start, end }) => ({
+export default connectRefetch(({ slo, start, end, ...props }) => ({
   influxFetch: {
     url: "/api/influx-data",
     method: "POST",
@@ -58,5 +59,6 @@ export default connectRefetch(({ slo, start, end }) => ({
       start,
       end,
     }),
+    ...props,
   },
 }))(SLOGraph);

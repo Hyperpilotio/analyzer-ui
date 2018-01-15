@@ -93,11 +93,7 @@ export default class AppDashboard extends React.Component {
               </Row>
               <Row>
                 <ChartGroup>
-                  <SLOGraph
-                    slo={app.slo}
-                    start={moment().subtract(10, "m").tsNano()}
-                    end={moment().tsNano()}
-                  />
+                  <SLOGraph slo={app.slo} start="now() - 10m" end="now()" refreshInterval={5 * 1000} />
                   <h5 className="text-center mb-3">
                     {_.words(app.slo.metric.type).map(_.capitalize).join(" ")} v.s. SLO
                   </h5>
