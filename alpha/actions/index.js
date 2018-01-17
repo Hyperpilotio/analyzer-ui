@@ -279,7 +279,10 @@ export const removeApp = appId => async (dispatch) => {
       },
       body: JSON.stringify({ app_id: appId }),
       types: [
-        types.REMOVE_APP[0],
+        {
+          type: types.REMOVE_APP[0],
+          meta: { appId },
+        },
         {
           type: types.REMOVE_APP[1],
           meta: { appId },

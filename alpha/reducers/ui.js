@@ -23,69 +23,75 @@ const initialState = _.mapValues(
 );
 
 export default (state = initialState, action) => {
-  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type));
+  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // FETCH_APPS
+  const actionType = actionTypes.actionTypeRegistry[actionName]; // SIMPLE / TRACKABLE / SIMPLE_AND_TRACKABLE
 
   if (_.isUndefined(actionName)) {
     return state;
   }
 
-  // 在這邊依照actionName查詢對應的type
+  
+
 
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
+
+    console.log("action", action, actionType);
+    let mapObject;
+    if (actionType === actionTypes.asyncActionTypes.SIMPLE) {
+      mapObject = null;
+    } else if (actionType === actionTypes.asyncActionTypes.TRACKABLE) {
+      mapObject = {
+        map: action.meta.appId,
+      };
+    } else {
+
+      if (_.isUndefined(action.meta)) {
+        mapObject = null;
+      } else {
+        mapObject = {
+          map: action.payload.data
+        };
+      } 
+      
+    }
     
+
+
+
+
+
     return {
       ...state,
       [_.camelCase(actionName)]: {
         ...state[_.camelCase(actionName)],
-        [_.camelCase(`IS_${actionName}_LOADING`)]: true,
-        [_.camelCase(`IS_${actionName}_FULFILLED`)]: false,
+        isLoading: true,
+        isFulfilled: false,
+        ...mapObject,
+        // 這邊要判斷map是否為單一 (用type來控制)
+        
       },
     };
   case SUCCESS:
     
-    let mapObject = {}; 
-    // 列表型
-    if (actionTypes.actionTypeRegistry[actionName] === actionTypes.asyncActionTypes.SIMPLE_AND_TRACKABLE) {
-      mapObject = {
-        map: _.flatMap(
-          action.payload.data,
-          item => _.map(
-            item,
-            () => (_.zipObject(simpleKeys, _.map(simpleKeys, () => (false)))),
-          ),
-        )
-      }
-    } else if (actionTypes.actionTypeRegistry[actionName] === actionTypes.asyncActionTypes.TRACKABLE) {
-      mapObject = {
-        map: _.flatMap(
-          action.payload.data.app_id,
-          item => _.map(
-            item,
-            () => (_.zipObject(simpleKeys, _.map(simpleKeys, () => (false)))),
-          ),
-        )
-      }
-    } else {
-      mapObject = {
-        map: _.flatMap(
-          action.payload.data.app_id,
-          item => _.map(
-            item,
-            () => (_.zipObject(simpleKeys, _.map(simpleKeys, () => (false)))),
-          ),
-        )
-      }
-    }
+    // console.log("action", action);
+
 
     return {
       ...state,
       [_.camelCase(actionName)]: {
         ...state[_.camelCase(actionName)],
-        [_.camelCase(`IS_${actionName}_LOADING`)]: false,
-        [_.camelCase(`IS_${actionName}_FULFILLED`)]: true,
-        [_.camelCase(`IS_${actionName}_REJECTED`)]: false,
-        ...mapObject,
+        isLoading: false,
+        isFulfilled: true,
+        map: _.isUndefined(action.meta) ?
+          {} :
+          _.flatMap(
+            [action.payload.data],
+            item => _.map(
+              item,
+              () => (_.zipObject(simpleKeys, _.map(simpleKeys, () => (false)))),
+            ),
+          ),
       },
       
     };
