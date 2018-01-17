@@ -2,10 +2,9 @@ import { VictoryVoronoiContainer } from "victory-chart";
 import { Data } from "victory-core";
 import _ from "lodash";
 
-const originalGetData = Data.getData.bind(Data);
 Data.getData = (props) => {
   if (props.isData) {
-    return originalGetData(props);
+    return props.data.map(({ x, y }, eventKey) => ({ eventKey, x, y, _x: x, _y: y }));
   }
   return null;
 };
