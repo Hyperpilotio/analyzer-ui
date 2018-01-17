@@ -87,7 +87,7 @@ export default (state = initialState, action) => {
         [_.camelCase(`IS_${actionName}_REJECTED`)]: false,
         ...mapObject,
       },
-      // [uiFieldName]: false,
+      
     };
 
   case FAIL:
