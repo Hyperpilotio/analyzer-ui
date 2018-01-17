@@ -17,10 +17,14 @@ const asyncActions = [
   ["ACTIVATE_APP", TRACKABLE],
   ["REMOVE_APP", TRACKABLE],
 ];
-_.assign(exports, _.fromPairs(_.map(
-  asyncActions,
-  ([name]) => [name, [`${name}_LOADING`, `${name}_SUCCESS`, `${name}_FAIL`]],
-)));
+_.assign(exports,
+  _.fromPairs(
+    _.map(
+      asyncActions,
+      ([name]) => ([name, [`${name}_LOADING`, `${name}_SUCCESS`, `${name}_FAIL`]]),
+    ),
+  ),
+);
 exports.actionTypeRegistry = _.fromPairs(asyncActions);
 
 const simpleActions = [
@@ -30,5 +34,5 @@ const simpleActions = [
   "OPEN_MODAL",
   "EMPTY_METRIC_OPTIONS",
   "SET_SLO_CONFIG_EDITABILITY",
-]
+];
 _.assign(exports, _.zipObject(simpleActions, simpleActions));
