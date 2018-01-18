@@ -264,7 +264,17 @@ export const fetchAppLatestIncident = appId => async (dispatch) => {
     [RSAA]: {
       endpoint: `/api/apps/${appId}/incidents/last`,
       method: "GET",
-      types: types.FETCH_APP_LATEST_INCIDENT,
+      types: [
+        {
+          type: types.FETCH_APP_LATEST_INCIDENT[0],
+          meta: { key: appId },
+        },
+        {
+          type: types.FETCH_APP_LATEST_INCIDENT[1],
+          meta: { key: appId },
+        },
+        types.FETCH_APP_LATEST_INCIDENT[2],
+      ],
     },
   });
 

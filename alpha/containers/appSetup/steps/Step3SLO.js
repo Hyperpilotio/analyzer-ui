@@ -18,8 +18,8 @@ class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
-    isFetchMetricsLoading: PropTypes.bool.isRequired,
-    isUpdateAppLoading: PropTypes.bool.isRequired,
+    isFetchMetricsLoading: PropTypes.bool,
+    isUpdateAppLoading: PropTypes.bool,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
     tags: PropTypes.array,

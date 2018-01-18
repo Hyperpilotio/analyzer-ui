@@ -53,8 +53,8 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpd
 Step1BasicInfo.propTypes = {
   submitBasicInfo: PropTypes.func.isRequired,
   cancelEdit: PropTypes.func.isRequired,
-  isCreateAppLoading: PropTypes.bool.isRequired,
-  isUpdateAppLoading: PropTypes.bool.isRequired,
+  isCreateAppLoading: PropTypes.bool,
+  isUpdateAppLoading: PropTypes.bool,
 };
 
 const mapStateToProps = ({ ui }) => ({

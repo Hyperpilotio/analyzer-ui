@@ -73,9 +73,9 @@ class Step2Microservices extends React.Component {
     removeMicroservice: PropTypes.func.isRequired,
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
-    isUpdateMicroservicesLoading: PropTypes.bool.isRequired,
-    isFetchAvailableServicesLoading: PropTypes.bool.isRequired,
-    isUpdateAppLoading: PropTypes.bool.isRequired,
+    isUpdateMicroservicesLoading: PropTypes.bool,
+    isFetchAvailableServicesLoading: PropTypes.bool,
+    isUpdateAppLoading: PropTypes.bool,
   }
 
   state = {

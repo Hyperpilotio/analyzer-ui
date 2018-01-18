@@ -1,6 +1,6 @@
 import _ from "lodash";
 import * as actionTypes from "../actions/types";
-import { LOADING, SUCCESS, FAIL, SINGLE_PENDING } from "../constants/apiActions";
+import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
 const RSAATypes = _.pickBy(actionTypes, type => _.isArray(type) && type.length === 3);
 const simpleKeys = ["isPending", "isFulfilled", "isRejected", "isSettled", "isRefreshing"];
@@ -40,32 +40,43 @@ export default (state = initialState, action) => {
   // _.has
 
   let map;
+  const loadingState = {
+    isPending: true,
+    isFulfilled: false,
+    isRejected: false,
+    isSettled: false,
+  };
+  console.log("action", action);
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
     if (actionType === actionTypes.asyncActionTypes.SIMPLE) {
-      map = null;
+      map = loadingState;
     } else if (actionType === actionTypes.asyncActionTypes.TRACKABLE) {
       map = {
         [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
       };
     } else if (_.has(action.meta, "key")) {
-      // 可能要傳別的meta
-      map = action.payload.data;
+      map = {
+        ...loadingState,
+        map: {
+          [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
+        },
+      };
     } else {
-      map = null;
+      map = {
+        ...loadingState,
+        map: {},
+      };
     }
 
     return {
       ...state,
       [uiFieldName]: {
         ...state[uiFieldName],
-        isPending: true,
-        isFulfilled: false,
-        isRejected: false,
-        isSettled: false,
         ...map,
       },
     };
+
   case SUCCESS:
     return {
       ...state,
@@ -78,11 +89,8 @@ export default (state = initialState, action) => {
         map: _.has(action.meta, "key") ?
           {
             [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
-          }
-          :
-          {},
+          } : {},
       },
-      
     };
 
   case FAIL:
@@ -101,11 +109,6 @@ export default (state = initialState, action) => {
         isRejected: true,
         isSettled: true,
       },
-    };
-  case SINGLE_PENDING:
-    return {
-      ...state,
-      [_.camelCase(`IS_${actionName}_LOADING`)]: true,
     };
   default:
     return state;

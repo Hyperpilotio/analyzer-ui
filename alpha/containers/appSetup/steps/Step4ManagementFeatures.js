@@ -105,8 +105,8 @@ Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManagementFeatures: PropTypes.func.isRequired,
-  isUpdateAppLoading: PropTypes.bool.isRequired,
-  isActivateAppLoading: PropTypes.bool.isRequired,
+  isUpdateAppLoading: PropTypes.bool,
+  isActivateAppLoading: PropTypes.bool,
 };
 
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
