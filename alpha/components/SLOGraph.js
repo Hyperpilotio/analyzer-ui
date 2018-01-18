@@ -40,7 +40,7 @@ const SLOGraph = ({ slo, influxFetch, ...props }) => {
           label: { fill: "#ff8686", fontSize: "16px" },
           area: { fill: "#ff8686", fillOpacity: 0.1 },
         }}
-        threshold={slo.threshold.value}
+        threshold={_.toNumber(slo.threshold.value)}
         type={slo.threshold.type}
         label="SLO"
       />

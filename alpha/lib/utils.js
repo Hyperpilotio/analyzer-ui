@@ -44,6 +44,8 @@ export const formToApp = ({ basicInfo, microservices, sloSource, slo, management
   management_features,
 });
 
+export const inRangeInclusive = (value, start, end) => value >= start && value <= end;
+
 _.assign(moment.prototype, {
   tsNano() {
     return this.valueOf() * (1000 ** 2);
