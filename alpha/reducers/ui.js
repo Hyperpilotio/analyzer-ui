@@ -2,9 +2,8 @@ import _ from "lodash";
 import * as actionTypes from "../actions/types";
 import { LOADING, SUCCESS, FAIL, SINGLE_PENDING } from "../constants/apiActions";
 
-// 可以在這邊做決斷
 const RSAATypes = _.pickBy(actionTypes, type => _.isArray(type) && type.length === 3);
-const simpleKeys = ["isLoading", "isFulfilled", "isRejected", "isSettled", "isRefreshing"];
+const simpleKeys = ["isPending", "isFulfilled", "isRejected", "isSettled", "isRefreshing"];
 
 const initialState = _.mapValues(
   _.mapKeys(RSAATypes, (__, name) => (_.camelCase(`${name}`))),
@@ -30,13 +29,16 @@ export default (state = initialState, action) => {
     return state;
   }
 
-  
-
-
+  /*
+  * SIMPLE: [x] mapObject
+  * TRACKABLE: [v] mapObject
+  * SIMPLE & TRACKABLE ~
+  *   meta: [V] mapObject
+  *   no meta: [x] mapObject
+  */
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
 
-    console.log("action", action, actionType);
     let mapObject;
     if (actionType === actionTypes.asyncActionTypes.SIMPLE) {
       mapObject = null;
@@ -45,7 +47,6 @@ export default (state = initialState, action) => {
         map: action.meta.appId,
       };
     } else {
-
       if (_.isUndefined(action.meta)) {
         mapObject = null;
       } else {
@@ -55,34 +56,27 @@ export default (state = initialState, action) => {
       } 
       
     }
-    
-
-
-
-
 
     return {
       ...state,
       [_.camelCase(actionName)]: {
         ...state[_.camelCase(actionName)],
-        isLoading: true,
+        isPending: true,
         isFulfilled: false,
+        isRejected: false,
+        isSettled: false,
         ...mapObject,
-        // 這邊要判斷map是否為單一 (用type來控制)
-        
       },
     };
   case SUCCESS:
-    
-    // console.log("action", action);
-
-
     return {
       ...state,
       [_.camelCase(actionName)]: {
         ...state[_.camelCase(actionName)],
-        isLoading: false,
+        isPending: false,
         isFulfilled: true,
+        isRejected: false,
+        isSettled: true,
         map: _.isUndefined(action.meta) ?
           {} :
           _.flatMap(
@@ -107,9 +101,10 @@ export default (state = initialState, action) => {
       ...state,
       [_.camelCase(actionName)]: {
         ...state[_.camelCase(actionName)],
-        [_.camelCase(`IS_${actionName}_LOADING`)]: false,
-        [_.camelCase(`IS_${actionName}_FULFILLED`)]: true,
-        [_.camelCase(`IS_${actionName}_REJECTED`)]: true,
+        isPending: false,
+        isFulfilled: false,
+        isRejected: true,
+        isSettled: true,
       },
     };
   case SINGLE_PENDING:

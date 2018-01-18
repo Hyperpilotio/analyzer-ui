@@ -18,7 +18,6 @@ class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
-    // sloFormDisabled: PropTypes.bool.isRequired,
     isFetchMetricsLoading: PropTypes.bool.isRequired,
     isUpdateAppLoading: PropTypes.bool.isRequired,
     metricOptions: PropTypes.array,
@@ -339,13 +338,13 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui: { isFetchMetricsLoading, isUpdateAppLoading }, applications }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui: { fetchMetrics, updateApp }, applications }) => ({
   savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
-  isFetchMetricsLoading,
-  isUpdateAppLoading,
+  isFetchMetricsLoading: fetchMetrics.isPending,
+  isUpdateAppLoading: updateApp.isPending,
   sloSource,
   microservices,
   slo,
