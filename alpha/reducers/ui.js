@@ -24,68 +24,63 @@ const initialState = _.mapValues(
 export default (state = initialState, action) => {
   const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // FETCH_APPS
   const actionType = actionTypes.actionTypeRegistry[actionName]; // SIMPLE / TRACKABLE / SIMPLE_AND_TRACKABLE
-
+  const uiFieldName = _.camelCase(actionName);
+  
   if (_.isUndefined(actionName)) {
     return state;
   }
-
   /*
-  * SIMPLE: [x] mapObject
-  * TRACKABLE: [v] mapObject
+  * SIMPLE: [x] map
+  * TRACKABLE: [v] map
   * SIMPLE & TRACKABLE ~
-  *   meta: [V] mapObject
-  *   no meta: [x] mapObject
+  *   meta: [V] map
+  *   no meta: [x] map
   */
+
+  // _.has
+
+  let map;
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
-
-    let mapObject;
     if (actionType === actionTypes.asyncActionTypes.SIMPLE) {
-      mapObject = null;
+      map = null;
     } else if (actionType === actionTypes.asyncActionTypes.TRACKABLE) {
-      mapObject = {
-        map: action.meta.appId,
+      map = {
+        [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
       };
+    } else if (_.has(action.meta, "key")) {
+      // 可能要傳別的meta
+      map = action.payload.data;
     } else {
-      if (_.isUndefined(action.meta)) {
-        mapObject = null;
-      } else {
-        mapObject = {
-          map: action.payload.data
-        };
-      } 
-      
+      map = null;
     }
 
     return {
       ...state,
-      [_.camelCase(actionName)]: {
-        ...state[_.camelCase(actionName)],
+      [uiFieldName]: {
+        ...state[uiFieldName],
         isPending: true,
         isFulfilled: false,
         isRejected: false,
         isSettled: false,
-        ...mapObject,
+        ...map,
       },
     };
   case SUCCESS:
     return {
       ...state,
-      [_.camelCase(actionName)]: {
-        ...state[_.camelCase(actionName)],
+      [uiFieldName]: {
+        ...state[uiFieldName],
         isPending: false,
         isFulfilled: true,
         isRejected: false,
         isSettled: true,
-        map: _.isUndefined(action.meta) ?
-          {} :
-          _.flatMap(
-            [action.payload.data],
-            item => _.map(
-              item,
-              () => (_.zipObject(simpleKeys, _.map(simpleKeys, () => (false)))),
-            ),
-          ),
+        map: _.has(action.meta, "key") ?
+          {
+            [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
+          }
+          :
+          {},
       },
       
     };
@@ -99,8 +94,8 @@ export default (state = initialState, action) => {
     }
     return {
       ...state,
-      [_.camelCase(actionName)]: {
-        ...state[_.camelCase(actionName)],
+      [uiFieldName]: {
+        ...state[uiFieldName],
         isPending: false,
         isFulfilled: false,
         isRejected: true,

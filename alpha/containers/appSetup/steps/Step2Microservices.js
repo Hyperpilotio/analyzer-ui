@@ -73,10 +73,9 @@ class Step2Microservices extends React.Component {
     removeMicroservice: PropTypes.func.isRequired,
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
-    stepNext: PropTypes.func.isRequired,
-    isUpdateMicroservicesLoading: PropTypes.bool,
-    isFetchAvailableServicesLoading: PropTypes.bool,
-    isUpdateAppLoading: PropTypes.bool,
+    isUpdateMicroservicesLoading: PropTypes.bool.isRequired,
+    isFetchAvailableServicesLoading: PropTypes.bool.isRequired,
+    isUpdateAppLoading: PropTypes.bool.isRequired,
   }
 
   state = {
@@ -208,13 +207,13 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { isFetchAvailableServicesLoading, isUpdateMicroservicesLoading, isUpdateAppLoading } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui }) => ({
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  isFetchAvailableServicesLoading,
-  isUpdateMicroservicesLoading,
-  isUpdateAppLoading,
+  isFetchAvailableServicesLoading: ui.fetchAvailableServices.isPending,
+  isUpdateMicroservicesLoading: ui.updateMicroservices.isPending,
+  isUpdateAppLoading: ui.updateApp.isPending,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

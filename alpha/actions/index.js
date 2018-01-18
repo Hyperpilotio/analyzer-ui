@@ -90,11 +90,11 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
         types: [
           {
             type: types.UPDATE_MICROSERVICES[0],
-            meta: { appId: microservicesInfo.app_id },
+            meta: { key: microservicesInfo.app_id },
           },
           {
             type: types.UPDATE_MICROSERVICES[1],
-            meta: { appId: microservicesInfo.app_id },
+            meta: { key: microservicesInfo.app_id },
           },
           types.UPDATE_MICROSERVICES[2],
         ],
@@ -134,11 +134,11 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
         types: [
           {
             type: types.UPDATE_APP[0],
-            meta: { appId: app.app_id },
+            meta: { key: app.app_id },
           },
           {
             type: types.UPDATE_APP[1],
-            meta: { appId: app.app_id },
+            meta: { key: app.app_id },
           },
           types.UPDATE_APP[2],
         ],
@@ -173,11 +173,11 @@ export const activateApp = app => async (dispatch) => {
       types: [
         {
           type: types.ACTIVATE_APP[0],
-          meta: { appId: app.app_id },
+          meta: { key: app.app_id },
         },
         {
           type: types.ACTIVATE_APP[1],
-          meta: { appId: app.app_id },
+          meta: { key: app.app_id },
         },
         types.ACTIVATE_APP[2],
       ],
@@ -312,11 +312,11 @@ export const removeApp = appId => async (dispatch) => {
       types: [
         {
           type: types.REMOVE_APP[0],
-          meta: { appId },
+          meta: { key: appId },
         },
         {
           type: types.REMOVE_APP[1],
-          meta: { appId },
+          meta: { key: appId },
         },
         types.REMOVE_APP[2],
       ],

@@ -338,13 +338,13 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui: { fetchMetrics, updateApp }, applications }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
   savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
-  isFetchMetricsLoading: fetchMetrics.isPending,
-  isUpdateAppLoading: updateApp.isPending,
+  isFetchMetricsLoading: ui.fetchMetrics.isPending,
+  isUpdateAppLoading: ui.updateApp.isPending,
   sloSource,
   microservices,
   slo,
