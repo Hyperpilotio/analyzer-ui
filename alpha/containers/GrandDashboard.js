@@ -18,16 +18,15 @@ import _s from "./style.scss";
 
 
 const mapStateToProps = ({
-  ui: { isFetchAppsLoading, isFetchDiagnosticsLoading },
+  ui,
   applications,
-  diagnosis: { incidents, problems, results },
+  diagnosis: { incidents, problems, results }
 }) => ({
   applications,
   incidents,
   problems,
   results,
-  isFetchAppsLoading,
-  isFetchDiagnosticsLoading,
+  ui,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -96,9 +95,9 @@ export default class GrandDashboard extends React.Component {
               </Row>
               <Row>
                 <DashboardAppsTable
-                  isLoading={this.props.isFetchAppsLoading}
+                  ui={this.props.ui}
                   openRemoveModal={appId => this.openRemoveModal(appId)}
-                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities"])}
+                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
                 { _.reject(this.props.applications, { state: "Unregistered" }).length === 0 && !this.props.isFetchAppsLoading ?
                   <div className={_s.noData}>

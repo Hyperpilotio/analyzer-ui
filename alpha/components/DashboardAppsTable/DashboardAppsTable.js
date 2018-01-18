@@ -13,9 +13,8 @@ import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 const DashboardAppsTable = ({
-  isLoading, applications,
-  incidents, openRemoveModal,
-  isRemoveAppLoading, deletingAppId,
+  isLoading, applications, incidents,
+  openRemoveModal, deletingAppId, ui,
 }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
@@ -50,7 +49,7 @@ const DashboardAppsTable = ({
                 <td />
                 <td>{ app.state }</td>
                 <td>
-                  { isRemoveAppLoading && app.app_id === deletingAppId ?
+                  { app.app_id === ui.removeApp.map ?
                     <div className={_s.loaderCon}>
                       <Spinner fadeIn="quarter" name="wave" className={_s.loader} />
                       <span>Deleting...</span>
@@ -117,7 +116,7 @@ const DashboardAppsTable = ({
               <td>{ app.state }</td>
               <td>
                 {
-                  isRemoveAppLoading && app.app_id === deletingAppId ?
+                  app.app_id === ui.removeApp.map ?
                     <div className={_s.loaderCon}>
                       <Spinner fadeIn="quarter" name="wave" className={_s.loader} />
                       <span>Deleting...</span>
@@ -146,8 +145,6 @@ const DashboardAppsTable = ({
 );
 
 DashboardAppsTable.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  isRemoveAppLoading: PropTypes.bool,
   incidents: PropTypes.array.isRequired,
   removeApp: PropTypes.func,
 };

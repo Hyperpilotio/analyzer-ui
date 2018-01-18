@@ -78,6 +78,7 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
     _.find(apps, { app_id: microservicesInfo.app_id }),
     _.keys(microservicesInfo),
   );
+
   // update in DB and redux apps if they are different
   if (!_.isEqual(microservicesInfo, matchAppsItem)) {
     const response = await dispatch({
@@ -86,7 +87,17 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(microservicesInfo),
-        types: types.UPDATE_MICROSERVICES,
+        types: [
+          {
+            type: types.UPDATE_MICROSERVICES[0],
+            meta: { appId: microservicesInfo.app_id },
+          },
+          {
+            type: types.UPDATE_MICROSERVICES[1],
+            meta: { appId: microservicesInfo.app_id },
+          },
+          types.UPDATE_MICROSERVICES[2],
+        ],
       },
     });
 
@@ -120,7 +131,17 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(app),
-        types: types.UPDATE_APP,
+        types: [
+          {
+            type: types.UPDATE_APP[0],
+            meta: { appId: app.app_id },
+          },
+          {
+            type: types.UPDATE_APP[1],
+            meta: { appId: app.app_id },
+          },
+          types.UPDATE_APP[2],
+        ],
       },
     });
     dispatch(updateReduxApps(response.payload.data));
@@ -149,7 +170,17 @@ export const activateApp = app => async (dispatch) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(app),
-      types: types.ACTIVATE_APP,
+      types: [
+        {
+          type: types.ACTIVATE_APP[0],
+          meta: { appId: app.app_id },
+        },
+        {
+          type: types.ACTIVATE_APP[1],
+          meta: { appId: app.app_id },
+        },
+        types.ACTIVATE_APP[2],
+      ],
     },
   });
 
