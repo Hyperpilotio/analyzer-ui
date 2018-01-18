@@ -46,7 +46,7 @@ export default (state = initialState, action) => {
     isRejected: false,
     isSettled: false,
   };
-  console.log("action", action);
+
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
     if (actionType === actionTypes.asyncActionTypes.SIMPLE) {

@@ -83,29 +83,6 @@ const DashboardAppsTable = ({
               </Badge>
 
             ) : null;
-          // if (_.size(incidents[app._id]) !== 0) {
-          //   badge = (
-          //     <Badge className={_s.Badge} color="danger">
-          //       <FaTimesCircle className="mr-1" />
-          //       Incidents
-          //     </Badge>
-          //   );
-          // Hiding this section for only doing P0
-          // } else if (_.size(risks[app._id]) !== 0) {
-          //   badge = (
-          //     <Badge className={_s.Badge} color="warning">
-          //       <FaExclamationCircle className="mr-1" />
-          //       Risks
-          //     </Badge>
-          //   )
-          // } else if (_.size(opportunities[app._id]) !== 0) {
-          //   badge = (
-          //     <Badge className={_s.Badge} color="success">
-          //       <FaLightbulbO className="mr-1" />
-          //       Opportunities
-          //     </Badge>
-          //   );
-          // }
           return (
             <Linked tag="tr" to={`/dashboard/${app.app_id}`} key={app.app_id}>
               <td>{ app.name }</td>

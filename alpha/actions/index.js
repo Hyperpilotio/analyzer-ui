@@ -295,7 +295,17 @@ export const fetchDiagnosis = (appId, incidentId) => async (dispatch) => {
     [RSAA]: {
       endpoint: `/api/apps/${appId}/incidents/${incidentId}/diagnosis`,
       method: "GET",
-      types: types.FETCH_DIAGNOSIS,
+      types: [
+        {
+          type: types.FETCH_DIAGNOSIS[0],
+          meta: { key: appId },
+        },
+        {
+          type: types.FETCH_DIAGNOSIS[1],
+          meta: { key: appId },
+        },
+        types.FETCH_DIAGNOSIS[2],
+      ],
     },
   });
   // Open error modal
