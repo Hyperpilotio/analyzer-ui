@@ -6,14 +6,16 @@ import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
+import { tsToMoment } from "../lib/utils";
 
 const f = format(".2f");
 
 const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
+  let data = influxFetch.value;
   if (influxFetch.pending) {
-    return null;
+    data = { name: metric.source, values: [] };
   }
-  const data = influxFetch.value;
+  data.values = _.reject(data.values, { 1: null });
   const stats = metric.analysis_result;
 
   return (
@@ -53,7 +55,7 @@ export default connectRefetch(({ problem, metric }) => ({
         { key: "nodename", value: _.get(problem, "description.node_name") },
         { key: "io.kubernetes.pod.name", value: _.get(problem, "description.pod_name") },
       ], "value"),
-      start: problem.timestamp - 5 * 60 * 1000 ** 3,
+      start: tsToMoment(problem.timestamp).subtract(10, "m").tsNano(),
       end: problem.timestamp,
     }),
   },
