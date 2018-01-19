@@ -13,8 +13,7 @@ import { getSLODisplay } from "../../lib/utils";
 import _s from "./style.scss";
 
 const DashboardAppsTable = ({
-  isLoading, applications, incidents,
-  openRemoveModal, deletingAppId, ui,
+  applications, openRemoveModal, ui,
 }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
@@ -122,8 +121,9 @@ const DashboardAppsTable = ({
 );
 
 DashboardAppsTable.propTypes = {
-  incidents: PropTypes.array.isRequired,
-  removeApp: PropTypes.func,
+  applications: PropTypes.array.isRequired,
+  openRemoveModal: PropTypes.func.isRequired,
+  ui: PropTypes.object,
 };
 
 export default (DashboardAppsTable);

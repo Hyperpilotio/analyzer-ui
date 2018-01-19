@@ -16,6 +16,25 @@ export const openModal = (modalType, props) => ({
   modalType,
   props,
 });
+
+const withKey = (RSAAType, key) => RSAAType.map(type => ({
+  type,
+  meta: { key },
+}));
+
+// types: [
+//   {
+//     type: types.UPDATE_MICROSERVICES[0],
+//     meta: { key: microservicesInfo.app_id },
+//   },
+//   {
+//     type: types.UPDATE_MICROSERVICES[1],
+//     meta: { key: microservicesInfo.app_id },
+//   },
+//   types.UPDATE_MICROSERVICES[2],
+// ],
+
+
 //----------------------------------
 
 export const fetchApps = () => async (dispatch) => {
@@ -87,17 +106,7 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(microservicesInfo),
-        types: [
-          {
-            type: types.UPDATE_MICROSERVICES[0],
-            meta: { key: microservicesInfo.app_id },
-          },
-          {
-            type: types.UPDATE_MICROSERVICES[1],
-            meta: { key: microservicesInfo.app_id },
-          },
-          types.UPDATE_MICROSERVICES[2],
-        ],
+        types: withKey(types.UPDATE_MICROSERVICES, microservicesInfo.app_id),
       },
     });
 
@@ -131,17 +140,7 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(app),
-        types: [
-          {
-            type: types.UPDATE_APP[0],
-            meta: { key: app.app_id },
-          },
-          {
-            type: types.UPDATE_APP[1],
-            meta: { key: app.app_id },
-          },
-          types.UPDATE_APP[2],
-        ],
+        types: withKey(types.UPDATE_APP, app.app_id),
       },
     });
     dispatch(updateReduxApps(response.payload.data));
@@ -170,17 +169,7 @@ export const activateApp = app => async (dispatch) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(app),
-      types: [
-        {
-          type: types.ACTIVATE_APP[0],
-          meta: { key: app.app_id },
-        },
-        {
-          type: types.ACTIVATE_APP[1],
-          meta: { key: app.app_id },
-        },
-        types.ACTIVATE_APP[2],
-      ],
+      types: withKey(types.ACTIVATE_APP, app.app_id),
     },
   });
 
@@ -264,17 +253,7 @@ export const fetchAppLatestIncident = appId => async (dispatch) => {
     [RSAA]: {
       endpoint: `/api/apps/${appId}/incidents/last`,
       method: "GET",
-      types: [
-        {
-          type: types.FETCH_APP_LATEST_INCIDENT[0],
-          meta: { key: appId },
-        },
-        {
-          type: types.FETCH_APP_LATEST_INCIDENT[1],
-          meta: { key: appId },
-        },
-        types.FETCH_APP_LATEST_INCIDENT[2],
-      ],
+      types: withKey(types.FETCH_APP_LATEST_INCIDENT, appId),
     },
   });
 
@@ -295,17 +274,7 @@ export const fetchDiagnosis = (appId, incidentId) => async (dispatch) => {
     [RSAA]: {
       endpoint: `/api/apps/${appId}/incidents/${incidentId}/diagnosis`,
       method: "GET",
-      types: [
-        {
-          type: types.FETCH_DIAGNOSIS[0],
-          meta: { key: appId },
-        },
-        {
-          type: types.FETCH_DIAGNOSIS[1],
-          meta: { key: appId },
-        },
-        types.FETCH_DIAGNOSIS[2],
-      ],
+      types: withKey(types.FETCH_DIAGNOSIS, appId),
     },
   });
   // Open error modal
@@ -329,17 +298,7 @@ export const removeApp = appId => async (dispatch) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ app_id: appId }),
-      types: [
-        {
-          type: types.REMOVE_APP[0],
-          meta: { key: appId },
-        },
-        {
-          type: types.REMOVE_APP[1],
-          meta: { key: appId },
-        },
-        types.REMOVE_APP[2],
-      ],
+      types: withKey(types.REMOVE_APP, appId),
     },
   });
 
