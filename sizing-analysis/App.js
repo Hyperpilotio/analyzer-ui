@@ -7,6 +7,7 @@ import Header from "../commons/components/Header";
 import SizingRunnerPage from "./components/SizingRunnerPage";
 import SizingResultsPage from "./components/SizingResultsPage";
 import { STAGE_CONFIG, STAGE_TEST } from "./constants";
+import reducers from "./reducers";
 import "./index.scss";
 
 /* eslint-disable no-underscore-dangle */

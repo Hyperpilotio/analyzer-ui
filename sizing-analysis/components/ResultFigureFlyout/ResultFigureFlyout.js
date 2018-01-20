@@ -61,7 +61,7 @@ class ResultFigureFlyout extends Component {
     const containerElement = <rect rx={4} ry={4} width={this.width} height={this.height} />;
 
     return (
-      <g transform="translate(20, 0)" className={styles.ResultFigureFlyout}>
+      <g transform="translate(0, 0)" className={styles.ResultFigureFlyout}>
         <g transform={`translate(${tooltipX},${tooltipY})`}>
           { React.cloneElement(containerElement, { className: styles.background }) }
           { React.cloneElement(containerElement, { className: styles.box }) }
