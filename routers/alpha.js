@@ -216,13 +216,9 @@ router.post("/api/influx-data", async (req, res) => {
     ${tagsFilter}
     GROUP BY time(5s)
   `;
-  const result = await influxClient.query(query, { database: req.body.db });
+  const result = await influxClient.queryRaw(query, { database: req.body.db, precision: "ms" });
 
-  res.json({
-    name: req.body.metric,
-    columns: ["time", "value"],
-    values: _.map(result, d => [d.time, d.value]),
-  });
+  res.json(_.get(result, "results.0.series.0"));
 });
 
 router.get("/api/apps/:appId/incidents/last", async (req, res) => {
