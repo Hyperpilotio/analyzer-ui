@@ -181,8 +181,7 @@ export default class IncidentDiagnosis extends React.Component {
                 <ChartGroup>
                   <SLOGraph
                     slo={app.slo}
-                    start={incidentTime.clone().subtract(10, "m").tsNano()}
-                    end={incidentTime.tsNano()}
+                    timeRange={[incidentTime.clone().subtract(10, "m"), incidentTime]}
                   />
                   <h5 className="text-center mb-3">
                     {_.words(app.slo.metric.type).map(_.capitalize).join(" ")} v.s. SLO
