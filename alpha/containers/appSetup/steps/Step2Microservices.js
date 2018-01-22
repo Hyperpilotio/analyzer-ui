@@ -60,6 +60,9 @@ MicroservicesTable.propTypes = {
   microservices: PropTypes.array.isRequired,
   buttonElement: PropTypes.object.isRequired,
   buttonOnClick: PropTypes.func.isRequired,
+  isFetchAvailableServicesLoading: PropTypes.bool,
+  isUpdateMicroservicesLoading: PropTypes.bool,
+  isUpdateAppLoading: PropTypes.bool,
 };
 
 class Step2Microservices extends React.Component {
@@ -117,7 +120,9 @@ class Step2Microservices extends React.Component {
     const {
       appId,
       updateMicroservices,
-      ui,
+      isFetchAvailableServicesLoading,
+      isUpdateMicroservicesLoading,
+      isUpdateAppLoading,
     } = this.props;
 
     return (
@@ -187,14 +192,14 @@ class Step2Microservices extends React.Component {
               microservices={this.detectedMicroservices}
               buttonElement={<Button size="sm" color="success">Add</Button>}
               buttonOnClick={this.props.addMicroservice}
-              isFetchAvailableServicesLoading={ ui.FETCH_AVAILABLE_SERVICES.pending}
+              isFetchAvailableServicesLoading={isFetchAvailableServicesLoading}
             />
           </CardBody>
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
           <Button
-            isLoading={ui.UPDATE_MICROSERVICES.pending || ui.UPDATE_APP.pending}
+            isLoading={isUpdateMicroservicesLoading || isUpdateAppLoading}
             color="primary"
           >Next</Button>
         </div>
@@ -207,7 +212,9 @@ const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, u
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  ui,
+  isFetchAvailableServicesLoading: ui.FETCH_AVAILABLE_SERVICES.pending,
+  isUpdateMicroservicesLoading: ui.UPDATE_MICROSERVICES.pending,
+  isUpdateAppLoading: ui.UPDATE_APP.pending,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
