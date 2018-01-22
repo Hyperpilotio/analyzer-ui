@@ -73,9 +73,7 @@ class Step2Microservices extends React.Component {
     removeMicroservice: PropTypes.func.isRequired,
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
-    isUpdateMicroservicesLoading: PropTypes.bool,
     isFetchAvailableServicesLoading: PropTypes.bool,
-    isUpdateAppLoading: PropTypes.bool,
   }
 
   state = {
@@ -119,9 +117,7 @@ class Step2Microservices extends React.Component {
     const {
       appId,
       updateMicroservices,
-      isUpdateMicroservicesLoading,
-      isFetchAvailableServicesLoading,
-      isUpdateAppLoading,
+      ui,
     } = this.props;
 
     return (
@@ -187,18 +183,18 @@ class Step2Microservices extends React.Component {
               </div>
             </div>
             <MicroservicesTable
-              tbodyStyle={{ height: "400px" }}
+              tbodyStyle={{ height: "400px" }} 
               microservices={this.detectedMicroservices}
               buttonElement={<Button size="sm" color="success">Add</Button>}
               buttonOnClick={this.props.addMicroservice}
-              isFetchAvailableServicesLoading={isFetchAvailableServicesLoading}
+              isFetchAvailableServicesLoading={ ui.FETCH_AVAILABLE_SERVICES.pending}
             />
           </CardBody>
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
           <Button
-            isLoading={isUpdateMicroservicesLoading || isUpdateAppLoading}
+            isLoading={ui.UPDATE_MICROSERVICES.pending || ui.UPDATE_APP.pending}
             color="primary"
           >Next</Button>
         </div>
@@ -211,9 +207,7 @@ const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, u
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  isFetchAvailableServicesLoading: ui.FETCH_AVALIABLE_SERVICES.pending,
-  isUpdateMicroservicesLoading: ui.UPDATE_MICROSERVICES.pending,
-  isUpdateAppLoading: ui.UPDATE_APP.pending,
+  ui,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

@@ -4,7 +4,7 @@ import { asyncActionTypes } from "../actions/types";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
 const initialLoadingState = {
-  pending: true,
+  pending: false,
   refreshing: false,
   fulfilled: false,
   rejected: false,
