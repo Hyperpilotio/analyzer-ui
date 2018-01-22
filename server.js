@@ -18,7 +18,8 @@ server.use(routersRequireContext(`./${ANALYSIS_APP}`).default);
 
 if (isDev && module.hot) {
   /* eslint-disable no-underscore-dangle */
-  // Replace the registration name of the router middleware we just `use`d from "mounted_app" to "alpha_router", in order to locate and replace them when there's an HMR
+  // Replace the registration name of the router middleware we just `use`d from "mounted_app"
+  // to "alpha_router", in order to locate and replace them when there's an HMR
   server._router.stack[server._router.stack.length - 1].name = `${ANALYSIS_APP}_router`;
 
   module.hot.accept(routersRequireContext.id, () => {
@@ -30,7 +31,8 @@ if (isDev && module.hot) {
 
     server.use(routersRequireContext(`./${ANALYSIS_APP}`).default);
 
-    server._router.stack.splice(routerIndex, 0, server._router.stack.pop()); // Move it to the original position
+    // Move it to the original position
+    server._router.stack.splice(routerIndex, 0, server._router.stack.pop());
     server._router.stack[routerIndex].name = `${ANALYSIS_APP}_router`;
   });
   /* eslint-enable */
