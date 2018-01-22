@@ -1,4 +1,9 @@
-import { VictoryVoronoiContainer } from "victory-chart";
+import {
+  combineContainerMixins,
+  zoomContainerMixin,
+  VictoryVoronoiContainer,
+  VictoryZoomContainer,
+} from "victory-chart";
 import { Data } from "victory-core";
 import _ from "lodash";
 
@@ -9,13 +14,15 @@ Data.getData = (props) => {
   return null;
 };
 
-export default class TimeSeriesTooltipContainer extends VictoryVoronoiContainer {
-  static displayName = "TimeSeriesTooltipContainer"
+export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer extends base {
+  static displayName = "VictoryTimeSeriesContainer"
   static defaultProps = {
-    ...VictoryVoronoiContainer.defaultProps,
+    ...base.defaultProps,
     voronoiDimension: "x",
+    zoomDimension: "x",
     labels: () => "",
   }
+  static defaultEvents = base.defaultEvents
 
   getLabelProps(props, points) {
     const { scale, labelComponent, theme, mousePosition } = props;
@@ -38,3 +45,8 @@ export default class TimeSeriesTooltipContainer extends VictoryVoronoiContainer 
     );
   }
 }
+
+export default combineContainerMixins([
+  zoomContainerMixin,
+  timeSeriesContainerMixin,
+], VictoryVoronoiContainer);

@@ -9,7 +9,7 @@ import moment from "moment";
 import { format } from "d3-format";
 import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
-import TimeSeriesTooltipContainer from "./TimeSeriesTooltipContainer";
+import TimeSeriesZoomContainer from "./TimeSeriesZoomContainer";
 import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
 
 // Overriding Wrapper.getDomain, which is used by VictoryChart
@@ -31,7 +31,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children }) => (
     width={width}
     height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
-    containerComponent={<TimeSeriesTooltipContainer
+    containerComponent={<TimeSeriesZoomContainer
       labelComponent={<DefaultDisabledTooltip flyoutComponent={<MultiPointFlyout />} />}
     />}
   >
