@@ -1,116 +1,75 @@
 import _ from "lodash";
 import * as actionTypes from "../actions/types";
+import { asyncActionTypes } from "../actions/types";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
-const RSAATypes = _.pickBy(actionTypes, type => _.isArray(type) && type.length === 3);
-const loadingStates = ["pending", "fulfilled", "rejected", "settled", "refreshing"];
-
+const initialLoadingState = {
+  pending: true,
+  refreshing: false,
+  fulfilled: false,
+  rejected: false,
+  settled: false,
+};
 const initialState = _.mapValues(
-  _.mapKeys(RSAATypes, (__, name) => (_.camelCase(`${name}`))),
-  (__, name) => {
-    const objectType = actionTypes.actionTypeRegistry[_.upperCase(name).replace(/ /g, "_")];
-    if (objectType === actionTypes.asyncActionTypes.SIMPLE) {
-      return (_.zipObject(loadingStates, _.map(loadingStates, () => (false))));
-    } else if (objectType === actionTypes.asyncActionTypes.TRACKABLE) {
-      return ({ map: {} });
+  actionTypes.actionTypeRegistry,
+  (actionType) => {
+    switch (actionType) {
+    case asyncActionTypes.SIMPLE:
+      return initialLoadingState;
+    case asyncActionTypes.TRACKABLE:
+      return { map: {} };
+    case asyncActionTypes.SIMPLE_AND_TRACKABLE:
+      return { ...initialLoadingState, map: {} };
+    default:
+      throw new Error(`Unknown async action type: ${actionType}`);
     }
-    return ({
-      ..._.zipObject(loadingStates, _.map(loadingStates, () => (false))),
-      map: {},
-    });
   },
 );
 
 export default (state = initialState, action) => {
-  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // FETCH_APPS
-  const actionType = actionTypes.actionTypeRegistry[actionName]; // SIMPLE / TRACKABLE / SIMPLE_AND_TRACKABLE
-  const uiFieldName = _.camelCase(actionName);
-  
+  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // i.e. FETCH_APPS
+
   if (_.isUndefined(actionName)) {
     return state;
   }
-  /*
-  * SIMPLE: [x] map
-  * TRACKABLE: [v] map
-  * SIMPLE & TRACKABLE ~
-  *   meta: [V] map
-  *   no meta: [x] map
-  */
 
-  // _.has
-
-  let map;
-  const loadingState = {
-    pending: true,
-    fulfilled: false,
-    rejected: false,
-    settled: false,
-  };
+  let loadingState = null;
+  const loadingStatePath = _.has(action.meta, "key") ?
+    [actionName, "map", action.meta.key] :
+    [actionName];
 
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
-    if (actionType === actionTypes.asyncActionTypes.SIMPLE) {
-      map = loadingState;
-    } else if (actionType === actionTypes.asyncActionTypes.TRACKABLE) {
-      map = {
-        [action.meta.key]: _.zipObject(loadingStates, _.map(loadingStates, () => (false))),
-      };
-    } else if (_.has(action.meta, "key")) {
-      map = {
-        ...loadingState,
-        map: {
-          [action.meta.key]: _.zipObject(loadingStates, _.map(loadingStates, () => (false))),
-        },
+    if (_.get(state, [...loadingStatePath, "fulfilled"], false)) {
+      loadingState = {
+        ..._.get(state, loadingStatePath),
+        refreshing: true,
       };
     } else {
-      map = {
-        ...loadingState,
-        map: {},
-      };
+      loadingState = initialLoadingState;
     }
-
-    return {
-      ...state,
-      [uiFieldName]: {
-        ...state[uiFieldName],
-        ...map,
-      },
-    };
-
+    break;
   case SUCCESS:
-    return {
-      ...state,
-      [uiFieldName]: {
-        ...state[uiFieldName],
-        pending: false,
-        fulfilled: true,
-        rejected: false,
-        settled: true,
-        map: _.has(action.meta, "key") ?
-          {
-            [action.meta.key]: _.zipObject(loadingStates, _.map(loadingStates, () => (false))),
-          } : {},
-      },
+    loadingState = {
+      ..._.get(state, loadingStatePath),
+      pending: false,
+      refreshing: false,
+      fulfilled: true,
+      settled: true,
     };
-
+    break;
   case FAIL:
-    console.error(`${actionName} failed:`);
-    if (action.payload.name === "ApiError") {
-      console.error(action.payload.response);
-    } else {
-      console.error(action.payload);
-    }
-    return {
-      ...state,
-      [uiFieldName]: {
-        ...state[uiFieldName],
-        pending: false,
-        fulfilled: false,
-        rejected: true,
-        settled: true,
-      },
+    loadingState = {
+      ..._.get(state, loadingStatePath),
+      pending: false,
+      refreshing: false,
+      fulfilled: false,
+      rejected: true,
+      settled: true,
     };
+    break;
   default:
-    return state;
+    throw new Error(`Unknown async action type: ${action.type}`);
   }
+  return _.setWith({ ...state }, loadingStatePath, loadingState, _.clone);
 };

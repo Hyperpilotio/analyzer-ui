@@ -29,7 +29,7 @@ const DashboardAppsTable = ({
       </tr>
     </thead>
     <tbody>
-      { ui.fetchApps.pending ?
+      { ui.FETCH_APPS.pending ?
         <tr>
           <td colSpan="7" style={{ textAlign: "center" }}>
             <div className={_s.loaderCon}>
@@ -49,7 +49,7 @@ const DashboardAppsTable = ({
                 <td />
                 <td>{ app.state }</td>
                 <td>
-                  { app.app_id === ui.removeApp.map ?
+                  { _.get(ui.REMOVE_APP.map, [app.app_id, "pending"]) ?
                     <div className={_s.loaderCon}>
                       <Spinner fadeIn="quarter" name="wave" className={_s.loader} />
                       <span>Deleting...</span>
@@ -85,7 +85,7 @@ const DashboardAppsTable = ({
               <td>{ app.state }</td>
               <td>
                 {
-                  app.app_id === ui.removeApp.map ?
+                  _.get(ui.REMOVE_APP.map, [app.app_id, "pending"]) ?
                     <div className={_s.loaderCon}>
                       <Spinner fadeIn="quarter" name="wave" className={_s.loader} />
                       <span>Deleting...</span>
