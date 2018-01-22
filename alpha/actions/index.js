@@ -22,21 +22,6 @@ const withKey = (RSAAType, key) => RSAAType.map(type => ({
   meta: { key },
 }));
 
-// types: [
-//   {
-//     type: types.UPDATE_MICROSERVICES[0],
-//     meta: { key: microservicesInfo.app_id },
-//   },
-//   {
-//     type: types.UPDATE_MICROSERVICES[1],
-//     meta: { key: microservicesInfo.app_id },
-//   },
-//   types.UPDATE_MICROSERVICES[2],
-// ],
-
-
-//----------------------------------
-
 export const fetchApps = () => async (dispatch) => {
   const response = await dispatch({
     [RSAA]: {
@@ -137,7 +122,7 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
     const response = await dispatch({
       [RSAA]: {
         endpoint: "/api/update-app",
-        method: "POST",
+        method: "POST", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(app),
         types: withKey(types.UPDATE_APP, app.app_id),
