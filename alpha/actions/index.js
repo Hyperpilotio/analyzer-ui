@@ -189,7 +189,7 @@ export const activateApp = app => async (dispatch) => {
 
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
   const { applications, ui } = getState();
-  if (applications.length === 0 && !ui.isFetchAppsLoading) {
+  if (applications.length === 0 && !ui.FETCH_APPS.pending) {
     await dispatch(fetchApps());
   }
   const app = _.find(getState().applications, { app_id: appId });

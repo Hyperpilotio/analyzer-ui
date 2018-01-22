@@ -105,7 +105,7 @@ class SetupEdit extends React.Component {
 
 const mapStateToProps = ({ createAppForm, ui }) => ({
   createAppForm,
-  isLoading: ui.isFetchAppsLoading,
+  isLoading: ui.FETCH_APPS.pending,
 });
 
 const mapDispatchToProps = dispatch => ({
