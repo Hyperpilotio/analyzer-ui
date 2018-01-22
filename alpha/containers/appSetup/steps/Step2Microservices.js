@@ -211,9 +211,9 @@ const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, u
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  isFetchAvailableServicesLoading: ui.fetchAvailableServices.isPending,
-  isUpdateMicroservicesLoading: ui.updateMicroservices.isPending,
-  isUpdateAppLoading: ui.updateApp.isPending,
+  isFetchAvailableServicesLoading: ui.fetchAvailableServices.pending,
+  isUpdateMicroservicesLoading: ui.updateMicroservices.pending,
+  isUpdateAppLoading: ui.updateApp.pending,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

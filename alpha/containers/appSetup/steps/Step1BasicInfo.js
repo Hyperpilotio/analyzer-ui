@@ -58,8 +58,8 @@ Step1BasicInfo.propTypes = {
 };
 
 const mapStateToProps = ({ ui }) => ({
-  isCreateAppLoading: ui.createApp.isPending,
-  isUpdateAppLoading: ui.updateApp.isPending,
+  isCreateAppLoading: ui.createApp.pending,
+  isUpdateAppLoading: ui.updateApp.pending,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({

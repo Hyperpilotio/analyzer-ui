@@ -3,19 +3,19 @@ import * as actionTypes from "../actions/types";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
 const RSAATypes = _.pickBy(actionTypes, type => _.isArray(type) && type.length === 3);
-const simpleKeys = ["isPending", "isFulfilled", "isRejected", "isSettled", "isRefreshing"];
+const loadingStates = ["pending", "fulfilled", "rejected", "settled", "refreshing"];
 
 const initialState = _.mapValues(
   _.mapKeys(RSAATypes, (__, name) => (_.camelCase(`${name}`))),
   (__, name) => {
     const objectType = actionTypes.actionTypeRegistry[_.upperCase(name).replace(/ /g, "_")];
     if (objectType === actionTypes.asyncActionTypes.SIMPLE) {
-      return (_.zipObject(simpleKeys, _.map(simpleKeys, () => (false))));
+      return (_.zipObject(loadingStates, _.map(loadingStates, () => (false))));
     } else if (objectType === actionTypes.asyncActionTypes.TRACKABLE) {
       return ({ map: {} });
     }
     return ({
-      ..._.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
+      ..._.zipObject(loadingStates, _.map(loadingStates, () => (false))),
       map: {},
     });
   },
@@ -41,10 +41,10 @@ export default (state = initialState, action) => {
 
   let map;
   const loadingState = {
-    isPending: true,
-    isFulfilled: false,
-    isRejected: false,
-    isSettled: false,
+    pending: true,
+    fulfilled: false,
+    rejected: false,
+    settled: false,
   };
 
   switch (actionTypes[actionName].indexOf(action.type)) {
@@ -53,13 +53,13 @@ export default (state = initialState, action) => {
       map = loadingState;
     } else if (actionType === actionTypes.asyncActionTypes.TRACKABLE) {
       map = {
-        [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
+        [action.meta.key]: _.zipObject(loadingStates, _.map(loadingStates, () => (false))),
       };
     } else if (_.has(action.meta, "key")) {
       map = {
         ...loadingState,
         map: {
-          [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
+          [action.meta.key]: _.zipObject(loadingStates, _.map(loadingStates, () => (false))),
         },
       };
     } else {
@@ -82,13 +82,13 @@ export default (state = initialState, action) => {
       ...state,
       [uiFieldName]: {
         ...state[uiFieldName],
-        isPending: false,
-        isFulfilled: true,
-        isRejected: false,
-        isSettled: true,
+        pending: false,
+        fulfilled: true,
+        rejected: false,
+        settled: true,
         map: _.has(action.meta, "key") ?
           {
-            [action.meta.key]: _.zipObject(simpleKeys, _.map(simpleKeys, () => (false))),
+            [action.meta.key]: _.zipObject(loadingStates, _.map(loadingStates, () => (false))),
           } : {},
       },
     };
@@ -104,10 +104,10 @@ export default (state = initialState, action) => {
       ...state,
       [uiFieldName]: {
         ...state[uiFieldName],
-        isPending: false,
-        isFulfilled: false,
-        isRejected: true,
-        isSettled: true,
+        pending: false,
+        fulfilled: false,
+        rejected: true,
+        settled: true,
       },
     };
   default:

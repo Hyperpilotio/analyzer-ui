@@ -112,8 +112,8 @@ Step4ManagementFeatures.propTypes = {
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
   appId: basicInfo.app_id,
   management_features,
-  isUpdateAppLoading: ui.updateApp.isPending,
-  isActivateAppLoading: ui.activateApp.isPending,
+  isUpdateAppLoading: ui.updateApp.pending,
+  isActivateAppLoading: ui.activateApp.pending,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
