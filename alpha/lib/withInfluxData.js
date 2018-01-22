@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import _ from "lodash";
 import { connect as connectRefetch, PromiseState } from "react-refetch";
 
 const withInfluxData = propsToQuery => (WrappedComponent) => {
-  @connectRefetch(props => {
+  @connectRefetch((props) => {
     const { db, metric, tags, timeRange, refreshInterval } = propsToQuery(props);
     const influxFetch = {
       url: "/api/influx-data",
@@ -23,6 +24,10 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
   })
   class WithInfluxData extends React.Component {
     static displayName = `withInfluxData(${WrappedComponent.displayName || WrappedComponent.name})`
+    static propTypes = {
+      influxFetch: PropTypes.instanceOf(PromiseState).isRequired,
+      influxFetchMeta: PropTypes.instanceOf(PromiseState).isRequired,
+    }
 
     constructor(props) {
       super(props);
@@ -32,7 +37,7 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
             PromiseState.create(props.influxFetch.meta),
             { value: { name: props.influxFetchMeta.value.metric, values: [] } },
           ),
-        }
+        };
       } else {
         this.state = { influxData: props.influxFetch };
       }

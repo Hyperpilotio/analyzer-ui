@@ -49,7 +49,7 @@ export const inRangeInclusive = (value, start, end) => value >= start && value <
 _.assign(moment.prototype, {
   tsNano() {
     return this.valueOf() * (1000 ** 2);
-  }
+  },
 });
 
 export const tsToMoment = tsNano => moment(tsNano / (1000 ** 2));

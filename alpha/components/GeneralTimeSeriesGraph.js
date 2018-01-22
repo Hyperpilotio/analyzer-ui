@@ -7,24 +7,23 @@ import { VictoryLabel } from "victory-core";
 import _ from "lodash";
 import moment from "moment";
 import { format } from "d3-format";
+import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesTooltipContainer from "./TimeSeriesTooltipContainer";
 import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
-import Wrapper from "victory-chart/es/helpers/wrapper";
 
 // Overriding Wrapper.getDomain, which is used by VictoryChart
 Wrapper.getDomain = _.wrap(
   ::Wrapper.getDomain,
-  (getDomain, props, axis, childComponents) => {
-    childComponents = childComponents || React.Children.toArray(props.children);
+  (getDomain, props, axis, childComponents = React.Children.toArray(props.children)) => {
     const domain = getDomain(props, axis, childComponents);
-    // We want to keep the threshold line in the graph even when all the data points are under threshold
+    // Keep the threshold line in the graph even when all the data points are under threshold
     const thresholdLine = _.find(childComponents, el => _.has(el.props, "threshold"));
     if (!_.isUndefined(thresholdLine)) {
       domain[1] = _.max([domain[1], thresholdLine.props.threshold]);
     }
     return domain;
-  }
+  },
 );
 
 const GeneralTimeSeriesGraph = ({ yLabel, width, height, children }) => (
