@@ -6,7 +6,7 @@ import _s from "../style.scss";
 import { updateApp, createApp } from "../../../actions";
 import Button from "../../../components/Button";
 
-const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpdateAppLoading }) => (
+const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, LoadingState }) => (
   <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
     <div className={_s.inputRow}>
       <div className={`form-group row ${_s.formGroup}`}>
@@ -43,7 +43,7 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpd
         Reset
       </Control.reset>
       <Button
-        isLoading={isCreateAppLoading || isUpdateAppLoading}
+        isLoading={LoadingState.createApp.pending || LoadingState.updateApp.pending}
         color="primary"
       >Next</Button>
     </div>
@@ -53,13 +53,14 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, isCreateAppLoading, isUpd
 Step1BasicInfo.propTypes = {
   submitBasicInfo: PropTypes.func.isRequired,
   cancelEdit: PropTypes.func.isRequired,
-  isCreateAppLoading: PropTypes.bool,
-  isUpdateAppLoading: PropTypes.bool,
+  LoadingState: PropTypes.object,
 };
 
-const mapStateToProps = ({ ui }) => ({
-  isCreateAppLoading: ui.CREATE_APP.pending,
-  isUpdateAppLoading: ui.CREATE_APP.pending,
+const mapStateToProps = ({ ui: { CREATE_APP, UPDATE_APP } }) => ({
+  LoadingState: {
+    createApp: CREATE_APP,
+    updateApp: UPDATE_APP,
+  },
 });
 
 const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({

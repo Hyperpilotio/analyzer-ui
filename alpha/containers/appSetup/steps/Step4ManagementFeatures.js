@@ -25,8 +25,7 @@ const Step4ManagementFeatures = ({
   management_features,
   stepBack,
   updateManagementFeatures,
-  isUpdateAppLoading,
-  isActivateAppLoading,
+  LoadingState,
 }) => (
   <Form
     model="createAppForm.management_features"
@@ -92,7 +91,7 @@ const Step4ManagementFeatures = ({
         onClick={stepBack}
       >Back</Button>
       <Button
-        isLoading={isUpdateAppLoading || isActivateAppLoading}
+        isLoading={LoadingState.updateApp || LoadingState.activateApp}
         color="success"
       >
       Begin Hyperpiloting
@@ -105,15 +104,16 @@ Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManagementFeatures: PropTypes.func.isRequired,
-  isUpdateAppLoading: PropTypes.bool,
-  isActivateAppLoading: PropTypes.bool,
+  LoadingState: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
   appId: basicInfo.app_id,
   management_features,
-  isUpdateAppLoading: ui.UPDATE_APP.pending,
-  isActivateAppLoading: ui.ACTIVATE_APP.pending,
+  LoadingState: {
+    updateApp: ui.UPDATE_APP,
+    activateApp: ui.ACTIVATE_APP,
+  },
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

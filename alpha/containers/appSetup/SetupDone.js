@@ -9,28 +9,28 @@ import CheckMark from "../../components/CheckMark";
 import _s from "../style.scss";
 
 const SetupDone = ({
-  isActivateAppLoading,
+  LoadingState,
   appName,
 }) => (
   <Container className="effect-fade-in">
-    { isActivateAppLoading ?
+    { LoadingState.activateApp ?
       <div className={`spinner-con loading ${_s.spinnerCon}`}>
         <Spinner />
       </div>
       : null
     }
-    { !isActivateAppLoading ?
+    { !LoadingState.activateApp ?
       <div className={`check-con done ${_s.checkCon}`}>
         <CheckMark />
       </div>
       : null
     }
     {
-      isActivateAppLoading ?
+      LoadingState.activateApp ?
         <h4 className={_s.wordLoading}>Setting up HyperPilot ...</h4> : null
     }
     {
-      !isActivateAppLoading ?
+      !LoadingState.activateApp ?
         <div>
           <h4 className={_s.wordSuccess}>HyperPilot is now running for {appName}! </h4>
           <div className="row">
@@ -47,16 +47,15 @@ const SetupDone = ({
 );
 
 SetupDone.propTypes = {
-  isActivateAppLoading: PropTypes.bool.isRequired,
-  appName: AppPropType.string,
+  appName: PropTypes.string,
+  LoadingState: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({
-  createAppForm,
-  ui: { isActivateAppLoading },
-}) => ({
+const mapStateToProps = ({ createAppForm, ui }) => ({
   appName: createAppForm.basicInfo.name,
-  isActivateAppLoading,
+  LoadingState: {
+    activateApp: ui.isActivateAppLoading,
+  },
 });
 
 export default connect(

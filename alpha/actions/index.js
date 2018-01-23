@@ -82,7 +82,6 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
     _.find(apps, { app_id: microservicesInfo.app_id }),
     _.keys(microservicesInfo),
   );
-
   // update in DB and redux apps if they are different
   if (!_.isEqual(microservicesInfo, matchAppsItem)) {
     const response = await dispatch({

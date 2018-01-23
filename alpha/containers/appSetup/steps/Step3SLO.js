@@ -18,8 +18,7 @@ class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
-    isFetchMetricsLoading: PropTypes.bool,
-    isUpdateAppLoading: PropTypes.bool,
+    LoadingState: PropTypes.object,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
     tags: PropTypes.array,
@@ -131,8 +130,7 @@ class Step3SLO extends React.Component {
       slo,
       addTagsInput,
       deleteTag,
-      isFetchMetricsLoading,
-      isUpdateAppLoading,
+      LoadingState,
     } = this.props;
 
     const selectedMetric = _.find(metricOptions, { name: slo.metric.name }) || {};
@@ -182,7 +180,7 @@ class Step3SLO extends React.Component {
               </Col>
               <Col>
                 <Button type="submit" color="primary" className="float-right" >
-                  { isFetchMetricsLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
+                  { LoadingState.fetchMetrics.pending ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
                   Confirm Source
                 </Button>
               </Col>
@@ -273,8 +271,8 @@ class Step3SLO extends React.Component {
                           <option value={null} disabled>Tag value</option>
                           { !_.isEmpty(metricOptions) ?
                             _.map(
-                              _.get(_.find(selectedMetric.tags, {key: tag.key}), "values"),
-                              val => <option key={val} value={val}>{val}</option>
+                              _.get(_.find(selectedMetric.tags, { key: tag.key }), "values"),
+                              val => <option key={val} value={val}>{val}</option>,
                             ) :
                             <option value={tag.value}>{tag.value}</option>
                           }
@@ -327,7 +325,7 @@ class Step3SLO extends React.Component {
             <div className="float-right">
               <Button
                 isDisabled={sloFormDisabled}
-                isLoading={isUpdateAppLoading}
+                isLoading={LoadingState.updateApp.pending}
                 color="primary"
               >Next</Button>
             </div>
@@ -343,8 +341,10 @@ const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microserv
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
-  isFetchMetricsLoading: ui.FETCH_METRICS.pending,
-  isUpdateAppLoading: ui.UPDATE_APP.pending,
+  LoadingState: {
+    fetchMetrics: ui.FETCH_METRICS,
+    updateApp: ui.UPDATE_APP,
+  },
   sloSource,
   microservices,
   slo,
