@@ -325,7 +325,7 @@ class Step3SLO extends React.Component {
             <div className="float-right">
               <Button
                 isDisabled={sloFormDisabled}
-                isLoading={LoadingState.updateApp.pending}
+                isLoading={LoadingState.updateApp.map[appId] && LoadingState.updateApp.map[appId].pending}
                 color="primary"
               >Next</Button>
             </div>

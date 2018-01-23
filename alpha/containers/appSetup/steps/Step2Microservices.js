@@ -144,7 +144,7 @@ class Step2Microservices extends React.Component {
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
           <Button
-            isLoading={LoadingState.upadteMicroservices.pending || LoadingState.updateApp.pending}
+            isLoading={LoadingState.upadteMicroservices.map[appId] && LoadingState.upadteMicroservices.map[appId].pending}
             color="primary"
           >Next</Button>
         </div>

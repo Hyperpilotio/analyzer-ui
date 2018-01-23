@@ -6,7 +6,7 @@ import _s from "../style.scss";
 import { updateApp, createApp } from "../../../actions";
 import Button from "../../../components/Button";
 
-const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, LoadingState }) => (
+const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, LoadingState, appId }) => (
   <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
     <div className={_s.inputRow}>
       <div className={`form-group row ${_s.formGroup}`}>
@@ -43,7 +43,7 @@ const Step1BasicInfo = ({ cancelEdit, submitBasicInfo, LoadingState }) => (
         Reset
       </Control.reset>
       <Button
-        isLoading={LoadingState.createApp.pending || LoadingState.updateApp.pending}
+        isLoading={LoadingState.createApp.pending || (LoadingState.updateApp.map[appId] && LoadingState.updateApp.map[appId].pending)}
         color="primary"
       >Next</Button>
     </div>
@@ -54,9 +54,11 @@ Step1BasicInfo.propTypes = {
   submitBasicInfo: PropTypes.func.isRequired,
   cancelEdit: PropTypes.func.isRequired,
   LoadingState: PropTypes.object,
+  appId: PropTypes.string,
 };
 
-const mapStateToProps = ({ ui: { CREATE_APP, UPDATE_APP } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo }, ui: { CREATE_APP, UPDATE_APP } }) => ({
+  appId: basicInfo.app_id,
   LoadingState: {
     createApp: CREATE_APP,
     updateApp: UPDATE_APP,
