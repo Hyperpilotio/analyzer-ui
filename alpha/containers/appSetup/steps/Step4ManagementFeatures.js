@@ -91,7 +91,7 @@ const Step4ManagementFeatures = ({
         onClick={stepBack}
       >Back</Button>
       <Button
-        isLoading={(LoadingState.updateApp.map[appId] && LoadingState.updateApp.map[appId].pending) || LoadingState.activateApp.pending}
+        isLoading={(LoadingState.activateApp.map[appId] && LoadingState.activateApp.map[appId].pending)}
         color="success"
       >
       Begin Hyperpiloting
