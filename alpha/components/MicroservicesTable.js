@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Table } from "reactstrap";
 import Spinner from "react-spinkit";
 import _ from "lodash";
-import _s from "../containers/style.scss";
+import _s from "../containers/appSetup/style.scss";
 
 
 const getDisplayKind = kind => (

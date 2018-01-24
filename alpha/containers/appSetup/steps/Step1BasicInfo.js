@@ -2,19 +2,20 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form, Control, Errors } from "react-redux-form";
 import { connect } from "react-redux";
+import _ from "lodash";
 import _s from "../style.scss";
-import { updateApp, createApp, resetUi } from "../../../actions";
+import { updateApp, createApp, resetLoadingState } from "../../../actions";
 import Button from "../../../components/Button";
 
 class Step1BasicInfo extends React.Component {
   static propTypes = {
-    resetUi: PropTypes.func.isRequired,
+    resetLoadingState: PropTypes.func.isRequired,
   }
   componentWillMount() {
-    this.props.resetUi();
+    this.props.resetLoadingState();
   }
   render = () => {
-    const { cancelEdit, submitBasicInfo, LoadingState, appId } = this.props;
+    const { cancelEdit, submitBasicInfo, loadingState, appId } = this.props;
     return (
       <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
         <div className={_s.inputRow}>
@@ -52,7 +53,7 @@ class Step1BasicInfo extends React.Component {
             Reset
           </Control.reset>
           <Button
-            isLoading={LoadingState.createApp.pending || (LoadingState.updateApp.map[appId] && LoadingState.updateApp.map[appId].pending)}
+            isLoading={loadingState.createApp.pending || _.get(loadingState.updateApp.map, [appId, "pending"], false)}
             color="primary"
           >Next</Button>
         </div>
@@ -65,13 +66,13 @@ class Step1BasicInfo extends React.Component {
 Step1BasicInfo.propTypes = {
   submitBasicInfo: PropTypes.func.isRequired,
   cancelEdit: PropTypes.func.isRequired,
-  LoadingState: PropTypes.object,
+  loadingState: PropTypes.object,
   appId: PropTypes.string,
 };
 
 const mapStateToProps = ({ createAppForm: { basicInfo }, ui: { CREATE_APP, UPDATE_APP } }) => ({
   appId: basicInfo.app_id,
-  LoadingState: {
+  loadingState: {
     createApp: CREATE_APP,
     updateApp: UPDATE_APP,
   },
@@ -85,7 +86,7 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
       dispatch(updateApp(basicInfo, stepNext));
     }
   },
-  resetUi: () => dispatch(resetUi()),
+  resetLoadingState: () => dispatch(resetLoadingState()),
 });
 
 export default connect(

@@ -7,6 +7,7 @@ import {
 import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import _ from "lodash";
 import { updateApp, activateApp } from "../../../actions";
 import Button from "../../../components/Button";
 
@@ -25,7 +26,7 @@ const Step4ManagementFeatures = ({
   management_features,
   stepBack,
   updateManagementFeatures,
-  LoadingState,
+  loadingState,
 }) => (
   <Form
     model="createAppForm.management_features"
@@ -91,7 +92,7 @@ const Step4ManagementFeatures = ({
         onClick={stepBack}
       >Back</Button>
       <Button
-        isLoading={(LoadingState.activateApp.map[appId] && LoadingState.activateApp.map[appId].pending)}
+        isLoading={_.get(loadingState.activateApp.map, [appId, "pending"], false)}
         color="success"
       >
       Begin Hyperpiloting
@@ -104,13 +105,13 @@ Step4ManagementFeatures.propTypes = {
   management_features: PropTypes.array.isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManagementFeatures: PropTypes.func.isRequired,
-  LoadingState: PropTypes.object.isRequired,
+  loadingState: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
   appId: basicInfo.app_id,
   management_features,
-  LoadingState: {
+  loadingState: {
     updateApp: ui.UPDATE_APP,
     activateApp: ui.ACTIVATE_APP,
   },

@@ -19,7 +19,7 @@ class Step2Microservices extends React.Component {
     removeMicroservice: PropTypes.func.isRequired,
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
-    LoadingState: PropTypes.object.isRequired,
+    loadingState: PropTypes.object.isRequired,
   }
 
   state = {
@@ -62,7 +62,7 @@ class Step2Microservices extends React.Component {
   render() {
     const {
       appId,
-      LoadingState,
+      loadingState,
       updateMicroservices,
     } = this.props;
 
@@ -80,7 +80,7 @@ class Step2Microservices extends React.Component {
               microservices={this.props.microservices}
               buttonElement={<Button size="sm" color="danger">Remove</Button>}
               buttonOnClick={this.props.removeMicroservice}
-              loadingState={LoadingState}
+              loadingState={loadingState}
             />
             { this.props.microservices.length <= 0 ?
               <div className={`row ${_s.noData}`}>
@@ -137,14 +137,14 @@ class Step2Microservices extends React.Component {
               microservices={this.detectedMicroservices}
               buttonElement={<Button size="sm" color="success">Add</Button>}
               buttonOnClick={this.props.addMicroservice}
-              loadingState={LoadingState}
+              loadingState={loadingState}
             />
           </CardBody>
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
           <Button
-            isLoading={LoadingState.upadteMicroservices.map[appId] && LoadingState.upadteMicroservices.map[appId].pending}
+            isLoading={_.get(loadingState.upadteMicroservices.map, [appId, "pending"], false)}
             color="primary"
           >Next</Button>
         </div>
@@ -157,7 +157,7 @@ const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, u
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  LoadingState: {
+  loadingState: {
     fetchAvailableServices: FETCH_AVAILABLE_SERVICES,
     upadteMicroservices: UPDATE_MICROSERVICES,
     updateApp: UPDATE_APP,

@@ -1,20 +1,20 @@
 import _ from "lodash";
 import * as actionTypes from "../actions/types";
 import { asyncActionTypes } from "../actions/types";
-import { setAsyncStatus } from "../lib/utils";
+import { makeLoadingState } from "../lib/utils";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
-const initialLoadingState = setAsyncStatus([]);
+const initialloadingState = makeLoadingState([]);
 const initialState = _.mapValues(
   actionTypes.actionTypeRegistry,
   (actionType) => {
     switch (actionType) {
     case asyncActionTypes.SIMPLE:
-      return initialLoadingState;
+      return initialloadingState;
     case asyncActionTypes.TRACKABLE:
       return { map: {} };
     case asyncActionTypes.SIMPLE_AND_TRACKABLE:
-      return { ...initialLoadingState, map: {} };
+      return { ...initialloadingState, map: {} };
     default:
       throw new Error(`Unknown async action type: ${actionType}`);
     }
@@ -29,6 +29,7 @@ export default (state = initialState, action) => {
     return initialState;
   }
 
+
   let loadingState = null;
   const loadingStatePath = _.has(action.meta, "key") ?
     [actionName, "map", action.meta.key] :
@@ -38,17 +39,17 @@ export default (state = initialState, action) => {
     
     if (_.get(state, [...loadingStatePath, "fulfilled"], false)) {
       // Refreshing with data existed
-      loadingState = setAsyncStatus(["refreshing", "fulfilled"]);
+      loadingState = makeLoadingState(["refreshing", "fulfilled"]);
     } else {
       // First time loading
-      loadingState = setAsyncStatus(["pending"]);
+      loadingState = makeLoadingState(["pending"]);
     }
     break;
   case SUCCESS:
-    loadingState = setAsyncStatus(["fulfilled", "settled"]);
+    loadingState = makeLoadingState(["fulfilled", "settled"]);
     break;
   case FAIL:
-    loadingState = setAsyncStatus(["rejected", "settled"]);
+    loadingState = makeLoadingState(["rejected", "settled"]);
     break;
   default:
     throw new Error(`Unknown async action type: ${action.type}`);
