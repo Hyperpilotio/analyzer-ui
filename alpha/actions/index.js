@@ -76,6 +76,10 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
   next(response.payload.data.app_id);
 };
 
+export const resetUi = () => ({
+  type: types.RESET_UI,
+});
+
 export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {
   const apps = getState().applications;
   const matchAppsItem = _.pick(
@@ -121,7 +125,7 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
     const response = await dispatch({
       [RSAA]: {
         endpoint: "/api/update-app",
-        method: "POST", 
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(app),
         types: withKey(types.UPDATE_APP, app.app_id),

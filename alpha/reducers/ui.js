@@ -25,6 +25,8 @@ export default (state = initialState, action) => {
   const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // i.e. FETCH_APPS
   if (_.isUndefined(actionName)) {
     return state;
+  } else if (action.type === actionTypes.RESET_UI) {
+    return initialState;
   }
 
   let loadingState = null;
@@ -33,12 +35,12 @@ export default (state = initialState, action) => {
     [actionName];
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
-    // Refreshing with data existed
+    
     if (_.get(state, [...loadingStatePath, "fulfilled"], false)) {
+      // Refreshing with data existed
       loadingState = setAsyncStatus(["refreshing", "fulfilled"]);
-    }
-    // First time loading
-    else {
+    } else {
+      // First time loading
       loadingState = setAsyncStatus(["pending"]);
     }
     break;

@@ -34,5 +34,8 @@ const simpleActions = [
   "OPEN_MODAL",
   "EMPTY_METRIC_OPTIONS",
   "SET_SLO_CONFIG_EDITABILITY",
+  "RESET_UI",
 ];
 _.assign(exports, _.zipObject(simpleActions, simpleActions));
+
+exports.resetType = "RESET_UI_STATE";

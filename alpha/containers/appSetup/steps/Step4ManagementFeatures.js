@@ -84,7 +84,7 @@ const Step4ManagementFeatures = ({
       </Card>
     ))
     }
-    <div className="float-right">
+    <div className="float-right mb-5">
       <Button
         color="secondary"
         className="mr-2"
