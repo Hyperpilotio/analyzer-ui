@@ -31,14 +31,22 @@ export default class MultiPointFlyout extends React.Component {
     this.width = 280;
     this.height = 80;
     this.mainBox = null;
-    this.shouldUpdateSize = false;
+    this.shouldUpdateSize = true;
   }
 
   componentWillReceiveProps() {
     this.shouldUpdateSize = true;
   }
 
+  componentDidMount() {
+    this.updateSize();
+  }
+
   componentDidUpdate() {
+    this.updateSize();
+  }
+
+  updateSize() {
     if (this.shouldUpdateSize) {
       const bbox = this.mainBox.getBBox();
       this.width = 10 + bbox.width + 10;
