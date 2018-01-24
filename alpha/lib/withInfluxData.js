@@ -57,7 +57,14 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
           const data = nextProps.influxFetch.value;
           if (!_.isNull(data)) {
             // Filter null values
-            data.values = _.reject(data.values, { 1: null });
+            const notNull = _.negate(_.matches({ 1: null }));
+            const firstNotNullIndex = _.findIndex(data.values, notNull);
+            const lastNotNullIndex = _.findLastIndex(data.values, notNull);
+            data.values = _.concat(
+              data.values.slice(0, firstNotNullIndex),
+              data.values.slice(firstNotNullIndex, lastNotNullIndex + 1).filter(notNull),
+              data.values.slice(lastNotNullIndex + 1),
+            );
           }
           this.setState({
             // Copy the next influxFetch with value field replaced

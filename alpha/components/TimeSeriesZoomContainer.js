@@ -32,7 +32,7 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
       {
         x: scale.x(points[0].x),
         y: mousePosition.y,
-        active: true,
+        active: !_.isNull(points[0].y),
         datum: { x: 0, y: 0 },
         text: "",
         points,
