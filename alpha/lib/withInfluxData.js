@@ -5,22 +5,33 @@ import { connect as connectRefetch, PromiseState } from "react-refetch";
 
 const withInfluxData = propsToQuery => (WrappedComponent) => {
   @connectRefetch((props) => {
-    const { db, metric, tags, timeRange, refreshInterval } = propsToQuery(props);
-    const influxFetch = {
+    const { db, metric, tags, timeRange, refreshInterval = 5 * 1000 } = propsToQuery(props);
+    const createFetch = (start, end, options) => ({
       url: "/api/influx-data",
       method: "POST",
-      body: JSON.stringify({
-        db,
-        metric,
-        tags,
-        start: _.isEmpty(timeRange) ? "now() - 10m" : `${timeRange[0]}ms`,
-        end: _.isEmpty(timeRange) ? "now()" : `${timeRange[1]}ms`,
+      body: JSON.stringify({ db, metric, tags, start, end }),
+      ...options,
+    });
+    const influxFetch = createFetch(
+      _.isEmpty(timeRange) ? "now() - 10m" : `${timeRange[0]}ms`,
+      _.isEmpty(timeRange) ? "now()" : `${timeRange[1]}ms`,
+      _.isEmpty(timeRange) ? { refreshInterval } : {},
+    );
+    return {
+      influxFetch,
+      influxFetchMeta: { value: { db, metric, tags, timeRange } },
+      withTimeRange: timeRange => ({
+        influxFetch: createFetch(
+          _.isNumber(timeRange[0]) ? `${timeRange[0]}ms` : timeRange[0],
+          _.isNumber(timeRange[1]) ? `${timeRange[1]}ms` : timeRange[1],
+          _.every(timeRange, _.isNumber) ? { force: true } : { refreshInterval, force: true },
+        ),
+        influxFetchMeta: {
+          value: { db, metric, tags, timeRange },
+          force: true,
+        },
       }),
     };
-    if (_.isEmpty(timeRange)) {
-      influxFetch.refreshInterval = refreshInterval || 5 * 1000;
-    }
-    return { influxFetch, influxFetchMeta: { value: { db, metric, tags, timeRange } } };
   })
   class WithInfluxData extends React.Component {
     static displayName = `withInfluxData(${WrappedComponent.displayName || WrappedComponent.name})`

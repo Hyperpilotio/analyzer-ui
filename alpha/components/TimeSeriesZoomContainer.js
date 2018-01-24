@@ -1,8 +1,8 @@
 import {
   combineContainerMixins,
-  zoomContainerMixin,
+  selectionContainerMixin,
   VictoryVoronoiContainer,
-  VictoryZoomContainer,
+  VoronoiHelpers,
 } from "victory-chart";
 import { Data } from "victory-core";
 import _ from "lodash";
@@ -14,12 +14,34 @@ Data.getData = (props) => {
   return null;
 };
 
+VoronoiHelpers.onMouseMove = _.throttle(
+  _.wrap(
+    VoronoiHelpers.onMouseMove,
+    (onMouseMove, evt, targetProps) => {
+      // Hide tooltip (i.e. empty activePoints prop, i.e. call onMouseLeave)
+      // when the user starts to drag a selection on the graph
+      if (targetProps.select) {
+        if (_.isEmpty(targetProps.activePoints)) {
+          return {};
+        }
+        return {
+          id: _.uniqueId("throttledEvent"),
+          mutations: VoronoiHelpers.onMouseLeave(evt, targetProps),
+        };
+      }
+      return onMouseMove(evt, targetProps);
+    },
+  ),
+  32,
+  { leading: true, trailing: false },
+);
+
 export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer extends base {
   static displayName = "VictoryTimeSeriesContainer"
   static defaultProps = {
     ...base.defaultProps,
     voronoiDimension: "x",
-    zoomDimension: "x",
+    selectionDimension: "x",
     labels: () => "",
   }
   static defaultEvents = base.defaultEvents
@@ -47,6 +69,6 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
 }
 
 export default combineContainerMixins([
-  zoomContainerMixin,
+  selectionContainerMixin,
   timeSeriesContainerMixin,
 ], VictoryVoronoiContainer);

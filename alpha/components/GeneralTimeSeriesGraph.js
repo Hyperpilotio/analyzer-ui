@@ -11,6 +11,7 @@ import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesZoomContainer from "./TimeSeriesZoomContainer";
 import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
+import { ensureMultipleTimes } from "../lib/utils";
 
 // Overriding Wrapper.getDomain, which is used by VictoryChart
 Wrapper.getDomain = _.wrap(
@@ -26,12 +27,24 @@ Wrapper.getDomain = _.wrap(
   },
 );
 
-const GeneralTimeSeriesGraph = ({ yLabel, width, height, children }) => (
+const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, withTimeRange }) => (
   <VictoryChart
     width={width}
     height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
     containerComponent={<TimeSeriesZoomContainer
+      onSelection={(_points, bounds) => withTimeRange(bounds.x.map(_.toNumber))}
+      onSelectionCleared={
+        ensureMultipleTimes(
+          ({ domain, scale, mousePosition }) => {
+            const centerX = scale.x.invert(mousePosition.x).valueOf();
+            const currentRange = domain.x[1] - domain.x[0];
+            withTimeRange([centerX - currentRange, centerX + currentRange]);
+          },
+          2, // Make sure it's a double-click
+          400, // Make sure the two clicks happened in-between 400 milliseconds
+        )
+      }
       labelComponent={<DefaultDisabledTooltip flyoutComponent={<MultiPointFlyout />} />}
     />}
   >
