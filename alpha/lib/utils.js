@@ -53,3 +53,22 @@ _.assign(moment.prototype, {
 });
 
 export const tsToMoment = tsNano => moment(tsNano / (1000 ** 2));
+
+export const ensureMultipleTimes = (func, n, maxWait) => {
+  // func is only invoked when it has been called n times within maxWait ms
+  let firstCalled = null;
+  let nCalls = 0;
+  return (...args) => {
+    if (_.now() - firstCalled > maxWait) {
+      firstCalled = _.now();
+      nCalls = 1;
+      return;
+    }
+    nCalls++;
+    if (nCalls >= n) {
+      firstCalled = null;
+      nCalls = 0;
+      return func(...args);
+    }
+  };
+};
