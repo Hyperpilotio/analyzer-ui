@@ -23,34 +23,14 @@ const initialState = _.mapValues(
 
 export default (state = initialState, action) => {
   if (action.type === actionTypes.RESET_LOADING_STATE) {
-    // 判斷有沒有map
-    switch (actionTypes.actionTypeRegistry[action.actionName]) {
-    case asyncActionTypes.SIMPLE:
-      return _.setWith(
-        { ...state },
-        action.actionName,
-        makeLoadingState(),
-        _.clone,
-      );
-    case asyncActionTypes.TRACKABLE:
-      return _.setWith(
-        { ...state },
-        [action.actionName, "map", action.key],
-        makeLoadingState(),
-        _.clone,
-      );
-    case asyncActionTypes.SIMPLE_AND_TRACKABLE:
-      return _.setWith(
-        { ...state },
-        action.actionName,
-        makeLoadingState(),
-        _.clone,
-      );
-    default:
-      throw new Error(`Unknown async action type: ${actionType}`);
-    }
+    return _.setWith(
+      { ...state },
+      _.has(action, "key") ? [action.actionName, "map", action.key] : action.actionName,
+      makeLoadingState(),
+      _.clone,
+    );
   }
-
+  
   const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // i.e. FETCH_APPS
 
   if (_.isUndefined(actionName)) {

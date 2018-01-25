@@ -87,7 +87,8 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
       dispatch(updateApp(basicInfo, stepNext));
     }
   },
-  resetLoadingState: (actionName, appId) => dispatch(resetLoadingState(actionName, appId)),
+  resetCreateAppState: actionName => dispatch(resetLoadingState(actionName)),
+  resetUpdateAppState: (actionName, appId) => dispatch(resetLoadingState(actionName, appId)),
 });
 
 export default connect(
