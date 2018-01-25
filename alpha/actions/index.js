@@ -76,8 +76,10 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
   next(response.payload.data.app_id);
 };
 
-export const resetLoadingState = () => ({
+export const resetLoadingState = (actionName, key) => ({
   type: types.RESET_LOADING_STATE,
+  actionName,
+  key,
 });
 
 export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {

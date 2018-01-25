@@ -22,13 +22,40 @@ const initialState = _.mapValues(
 );
 
 export default (state = initialState, action) => {
-  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // i.e. FETCH_APPS
-  if (_.isUndefined(actionName)) {
-    return state;
-  } else if (action.type === actionTypes.RESET_UI) {
-    return initialState;
+  if (action.type === actionTypes.RESET_LOADING_STATE) {
+    // 判斷有沒有map
+    switch (actionTypes.actionTypeRegistry[action.actionName]) {
+    case asyncActionTypes.SIMPLE:
+      return _.setWith(
+        { ...state },
+        action.actionName,
+        makeLoadingState(),
+        _.clone,
+      );
+    case asyncActionTypes.TRACKABLE:
+      return _.setWith(
+        { ...state },
+        [action.actionName, "map", action.key],
+        makeLoadingState(),
+        _.clone,
+      );
+    case asyncActionTypes.SIMPLE_AND_TRACKABLE:
+      return _.setWith(
+        { ...state },
+        action.actionName,
+        makeLoadingState(),
+        _.clone,
+      );
+    default:
+      throw new Error(`Unknown async action type: ${actionType}`);
+    }
   }
 
+  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // i.e. FETCH_APPS
+
+  if (_.isUndefined(actionName)) {
+    return state;
+  }
 
   let loadingState = null;
   const loadingStatePath = _.has(action.meta, "key") ?

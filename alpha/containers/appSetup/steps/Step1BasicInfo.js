@@ -12,7 +12,9 @@ class Step1BasicInfo extends React.Component {
     resetLoadingState: PropTypes.func.isRequired,
   }
   componentWillMount() {
-    this.props.resetLoadingState();
+    const { resetLoadingState, appId } = this.props;
+    resetLoadingState("CREATE_APP");
+    resetLoadingState("UPDATE_APP", appId);
   }
   render = () => {
     const { cancelEdit, submitBasicInfo, loadingState, appId } = this.props;
@@ -58,9 +60,8 @@ class Step1BasicInfo extends React.Component {
           >Next</Button>
         </div>
       </Form>
-  );
-}
-
+    );
+  }
 }
 
 Step1BasicInfo.propTypes = {
@@ -86,7 +87,7 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
       dispatch(updateApp(basicInfo, stepNext));
     }
   },
-  resetLoadingState: () => dispatch(resetLoadingState()),
+  resetLoadingState: (actionName, appId) => dispatch(resetLoadingState(actionName, appId)),
 });
 
 export default connect(
