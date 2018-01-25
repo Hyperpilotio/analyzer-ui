@@ -10,7 +10,7 @@ import moment from "moment";
 import { format } from "d3-format";
 import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
-import TimeSeriesZoomContainer from "./TimeSeriesZoomContainer";
+import TimeSeriesSelectionContainer from "./TimeSeriesSelectionContainer";
 import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
 import { ensureMultipleTimes } from "../lib/utils";
 
@@ -56,7 +56,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
     width={width}
     height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
-    containerComponent={<TimeSeriesZoomContainer
+    containerComponent={<TimeSeriesSelectionContainer
       onSelection={(points, bounds, { domain }) => {
         if (autoRefreshing && bounds.x[1] - domain.x[1] === 0) {
           withTimeRange([`now() - ${bounds.x[1] - bounds.x[0]}ms`, "now()"]);
