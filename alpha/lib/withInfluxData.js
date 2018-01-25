@@ -87,8 +87,10 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
       this.setState({ influxData: nextProps.influxFetch });
     }
     render() {
+      const { timeRange } = this.props.influxFetchMeta.value;
       return (
         <WrappedComponent
+          autoRefreshing={_.isUndefined(timeRange) || !_.every(timeRange, _.isNumber)}
           {..._.omit(this.props, ["influxFetch", "influxFetchMeta"])}
           {...this.state}
         />

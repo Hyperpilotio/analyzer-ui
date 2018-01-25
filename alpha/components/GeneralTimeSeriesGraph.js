@@ -2,8 +2,9 @@ import React from "react";
 import {
   VictoryChart,
   VictoryAxis,
+  SelectionHelpers,
 } from "victory-chart";
-import { VictoryLabel } from "victory-core";
+import { VictoryLabel, Selection } from "victory-core";
 import _ from "lodash";
 import moment from "moment";
 import { format } from "d3-format";
@@ -27,19 +28,52 @@ Wrapper.getDomain = _.wrap(
   },
 );
 
-const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, withTimeRange }) => (
+SelectionHelpers.onMouseMove = _.throttle(
+  (evt, targetProps) => {
+    const { allowSelection, select } = targetProps;
+    const dimension = targetProps.selectionDimension;
+    if (!allowSelection || !select) {
+      return {};
+    }
+    const { x, y } = Selection.getSVGEventCoordinates(evt);
+    const chartDomain = Selection.getDomainCoordinates(targetProps);
+    const x2 = dimension !== "y" ? _.clamp(x, ...chartDomain.x) : chartDomain.x[1];
+    const y2 = dimension !== "x" ? _.clamp(y, ...chartDomain.y) : chartDomain.y[1];
+    return {
+      id: _.uniqueId("throttledEvent"),
+      mutations: {
+        target: "parent",
+        mutation: () => ({ x2, y2 }),
+      },
+    };
+  },
+  16,
+  { leading: true, trailing: false },
+);
+
+const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshing, withTimeRange }) => (
   <VictoryChart
     width={width}
     height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
     containerComponent={<TimeSeriesZoomContainer
-      onSelection={(_points, bounds) => withTimeRange(bounds.x.map(_.toNumber))}
+      onSelection={(points, bounds, { domain }) => {
+        if (autoRefreshing && bounds.x[1] - domain.x[1] === 0) {
+          withTimeRange([`now() - ${bounds.x[1] - bounds.x[0]}ms`, "now()"]);
+        } else {
+          withTimeRange(bounds.x.map(_.toNumber));
+        }
+      }}
       onSelectionCleared={
         ensureMultipleTimes(
           ({ domain, scale, mousePosition }) => {
-            const centerX = scale.x.invert(mousePosition.x).valueOf();
+            const centerX = (domain.x[0] + domain.x[1]) / 2;
             const currentRange = domain.x[1] - domain.x[0];
-            withTimeRange([centerX - currentRange, centerX + currentRange]);
+            if (centerX + currentRange > moment.now()) {
+              withTimeRange([`now() - ${currentRange * 2}ms`, "now()"]);
+            } else {
+              withTimeRange([centerX - currentRange, centerX + currentRange]);
+            }
           },
           2, // Make sure it's a double-click
           400, // Make sure the two clicks happened in-between 400 milliseconds
