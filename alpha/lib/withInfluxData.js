@@ -95,7 +95,15 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
       );
     }
   }
-  return WithInfluxData;
+
+  return class extends WithInfluxData {
+    // Override to make sure it doesn't reinvoke propsToRequestsToProps again when the queries are identical
+    componentWillReceiveProps(nextProps, nextContext) {
+      if (!_.isEqual(this.props, nextProps)) {
+        return super.componentWillReceiveProps(nextProps, nextContext);
+      }
+    }
+  };
 };
 
 export default withInfluxData;
