@@ -6,14 +6,13 @@ import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
+import { tsToMoment } from "../lib/utils";
+import withInfluxData from "../lib/withInfluxData";
 
 const f = format(".2f");
 
-const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
-  if (influxFetch.pending) {
-    return null;
-  }
-  const data = influxFetch.value;
+const SingleResourceGraph = ({ problem, metric, influxData, ...props }) => {
+  const data = influxData.value;
   const stats = metric.analysis_result;
 
   return (
@@ -42,19 +41,12 @@ const SingleResourceGraph = ({ problem, metric, influxFetch, ...props }) => {
   );
 };
 
-export default connectRefetch(({ problem, metric }) => ({
-  influxFetch: {
-    url: "/api/influx-data",
-    method: "POST",
-    body: JSON.stringify({
-      db: "snapaverage",
-      metric: metric.source,
-      tags: _.filter([
-        { key: "nodename", value: _.get(problem, "description.node_name") },
-        { key: "io.kubernetes.pod.name", value: _.get(problem, "description.pod_name") },
-      ], "value"),
-      start: problem.timestamp - 5 * 60 * 1000 ** 3,
-      end: problem.timestamp,
-    }),
-  },
+export default withInfluxData(({ problem, metric }) => ({
+  db: "snapaverage",
+  metric: metric.source,
+  tags: _.filter([
+    { key: "nodename", value: _.get(problem, "description.node_name") },
+    { key: "io.kubernetes.pod.name", value: _.get(problem, "description.pod_name") },
+  ], "value"),
+  timeRange: [tsToMoment(problem.timestamp).subtract(10, "m"), tsToMoment(problem.timestamp)],
 }))(SingleResourceGraph);

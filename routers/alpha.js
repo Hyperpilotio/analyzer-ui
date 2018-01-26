@@ -9,7 +9,7 @@ const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.printf(info => `[${_.toUpper(info.level)}] ${info.timestamp} - ${info.message}`)
+    winston.format.printf(info => `[${_.toUpper(info.level)}] ${info.timestamp} - ${info.message}`),
   ),
   transports: [
     new winston.transports.Console(),
@@ -83,9 +83,11 @@ router.get("/api/apps", async (req, res) => {
   const activeAppsResponse = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");
 
   const promises = [];
-  activeAppsResponse.data.forEach(({ app_id, name }) => {
-    const incidentRequest = makeRequest("get", "analyzer", `/api/v1/apps/${app_id}/incidents`).catch(
-      err => ({ data: { incident_id: null } })
+  activeAppsResponse.data.forEach(({ app_id }) => {
+    const incidentRequest = makeRequest(
+      "get", "analyzer", `/api/v1/apps/${app_id}/incidents`,
+    ).catch(
+      () => ({ data: { incident_id: null } }),
     );
     promises.push(incidentRequest);
   });
@@ -216,13 +218,9 @@ router.post("/api/influx-data", async (req, res) => {
     ${tagsFilter}
     GROUP BY time(5s)
   `;
-  const result = await influxClient.query(query, { database: req.body.db });
+  const result = await influxClient.queryRaw(query, { database: req.body.db, precision: "ms" });
 
-  res.json({
-    name: req.body.metric,
-    columns: ["time", "value"],
-    values: _.map(result, d => [d.time, d.value]),
-  });
+  res.json(_.get(result, "results.0.series.0"));
 });
 
 router.get("/api/apps/:appId/incidents/last", async (req, res) => {
@@ -266,7 +264,7 @@ router.get("/api/diagnostics/:appId", async (req, res) => {
   const incident = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/incidents`);
   const diagnosis = await makeRequest("get", "analyzer", `/api/v1/apps/${req.params.appId}/diagnosis`, {
     body: { incident_id: incident.data.incident_id },
-  })
+  });
   const problems = await Promise.all(
     diagnosis.data.top_related_problems.map(
       ({ id }) => makeRequest("get", "analyzer", `/api/v1/problems/${id}`),

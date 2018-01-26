@@ -1,9 +1,10 @@
 import React from "react";
 import _ from "lodash";
 import { Line, Area, VictoryLabel } from "victory-core";
+import { inRangeInclusive } from "../lib/utils";
 
 const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft, style }) => {
-  if (!_.inRange(threshold, ...scale.y.domain())) {
+  if (!inRangeInclusive(threshold, ...scale.y.domain())) {
     return <g />;
   }
   const yPos = scale.y(threshold);

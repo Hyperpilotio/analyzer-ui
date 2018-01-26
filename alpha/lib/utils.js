@@ -44,10 +44,31 @@ export const formToApp = ({ basicInfo, microservices, sloSource, slo, management
   management_features,
 });
 
+export const inRangeInclusive = (value, start, end) => value >= start && value <= end;
+
 _.assign(moment.prototype, {
   tsNano() {
     return this.valueOf() * (1000 ** 2);
-  }
+  },
 });
 
 export const tsToMoment = tsNano => moment(tsNano / (1000 ** 2));
+
+export const ensureMultipleTimes = (func, n, maxWait) => {
+  // func is only invoked when it has been called n times within maxWait ms
+  let firstCalled = null;
+  let nCalls = 0;
+  return (...args) => {
+    if (_.now() - firstCalled > maxWait) {
+      firstCalled = _.now();
+      nCalls = 1;
+      return;
+    }
+    nCalls++;
+    if (nCalls >= n) {
+      firstCalled = null;
+      nCalls = 0;
+      return func(...args);
+    }
+  };
+};

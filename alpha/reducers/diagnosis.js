@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
       ...state,
       results: _.unionBy([data.diagnosis], state.results, "incident_id"),
       problems: _.unionBy(data.problems, state.problems, "problem_id"),
-    }
+    };
   case types.FETCH_APP_LATEST_INCIDENT[SUCCESS]:
     return {
       ...state,

@@ -20,7 +20,7 @@ export default reduceReducers(
         kind: "",
         name: "",
       },
-      port: 7998,
+      port: 80,
     },
     slo: {
       threshold: {

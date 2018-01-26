@@ -1,5 +1,4 @@
 import * as types from "../actions/types";
-import * as modalTypes from "../constants/modalTypes";
 
 const initialState = {
   isOpen: false,
