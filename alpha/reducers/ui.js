@@ -4,17 +4,17 @@ import { asyncActionTypes } from "../actions/types";
 import { makeLoadingState } from "../lib/utils";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
-const initialloadingState = makeLoadingState([]);
+const initialLoadingState = makeLoadingState([]);
 const initialState = _.mapValues(
   actionTypes.actionTypeRegistry,
   (actionType) => {
     switch (actionType) {
     case asyncActionTypes.SIMPLE:
-      return initialloadingState;
+      return initialLoadingState;
     case asyncActionTypes.TRACKABLE:
       return { map: {} };
     case asyncActionTypes.SIMPLE_AND_TRACKABLE:
-      return { ...initialloadingState, map: {} };
+      return { ...initialLoadingState, map: {} };
     default:
       throw new Error(`Unknown async action type: ${actionType}`);
     }
