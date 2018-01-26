@@ -4,7 +4,7 @@ import { Form, Control, Errors } from "react-redux-form";
 import { connect } from "react-redux";
 import _ from "lodash";
 import _s from "../style.scss";
-import { updateApp, createApp, resetLoadingState } from "../../../actions";
+import { updateApp, createApp, resetCreateAppState, resetUpdateAppState } from "../../../actions";
 import Button from "../../../components/Button";
 
 class Step1BasicInfo extends React.Component {
@@ -18,8 +18,8 @@ class Step1BasicInfo extends React.Component {
   }
   componentWillMount() {
     const { resetCreateAppState, resetUpdateAppState, appId } = this.props;
-    resetCreateAppState("CREATE_APP");
-    resetUpdateAppState("UPDATE_APP", appId);
+    resetCreateAppState();
+    resetUpdateAppState(appId);
   }
   render = () => {
     const { cancelEdit, submitBasicInfo, loadingState, appId } = this.props;
@@ -85,8 +85,8 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
       dispatch(updateApp(basicInfo, stepNext));
     }
   },
-  resetCreateAppState: actionName => dispatch(resetLoadingState(actionName)),
-  resetUpdateAppState: (actionName, appId) => dispatch(resetLoadingState(actionName, appId)),
+  resetCreateAppState: () => dispatch(resetCreateAppState()),
+  resetUpdateAppState: appId => dispatch(resetUpdateAppState(appId)),
 });
 
 export default connect(
