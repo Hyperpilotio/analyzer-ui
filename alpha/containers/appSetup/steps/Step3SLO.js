@@ -18,9 +18,7 @@ class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
-    // sloFormDisabled: PropTypes.bool.isRequired,
-    isFetchMetricsLoading: PropTypes.bool.isRequired,
-    isUpdateAppLoading: PropTypes.bool.isRequired,
+    loadingState: PropTypes.object,
     metricOptions: PropTypes.array,
     microservices: PropTypes.array,
     tags: PropTypes.array,
@@ -132,8 +130,7 @@ class Step3SLO extends React.Component {
       slo,
       addTagsInput,
       deleteTag,
-      isFetchMetricsLoading,
-      isUpdateAppLoading,
+      loadingState,
     } = this.props;
 
     const selectedMetric = _.find(metricOptions, { name: slo.metric.name }) || {};
@@ -183,7 +180,7 @@ class Step3SLO extends React.Component {
               </Col>
               <Col>
                 <Button type="submit" color="primary" className="float-right" >
-                  { isFetchMetricsLoading ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
+                  { loadingState.fetchMetrics.pending ? <FaLoadingCircle className={`mr-1 mb-1 ${_s.rotating}`} /> : null}
                   Confirm Source
                 </Button>
               </Col>
@@ -205,9 +202,17 @@ class Step3SLO extends React.Component {
                   onChange={::this.onChangeMetricName}
                 >
                   <option value={null} disabled>Select Metric</option>
-                  { !_.isEmpty(metricOptions) ?
-                    _.map(metricOptions, mt => <option key={mt.name} value={mt.name}>{mt.name}</option>) :
-                    _.get(slo, "metric.name") && <option value={slo.metric.name}>{slo.metric.name}</option>
+                  {
+                    !_.isEmpty(metricOptions)
+                      ? _.map(
+                          metricOptions,
+                          mt => <option key={mt.name} value={mt.name}>{mt.name}</option>
+                        )
+                      : (
+                        _.get(slo, "metric.name")
+                          ? <option value={slo.metric.name}>{slo.metric.name}</option>
+                          : null
+                      )
                   }
                 </Control.select>
               </FormGroup>
@@ -266,8 +271,8 @@ class Step3SLO extends React.Component {
                           <option value={null} disabled>Tag value</option>
                           { !_.isEmpty(metricOptions) ?
                             _.map(
-                              _.get(_.find(selectedMetric.tags, {key: tag.key}), "values"),
-                              val => <option key={val} value={val}>{val}</option>
+                              _.get(_.find(selectedMetric.tags, { key: tag.key }), "values"),
+                              val => <option key={val} value={val}>{val}</option>,
                             ) :
                             <option value={tag.value}>{tag.value}</option>
                           }
@@ -320,7 +325,7 @@ class Step3SLO extends React.Component {
             <div className="float-right">
               <Button
                 isDisabled={sloFormDisabled}
-                isLoading={isUpdateAppLoading}
+                isLoading={_.get(loadingState.updateApp.map, [appId, "pending"], false)}
                 color="primary"
               >Next</Button>
             </div>
@@ -331,13 +336,15 @@ class Step3SLO extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui: { isFetchMetricsLoading, isUpdateAppLoading }, applications }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
   savedApp: _.find(applications, { app_id: basicInfo.app_id }),
   appId: basicInfo.app_id,
   sloFormDisabled: forms.slo.$form.isDisable,
   metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
-  isFetchMetricsLoading,
-  isUpdateAppLoading,
+  loadingState: {
+    fetchMetrics: ui.FETCH_METRICS,
+    updateApp: ui.UPDATE_APP,
+  },
   sloSource,
   microservices,
   slo,

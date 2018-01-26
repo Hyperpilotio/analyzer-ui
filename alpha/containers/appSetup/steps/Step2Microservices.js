@@ -1,69 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Card, CardBody, CardTitle,
-  Table, FormGroup, Input,
-} from "reactstrap";
+import { Card, CardBody, CardTitle, FormGroup, Input } from "reactstrap";
 import _ from "lodash";
 import { connect } from "react-redux";
-import Spinner from "react-spinkit";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
-import _s from "../style.scss";
+import MicroservicesTable from "../../../components/MicroservicesTable";
 import Button from "../../../components/Button";
-
-const getDisplayKind = kind => (
-  _.get({ services: "Service", deployments: "Deployment", statefulsets: "StatefulSet" }, kind)
-);
-
-const MicroservicesTable = ({ tbodyStyle, microservices, buttonElement, buttonOnClick, isFetchAvailableServicesLoading }) => (
-  <div className={_s.MicroservicesTable}>
-    <Table>
-      <thead className="text-secondary">
-        <tr className="row m-0">
-          <th className="col">Namespace</th>
-          <th className="col">Kind</th>
-          <th className="col">Name</th>
-          <th className="col" />
-        </tr>
-      </thead>
-      <tbody style={tbodyStyle} className="d-block">
-        { isFetchAvailableServicesLoading ?
-          <tr className={_s.loaderTr}>
-            <td colSpan="7" className={_s.loaderTd}>
-              <div className={_s.loaderCon}>
-                <Spinner fadeIn="quarter" name="pacman" />
-              </div>
-            </td>
-          </tr> :
-          microservices.map(({ namespace, kind, name }) => (
-            <tr className="row m-0" key={`${namespace}-${kind}-${name}`}>
-              <td className="col">{ namespace }</td>
-              <td className="col">{ getDisplayKind(kind) }</td>
-              <td className="col">{ name }</td>
-              <td className="col">
-                { React.cloneElement(buttonElement, {
-                  onClick: () => buttonOnClick({ namespace, kind, name }),
-                })
-                }
-              </td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </Table>
-  </div>
-);
-
-MicroservicesTable.propTypes = {
-  tbodyStyle: PropTypes.object.isRequired,
-  microservices: PropTypes.array.isRequired,
-  buttonElement: PropTypes.object.isRequired,
-  buttonOnClick: PropTypes.func.isRequired,
-};
+import _s from "../style.scss";
 
 class Step2Microservices extends React.Component {
-
   static propTypes = {
     // cacheServices: PropTypes.func.isRequired,
     microservices: PropTypes.array.isRequired,
@@ -73,10 +19,7 @@ class Step2Microservices extends React.Component {
     removeMicroservice: PropTypes.func.isRequired,
     stepBack: PropTypes.func.isRequired,
     updateMicroservices: PropTypes.func.isRequired,
-    stepNext: PropTypes.func.isRequired,
-    isUpdateMicroservicesLoading: PropTypes.bool.isRequired,
-    isFetchAvailableServicesLoading: PropTypes.bool.isRequired,
-    isUpdateAppLoading: PropTypes.bool.isRequired,
+    loadingState: PropTypes.object.isRequired,
   }
 
   state = {
@@ -119,28 +62,30 @@ class Step2Microservices extends React.Component {
   render() {
     const {
       appId,
+      loadingState,
       updateMicroservices,
-      isUpdateMicroservicesLoading,
-      isFetchAvailableServicesLoading,
-      isUpdateAppLoading,
     } = this.props;
 
     return (
-      <Form model="createAppForm.microservices" onSubmit={microservices => updateMicroservices(microservices, appId)}>
+      <Form
+        model="createAppForm.microservices"
+        onSubmit={microservices => updateMicroservices(microservices, appId)}
+      >
         {/* Selected Microservices */}
         <Card className={`${_s.selectedMicroservices} ${_s.card}`}>
           <CardBody>
             <CardTitle>Selected Microservices</CardTitle>
             <MicroservicesTable
-              tbodyStyle={{ height: "280px" }}
+              tbodyStyle={{ height: "280px", overflowY: "scroll" }}
               microservices={this.props.microservices}
               buttonElement={<Button size="sm" color="danger">Remove</Button>}
               buttonOnClick={this.props.removeMicroservice}
+              loadingState={loadingState}
             />
             { this.props.microservices.length <= 0 ?
               <div className={`row ${_s.noData}`}>
                 <span>
-                  No microservice selected, click on "Add" button to add them.
+                  No microservice selected, click on  "Add" button to add them.
                 </span>
               </div> : null
             }
@@ -188,18 +133,18 @@ class Step2Microservices extends React.Component {
               </div>
             </div>
             <MicroservicesTable
-              tbodyStyle={{ height: "400px" }}
+              tbodyStyle={{ height: "400px", overflowY: "scroll" }}
               microservices={this.detectedMicroservices}
               buttonElement={<Button size="sm" color="success">Add</Button>}
               buttonOnClick={this.props.addMicroservice}
-              isFetchAvailableServicesLoading={isFetchAvailableServicesLoading}
+              loadingState={loadingState}
             />
           </CardBody>
         </Card>
         <div className="row d-flex justify-content-end">
           <Button onClick={this.props.stepBack} className="mr-2" color="secondary">Back</Button>
           <Button
-            isLoading={isUpdateMicroservicesLoading || isUpdateAppLoading}
+            isLoading={_.get(loadingState.upadteMicroservices.map, [appId, "pending"], false)}
             color="primary"
           >Next</Button>
         </div>
@@ -208,13 +153,15 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { isFetchAvailableServicesLoading, isUpdateMicroservicesLoading, isUpdateAppLoading } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { FETCH_AVAILABLE_SERVICES, UPDATE_MICROSERVICES, UPDATE_APP } }) => ({
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
-  isFetchAvailableServicesLoading,
-  isUpdateMicroservicesLoading,
-  isUpdateAppLoading,
+  loadingState: {
+    fetchAvailableServices: FETCH_AVAILABLE_SERVICES,
+    upadteMicroservices: UPDATE_MICROSERVICES,
+    updateApp: UPDATE_APP,
+  },
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({

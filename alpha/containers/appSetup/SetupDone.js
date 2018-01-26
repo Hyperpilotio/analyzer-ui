@@ -3,36 +3,37 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Container, Button } from "reactstrap";
+import _ from "lodash";
 import { app as AppPropType } from "../../constants/propTypes";
 import Spinner from "../../components/Spinner";
 import CheckMark from "../../components/CheckMark";
 import _s from "../style.scss";
 
 const SetupDone = ({
-  isActivateAppLoading,
-  appName,
+  basicInfo,
+  loadingState,
 }) => (
   <Container className="effect-fade-in">
-    { isActivateAppLoading ?
+    { _.get(loadingState.activateApp.map, [basicInfo.app_id, "pending"], false) ?
       <div className={`spinner-con loading ${_s.spinnerCon}`}>
         <Spinner />
       </div>
       : null
     }
-    { !isActivateAppLoading ?
+    { !_.get(loadingState.activateApp.map, [basicInfo.app_id, "pending"], false) ?
       <div className={`check-con done ${_s.checkCon}`}>
         <CheckMark />
       </div>
       : null
     }
     {
-      isActivateAppLoading ?
+      _.get(loadingState.activateApp.map, [basicInfo.app_id, "pending"], false) ?
         <h4 className={_s.wordLoading}>Setting up HyperPilot ...</h4> : null
     }
     {
-      !isActivateAppLoading ?
+      !_.get(loadingState.activateApp.map, [basicInfo.app_id, "pending"], false) ?
         <div>
-          <h4 className={_s.wordSuccess}>HyperPilot is now running for {appName}! </h4>
+          <h4 className={_s.wordSuccess}>HyperPilot is now running for {basicInfo.name}! </h4>
           <div className="row">
             <Button className={`btn btn-success mt-3 ${_s.btnReturn}`}>
               <Link to="/dashboard">
@@ -47,16 +48,15 @@ const SetupDone = ({
 );
 
 SetupDone.propTypes = {
-  isActivateAppLoading: PropTypes.bool.isRequired,
-  appName: AppPropType.string,
+  basicInfo: PropTypes.object.isRequired,
+  loadingState: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({
-  createAppForm,
-  ui: { isActivateAppLoading },
-}) => ({
-  appName: createAppForm.basicInfo.name,
-  isActivateAppLoading,
+const mapStateToProps = ({ createAppForm, ui }) => ({
+  basicInfo: createAppForm.basicInfo,
+  loadingState: {
+    activateApp: ui.ACTIVATE_APP,
+  },
 });
 
 export default connect(

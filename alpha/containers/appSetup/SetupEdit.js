@@ -25,7 +25,7 @@ class SetupEdit extends React.Component {
     match: ReactRouterPropTypes.match.isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     prepareEditAppForm: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool,
     openModal: PropTypes.func.isRequired,
   }
 
@@ -105,7 +105,7 @@ class SetupEdit extends React.Component {
 
 const mapStateToProps = ({ createAppForm, ui }) => ({
   createAppForm,
-  isLoading: ui.isFetchAppsLoading,
+  isLoading: ui.FETCH_APPS.pending,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -23,7 +23,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
 
   const app = _.find(applications, { app_id: match.params.appId });
 
-  const isIncidentLoading = ui.isFetchAppLatestIncidentLoading;
+  const isIncidentLoading = ui.FETCH_APP_LATEST_INCIDENT.pending;
   const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
   if (_.isEmpty(appIncidents)) {
     return { app, latestIncident: null, isAppLoading, isIncidentLoading };

@@ -17,18 +17,23 @@ const asyncActions = [
   ["ACTIVATE_APP", TRACKABLE],
   ["REMOVE_APP", TRACKABLE],
 ];
-_.assign(exports, _.fromPairs(_.map(
-  asyncActions,
-  ([name]) => [name, [`${name}_LOADING`, `${name}_SUCCESS`, `${name}_FAIL`]],
-)));
+_.assign(exports,
+  _.fromPairs(
+    _.map(
+      asyncActions,
+      ([name]) => ([name, [`${name}_LOADING`, `${name}_SUCCESS`, `${name}_FAIL`]]),
+    ),
+  ),
+);
 exports.actionTypeRegistry = _.fromPairs(asyncActions);
 
-const simpleActions = [
+const pureActions = [
   "UPDATE_REDUX_APPS",
   "EMPTY_METRIC_OPTIONS",
   "TOGGLE_MODAL",
   "OPEN_MODAL",
   "EMPTY_METRIC_OPTIONS",
   "SET_SLO_CONFIG_EDITABILITY",
-]
-_.assign(exports, _.zipObject(simpleActions, simpleActions));
+  "RESET_LOADING_STATE",
+];
+_.assign(exports, _.zipObject(pureActions, pureActions));

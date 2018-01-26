@@ -16,7 +16,11 @@ export const openModal = (modalType, props) => ({
   modalType,
   props,
 });
-//----------------------------------
+
+const withKey = (RSAAType, key) => RSAAType.map(type => ({
+  type,
+  meta: { key },
+}));
 
 export const fetchApps = () => async (dispatch) => {
   const response = await dispatch({
@@ -72,6 +76,12 @@ export const createApp = (basicInfo, next) => async (dispatch) => {
   next(response.payload.data.app_id);
 };
 
+export const resetLoadingState = (actionName, key) => ({
+  type: types.RESET_LOADING_STATE,
+  actionName,
+  key,
+});
+
 export const updateMicroservices = (microservicesInfo, next) => async (dispatch, getState) => {
   const apps = getState().applications;
   const matchAppsItem = _.pick(
@@ -86,7 +96,7 @@ export const updateMicroservices = (microservicesInfo, next) => async (dispatch,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(microservicesInfo),
-        types: types.UPDATE_MICROSERVICES,
+        types: withKey(types.UPDATE_MICROSERVICES, microservicesInfo.app_id),
       },
     });
 
@@ -120,7 +130,7 @@ export const updateApp = (app, next) => async (dispatch, getState) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(app),
-        types: types.UPDATE_APP,
+        types: withKey(types.UPDATE_APP, app.app_id),
       },
     });
     dispatch(updateReduxApps(response.payload.data));
@@ -149,7 +159,7 @@ export const activateApp = app => async (dispatch) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(app),
-      types: types.ACTIVATE_APP,
+      types: withKey(types.ACTIVATE_APP, app.app_id),
     },
   });
 
@@ -169,7 +179,7 @@ export const activateApp = app => async (dispatch) => {
 
 export const prepareEditAppForm = appId => async (dispatch, getState) => {
   const { applications, ui } = getState();
-  if (applications.length === 0 && !ui.isFetchAppsLoading) {
+  if (applications.length === 0 && !ui.FETCH_APPS.pending) {
     await dispatch(fetchApps());
   }
   const app = _.find(getState().applications, { app_id: appId });
@@ -233,7 +243,7 @@ export const fetchAppLatestIncident = appId => async (dispatch) => {
     [RSAA]: {
       endpoint: `/api/apps/${appId}/incidents/last`,
       method: "GET",
-      types: types.FETCH_APP_LATEST_INCIDENT,
+      types: withKey(types.FETCH_APP_LATEST_INCIDENT, appId),
     },
   });
 
@@ -254,7 +264,7 @@ export const fetchDiagnosis = (appId, incidentId) => async (dispatch) => {
     [RSAA]: {
       endpoint: `/api/apps/${appId}/incidents/${incidentId}/diagnosis`,
       method: "GET",
-      types: types.FETCH_DIAGNOSIS,
+      types: withKey(types.FETCH_DIAGNOSIS, appId),
     },
   });
   // Open error modal
@@ -278,7 +288,7 @@ export const removeApp = appId => async (dispatch) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ app_id: appId }),
-      types: types.REMOVE_APP,
+      types: withKey(types.REMOVE_APP, appId),
     },
   });
 

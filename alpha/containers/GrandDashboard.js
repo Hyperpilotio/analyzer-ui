@@ -18,16 +18,15 @@ import _s from "./style.scss";
 
 
 const mapStateToProps = ({
-  ui: { isFetchAppsLoading, isFetchDiagnosticsLoading },
+  ui,
   applications,
-  diagnosis: { incidents, problems, results },
+  diagnosis: { incidents, problems, results }
 }) => ({
   applications,
   incidents,
   problems,
   results,
-  isFetchAppsLoading,
-  isFetchDiagnosticsLoading,
+  ui,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -78,11 +77,13 @@ export default class GrandDashboard extends React.Component {
   }
 
   render() {
+    const { match, ui, applications, resetAppForm, isFetchAppsLoading } = this.props;
+
     return (
       <div>
         <Switch>
-          <Route path={`${this.props.match.path}/:appId`} component={AppDashboard} />
-          <Route exact path={this.props.match.path}>
+          <Route path={`${match.path}/:appId`} component={AppDashboard} />
+          <Route exact path={match.path}>
             <Container>
               <Row className="pt-4 pb-3">
                 <Col>
@@ -90,17 +91,17 @@ export default class GrandDashboard extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Link to="/apps/new" className="btn btn-primary mt-5 mb-2" onClick={this.props.resetAppForm}>
+                <Link to="/apps/new" className="btn btn-primary mt-5 mb-2" onClick={resetAppForm}>
                   + Add
                 </Link>
               </Row>
               <Row>
                 <DashboardAppsTable
-                  isLoading={this.props.isFetchAppsLoading}
+                  ui={ui}
                   openRemoveModal={appId => this.openRemoveModal(appId)}
-                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities"])}
+                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
                 />
-                { _.reject(this.props.applications, { state: "Unregistered" }).length === 0 && !this.props.isFetchAppsLoading ?
+                { _.reject(applications, { state: "Unregistered" }).length === 0 && !isFetchAppsLoading ?
                   <div className={_s.noData}>
                     <span>
                       No applications managed by HyperPilot, click on "Add" button to add them.

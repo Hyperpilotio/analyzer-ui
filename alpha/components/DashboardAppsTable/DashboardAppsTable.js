@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Row, Table } from "reactstrap";
+import { Table } from "reactstrap";
+import FaTimesCircle from "react-icons/lib/fa/times-circle";
+import FaLightbulbO from "react-icons/lib/fa/lightbulb-o";
 import FaEdit from "react-icons/lib/fa/edit";
 import MdDelete from "react-icons/lib/md/delete";
 import _ from "lodash";
@@ -9,13 +11,10 @@ import Spinner from "react-spinkit";
 import Linked from "~/commons/components/Linked";
 import AppStatusBadge from "../AppStatusBadge";
 import { getSLODisplay } from "../../lib/utils";
-import * as modalTypes from "../../constants/modalTypes";
-import withModal from "../../lib/withModal";
 import _s from "./style.scss";
 
 const DashboardAppsTable = ({
-  isLoading, applications,
-  incidents, openRemoveModal,
+  applications, openRemoveModal, ui,
 }) => (
   <Table className={_s.DashboardAppsTable} hover>
     <thead>
@@ -30,7 +29,7 @@ const DashboardAppsTable = ({
       </tr>
     </thead>
     <tbody>
-      { isLoading ?
+      { ui.FETCH_APPS.pending ?
         <tr>
           <td colSpan="7" style={{ textAlign: "center" }}>
             <div className={_s.loaderCon}>
@@ -50,16 +49,25 @@ const DashboardAppsTable = ({
                 <td />
                 <td>{ app.state }</td>
                 <td>
-                  <Link className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
-                    <FaEdit className={_s.iconGrp} />
-                  </Link>
-                  <MdDelete
-                    className={_s.iconGrp}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openRemoveModal(app.app_id);
-                    }}
-                  />
+                  { _.get(ui.REMOVE_APP.map, [app.app_id, "pending"]) ?
+                    <div className={_s.loaderCon}>
+                      <Spinner fadeIn="quarter" name="wave" className={_s.loader} />
+                      <span>Deleting...</span>
+                    </div>
+                    :
+                    <div>
+                      <Link className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
+                        <FaEdit className={_s.iconGrp} />
+                      </Link>
+                      <MdDelete
+                        className={_s.iconGrp}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openRemoveModal(app.app_id);
+                        }}
+                      />
+                    </div>
+                  }
                 </td>
               </Linked>
             );
@@ -76,16 +84,26 @@ const DashboardAppsTable = ({
               <td><AppStatusBadge className={_s.Badge} app={app} /></td>
               <td>{ app.state }</td>
               <td>
-                <Link onClick={e => e.stopPropagation()} className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
-                  <FaEdit className={_s.iconGrp} />
-                </Link>
-                <MdDelete
-                  className={_s.iconGrp}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openRemoveModal(app.app_id);
-                  }}
-                />
+                {
+                  _.get(ui.REMOVE_APP.map, [app.app_id, "pending"]) ?
+                    <div className={_s.loaderCon}>
+                      <Spinner fadeIn="quarter" name="wave" className={_s.loader} />
+                      <span>Deleting...</span>
+                    </div>
+                    :
+                    <div>
+                      <Link onClick={e => e.stopPropagation()} className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
+                        <FaEdit className={_s.iconGrp} />
+                      </Link>
+                      <MdDelete
+                        className={_s.iconGrp}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openRemoveModal(app.app_id);
+                        }}
+                      />
+                    </div>
+                }
               </td>
             </Linked>
           );
@@ -96,8 +114,9 @@ const DashboardAppsTable = ({
 );
 
 DashboardAppsTable.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  incidents: PropTypes.array.isRequired,
+  applications: PropTypes.array.isRequired,
+  openRemoveModal: PropTypes.func.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 export default (DashboardAppsTable);
