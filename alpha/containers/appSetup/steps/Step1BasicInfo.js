@@ -9,12 +9,17 @@ import Button from "../../../components/Button";
 
 class Step1BasicInfo extends React.Component {
   static propTypes = {
-    resetLoadingState: PropTypes.func.isRequired,
+    resetCreateAppState: PropTypes.func.isRequired,
+    resetUpdateAppState: PropTypes.func.isRequired,
+    submitBasicInfo: PropTypes.func.isRequired,
+    cancelEdit: PropTypes.func.isRequired,
+    loadingState: PropTypes.object,
+    appId: PropTypes.string,
   }
   componentWillMount() {
-    const { resetLoadingState, appId } = this.props;
-    resetLoadingState("CREATE_APP");
-    resetLoadingState("UPDATE_APP", appId);
+    const { resetCreateAppState, resetUpdateAppState, appId } = this.props;
+    resetCreateAppState("CREATE_APP");
+    resetUpdateAppState("UPDATE_APP", appId);
   }
   render = () => {
     const { cancelEdit, submitBasicInfo, loadingState, appId } = this.props;
@@ -63,13 +68,6 @@ class Step1BasicInfo extends React.Component {
     );
   }
 }
-
-Step1BasicInfo.propTypes = {
-  submitBasicInfo: PropTypes.func.isRequired,
-  cancelEdit: PropTypes.func.isRequired,
-  loadingState: PropTypes.object,
-  appId: PropTypes.string,
-};
 
 const mapStateToProps = ({ createAppForm: { basicInfo }, ui: { CREATE_APP, UPDATE_APP } }) => ({
   appId: basicInfo.app_id,
