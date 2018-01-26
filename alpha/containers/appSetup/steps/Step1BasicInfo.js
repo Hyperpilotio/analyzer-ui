@@ -17,9 +17,8 @@ class Step1BasicInfo extends React.Component {
     appId: PropTypes.string,
   }
   componentWillMount() {
-    const { resetCreateAppState, resetUpdateAppState, appId } = this.props;
-    resetCreateAppState("CREATE_APP");
-    resetUpdateAppState("UPDATE_APP", appId);
+    this.props.resetCreateAppState();
+    this.props.resetUpdateAppState(this.props.appId);
   }
   render = () => {
     const { cancelEdit, submitBasicInfo, loadingState, appId } = this.props;
@@ -85,8 +84,8 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
       dispatch(updateApp(basicInfo, stepNext));
     }
   },
-  resetCreateAppState: actionName => dispatch(resetLoadingState(actionName)),
-  resetUpdateAppState: (actionName, appId) => dispatch(resetLoadingState(actionName, appId)),
+  resetCreateAppState: () => dispatch(resetLoadingState("CREATE_APP")),
+  resetUpdateAppState: appId => dispatch(resetLoadingState("UPDATE_APP", appId)),
 });
 
 export default connect(
