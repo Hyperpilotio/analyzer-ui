@@ -12,7 +12,7 @@ import { Container, Row, Col, Table } from "reactstrap";
 import Spinner from "react-spinkit";
 import Linked from "~/commons/components/Linked";
 import AppStatusBadge from "../components/AppStatusBadge";
-import { fetchApps, removeApp } from "../actions";
+import { fetchApps, fetchAppLatestIncident, removeApp } from "../actions";
 import { getSLODisplay } from "../lib/utils";
 import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
@@ -24,10 +24,11 @@ const mapStateToProps = ({
   applications,
   diagnosis: { incidents },
 }) => ({
-  applications,
+  applications: _.reject(applications, { state: "Unregistered" }),
   incidents,
   loadingStates: {
     fetchApps: ui.FETCH_APPS,
+    fetchLatestIncident: ui.FETCH_APP_LATEST_INCIDENT,
     removeApp: ui.REMOVE_APP,
   },
 });
@@ -40,6 +41,7 @@ const mapDispatchToProps = dispatch => ({
       form => dispatch(formActions.reset(`createAppForm.${form}`)),
     );
   },
+  fetchLatestIncident: appId => dispatch(fetchAppLatestIncident(appId)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -59,12 +61,15 @@ export default class GrandDashboard extends React.Component {
     refreshInterval: 30 * 1000,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refetchApps();
   }
 
   async refetchApps() {
-    this.props.fetchApps();
+    await this.props.fetchApps();
+    await Promise.all(this.props.applications.map(
+      ({ app_id }) => this.props.fetchLatestIncident(app_id),
+    ));
     this.props.setTimeout(::this.refetchApps, this.props.refreshInterval)
   }
 
@@ -117,9 +122,6 @@ export default class GrandDashboard extends React.Component {
                   </td>
                 </tr> :
                 applications.map((app) => {
-                  if (app.state === "Unregistered") {
-                    return null;
-                  }
                   const removeAppCellContent = (
                     _.get(loadingStates.removeApp.map, [app.app_id, "pending"], false) ?
                       <div className={_s.loaderCon}>
@@ -159,7 +161,9 @@ export default class GrandDashboard extends React.Component {
                         <td>{ app.type }</td>
                         <td>{ _.size(app.microservices) }</td>
                         <td>{ getSLODisplay(app.slo) }</td>
-                        <td><AppStatusBadge className={_s.AppStatusBadge} app={app} /></td>
+                        <td>
+                          <AppStatusBadge className={_s.AppStatusBadge} appId={app.app_id} />
+                        </td>
                         <td>{ app.state }</td>
                         <td>{ removeAppCellContent }</td>
                       </Linked>
@@ -171,7 +175,7 @@ export default class GrandDashboard extends React.Component {
               }
             </tbody>
           </Table>
-          { _.every(applications, { state: "Unregistered" }) && loadingStates.fetchApps.fulfilled ?
+          { _.isEmpty(applications) && loadingStates.fetchApps.fulfilled ?
             <div className={_s.noData}>
               <span>
                 No applications managed by HyperPilot, click on "Add" button to add them.
