@@ -67,8 +67,9 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
       onSelectionCleared={
         ensureMultipleTimes(
           ({ domain, scale, mousePosition }) => {
-            const centerX = (domain.x[0] + domain.x[1]) / 2;
-            const currentRange = domain.x[1] - domain.x[0];
+            const xDomain = _.map(domain.x, _.toNumber);
+            const centerX = (xDomain[0] + xDomain[1]) / 2;
+            const currentRange = xDomain[1] - xDomain[0];
             if (centerX + currentRange > moment.now()) {
               withTimeRange([`now() - ${currentRange * 2}ms`, "now()"]);
             } else {

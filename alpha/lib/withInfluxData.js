@@ -63,7 +63,6 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
           this.setState({
             influxData: PromiseState.refresh(this.state.influxData, nextProps.influxFetch.meta),
           });
-          return;
         } else if (nextProps.influxFetch.fulfilled) {
           const data = nextProps.influxFetch.value;
           if (!_.isNull(data)) {
@@ -81,10 +80,17 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
             // Copy the next influxFetch with value field replaced
             influxData: _.assign(PromiseState.create(), nextProps.influxFetch, { value: data }),
           });
-          return;
         }
+      } else if (nextProps.influxFetch.pending) {
+        this.setState({
+          influxData: _.assign(
+            PromiseState.create(nextProps.influxFetch.meta),
+            { value: { name: nextProps.influxFetchMeta.value.metric, values: [] } },
+          ),
+        });
+      } else {
+        this.setState({ influxData: nextProps.influxFetch });
       }
-      this.setState({ influxData: nextProps.influxFetch });
     }
     render() {
       const { timeRange } = this.props.influxFetchMeta.value;
