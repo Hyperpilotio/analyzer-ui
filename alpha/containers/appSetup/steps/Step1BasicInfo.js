@@ -7,7 +7,29 @@ import _s from "../style.scss";
 import { updateApp, createApp, resetLoadingState } from "../../../actions";
 import Button from "../../../components/Button";
 
-class Step1BasicInfo extends React.Component {
+
+const mapStateToProps = ({ createAppForm: { basicInfo }, ui: { CREATE_APP, UPDATE_APP } }) => ({
+  appId: basicInfo.app_id,
+  loadingState: {
+    createApp: CREATE_APP,
+    updateApp: UPDATE_APP,
+  },
+});
+
+const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
+  submitBasicInfo: (basicInfo) => {
+    if (mode === "create") {
+      dispatch(createApp(basicInfo, stepNext));
+    } else {
+      dispatch(updateApp(basicInfo, stepNext));
+    }
+  },
+  resetCreateAppState: () => dispatch(resetLoadingState("CREATE_APP")),
+  resetUpdateAppState: appId => dispatch(resetLoadingState("UPDATE_APP", appId)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class Step1BasicInfo extends React.Component {
   static propTypes = {
     resetCreateAppState: PropTypes.func.isRequired,
     resetUpdateAppState: PropTypes.func.isRequired,
@@ -16,11 +38,13 @@ class Step1BasicInfo extends React.Component {
     loadingState: PropTypes.object,
     appId: PropTypes.string,
   }
+
   componentWillMount() {
     this.props.resetCreateAppState();
     this.props.resetUpdateAppState(this.props.appId);
   }
-  render = () => {
+
+  render() {
     const { cancelEdit, submitBasicInfo, loadingState, appId } = this.props;
     return (
       <Form model="createAppForm.basicInfo" onSubmit={submitBasicInfo}>
@@ -66,29 +90,4 @@ class Step1BasicInfo extends React.Component {
       </Form>
     );
   }
-}
-
-const mapStateToProps = ({ createAppForm: { basicInfo }, ui: { CREATE_APP, UPDATE_APP } }) => ({
-  appId: basicInfo.app_id,
-  loadingState: {
-    createApp: CREATE_APP,
-    updateApp: UPDATE_APP,
-  },
-});
-
-const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
-  submitBasicInfo: (basicInfo) => {
-    if (mode === "create") {
-      dispatch(createApp(basicInfo, stepNext));
-    } else {
-      dispatch(updateApp(basicInfo, stepNext));
-    }
-  },
-  resetCreateAppState: () => dispatch(resetLoadingState("CREATE_APP")),
-  resetUpdateAppState: appId => dispatch(resetLoadingState("UPDATE_APP", appId)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Step1BasicInfo);
+};
