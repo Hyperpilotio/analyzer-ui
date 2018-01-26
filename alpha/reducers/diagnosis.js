@@ -19,6 +19,9 @@ export default (state = initialState, action) => {
       problems: _.unionBy(data.problems, state.problems, "problem_id"),
     };
   case types.FETCH_APP_LATEST_INCIDENT[SUCCESS]:
+    if (_.isNull(action.payload.data)) {
+      return state;
+    }
     return {
       ...state,
       incidents: _.unionBy([action.payload.data], state.incidents, "incident_id"),
