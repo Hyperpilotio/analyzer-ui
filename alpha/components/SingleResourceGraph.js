@@ -11,6 +11,7 @@ import withInfluxData from "../lib/withInfluxData";
 
 const f = format(".2f");
 
+
 const SingleResourceGraph = ({ problem, metric, influxData, ...props }) => {
   const data = influxData.value;
   const stats = metric.analysis_result;
@@ -20,7 +21,7 @@ const SingleResourceGraph = ({ problem, metric, influxData, ...props }) => {
       <TopRightLegend data={[{ name: metric.source, symbol: { fill: "#b8e986" } }]} />
       <VictoryArea
         style={{ data: { stroke: "#b8e986", strokeWidth: "1.5px", fill: "rgba(184, 233, 134, 0.19)" } }}
-        data={data.values.map(([date, value]) => ({ x: new Date(date), y: value }))}
+        data={data.values.map(([date, value]) => ({ x: date, y: value }))}
         name={metric.source}
         isData
       />
@@ -41,12 +42,15 @@ const SingleResourceGraph = ({ problem, metric, influxData, ...props }) => {
   );
 };
 
-export default withInfluxData(({ problem, metric }) => ({
+export default withInfluxData(({ problem, metric, timeRange }) => ({
   db: "snapaverage",
   metric: metric.source,
   tags: _.filter([
     { key: "nodename", value: _.get(problem, "description.node_name") },
     { key: "io.kubernetes.pod.name", value: _.get(problem, "description.pod_name") },
   ], "value"),
-  timeRange: [tsToMoment(problem.timestamp).subtract(10, "m"), tsToMoment(problem.timestamp)],
+  timeRange: timeRange || [
+    tsToMoment(problem.timestamp).subtract(5, "m").valueOf(),
+    tsToMoment(problem.timestamp).add(5, "m").valueOf(),
+  ],
 }))(SingleResourceGraph);

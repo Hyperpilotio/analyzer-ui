@@ -56,7 +56,45 @@ export default class IncidentDiagnosis extends React.Component {
     refreshInterval: 30 * 1000,
   }
 
-  componentWillMount() {
+  static ensureTimeRange(rawTimeRange) {
+    const timeRange = _.map(timeRange, t => t.valueOf());
+    if (!_.every(timeRange, _.isNumber)) {
+      return timeRange;
+    }
+    if (timeRange[1] > new Date()) {
+      return [`now() - ${timeRange[1] - timeRange[0]}ms`, "now()"];
+    }
+    return timeRange;
+  }
+
+  constructor(props) {
+    super(props);
+    if (!_.isEmpty(props.incident)) {
+      this.state = {
+        chartTimeRange: IncidentDiagnosis.ensureTimeRange([
+          tsToMoment(props.incident.timestamp).subtract(5, "m"),
+          tsToMoment(props.incident.timestamp).add(5, "m"),
+        ]),
+      };
+    } else {
+      this.state = { chartTimeRange: null };
+    }
+
+    this.withTimeRange = ::this.withTimeRange;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (_.isNull(this.state.chartTimeRange) && _.has(nextProps.incident, "timestamp")) {
+      this.setState({
+        chartTimeRange: IncidentDiagnosis.ensureTimeRange([
+          tsToMoment(nextProps.incident.timestamp).subtract(5, "m").valueOf(),
+          tsToMoment(nextProps.incident.timestamp).add(5, "m").valueOf(),
+        ]),
+      });
+    }
+  }
+
+  componentDidMount() {
     this.refetchDiagnosis();
   }
 
@@ -65,13 +103,17 @@ export default class IncidentDiagnosis extends React.Component {
     this.props.setTimeout(::this.refetchDiagnosis, this.props.refreshInterval);
   }
 
+  withTimeRange(timeRange) {
+    this.setState({ chartTimeRange: timeRange });
+  }
+
   render() {
     const { isDiagnosticsLoading, app, result, incident, problems, match } = this.props;
     const incidentTime = incident && tsToMoment(incident.timestamp);
     return (
       <div>
-        {isDiagnosticsLoading ? <AutoBreadcrumbItem link={match.url} text="Loading..." /> : null}
-        {isDiagnosticsLoading ? null : (
+        {isDiagnosticsLoading ?
+          <AutoBreadcrumbItem link={match.url} text="Loading..." /> :
           <div>
             <AutoBreadcrumbItem
               link={match.url}
@@ -161,6 +203,8 @@ export default class IncidentDiagnosis extends React.Component {
                                 height={problem.metrics.length > 1 ? 300 : 400}
                                 problem={problem}
                                 metric={metric}
+                                timeRange={this.state.chartTimeRange}
+                                withTimeRange={this.withTimeRange}
                               />
                             </Col>
                           </Row>
@@ -178,7 +222,8 @@ export default class IncidentDiagnosis extends React.Component {
                 <ChartGroup>
                   <SLOGraph
                     slo={app.slo}
-                    timeRange={[incidentTime.clone().subtract(10, "m"), incidentTime]}
+                    timeRange={this.state.chartTimeRange}
+                    withTimeRange={this.withTimeRange}
                   />
                   <h5 className="text-center mb-3">
                     {_.words(app.slo.metric.type).map(_.capitalize).join(" ")} v.s. SLO
@@ -199,7 +244,7 @@ export default class IncidentDiagnosis extends React.Component {
               )}
             />
           </div>
-        )}
+        }
       </div>
     );
   }
