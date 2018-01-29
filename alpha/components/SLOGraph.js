@@ -1,5 +1,6 @@
 import React from "react";
 import { VictoryArea } from "victory-chart";
+import { VictoryLabel } from "victory-core";
 import _ from "lodash";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
@@ -10,7 +11,7 @@ import withInfluxData from "../lib/withInfluxData";
 const SLOGraph = ({ slo, influxData, ...props }) => {
   const data = influxData.value;
   let dataArea = null;
-  if (!_.isNull(data)) {
+  if (!_.isEmpty(data)) {
     dataArea = (
       <VictoryArea
         style={{ data: {

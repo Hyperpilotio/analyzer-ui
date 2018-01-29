@@ -129,7 +129,11 @@ export default class GrandDashboard extends React.Component {
                         <span>Deleting...</span>
                       </div> :
                       <div>
-                        <Link className="mr-2" to={`/apps/${app.app_id}/edit/1`}>
+                        <Link
+                          onClick={e => e.stopPropagation()}
+                          className="mr-2"
+                          to={`/apps/${app.app_id}/edit/1`}
+                        >
                           <FaEdit className={_s.iconGrp} />
                         </Link>
                         <MdDelete

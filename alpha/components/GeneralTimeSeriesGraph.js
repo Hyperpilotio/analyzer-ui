@@ -111,6 +111,9 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
       x={15}
       y={30}
     />
+    { _.isEmpty(React.Children.toArray(children).filter(child => child.props.isData)) ?
+      <VictoryLabel x={width / 2 - 60} y={height / 2} text="No data points found" /> : null
+    }
     { children }
   </VictoryChart>
 );
