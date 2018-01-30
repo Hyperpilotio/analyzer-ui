@@ -61,7 +61,7 @@ export const withAutoBreadcrumb = WrappedComponent => class extends React.Compon
     };
     this.portalUpdate = (key, el) => this.portalRef.portalUpdate(key, el);
     this.portalRegister = () => this.portalRef.portalRegister();
-    this.portalDeregister = (key) => _.invoke(this.portalRef, "portalDeregister", key);
+    this.portalDeregister = key => _.invoke(this.portalRef, "portalDeregister", key);
   }
 
   render() {
@@ -72,4 +72,4 @@ export const withAutoBreadcrumb = WrappedComponent => class extends React.Compon
       />
     );
   }
-}
+};

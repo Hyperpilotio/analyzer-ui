@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col, Table, Button } from "reactstrap";
 import { RemediationDescription } from "../components/TextDescriptions";
 
-const RemediationsTable = ({ problem, remediations }) => (
+const RemediationsTable = ({ remediations }) => (
   <Container>
     <Row className="mb-2">
       <Col>
@@ -20,6 +20,7 @@ const RemediationsTable = ({ problem, remediations }) => (
           </thead>
           <tbody>
             {remediations.map((option, i) => (
+              // eslint-disable-next-line react/no-array-index-key
               <tr key={i}>
                 <td><RemediationDescription option={option} /></td>
                 <td><Button disabled>Execute</Button></td>

@@ -70,7 +70,7 @@ export default class GrandDashboard extends React.Component {
     await Promise.all(this.props.applications.map(
       ({ app_id }) => this.props.fetchLatestIncident(app_id),
     ));
-    this.props.setTimeout(::this.refetchApps, this.props.refreshInterval)
+    this.props.setTimeout(::this.refetchApps, this.props.refreshInterval);
   }
 
   openRemoveModal(appId) {
@@ -85,7 +85,7 @@ export default class GrandDashboard extends React.Component {
   }
 
   render() {
-    const { match, loadingStates, applications, resetAppForm } = this.props;
+    const { loadingStates, applications, resetAppForm } = this.props;
 
     return (
       <Container>
@@ -123,11 +123,12 @@ export default class GrandDashboard extends React.Component {
                 </tr> :
                 applications.map((app) => {
                   const removeAppCellContent = (
-                    _.get(loadingStates.removeApp.map, [app.app_id, "pending"], false) ?
+                    _.get(loadingStates.removeApp.map, [app.app_id, "pending"], false) ? (
                       <div className={_s.loaderCon}>
                         <Spinner fadeIn="quarter" name="wave" />
                         <span>Deleting...</span>
-                      </div> :
+                      </div>
+                    ) : (
                       <div>
                         <Link
                           onClick={e => e.stopPropagation()}
@@ -144,6 +145,7 @@ export default class GrandDashboard extends React.Component {
                           }}
                         />
                       </div>
+                    )
                   );
                   switch (app.state) {
                   case "Registered":
@@ -182,7 +184,7 @@ export default class GrandDashboard extends React.Component {
           { _.isEmpty(applications) && loadingStates.fetchApps.fulfilled ?
             <div className={_s.noData}>
               <span>
-                No applications managed by HyperPilot, click on "Add" button to add them.
+                No applications managed by HyperPilot, click on &quot;Add&quot; button to add them.
               </span>
             </div>
             : null

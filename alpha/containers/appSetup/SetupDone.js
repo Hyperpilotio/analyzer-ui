@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Container, Button } from "reactstrap";
 import _ from "lodash";
-import { app as AppPropType } from "../../constants/propTypes";
 import Spinner from "../../components/Spinner";
 import CheckMark from "../../components/CheckMark";
 import _s from "../style.scss";

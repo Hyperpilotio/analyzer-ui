@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Card, CardBody, CardTitle, FormGroup, Input } from "reactstrap";
 import _ from "lodash";
+import { autobind } from "core-decorators";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
@@ -11,7 +12,6 @@ import _s from "../style.scss";
 
 class Step2Microservices extends React.Component {
   static propTypes = {
-    // cacheServices: PropTypes.func.isRequired,
     microservices: PropTypes.array.isRequired,
     k8sMicroservices: PropTypes.array,
     fetchMicroservices: PropTypes.func.isRequired,
@@ -51,25 +51,23 @@ class Step2Microservices extends React.Component {
     return _.uniq(_.map(this.props.k8sMicroservices, "namespace"));
   }
 
+  @autobind
   filterNamespace(event) {
     this.setState({ namespaceFilter: event.target.value });
   }
 
+  @autobind
   filterKind(event) {
     this.setState({ kindFilter: event.target.value });
   }
 
   render() {
-    const {
-      appId,
-      loadingState,
-      updateMicroservices,
-    } = this.props;
+    const { appId, loadingState } = this.props;
 
     return (
       <Form
         model="createAppForm.microservices"
-        onSubmit={microservices => updateMicroservices(microservices, appId)}
+        onSubmit={microservices => this.props.updateMicroservices(microservices, appId)}
       >
         {/* Selected Microservices */}
         <Card className={`${_s.selectedMicroservices} ${_s.card}`}>
@@ -85,7 +83,7 @@ class Step2Microservices extends React.Component {
             { this.props.microservices.length <= 0 ?
               <div className={`row ${_s.noData}`}>
                 <span>
-                  No microservice selected, click on  "Add" button to add them.
+                  No microservice selected, click on &quot;Add&quot; button to add them.
                 </span>
               </div> : null
             }
@@ -104,7 +102,7 @@ class Step2Microservices extends React.Component {
                   <Input
                     id="select-namespace"
                     type="select"
-                    onChange={::this.filterNamespace}
+                    onChange={this.filterNamespace}
                     value={this.state.namespaceFilter}
                   >
                     <option value="all">All</option>
@@ -121,7 +119,7 @@ class Step2Microservices extends React.Component {
                   <Input
                     id="select-kind"
                     type="select"
-                    onChange={::this.filterKind}
+                    onChange={this.filterKind}
                     value={this.state.kindFilter}
                   >
                     <option value="all">All</option>
@@ -153,14 +151,14 @@ class Step2Microservices extends React.Component {
   }
 }
 
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { FETCH_AVAILABLE_SERVICES, UPDATE_MICROSERVICES, UPDATE_APP } }) => ({
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui }) => ({
   microservices,
   appId: basicInfo.app_id,
   k8sMicroservices: forms.microservices.$form.options,
   loadingState: {
-    fetchAvailableServices: FETCH_AVAILABLE_SERVICES,
-    upadteMicroservices: UPDATE_MICROSERVICES,
-    updateApp: UPDATE_APP,
+    fetchAvailableServices: ui.FETCH_AVAILABLE_SERVICES,
+    upadteMicroservices: ui.UPDATE_MICROSERVICES,
+    updateApp: ui.UPDATE_APP,
   },
 });
 

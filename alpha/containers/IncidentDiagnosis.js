@@ -83,6 +83,10 @@ export default class IncidentDiagnosis extends React.Component {
     this.withTimeRange = ::this.withTimeRange;
   }
 
+  componentDidMount() {
+    this.refetchDiagnosis();
+  }
+
   componentWillReceiveProps(nextProps) {
     if (_.isNull(this.state.chartTimeRange) && _.has(nextProps.incident, "timestamp")) {
       this.setState({
@@ -92,10 +96,6 @@ export default class IncidentDiagnosis extends React.Component {
         ]),
       });
     }
-  }
-
-  componentDidMount() {
-    this.refetchDiagnosis();
   }
 
   async refetchDiagnosis() {
@@ -139,7 +139,8 @@ export default class IncidentDiagnosis extends React.Component {
             </Container>
 
             <Route
-              exact path={match.path}
+              // Putting "exact" and "path" together just sounds great
+              exact path={match.path} // eslint-disable-line react/jsx-max-props-per-line
               render={({ match: { params } }) => (
                 <DiagnosticsTable
                   selectedProblem={params.problemId}
@@ -153,7 +154,7 @@ export default class IncidentDiagnosis extends React.Component {
             <Route
               path={`${match.path}/:problemId`}
               render={({ match: { path, params: { problemId } } }) => {
-                const problem = _.find(problems, { problem_id: problemId });
+                const selectedProblem = _.find(problems, { problem_id: problemId });
                 const diagnosisProblemRef = _.find(result.top_related_problems, { id: problemId });
                 const otherProblems = _.reject(result.top_related_problems, { id: problemId });
                 return (
@@ -169,21 +170,21 @@ export default class IncidentDiagnosis extends React.Component {
                                   Problem #{diagnosisProblemRef.rank}:
                                 </Col>
                                 <Col>
-                                  <ProblemDescription problem={problem} />
+                                  <ProblemDescription problem={selectedProblem} />
                                   <FaCaretDown className="ml-1" />
                                 </Col>
                               </Row>
                             </DropdownToggle>
                             <DropdownMenu>
-                              {otherProblems.map(relatedProblem => (
-                                <DropdownItem key={relatedProblem.id}>
-                                  <Linked tag={Row} to={`${match.url}/${relatedProblem.id}`}>
+                              {otherProblems.map(problem => (
+                                <DropdownItem key={problem.id}>
+                                  <Linked tag={Row} to={`${match.url}/${problem.id}`}>
                                     <Col sm="auto">
-                                      Problem #{ relatedProblem.rank }:
+                                      Problem #{ problem.rank }:
                                     </Col>
                                     <Col>
                                       <ProblemDescription
-                                        problem={_.find(problems, { problem_id: relatedProblem.id })}
+                                        problem={_.find(problems, { problem_id: problem.id })}
                                       />
                                     </Col>
                                   </Linked>
@@ -196,12 +197,12 @@ export default class IncidentDiagnosis extends React.Component {
                     </Row>
                     <Row>
                       <ChartGroup className="mb-3">
-                        {problem.metrics.map(metric => (
+                        {selectedProblem.metrics.map(metric => (
                           <Row key={metric.name} className="mb-2">
                             <Col>
                               <SingleResourceGraph
-                                height={problem.metrics.length > 1 ? 300 : 400}
-                                problem={problem}
+                                height={selectedProblem.metrics.length > 1 ? 300 : 400}
+                                problem={selectedProblem}
                                 metric={metric}
                                 timeRange={this.state.chartTimeRange}
                                 withTimeRange={this.withTimeRange}
@@ -209,7 +210,7 @@ export default class IncidentDiagnosis extends React.Component {
                             </Col>
                           </Row>
                         ))}
-                        <ResourceGraphTitle problem={problem} />
+                        <ResourceGraphTitle problem={selectedProblem} />
                       </ChartGroup>
                     </Row>
                   </Container>

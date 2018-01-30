@@ -90,4 +90,4 @@ export default class Step1BasicInfo extends React.Component {
       </Form>
     );
   }
-};
+}

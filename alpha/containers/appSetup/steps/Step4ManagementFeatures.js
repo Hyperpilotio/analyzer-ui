@@ -58,7 +58,7 @@ const Step4ManagementFeatures = ({
                   </tr>
                 </thead>
                 <tbody>
-                  { remediation_policy.map(({ action_name, mode, constraints }, rpIndex) => (
+                  { remediation_policy.map(({ action_name }, rpIndex) => (
                     <tr key={action_name}>
                       <td>{ texts[action_name] }</td>
                       <td>
@@ -72,7 +72,11 @@ const Step4ManagementFeatures = ({
                         </Control.select>
                       </td>
                       <td>
-                        <a href="#"><FaEdit className="mr-2" />Edit constraints</a>
+                        {/* This button is a placeholder and doesn't do anything for now */}
+                        <Button onClick={e => e.preventDefault()}>
+                          <FaEdit className="mr-2" />
+                          Edit constraints
+                        </Button>
                       </td>
                     </tr>
                   ))
