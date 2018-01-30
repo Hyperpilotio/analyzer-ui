@@ -1,14 +1,15 @@
 import React from "react";
 import { VictoryArea } from "victory-chart";
 import _ from "lodash";
+import FaSpinner from "react-icons/lib/fa/spinner";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 import withInfluxData from "../lib/withInfluxData";
 
-
 const SLOGraph = ({ slo, influxData, ...props }) => {
   const data = influxData.value;
+  console.log("influxData", influxData);
   let dataArea = null;
   if (!_.isNull(data)) {
     dataArea = (
@@ -27,6 +28,13 @@ const SLOGraph = ({ slo, influxData, ...props }) => {
 
   return (
     <GeneralTimeSeriesGraph yLabel={`${slo.metric.type} (${slo.threshold.unit})`} {...props}>
+      {/* Refetch Spinner */}
+      <g
+        display={influxData.refreshing ? "block" : "none"}
+        transform="translate(1355,80)"
+      >
+        <FaSpinner />
+      </g>
       <TopRightLegend data={[{ name: slo.metric.name, symbol: { fill: "#5677fa" } }]} />
       { dataArea }
       <ThresholdLine
