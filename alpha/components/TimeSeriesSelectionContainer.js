@@ -66,7 +66,7 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
       this.getDefaultLabelProps(props, points),
     );
   }
-}
+};
 
 export default combineContainerMixins([
   selectionContainerMixin,

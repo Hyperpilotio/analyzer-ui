@@ -35,6 +35,9 @@ const DiagnosticsTable = ({ selectedProblem, baseUrl, result, problems }) => (
                     </Row>
                     <ListGroup>
                       {remediation_options.map((option, i) => (
+                        // Remediation options are static within a problem, and we also have
+                        // nothing else other than index for the key
+                        // eslint-disable-next-line react/no-array-index-key
                         <ListGroupItem key={i}>
                           <Row>
                             <Col sm="auto">{i + 1}. </Col>

@@ -3,11 +3,13 @@ import _ from "lodash";
 import { Badge, Row, Col } from "reactstrap";
 
 
-const Resource = ({ name }) => <Badge color="primary">Resource: { name }</Badge>
-const Node = ({ name }) => <Badge color="info">Node: { name }</Badge>
-const Pod = ({ name }) => <Badge color="success">Container: { name }</Badge>
-const Instance = ({ name }) => <Badge color="warning">Instance Type: { name }</Badge>
-const GenericLabel = ({ name, value }) => <Badge color="dark">{name}: {value}</Badge>
+// eslint-disable react/prop-types
+const Resource = ({ name }) => <Badge color="primary">Resource: { name }</Badge>;
+const Node = ({ name }) => <Badge color="info">Node: { name }</Badge>;
+const Pod = ({ name }) => <Badge color="success">Container: { name }</Badge>;
+const Instance = ({ name }) => <Badge color="warning">Instance Type: { name }</Badge>;
+const GenericLabel = ({ name, value }) => <Badge color="dark">{name}: {value}</Badge>;
+// eslint-enable
 
 const fieldComponentMap = {
   resource: Resource,
@@ -38,7 +40,7 @@ export const RemediationDescription = ({ option, ...props }) => {
   });
   _.forEach(option.spec, (value, key) => {
     children.push(<GenericLabel name={_.words(key).map(_.capitalize).join(" ")} value={value} />);
-    children.push(" ")
+    children.push(" ");
   });
   return (
     <Row>
@@ -61,6 +63,7 @@ export const ResourceGraphTitle = ({ problem }) => {
       <h5 className="text-center">
         <Resource name={desc.resource} /> usage on <Node name={desc.node_name} />
       </h5>
-    )
+    );
   }
+  return null;
 };

@@ -34,16 +34,21 @@ export default class MultiPointFlyout extends React.Component {
     this.shouldUpdateSize = true;
   }
 
-  componentWillReceiveProps() {
-    this.shouldUpdateSize = true;
-  }
-
   componentDidMount() {
     this.updateSize();
   }
 
+  componentWillReceiveProps() {
+    this.shouldUpdateSize = true;
+  }
+
   componentDidUpdate() {
     this.updateSize();
+  }
+
+  getPlacement() {
+    const { scale } = this.props;
+    return (this.props.x > scale.x.range()[1] - this.width) ? "left" : "right";
   }
 
   updateSize() {
@@ -54,11 +59,6 @@ export default class MultiPointFlyout extends React.Component {
       this.shouldUpdateSize = false;
       this.forceUpdate();
     }
-  }
-
-  getPlacement() {
-    const { scale } = this.props;
-    return (this.props.x > scale.x.range()[1] - this.width) ? "left" : "right";
   }
 
   render() {

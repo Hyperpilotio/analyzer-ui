@@ -11,7 +11,7 @@ const AppStatusBadge = ({ className, incident, isLoading }) => {
   if (isLoading) {
     return <h6>Loading...</h6>;
   }
-  className = classnames("d-inline-flex", "align-items-center", className);
+  const combinedClassName = classnames("d-inline-flex", "align-items-center", className);
   let badgeProps = { color: "success" };
   let Icon = FaCheckCircle;
   let innerText = "Healthy";
@@ -21,7 +21,7 @@ const AppStatusBadge = ({ className, incident, isLoading }) => {
     innerText = incident.type;
   }
   return (
-    <Badge className={className} {...badgeProps}>
+    <Badge className={combinedClassName} {...badgeProps}>
       <Icon className="mr-1" />
       <h6 className="mb-0">{ innerText }</h6>
     </Badge>

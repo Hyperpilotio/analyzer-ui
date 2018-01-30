@@ -51,7 +51,9 @@ SelectionHelpers.onMouseMove = _.throttle(
   { leading: true, trailing: false },
 );
 
-const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshing, withTimeRange }) => (
+const GeneralTimeSeriesGraph = ({
+  yLabel, width, height, children, autoRefreshing, withTimeRange,
+}) => (
   <VictoryChart
     width={width}
     height={height}
@@ -66,7 +68,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
       }}
       onSelectionCleared={
         ensureMultipleTimes(
-          ({ domain, scale, mousePosition }) => {
+          ({ domain }) => {
             const xDomain = _.map(domain.x, _.toNumber);
             const centerX = (xDomain[0] + xDomain[1]) / 2;
             const currentRange = xDomain[1] - xDomain[0];
@@ -112,7 +114,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
       y={30}
     />
     { _.isEmpty(React.Children.toArray(children).filter(child => child.props.isData)) ?
-      <VictoryLabel x={width / 2 - 60} y={height / 2} text="No data points found" /> : null
+      <VictoryLabel x={(width / 2) - 60} y={height / 2} text="No data points found" /> : null
     }
     { children }
   </VictoryChart>

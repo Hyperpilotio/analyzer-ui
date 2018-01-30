@@ -1,6 +1,5 @@
 import React from "react";
 import { VictoryArea } from "victory-chart";
-import { VictoryLabel } from "victory-core";
 import _ from "lodash";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";

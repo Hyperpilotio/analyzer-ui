@@ -2,7 +2,6 @@ import React from "react";
 import _ from "lodash";
 import { format } from "d3-format";
 import { VictoryArea } from "victory-chart";
-import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
