@@ -57,7 +57,7 @@ export default class IncidentDiagnosis extends React.Component {
   }
 
   static ensureTimeRange(rawTimeRange) {
-    const timeRange = _.map(timeRange, t => t.valueOf());
+    const timeRange = _.map(rawTimeRange, t => t.valueOf());
     if (!_.every(timeRange, _.isNumber)) {
       return timeRange;
     }
