@@ -140,7 +140,7 @@ router.post("/api/save-microservices", async (req, res) => {
 
   _.forEach(k8sSpecs, ({ namespace, ...kinds }) => {
     _.forEach(kinds, (specs, kind) => {
-      specs.forEach(({ name, k8s_spec }) => {
+      specs.forEach(({ name, k8s_spec }) => { // eslint-disable-line camelcase
         requestedResources.push({ namespace, kind, name });
         const registerRequest = makeRequest("post", "analyzer", "/api/v1/k8s_services", {
           body: { spec: JSON.stringify(k8s_spec) },

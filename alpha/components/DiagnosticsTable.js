@@ -20,7 +20,7 @@ const DiagnosticsTable = ({ selectedProblem, baseUrl, result, problems }) => (
           </tr>
         </thead>
         <tbody>
-          {result.top_related_problems.map(({ id, rank, remediation_options }) => {
+          {result.top_related_problems.map(({ id, rank, remediation_options: options }) => {
             const problem = _.find(problems, { problem_id: id });
             return (
               <Linked tag="tr" key={id} to={`${baseUrl}/${id}`}>
@@ -34,7 +34,7 @@ const DiagnosticsTable = ({ selectedProblem, baseUrl, result, problems }) => (
                       <h5>Recommended Remediaion Actions:</h5>
                     </Row>
                     <ListGroup>
-                      {remediation_options.map((option, i) => (
+                      {options.map((option, i) => (
                         // Remediation options are static within a problem, and we also have
                         // nothing else other than index for the key
                         // eslint-disable-next-line react/no-array-index-key

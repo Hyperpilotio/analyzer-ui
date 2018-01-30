@@ -61,7 +61,6 @@ class Step3SLO extends React.Component {
       openModal,
       restoreSloSourceConfig,
       savedApp,
-      appId,
     } = this.props;
 
     const res = await submitSloSource(sloSource);

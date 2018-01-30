@@ -23,7 +23,7 @@ const texts = {
 
 const Step4ManagementFeatures = ({
   appId,
-  management_features,
+  management_features, // eslint-disable-line camelcase
   stepBack,
   updateManagementFeatures,
   loadingState,
@@ -32,7 +32,7 @@ const Step4ManagementFeatures = ({
     model="createAppForm.management_features"
     onSubmit={data => updateManagementFeatures(data, appId)}
   >
-    { management_features.map(({ name, status, remediation_policy }, index) => (
+    { management_features.map(({ name, status, remediation_policy: policies }, index) => (
       <Card key={name} className="mb-3">
         <CardBody>
           <Row>
@@ -58,9 +58,9 @@ const Step4ManagementFeatures = ({
                   </tr>
                 </thead>
                 <tbody>
-                  { remediation_policy.map(({ action_name }, rpIndex) => (
-                    <tr key={action_name}>
-                      <td>{ texts[action_name] }</td>
+                  { policies.map(({ action_name: actionName }, rpIndex) => (
+                    <tr key={actionName}>
+                      <td>{ texts[actionName] }</td>
                       <td>
                         <Control.select
                           model={`.[${index}].remediation_policy[${rpIndex}].mode`}
@@ -112,6 +112,7 @@ Step4ManagementFeatures.propTypes = {
   loadingState: PropTypes.object.isRequired,
 };
 
+// eslint-disable-next-line camelcase
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
   appId: basicInfo.app_id,
   management_features,

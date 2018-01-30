@@ -17,6 +17,7 @@ export const flattenResourcesData = resources => (
   ))
 );
 
+// eslint-disable-next-line camelcase
 export const appToForm = ({ app_id, name, type, slo, microservices, management_features }) => {
   const formData = { basicInfo: { app_id, name, type } };
   if (!_.isUndefined(microservices)) {
@@ -34,6 +35,7 @@ export const appToForm = ({ app_id, name, type, slo, microservices, management_f
   return formData;
 };
 
+// eslint-disable-next-line camelcase
 export const formToApp = ({ basicInfo, microservices, sloSource, slo, management_features }) => ({
   ...basicInfo,
   microservices,
