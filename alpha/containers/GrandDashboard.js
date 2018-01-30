@@ -4,7 +4,6 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { actions as formActions } from "react-redux-form";
-import ReactRouterPropTypes from "react-router-prop-types";
 import ReactTimeout from "react-timeout";
 import FaEdit from "react-icons/lib/fa/edit";
 import MdDelete from "react-icons/lib/md/delete";
@@ -49,7 +48,6 @@ const mapDispatchToProps = dispatch => ({
 @withModal
 export default class GrandDashboard extends React.Component {
   static propTypes = {
-    match: ReactRouterPropTypes.match.isRequired,
     fetchApps: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     removeAppInModal: PropTypes.func.isRequired,
@@ -68,7 +66,7 @@ export default class GrandDashboard extends React.Component {
   async refetchApps() {
     await this.props.fetchApps();
     await Promise.all(this.props.applications.map(
-      ({ app_id }) => this.props.fetchLatestIncident(app_id),
+      ({ app_id }) => this.props.fetchLatestIncident(app_id), // eslint-disable-line camelcase
     ));
     this.props.setTimeout(::this.refetchApps, this.props.refreshInterval);
   }
