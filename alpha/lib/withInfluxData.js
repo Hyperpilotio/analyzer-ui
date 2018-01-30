@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import { connect as connectRefetch, PromiseState } from "react-refetch";
 
+
 const withInfluxData = propsToQuery => (WrappedComponent) => {
   @connectRefetch((props) => {
     const { db, metric, tags, timeRange, refreshInterval = 5 * 1000 } = propsToQuery(props);
@@ -25,11 +26,13 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
       influxFetchMeta: { value: { db, metric, tags, timeRange } },
     };
     if (_.isEmpty(props.withTimeRange)) {
-      wrappedProps.withTimeRange = timeRange => ({
+      wrappedProps.withTimeRange = ([newStart, newEnd]) => ({
         influxFetch: createFetch(
-          _.isNumber(timeRange[0]) ? `${timeRange[0]}ms` : timeRange[0],
-          _.isNumber(timeRange[1]) ? `${timeRange[1]}ms` : timeRange[1],
-          _.every(timeRange, _.isNumber) ? { force: true } : { refreshInterval, force: true },
+          _.isNumber(newStart) ? `${newStart}ms` : newStart,
+          _.isNumber(newEnd) ? `${newEnd}ms` : newEnd,
+          _.every([newStart, newEnd], _.isNumber) ?
+            { force: true } :
+            { refreshInterval, force: true },
         ),
         influxFetchMeta: {
           value: { db, metric, tags, timeRange },
@@ -98,6 +101,7 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
         this.setState({ influxData: nextProps.influxFetch });
       }
     }
+
     render() {
       const { timeRange } = this.props.influxFetchMeta.value;
       return (
@@ -111,10 +115,11 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
   }
 
   return class extends WithInfluxData {
-    // Override to make sure it doesn't reinvoke propsToRequestsToProps again when the queries are identical
+    // Override to make sure it doesn't reinvoke propsToRequestsToProps
+    // again when the queries are identical
     componentWillReceiveProps(nextProps, nextContext) {
       if (!_.isEqual(this.props, nextProps)) {
-        return super.componentWillReceiveProps(nextProps, nextContext);
+        super.componentWillReceiveProps(nextProps, nextContext);
       }
     }
   };

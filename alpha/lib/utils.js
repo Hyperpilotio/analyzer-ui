@@ -62,14 +62,15 @@ export const ensureMultipleTimes = (func, n, maxWait) => {
     if (_.now() - firstCalled > maxWait) {
       firstCalled = _.now();
       nCalls = 1;
-      return;
+      return null;
     }
-    nCalls++;
+    nCalls += 1;
     if (nCalls >= n) {
       firstCalled = null;
       nCalls = 0;
       return func(...args);
     }
+    return null;
   };
 };
 
