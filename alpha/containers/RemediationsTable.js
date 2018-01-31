@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Container, Row, Col, Table, Button } from "reactstrap";
 import { RemediationDescription } from "../components/TextDescriptions";
+import * as HPPropTypes from "../constants/propTypes";
 
 const RemediationsTable = ({ remediations }) => (
   <Container>
@@ -32,5 +34,9 @@ const RemediationsTable = ({ remediations }) => (
     </Row>
   </Container>
 );
+
+RemediationsTable.propTypes = {
+  remediations: PropTypes.arrayOf(HPPropTypes.remediationOption).isRequired,
+};
 
 export default RemediationsTable;

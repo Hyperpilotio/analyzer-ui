@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Container, Button } from "reactstrap";
 import _ from "lodash";
+import * as HPPropTypes from "../../constants/propTypes";
 import Spinner from "../../components/Spinner";
 import CheckMark from "../../components/CheckMark";
 import _s from "../style.scss";
@@ -47,8 +48,11 @@ const SetupDone = ({
 );
 
 SetupDone.propTypes = {
-  basicInfo: PropTypes.object.isRequired,
-  loadingState: PropTypes.object.isRequired,
+  basicInfo: PropTypes.shape({
+    app_id: PropTypes.string,
+    name: PropTypes.string,
+  }).isRequired,
+  loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
 };
 
 const mapStateToProps = ({ createAppForm, ui }) => ({

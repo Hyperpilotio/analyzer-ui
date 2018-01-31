@@ -12,7 +12,8 @@ import Spinner from "react-spinkit";
 import Linked from "~/commons/components/Linked";
 import AppStatusBadge from "../components/AppStatusBadge";
 import { fetchApps, fetchAppLatestIncident, removeApp } from "../actions";
-import { getSLODisplay } from "../lib/utils";
+import * as HPPropTypes from "../constants/propTypes";
+import { getSLODisplay, dispatcherProps } from "../lib/utils";
 import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
 import _s from "./style.scss";
@@ -48,10 +49,10 @@ const mapDispatchToProps = dispatch => ({
 @withModal
 export default class GrandDashboard extends React.Component {
   static propTypes = {
-    fetchApps: PropTypes.func.isRequired,
-    openModal: PropTypes.func.isRequired,
-    removeAppInModal: PropTypes.func.isRequired,
-    resetAppForm: PropTypes.func.isRequired,
+    ...withModal.propTypes,
+    ...ReactTimeout.propTypes,
+    ...dispatcherProps("fetchApps", "fetchLatestIncident", "removeAppInModal", "resetAppForm"),
+    applications: PropTypes.arrayOf(HPPropTypes.app).isRequired,
     refreshInterval: PropTypes.number,
   }
 

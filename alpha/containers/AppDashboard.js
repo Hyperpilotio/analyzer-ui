@@ -2,6 +2,8 @@ import React from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
 import { Route } from "react-router";
+import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import ReactTimeout from "react-timeout";
@@ -11,14 +13,15 @@ import SLOGraph from "../components/SLOGraph";
 import IncidentDiagnosis from "./IncidentDiagnosis";
 import { fetchApps, fetchAppLatestIncident } from "../actions";
 import { withAutoBreadcrumb, AutoBreadcrumbItem } from "./AutoBreadcrumb";
-import { tsToMoment } from "../lib/utils";
+import { tsToMoment, dispatcherProps } from "../lib/utils";
+import * as HPPropTypes from "../constants/propTypes";
 
 
 const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   const { appId } = match.params;
   const isAppLoading = !ui.FETCH_APPS.fulfilled;
   if (isAppLoading) {
-    return { app: null, latestIncident: null, isAppLoading, isIncidentLoading: true };
+    return { isAppLoading, isIncidentLoading: true };
   }
 
   const app = _.find(applications, { app_id: appId });
@@ -26,7 +29,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
   const isIncidentLoading = !_.get(ui.FETCH_APP_LATEST_INCIDENT.map, [appId, "fulfilled"]);
   const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
   if (_.isEmpty(appIncidents)) {
-    return { app, latestIncident: null, isAppLoading, isIncidentLoading };
+    return { app, isAppLoading, isIncidentLoading };
   }
 
   const latestIncident = _.maxBy(appIncidents, "timestamp");
@@ -42,7 +45,21 @@ const mapDispatchToProps = (dispatch, { match }) => ({
 @ReactTimeout
 @withAutoBreadcrumb
 export default class AppDashboard extends React.Component {
+  static propTypes = {
+    ...withAutoBreadcrumb.propTypes,
+    ...ReactTimeout.propTypes,
+    match: ReactRouterPropTypes.match.isRequired,
+    refreshInterval: PropTypes.number,
+    app: HPPropTypes.app,
+    latestIncident: HPPropTypes.incident,
+    isAppLoading: PropTypes.bool.isRequired,
+    isIncidentLoading: PropTypes.bool.isRequired,
+    ...dispatcherProps("fetchApps", "fetchAppLatestIncident"),
+  }
+
   static defaultProps = {
+    app: null,
+    latestIncident: null,
     refreshInterval: 30 * 1000,
   }
 

@@ -28,6 +28,17 @@ const WrappedBreadcrumbItem = ({ active, link, text }) => (
   </BreadcrumbItem>
 );
 
+WrappedBreadcrumbItem.propTypes = {
+  active: PropTypes.bool,
+  link: PropTypes.string,
+  text: PropTypes.string.isRequired,
+};
+
+WrappedBreadcrumbItem.defaultProps = {
+  active: false,
+  link: null,
+};
+
 export class AutoBreadcrumbItem extends VictoryPortal {
   static displayName = "AutoBreadcrumbItem"
   static defaultProps = {}
@@ -72,4 +83,8 @@ export const withAutoBreadcrumb = WrappedComponent => class extends React.Compon
       />
     );
   }
+};
+
+withAutoBreadcrumb.propTypes = {
+  breadcrumb: PropTypes.element.isRequired,
 };

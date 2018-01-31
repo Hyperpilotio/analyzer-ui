@@ -8,6 +8,7 @@ import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import * as HPPropTypes from "../../../constants/propTypes";
 import { updateApp, activateApp } from "../../../actions";
 import Button from "../../../components/Button";
 
@@ -23,7 +24,7 @@ const texts = {
 
 const Step4ManagementFeatures = ({
   appId,
-  management_features, // eslint-disable-line camelcase
+  managementFeatures,
   stepBack,
   updateManagementFeatures,
   loadingState,
@@ -32,7 +33,7 @@ const Step4ManagementFeatures = ({
     model="createAppForm.management_features"
     onSubmit={data => updateManagementFeatures(data, appId)}
   >
-    { management_features.map(({ name, status, remediation_policy: policies }, index) => (
+    { managementFeatures.map(({ name, status, remediation_policy: policies }, index) => (
       <Card key={name} className="mb-3">
         <CardBody>
           <Row>
@@ -106,16 +107,21 @@ const Step4ManagementFeatures = ({
 );
 
 Step4ManagementFeatures.propTypes = {
-  management_features: PropTypes.array.isRequired,
+  appId: PropTypes.string,
+  managementFeatures: PropTypes.arrayOf(HPPropTypes.managementFeature).isRequired,
+  loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManagementFeatures: PropTypes.func.isRequired,
-  loadingState: PropTypes.object.isRequired,
+};
+
+Step4ManagementFeatures.defaultProps = {
+  appId: null,
 };
 
 // eslint-disable-next-line camelcase
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
   appId: basicInfo.app_id,
-  management_features,
+  managementFeatures: management_features,
   loadingState: {
     updateApp: ui.UPDATE_APP,
     activateApp: ui.ACTIVATE_APP,

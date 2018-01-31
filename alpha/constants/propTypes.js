@@ -4,7 +4,7 @@ import ReactTimeout from "react-timeout";
 ReactTimeout.propTypes = {
   setTimeout: PropTypes.func.isRequired,
   setInterval: PropTypes.func.isRequired,
-  setIntermediate: PropTypes.func.isRequired,
+  setImmediate: PropTypes.func.isRequired,
 };
 
 export const metric = PropTypes.shape({
@@ -26,9 +26,9 @@ export const incident = PropTypes.shape({
   app_id: PropTypes.string,
   incident_id: PropTypes.string,
   labels: PropTypes.objectOf(PropTypes.string),
-  metric: metric,
+  metric,
   severity: PropTypes.number,
-  state: PropTypes.oneOf(["State", "Resolved"]),
+  state: PropTypes.oneOf(["Active", "Resolved"]),
   timestamp: PropTypes.number,
   type: PropTypes.string,
 });
@@ -74,6 +74,7 @@ export const problem = PropTypes.shape({
 });
 
 export const microservice = PropTypes.shape({
+  service_id: PropTypes.string,
   namespace: PropTypes.string,
   kind: PropTypes.string,
   name: PropTypes.string,
@@ -83,7 +84,7 @@ export const sloSource = PropTypes.shape({
   APM_type: PropTypes.string,
   port: PropTypes.number,
   service: microservice,
-})
+});
 
 export const managementFeature = PropTypes.shape({
   name: PropTypes.string,
@@ -99,9 +100,9 @@ export const app = PropTypes.shape({
   name: PropTypes.string,
   microservices: PropTypes.arrayOf(microservice),
   slo: PropTypes.shape({
-    metric: metric,
+    metric,
     source: sloSource,
-    threshold: threshold,
+    threshold,
   }),
   management_features: PropTypes.arrayOf(managementFeature),
   state: PropTypes.oneOf(["Active", "Registered", "Unregistered"]),
@@ -119,4 +120,12 @@ const singleLoadingState = {
 export const loadingState = PropTypes.shape({
   ...singleLoadingState,
   map: PropTypes.objectOf(PropTypes.shape(singleLoadingState)),
+});
+
+export const metricOption = PropTypes.shape({
+  name: PropTypes.string,
+  tags: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string,
+    values: PropTypes.arrayOf(PropTypes.string),
+  })),
 });

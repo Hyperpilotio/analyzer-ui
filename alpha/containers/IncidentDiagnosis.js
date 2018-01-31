@@ -10,6 +10,7 @@ import {
 import { Toggle } from "react-powerplug";
 import FaCaretDown from "react-icons/lib/fa/caret-down";
 import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
 import ReactTimeout from "react-timeout";
 import Linked from "~/commons/components/Linked";
 import DiagnosticsTable from "../components/DiagnosticsTable";
@@ -21,15 +22,16 @@ import { ProblemDescription, ResourceGraphTitle } from "../components/TextDescri
 import { AutoBreadcrumbItem } from "./AutoBreadcrumb";
 import { fetchDiagnosis } from "../actions";
 import { tsToMoment } from "../lib/utils";
+import * as HPPropTypes from "../constants/propTypes";
 
 const mapStateToProps = ({ diagnosis }, { match }) => {
   const incident = _.find(diagnosis.incidents, { incident_id: match.params.incidentId });
   if (_.isEmpty(incident)) {
-    return { incident: null, result: null, problems: null, isDiagnosticsLoading: true };
+    return { isDiagnosticsLoading: true };
   }
   const result = _.find(diagnosis.results, { incident_id: incident.incident_id });
   if (_.isEmpty(result)) {
-    return { incident: null, result: null, problems: null, isDiagnosticsLoading: true };
+    return { isDiagnosticsLoading: true };
   }
   const problems = result.top_related_problems.map(
     ({ id }) => _.find(diagnosis.problems, { problem_id: id }),
@@ -46,13 +48,21 @@ const mapDispatchToProps = (dispatch, { match: { params } }) => ({
 @ReactTimeout
 export default class IncidentDiagnosis extends React.Component {
   static propTypes = {
+    app: HPPropTypes.app.isRequired,
+    incident: HPPropTypes.incident,
+    result: HPPropTypes.result,
+    problems: PropTypes.arrayOf(HPPropTypes.problem),
     fetchDiagnosis: PropTypes.func.isRequired,
     isDiagnosticsLoading: PropTypes.bool.isRequired,
     setTimeout: PropTypes.func.isRequired,
+    match: ReactRouterPropTypes.match.isRequired,
     refreshInterval: PropTypes.number,
   }
 
   static defaultProps = {
+    incident: null,
+    result: null,
+    problems: null,
     refreshInterval: 30 * 1000,
   }
 

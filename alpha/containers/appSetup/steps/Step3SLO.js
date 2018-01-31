@@ -9,7 +9,8 @@ import FaClose from "react-icons/lib/fa/close";
 import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
-import { getKindDisplay } from "../../../lib/utils";
+import * as HPPropTypes from "../../../constants/propTypes";
+import { getKindDisplay, dispatcherProps } from "../../../lib/utils";
 import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } from "../../../actions";
 import Button from "../../../components/Button";
 import withModal from "../../../lib/withModal";
@@ -28,9 +29,9 @@ const mapStateToProps = ({
     fetchMetrics: ui.FETCH_METRICS,
     updateApp: ui.UPDATE_APP,
   },
+  slo,
   sloSource,
   microservices,
-  slo,
 });
 
 const mapDispatchToProps = (dispatch, { stepNext }) => ({
@@ -69,19 +70,29 @@ const mapDispatchToProps = (dispatch, { stepNext }) => ({
 @withModal
 export default class Step3SLO extends React.Component {
   static propTypes = {
-    submitSloSource: PropTypes.func.isRequired,
-    updateSlo: PropTypes.func.isRequired,
-    loadingState: PropTypes.object.isRequired,
-    metricOptions: PropTypes.array,
-    microservices: PropTypes.array,
-    tags: PropTypes.array,
-    sloSource: PropTypes.object,
-    stepBack: PropTypes.func.isRequired,
-    addTagsInput: PropTypes.func.isRequired,
-    deleteTag: PropTypes.func.isRequired,
-    setRightSideEditability: PropTypes.func.isRequired,
-    openModal: PropTypes.func.isRequired,
+    ...withModal.propTypes,
+    appId: PropTypes.string,
+    savedApp: HPPropTypes.app,
+    sloFormDisabled: PropTypes.bool,
+    loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
+    metricOptions: PropTypes.arrayOf(HPPropTypes.metricOption).isRequired,
+    microservices: PropTypes.arrayOf(HPPropTypes.microservice).isRequired,
+    slo: PropTypes.shape({
+      metric: HPPropTypes.metric,
+      threshold: HPPropTypes.threshold,
+    }).isRequired,
+    sloSource: HPPropTypes.sloSource.isRequired,
+    ...dispatcherProps(
+      "selectEndpointService", "submitSloSource", "updateThresholdType", "addTagsInput",
+      "deleteTag", "updateSlo", "setRightSideEditability", "restoreSloSourceConfig",
+    ),
   };
+
+  static defaultProps = {
+    appId: null,
+    savedApp: null,
+    sloFormDisabled: false,
+  }
 
   constructor(props) {
     super(props);
