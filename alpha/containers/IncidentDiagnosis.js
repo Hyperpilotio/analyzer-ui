@@ -151,9 +151,8 @@ export default class IncidentDiagnosis extends React.Component {
             <Route
               // Putting "exact" and "path" together just sounds great
               exact path={match.path} // eslint-disable-line react/jsx-max-props-per-line
-              render={({ match: { params } }) => (
+              render={() => (
                 <DiagnosticsTable
-                  selectedProblem={params.problemId}
                   baseUrl={match.url}
                   result={result}
                   problems={problems}
