@@ -7,6 +7,7 @@ import {
 import { VictoryLabel, Selection } from "victory-core";
 import _ from "lodash";
 import moment from "moment";
+import PropTypes from "prop-types";
 import { format } from "d3-format";
 import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
@@ -120,9 +121,20 @@ const GeneralTimeSeriesGraph = ({
   </VictoryChart>
 );
 
+GeneralTimeSeriesGraph.propTypes = {
+  yLabel: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  children: PropTypes.node.isRequired,
+  autoRefreshing: PropTypes.bool,
+  withTimeRange: PropTypes.func.isRequired,
+};
+
 GeneralTimeSeriesGraph.defaultProps = {
+  yLabel: "",
   width: 1400,
   height: 400,
+  autoRefreshing: false,
 };
 
 export default GeneralTimeSeriesGraph;

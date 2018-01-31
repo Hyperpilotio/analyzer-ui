@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import _ from "lodash";
 import { Line, Area, VictoryLabel } from "victory-core";
+import { BaseProps } from "victory-chart/es/helpers/common-props";
 import { inRangeInclusive } from "../lib/utils";
 
 const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft, style }) => {
@@ -31,6 +33,14 @@ const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft,
       <VictoryLabel style={style.label} text={label} x={x2 + marginLeft} y={yPos} />
     </g>
   );
+};
+
+ThresholdLine.propTypes = {
+  ...BaseProps,
+  type: PropTypes.oneOf(["UB", "LB"]),
+  area: PropTypes.bool,
+  label: PropTypes.string,
+  marginLeft: PropTypes.number,
 };
 
 ThresholdLine.defaultProps = {

@@ -1,20 +1,22 @@
 import React from "react";
 import _ from "lodash";
 import { Badge, Row, Col } from "reactstrap";
+import * as HPPropTypes from "../constants/propTypes";
 
 
-// eslint-disable react/prop-types
+/* eslint-disable react/prop-types */
 const Resource = ({ name }) => <Badge color="primary">Resource: { name }</Badge>;
 const Node = ({ name }) => <Badge color="info">Node: { name }</Badge>;
 const Pod = ({ name }) => <Badge color="success">Container: { name }</Badge>;
 const Instance = ({ name }) => <Badge color="warning">Instance Type: { name }</Badge>;
 const GenericLabel = ({ name, value }) => <Badge color="dark">{name}: {value}</Badge>;
-// eslint-enable
+/* eslint-enable */
 
 const fieldComponentMap = {
   resource: Resource,
   node_name: Node,
   pod_name: Pod,
+  instance: Instance,
 };
 
 export const ProblemDescription = ({ problem: { description }, ...props }) => {
@@ -27,6 +29,10 @@ export const ProblemDescription = ({ problem: { description }, ...props }) => {
     }
   });
   return React.createElement("span", props, ...children);
+};
+
+ProblemDescription.propTypes = {
+  problem: HPPropTypes.problem.isRequired,
 };
 
 export const RemediationDescription = ({ option, ...props }) => {
@@ -50,6 +56,10 @@ export const RemediationDescription = ({ option, ...props }) => {
   );
 };
 
+RemediationDescription.propTypes = {
+  option: HPPropTypes.remediationOption.isRequired,
+};
+
 export const ResourceGraphTitle = ({ problem }) => {
   const desc = problem.description;
   if (_.has(desc, "pod_name")) {
@@ -66,4 +76,8 @@ export const ResourceGraphTitle = ({ problem }) => {
     );
   }
   return null;
+};
+
+ResourceGraphTitle.propTypes = {
+  problem: HPPropTypes.problem.isRequired,
 };

@@ -34,8 +34,12 @@ const CommonModal = ({
 CommonModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   modalType: PropTypes.string.isRequired,
-  props: PropTypes.object,
+  props: PropTypes.objectOf(PropTypes.any),
   toggle: PropTypes.func.isRequired,
+};
+
+CommonModal.defaultProps = {
+  props: {},
 };
 
 const mapStateToProps = ({ modal }) => modal;

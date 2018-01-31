@@ -3,6 +3,7 @@ import { VictoryLine } from "victory-chart";
 import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
+import * as HPPropTypes from "../constants/propTypes";
 
 const InterferenceGraph = ({ influxFetch }) => {
   if (influxFetch.pending) {
@@ -33,6 +34,10 @@ const InterferenceGraph = ({ influxFetch }) => {
       />
     </GeneralTimeSeriesGraph>
   );
+};
+
+InterferenceGraph.propTypes = {
+  influxFetch: HPPropTypes.refetch.isRequired,
 };
 
 export default connectRefetch(() => ({

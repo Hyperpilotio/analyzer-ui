@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Table } from "reactstrap";
 import Spinner from "react-spinkit";
 import _ from "lodash";
+import * as HPPropTypes from "../constants/propTypes";
 import _s from "../containers/appSetup/style.scss";
 
 
@@ -54,12 +55,16 @@ const MicroservicesTable = ({
 );
 
 MicroservicesTable.propTypes = {
-  tbodyStyle: PropTypes.object.isRequired,
-  microservices: PropTypes.array.isRequired,
-  buttonElement: PropTypes.object.isRequired,
+  tbodyStyle: PropTypes.objectOf(PropTypes.string),
+  microservices: PropTypes.arrayOf(HPPropTypes.microservice),
+  buttonElement: PropTypes.element.isRequired,
   buttonOnClick: PropTypes.func.isRequired,
-  loadingState: PropTypes.object.isRequired,
+  loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
 };
 
+MicroservicesTable.defaultProps = {
+  tbodyStyle: {},
+  microservices: [],
+};
 
 export default MicroservicesTable;

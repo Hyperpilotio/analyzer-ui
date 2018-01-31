@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import ReactTimeout from "react-timeout";
+import { PromiseState } from "react-refetch";
 
 ReactTimeout.propTypes = {
   setTimeout: PropTypes.func.isRequired,
@@ -86,6 +87,12 @@ export const sloSource = PropTypes.shape({
   service: microservice,
 });
 
+export const slo = PropTypes.shape({
+  metric,
+  source: sloSource,
+  threshold,
+});
+
 export const managementFeature = PropTypes.shape({
   name: PropTypes.string,
   status: PropTypes.oneOf(["Enabled", "Disabled"]),
@@ -99,11 +106,7 @@ export const app = PropTypes.shape({
   app_id: PropTypes.string,
   name: PropTypes.string,
   microservices: PropTypes.arrayOf(microservice),
-  slo: PropTypes.shape({
-    metric,
-    source: sloSource,
-    threshold,
-  }),
+  slo,
   management_features: PropTypes.arrayOf(managementFeature),
   state: PropTypes.oneOf(["Active", "Registered", "Unregistered"]),
   type: PropTypes.oneOf(["long-running", "batch-processing"]),
@@ -129,3 +132,5 @@ export const metricOption = PropTypes.shape({
     values: PropTypes.arrayOf(PropTypes.string),
   })),
 });
+
+export const refetch = PropTypes.instanceOf(PromiseState);

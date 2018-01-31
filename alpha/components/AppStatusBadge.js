@@ -6,6 +6,7 @@ import FaCheckCircle from "react-icons/lib/fa/check-circle";
 import { Badge } from "reactstrap";
 import classnames from "classnames";
 import { connect } from "react-redux";
+import * as HPPropTypes from "../constants/propTypes";
 
 const AppStatusBadge = ({ className, incident, isLoading }) => {
   if (isLoading) {
@@ -30,11 +31,13 @@ const AppStatusBadge = ({ className, incident, isLoading }) => {
 
 AppStatusBadge.propTypes = {
   className: PropTypes.string,
+  incident: HPPropTypes.incident,
   isLoading: PropTypes.bool.isRequired,
 };
 
 AppStatusBadge.defaultProps = {
   className: "",
+  incident: null,
 };
 
 const mapStateToProps = ({ diagnosis: { incidents }, ui }, { appId }) => ({

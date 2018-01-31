@@ -5,6 +5,7 @@ import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 import withInfluxData from "../lib/withInfluxData";
+import * as HPPropTypes from "../constants/propTypes";
 
 
 const SLOGraph = ({ slo, influxData, ...props }) => {
@@ -42,6 +43,11 @@ const SLOGraph = ({ slo, influxData, ...props }) => {
       />
     </GeneralTimeSeriesGraph>
   );
+};
+
+SLOGraph.propTypes = {
+  slo: HPPropTypes.slo.isRequired,
+  influxData: HPPropTypes.refetch.isRequired,
 };
 
 export default withInfluxData(({ slo, timeRange, refreshInterval }) => ({

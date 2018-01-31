@@ -2,6 +2,8 @@ import React from "react";
 import { VictoryLabel, VictoryLegend } from "victory-core";
 
 
+// LegendRect is just small enough that doesn't necessary needs any prop vaildation
+// eslint-disable-next-line react/prop-types
 const LegendRect = ({ x, y, style }) => (
   <rect x={x} y={y} width={30} height={5} style={{ fill: style.fill }} />
 );
