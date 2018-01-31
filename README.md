@@ -35,6 +35,7 @@ This repository consists of three JavaScript apps:
 - `INFLUXDB_HOST`, `INFLUXDB_PORT`, `INFLUXDB_USERNAME`, `INFLUXDB_PASSWORD`: Configurations for connecting to InfluxDB
 
 ### Building Production Bundle
+- `yarn build-server` or `npm run build-server`
 - `yarn build` or `npm run build`
 - `yarn serve` or `npm run serve` to serve the app
 
