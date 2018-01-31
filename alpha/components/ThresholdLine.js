@@ -17,10 +17,12 @@ const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft,
           interpolation="linear"
           scale={scale}
           data={
-            [0, 1].map(i => ({
-              _x: scale.x.domain()[i],
+            scale.x.domain().map(limit => ({
+              _x: limit,
               _y: threshold,
-              _y0: type === "UB" ? _.max([scale.y.domain()[1], threshold]) : _.min([scale.y.domain()[0], threshold]),
+              _y0: type === "UB" ?
+                _.max([scale.y.domain()[1], threshold]) :
+                _.min([scale.y.domain()[0], threshold]),
             }))
           }
           style={{ stroke: "none", ...style.area }}
