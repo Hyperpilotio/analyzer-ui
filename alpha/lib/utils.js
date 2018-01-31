@@ -1,5 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
+import PropTypes from "prop-types";
 
 export const getSLODisplay = ({ metric, threshold }) => (
   `${metric.type} ${threshold.type === "UB" ? "<" : ">"} ${threshold.value} ${threshold.unit}`
@@ -80,3 +81,8 @@ export const makeLoadingState = (array) => {
   const statusArr = ["pending", "refreshing", "fulfilled", "rejected", "settled"];
   return _.zipObject(statusArr, _.map(statusArr, d => _.includes(array, d)));
 };
+
+export const dispatcherProps = (...propNames) => _.zipObject(
+  propNames,
+  propNames.map(_.constant(PropTypes.func.isRequired)),
+);
