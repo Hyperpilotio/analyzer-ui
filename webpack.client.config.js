@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 /* eslint-enable */
@@ -118,7 +117,6 @@ module.exports = {
     ],
   },
   plugins: _.filter([
-    new WebpackCleanupPlugin(),
     new webpack.ProgressPlugin({ profile: false }),
     new webpack.optimize.CommonsChunkPlugin({
       name: "commons",
