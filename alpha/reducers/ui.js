@@ -61,5 +61,6 @@ export default (state = initialState, action) => {
   default:
     throw new Error(`Unknown async action type: ${action.type}`);
   }
+  loadingState = { ..._.get(state, loadingStatePath), ...loadingState };
   return _.setWith({ ...state }, loadingStatePath, loadingState, _.clone);
 };

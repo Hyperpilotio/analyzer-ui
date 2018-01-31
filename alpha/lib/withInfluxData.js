@@ -12,15 +12,20 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
       body: JSON.stringify({ db, metric, tags, start, end }),
       ...options,
     });
-    const influxFetch = createFetch(
-      _.isEmpty(timeRange) ? "now() - 10m" : `${timeRange[0]}ms`,
-      _.isEmpty(timeRange) ? "now()" : `${timeRange[1]}ms`,
-      _.isEmpty(timeRange) ? { refreshInterval } : {},
-    );
-    return {
+    let influxFetch;
+    if (_.isEmpty(timeRange)) {
+      influxFetch = createFetch("now() - 10m", "now()", { refreshInterval });
+    } else if (_.every(timeRange, _.isNumber)) {
+      influxFetch = createFetch(...timeRange.map(t => `${t}ms`), {});
+    } else {
+      influxFetch = createFetch(...timeRange, { refreshInterval });
+    }
+    const wrappedProps = {
       influxFetch,
       influxFetchMeta: { value: { db, metric, tags, timeRange } },
-      withTimeRange: timeRange => ({
+    };
+    if (_.isEmpty(props.withTimeRange)) {
+      wrappedProps.withTimeRange = timeRange => ({
         influxFetch: createFetch(
           _.isNumber(timeRange[0]) ? `${timeRange[0]}ms` : timeRange[0],
           _.isNumber(timeRange[1]) ? `${timeRange[1]}ms` : timeRange[1],
@@ -30,8 +35,9 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
           value: { db, metric, tags, timeRange },
           force: true,
         },
-      }),
-    };
+      });
+    }
+    return wrappedProps;
   })
   class WithInfluxData extends React.Component {
     static displayName = `withInfluxData(${WrappedComponent.displayName || WrappedComponent.name})`
@@ -63,7 +69,6 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
           this.setState({
             influxData: PromiseState.refresh(this.state.influxData, nextProps.influxFetch.meta),
           });
-          return;
         } else if (nextProps.influxFetch.fulfilled) {
           const data = nextProps.influxFetch.value;
           if (!_.isNull(data)) {
@@ -81,10 +86,17 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
             // Copy the next influxFetch with value field replaced
             influxData: _.assign(PromiseState.create(), nextProps.influxFetch, { value: data }),
           });
-          return;
         }
+      } else if (nextProps.influxFetch.pending) {
+        this.setState({
+          influxData: _.assign(
+            PromiseState.create(nextProps.influxFetch.meta),
+            { value: { name: nextProps.influxFetchMeta.value.metric, values: [] } },
+          ),
+        });
+      } else {
+        this.setState({ influxData: nextProps.influxFetch });
       }
-      this.setState({ influxData: nextProps.influxFetch });
     }
     render() {
       const { timeRange } = this.props.influxFetchMeta.value;

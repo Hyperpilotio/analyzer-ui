@@ -19,7 +19,7 @@ const AppInfoJumbotron = ({ app }) => (
           <Row className="mb-3">
             <Col md={3}>
               <span className="text-muted d-block">App Status</span>
-              <AppStatusBadge app={app} />
+              <AppStatusBadge appId={app.app_id} />
             </Col>
             <Col md={3}>
               <span className="text-muted">Services</span>

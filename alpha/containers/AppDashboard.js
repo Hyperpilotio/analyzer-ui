@@ -10,20 +10,21 @@ import AppInfoJumbotron from "../components/AppInfoJumbotron";
 import ChartGroup from "../components/ChartGroup";
 import SLOGraph from "../components/SLOGraph";
 import IncidentDiagnosis from "./IncidentDiagnosis";
-import { fetchAppLatestIncident } from "../actions";
+import { fetchApps, fetchAppLatestIncident } from "../actions";
 import { withAutoBreadcrumb, AutoBreadcrumbItem } from "./AutoBreadcrumb";
 import { tsToMoment } from "../lib/utils";
 
 
 const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
-  const isAppLoading = _.isEmpty(applications);
+  const { appId } = match.params;
+  const isAppLoading = !ui.FETCH_APPS.fulfilled;
   if (isAppLoading) {
     return { app: null, latestIncident: null, isAppLoading, isIncidentLoading: true };
   }
 
-  const app = _.find(applications, { app_id: match.params.appId });
+  const app = _.find(applications, { app_id: appId });
 
-  const isIncidentLoading = ui.FETCH_APP_LATEST_INCIDENT.pending;
+  const isIncidentLoading = !_.get(ui.FETCH_APP_LATEST_INCIDENT.map, [appId, "fulfilled"]);
   const appIncidents = _.filter(diagnosis.incidents, { labels: { app_name: app.name } });
   if (_.isEmpty(appIncidents)) {
     return { app, latestIncident: null, isAppLoading, isIncidentLoading };
@@ -34,6 +35,7 @@ const mapStateToProps = ({ applications, ui, diagnosis }, { match }) => {
 };
 
 const mapDispatchToProps = (dispatch, { match }) => ({
+  fetchApps: () => dispatch(fetchApps()),
   fetchAppLatestIncident: () => dispatch(fetchAppLatestIncident(match.params.appId)),
 });
 
@@ -46,13 +48,13 @@ export default class AppDashboard extends React.Component {
     refreshInterval: 30 * 1000,
   }
 
-  componentWillMount() {
-    this.refetchIncident();
+  componentDidMount() {
+    this.refetchAppAndIncident();
   }
 
-  async refetchIncident() {
-    await this.props.fetchAppLatestIncident();
-    this.props.setTimeout(::this.refetchIncident, this.props.refreshInterval);
+  async refetchAppAndIncident() {
+    await Promise.all([this.props.fetchApps(), this.props.fetchAppLatestIncident()]);
+    this.props.setTimeout(::this.refetchAppAndIncident, this.props.refreshInterval);
   }
 
   render() {

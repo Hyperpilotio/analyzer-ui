@@ -1,3 +1,5 @@
+@import "commons/styles/variables";
+
 // SetupList
 .stepOneCon {
   overflow: hidden;
@@ -41,9 +43,12 @@
   transform: translateY(70px);
 }
 
-.iconGrp:hover {
-  transition: all .3s ease-out;
-  transform: scale(1.4);
+.iconGrp {
+  color: $color-primary;
+  &:hover {
+    transition: all .3s ease-out;
+    transform: scale(1.4);
+  }
 }
 
 .btnReturn, .btnBegin {
@@ -65,4 +70,18 @@
   text-align: center;
   display: block;
   color: #b9bacb;
+}
+
+.appsTable {
+  .AppStatusBadge {
+    font-size: 100%;
+  }
+
+  tbody tr:hover {
+    cursor: pointer;
+  }
+}
+
+.loaderCon {
+  display: inline-block;
 }

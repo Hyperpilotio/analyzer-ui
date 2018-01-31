@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import { apiMiddleware } from "redux-api-middleware";
 import { navLogo } from "~/assets";
 import rootReducer from "./reducers";
+import AppDashboard from "./containers/AppDashboard";
 import GrandDashboard from "./containers/GrandDashboard";
 import SetupEdit from "./containers/appSetup/SetupEdit";
 import SetupDone from "./containers/appSetup/SetupDone";
@@ -35,6 +36,7 @@ export default () => (
           </div>
         </div>
         <Switch>
+          <Route path="/dashboard/:appId" component={AppDashboard} />
           <Route path="/dashboard" component={GrandDashboard} />
           <Route path="/apps/new" component={SetupEdit} />
           <Route path="/apps/:appId/edit/done" component={SetupDone} />

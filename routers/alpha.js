@@ -80,29 +80,10 @@ const makeRequest = async (method, service, path, params) => {
 
 
 router.get("/api/apps", async (req, res) => {
-  const activeAppsResponse = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");
+  const activeApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");
+  const registeredApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Registered");
 
-  const promises = [];
-  activeAppsResponse.data.forEach(({ app_id }) => {
-    const incidentRequest = makeRequest(
-      "get", "analyzer", `/api/v1/apps/${app_id}/incidents`,
-    ).catch(
-      () => ({ data: { incident_id: null } }),
-    );
-    promises.push(incidentRequest);
-  });
-
-  const incidentResponses = await Promise.all(promises);
-
-  const responseWithIncident = _.merge(
-    activeAppsResponse.data, _.flatMap(incidentResponses, item => ({
-      hasIncident: !_.isNull(item.data.incident_id) && item.data.state !== "Resolved",
-    })),
-  );
-
-  const registeredAppsResponse = await makeRequest("get", "analyzer", "/api/v1/apps?state=Registered");
-
-  res.json({ success: true, data: [...responseWithIncident, ...registeredAppsResponse.data] });
+  res.json({ success: true, data: [...activeApps.data, ...registeredApps.data] });
 });
 
 router.post("/api/new-app", async (req, res) => {

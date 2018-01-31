@@ -1,17 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Switch, Route } from "react-router";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { actions as formActions } from "react-redux-form";
 import ReactRouterPropTypes from "react-router-prop-types";
 import ReactTimeout from "react-timeout";
-import { Container, Row, Col } from "reactstrap";
-import DashboardAppsTable from "../components/DashboardAppsTable";
-import AppDashboard from "./AppDashboard";
-import { fetchApps, removeApp } from "../actions";
-import { app as appPropType, event as eventPropType } from "../constants/propTypes";
+import FaEdit from "react-icons/lib/fa/edit";
+import MdDelete from "react-icons/lib/md/delete";
+import { Container, Row, Col, Table } from "reactstrap";
+import Spinner from "react-spinkit";
+import Linked from "~/commons/components/Linked";
+import AppStatusBadge from "../components/AppStatusBadge";
+import { fetchApps, fetchAppLatestIncident, removeApp } from "../actions";
+import { getSLODisplay } from "../lib/utils";
 import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
 import _s from "./style.scss";
@@ -20,13 +22,15 @@ import _s from "./style.scss";
 const mapStateToProps = ({
   ui,
   applications,
-  diagnosis: { incidents, problems, results }
+  diagnosis: { incidents },
 }) => ({
-  applications,
+  applications: _.reject(applications, { state: "Unregistered" }),
   incidents,
-  problems,
-  results,
-  ui,
+  loadingStates: {
+    fetchApps: ui.FETCH_APPS,
+    fetchLatestIncident: ui.FETCH_APP_LATEST_INCIDENT,
+    removeApp: ui.REMOVE_APP,
+  },
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -37,6 +41,7 @@ const mapDispatchToProps = dispatch => ({
       form => dispatch(formActions.reset(`createAppForm.${form}`)),
     );
   },
+  fetchLatestIncident: appId => dispatch(fetchAppLatestIncident(appId)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -56,64 +61,134 @@ export default class GrandDashboard extends React.Component {
     refreshInterval: 30 * 1000,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refetchApps();
   }
 
   async refetchApps() {
-    this.props.fetchApps();
+    await this.props.fetchApps();
+    await Promise.all(this.props.applications.map(
+      ({ app_id }) => this.props.fetchLatestIncident(app_id),
+    ));
     this.props.setTimeout(::this.refetchApps, this.props.refreshInterval)
   }
 
-  openRemoveModal = (appId) => {
+  openRemoveModal(appId) {
     this.props.openModal(
       modalTypes.ACTION_MODAL,
       {
         title: "Delete app",
         message: "Are you sure you want to delete this app?",
-        onSubmit: () => { this.props.removeAppInModal(appId); },
+        onSubmit: () => this.props.removeAppInModal(appId),
       },
     );
   }
 
   render() {
-    const { match, ui, applications, resetAppForm, isFetchAppsLoading } = this.props;
+    const { match, loadingStates, applications, resetAppForm } = this.props;
 
     return (
-      <div>
-        <Switch>
-          <Route path={`${match.path}/:appId`} component={AppDashboard} />
-          <Route exact path={match.path}>
-            <Container>
-              <Row className="pt-4 pb-3">
-                <Col>
-                  <h3>Applications managed by HyperPilot</h3>
-                </Col>
-              </Row>
-              <Row>
-                <Link to="/apps/new" className="btn btn-primary mt-5 mb-2" onClick={resetAppForm}>
-                  + Add
-                </Link>
-              </Row>
-              <Row>
-                <DashboardAppsTable
-                  ui={ui}
-                  openRemoveModal={appId => this.openRemoveModal(appId)}
-                  {..._.pick(this.props, ["applications", "incidents", "risks", "opportunities", "removeApp"])}
-                />
-                { _.reject(applications, { state: "Unregistered" }).length === 0 && !isFetchAppsLoading ?
-                  <div className={_s.noData}>
-                    <span>
-                      No applications managed by HyperPilot, click on "Add" button to add them.
-                    </span>
-                  </div>
-                  : null
-                }
-              </Row>
-            </Container>
-          </Route>
-        </Switch>
-      </div>
+      <Container>
+        <Row className="pt-4 pb-3">
+          <Col>
+            <h3>Applications managed by HyperPilot</h3>
+          </Col>
+        </Row>
+        <Row>
+          <Link to="/apps/new" className="btn btn-primary mt-5 mb-2" onClick={resetAppForm}>
+            + Add
+          </Link>
+        </Row>
+        <Row>
+          <Table className={_s.appsTable} hover>
+            <thead>
+              <tr>
+                <th>App Name</th>
+                <th>Type</th>
+                <th>Services</th>
+                <th>SLO</th>
+                <th>App Status</th>
+                <th>State</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              { loadingStates.fetchApps.pending ?
+                <tr>
+                  <td colSpan="7" style={{ textAlign: "center" }}>
+                    <div className={_s.loaderCon}>
+                      <Spinner fadeIn="quarter" name="pacman" />
+                    </div>
+                  </td>
+                </tr> :
+                applications.map((app) => {
+                  const removeAppCellContent = (
+                    _.get(loadingStates.removeApp.map, [app.app_id, "pending"], false) ?
+                      <div className={_s.loaderCon}>
+                        <Spinner fadeIn="quarter" name="wave" />
+                        <span>Deleting...</span>
+                      </div> :
+                      <div>
+                        <Link
+                          onClick={e => e.stopPropagation()}
+                          className="mr-2"
+                          to={`/apps/${app.app_id}/edit/1`}
+                        >
+                          <FaEdit className={_s.iconGrp} />
+                        </Link>
+                        <MdDelete
+                          className={_s.iconGrp}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            this.openRemoveModal(app.app_id);
+                          }}
+                        />
+                      </div>
+                  );
+                  switch (app.state) {
+                  case "Registered":
+                    return (
+                      <Linked tag="tr" to={`/apps/${app.app_id}/edit/1`} key={app.app_id}>
+                        <td>{ app.name }</td>
+                        <td>{ app.type }</td>
+                        <td />
+                        <td />
+                        <td />
+                        <td>{ app.state }</td>
+                        <td>{ removeAppCellContent }</td>
+                      </Linked>
+                    );
+                  case "Active":
+                    return (
+                      <Linked tag="tr" to={`/dashboard/${app.app_id}`} key={app.app_id}>
+                        <td>{ app.name }</td>
+                        <td>{ app.type }</td>
+                        <td>{ _.size(app.microservices) }</td>
+                        <td>{ getSLODisplay(app.slo) }</td>
+                        <td>
+                          <AppStatusBadge className={_s.AppStatusBadge} appId={app.app_id} />
+                        </td>
+                        <td>{ app.state }</td>
+                        <td>{ removeAppCellContent }</td>
+                      </Linked>
+                    );
+                  default:
+                    return null;
+                  }
+                })
+              }
+            </tbody>
+          </Table>
+          { _.isEmpty(applications) && loadingStates.fetchApps.fulfilled ?
+            <div className={_s.noData}>
+              <span>
+                No applications managed by HyperPilot, click on "Add" button to add them.
+              </span>
+            </div>
+            : null
+          }
+        </Row>
+      </Container>
     );
   }
 }
