@@ -11,7 +11,7 @@ import { format } from "d3-format";
 import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesSelectionContainer from "./TimeSeriesSelectionContainer";
-import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
+import DefaultPreventedTooltip from "./DefaultPreventedTooltip";
 import { ensureMultipleTimes } from "../lib/utils";
 
 // Overriding Wrapper.getDomain, which is used by VictoryChart
@@ -82,7 +82,7 @@ const GeneralTimeSeriesGraph = ({
           400, // Make sure the two clicks happened in-between 400 milliseconds
         )
       }
-      labelComponent={<DefaultDisabledTooltip flyoutComponent={<MultiPointFlyout />} />}
+      labelComponent={<DefaultPreventedTooltip flyoutComponent={<MultiPointFlyout />} />}
     />}
   >
     <VictoryAxis

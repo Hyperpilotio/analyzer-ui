@@ -1,8 +1,8 @@
 import { VictoryTooltip } from "victory-core";
 
 
-export default class DefaultDisabledTooltip extends VictoryTooltip {
-  static displayName = "DefaultDisabledTooltip"
+export default class DefaultPreventedTooltip extends VictoryTooltip {
+  static displayName = "DefaultPreventedTooltip"
 
   getCalculatedValues(props) {
     return {
