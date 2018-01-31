@@ -15,7 +15,59 @@ import Button from "../../../components/Button";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
-class Step3SLO extends React.Component {
+const mapStateToProps = ({
+  createAppForm: { basicInfo, sloSource, slo, microservices, forms },
+  ui,
+  applications,
+}) => ({
+  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
+  appId: basicInfo.app_id,
+  sloFormDisabled: forms.slo.$form.isDisable,
+  metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
+  loadingState: {
+    fetchMetrics: ui.FETCH_METRICS,
+    updateApp: ui.UPDATE_APP,
+  },
+  sloSource,
+  microservices,
+  slo,
+});
+
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
+  selectEndpointService: serializedValue => dispatch(formActions.merge(
+    "createAppForm.sloSource.service",
+    _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
+  )),
+  submitSloSource: sloSource => (dispatch(fetchMetrics(sloSource))),
+  updateThresholdType: metricType => dispatch(formActions.change(
+    "createAppForm.slo.threshold.type",
+    _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
+  )),
+  addTagsInput: () => {
+    dispatch(formActions.push(
+      "createAppForm.slo.metric.tags",
+      { key: "", value: "" },
+    ));
+  },
+  deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
+  updateSlo: (slo, sloSource, appId) => {
+    dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
+  },
+  setRightSideEditability: (isEditable) => {
+    dispatch(setSloConfigEditability(isEditable));
+    if (!isEditable) {
+      dispatch(emptyMetricOptions());
+    }
+  },
+  restoreSloSourceConfig: originalSloSource => dispatch(formActions.change(
+    "createAppForm.sloSource",
+    originalSloSource,
+  )),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+@withModal
+export default class Step3SLO extends React.Component {
   static propTypes = {
     submitSloSource: PropTypes.func.isRequired,
     updateSlo: PropTypes.func.isRequired,
@@ -341,58 +393,3 @@ class Step3SLO extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({
-  createAppForm: { basicInfo, sloSource, slo, microservices, forms },
-  ui,
-  applications,
-}) => ({
-  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
-  appId: basicInfo.app_id,
-  sloFormDisabled: forms.slo.$form.isDisable,
-  metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
-  loadingState: {
-    fetchMetrics: ui.FETCH_METRICS,
-    updateApp: ui.UPDATE_APP,
-  },
-  sloSource,
-  microservices,
-  slo,
-});
-
-const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  selectEndpointService: serializedValue => dispatch(formActions.merge(
-    "createAppForm.sloSource.service",
-    _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
-  )),
-  submitSloSource: sloSource => (dispatch(fetchMetrics(sloSource))),
-  updateThresholdType: metricType => dispatch(formActions.change(
-    "createAppForm.slo.threshold.type",
-    _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
-  )),
-  addTagsInput: () => {
-    dispatch(formActions.push(
-      "createAppForm.slo.metric.tags",
-      { key: "", value: "" },
-    ));
-  },
-  deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
-  updateSlo: (slo, sloSource, appId) => {
-    dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
-  },
-  setRightSideEditability: (isEditable) => {
-    dispatch(setSloConfigEditability(isEditable));
-    if (!isEditable) {
-      dispatch(emptyMetricOptions());
-    }
-  },
-  restoreSloSourceConfig: originalSloSource => dispatch(formActions.change(
-    "createAppForm.sloSource",
-    originalSloSource,
-  )),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withModal(Step3SLO));
