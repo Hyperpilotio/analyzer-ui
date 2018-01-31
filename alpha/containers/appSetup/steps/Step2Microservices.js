@@ -125,7 +125,7 @@ export default class Step2Microservices extends React.Component {
         </Card>
 
         {/* Detected Microservices */}
-        <Card className={`mt-5 mb-5 ${_s.detectedMicroservices} ${_s.card}`}>
+        <Card className={`mt-5 mb-5 ${_s.card}`}>
           <CardBody>
             <div>
               <CardTitle>Detected K8S Resources</CardTitle>
