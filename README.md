@@ -8,6 +8,13 @@
 ### Running on a tech-demo cluster
 - Deploy a cluster using deployer through executing `./deploy-gcp <username> no-snap` under [`hyperpilot-demo/workloads/tech-demo`](https://github.com/Hyperpilotio/hyperpilot-demo/tree/master/workloads/tech-demo)
 - Deploy HyperPilot components through executing `kubectl create -f hyperpilot-install.yaml` under [`hyperpilot-install`](https://github.com/Hyperpilotio/hyperpilot-install)
+- Run load controllers through demo-ui:
+    * `kubectl create -f scripts/load-controller-deployment.json`
+    * `kubectl create -f scripts/spark-load-controller-deployment.json`
+- Set up GoDDD application
+    * You have to at least select `goddd` deployment under `default` namespace as a microservice
+    * Select goddd deployment as SLO source service, with the port of 8080
+    * Select `api_booking_service_request_latency_microseconds` as the metric, with tag `summary=quantile_90`, value set to 0.1 seconds
 
 ---
 

@@ -15,8 +15,10 @@ import TimeSeriesSelectionContainer from "./TimeSeriesSelectionContainer";
 import DefaultPreventedTooltip from "./DefaultPreventedTooltip";
 import { ensureMultipleTimes } from "../lib/utils";
 
-// Overriding Wrapper.getDomain, which is used by VictoryChart
+
+// Overriding and extending Wrapper.getDomain, which is used by VictoryChart
 Wrapper.getDomain = _.wrap(
+  // Original function: https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/helpers/wrapper.js#L36-L54
   ::Wrapper.getDomain,
   (getDomain, props, axis, childComponents = React.Children.toArray(props.children)) => {
     const domain = getDomain(props, axis, childComponents);
@@ -29,8 +31,10 @@ Wrapper.getDomain = _.wrap(
   },
 );
 
+// Overriding SelectionHelpers.onMouseMove: https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/selection-helpers.js#L98-L114
 SelectionHelpers.onMouseMove = _.throttle(
   (evt, targetProps) => {
+    // Contents copied from the original function
     const { allowSelection, select } = targetProps;
     const dimension = targetProps.selectionDimension;
     if (!allowSelection || !select) {
@@ -38,9 +42,11 @@ SelectionHelpers.onMouseMove = _.throttle(
     }
     const { x, y } = Selection.getSVGEventCoordinates(evt);
     const chartDomain = Selection.getDomainCoordinates(targetProps);
+    // Make sure the selection is capped with the chart domain
     const x2 = dimension !== "y" ? _.clamp(x, ...chartDomain.x) : chartDomain.x[1];
     const y2 = dimension !== "x" ? _.clamp(y, ...chartDomain.y) : chartDomain.y[1];
     return {
+      // Do what victory-chart's `attachId` helper does: https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/helpers/event-handlers.js#L3-L8
       id: _.uniqueId("throttledEvent"),
       mutations: {
         target: "parent",
@@ -48,6 +54,7 @@ SelectionHelpers.onMouseMove = _.throttle(
       },
     };
   },
+  // The following parameters for _.throttle are copied from https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/selection-helpers.js#L158-L162
   16,
   { leading: true, trailing: false },
 );
@@ -60,10 +67,15 @@ const GeneralTimeSeriesGraph = ({
     height={height}
     padding={{ left: 50, right: 60, bottom: 50, top: 80 }}
     containerComponent={<TimeSeriesSelectionContainer
+      // onSelection should set the time range of the influx query
       onSelection={(points, bounds, { domain }) => {
+        // Keep it auto-refreshing if the area user selects reaches the domain's right end,
+        // (using non-number values will make it auto-refreshing, e.g. "now() - 5m",
+        // see withInfluxData)
         if (autoRefreshing && bounds.x[1] - domain.x[1] === 0) {
           withTimeRange([`now() - ${bounds.x[1] - bounds.x[0]}ms`, "now()"]);
         } else {
+          // Or just a normal time range with two timestamps
           withTimeRange(bounds.x.map(_.toNumber));
         }
       }}
@@ -73,6 +85,7 @@ const GeneralTimeSeriesGraph = ({
             const xDomain = _.map(domain.x, _.toNumber);
             const centerX = (xDomain[0] + xDomain[1]) / 2;
             const currentRange = xDomain[1] - xDomain[0];
+            // Make sure the adjusted domain doesn't exceed the current time
             if (centerX + currentRange > moment.now()) {
               withTimeRange([`now() - ${currentRange * 2}ms`, "now()"]);
             } else {
@@ -80,7 +93,7 @@ const GeneralTimeSeriesGraph = ({
             }
           },
           2, // Make sure it's a double-click
-          400, // Make sure the two clicks happened in-between 400 milliseconds
+          400, // Make sure the two clicks happened within 400 milliseconds
         )
       }
       labelComponent={<DefaultPreventedTooltip flyoutComponent={<MultiPointFlyout />} />}
@@ -89,6 +102,7 @@ const GeneralTimeSeriesGraph = ({
     <VictoryAxis
       dependentAxis
       tickFormat={_.cond([
+        // Different number formats for different sizes of domains
         [x => x < 4, format(".2f")],
         [x => x < 1000, format("d")],
         [_.stubTrue, format(".2s")],
@@ -126,6 +140,7 @@ GeneralTimeSeriesGraph.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   children: PropTypes.node.isRequired,
+  // autoRefreshing indicates whether if the chart is set up to refresh for every certain interval
   autoRefreshing: PropTypes.bool,
   withTimeRange: PropTypes.func.isRequired,
 };

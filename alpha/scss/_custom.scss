@@ -1,3 +1,7 @@
+/*
+ * _custom.scss is imported before libraries, used for making custom configs for
+ * bootstrap, loaders.css or any other CSS libraries
+ */
 @import "commons/styles/variables";
 
 $theme-colors: (

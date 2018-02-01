@@ -27,6 +27,11 @@ const styles = {
   },
 };
 
+
+/*
+ * The goal of MultiPointFlyout is to allow it to show multiple data points at the same time,
+ * which is useful for things like InterferenceGraph
+ */
 export default class MultiPointFlyout extends React.Component {
   static propTypes = {
     ...Flyout.propTypes,
@@ -62,6 +67,8 @@ export default class MultiPointFlyout extends React.Component {
     return (this.props.x > scale.x.range()[1] - this.width) ? "left" : "right";
   }
 
+  // The component always renders twice, the first time gets the actual size of the tooltip,
+  // the second time it renders the tooltip box with the width and height that fits the content
   updateSize() {
     if (this.shouldUpdateSize) {
       const bbox = this.mainBox.getBBox();

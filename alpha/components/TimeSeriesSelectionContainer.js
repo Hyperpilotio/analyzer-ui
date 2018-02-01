@@ -17,7 +17,7 @@ Data.getData = (props) => {
 };
 
 VoronoiHelpers.onMouseMove = _.throttle(
-  // Overriding https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/voronoi-helpers.js#L146-L168
+  // Overriding / extending https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/voronoi-helpers.js#L146-L168
   _.wrap(
     VoronoiHelpers.onMouseMove,
     (onMouseMove, evt, targetProps) => {
@@ -35,6 +35,8 @@ VoronoiHelpers.onMouseMove = _.throttle(
       return onMouseMove(evt, targetProps);
     },
   ),
+  // The following arguments for _.throttle are copied from the default export of
+  // victory-chart/src/components/containers/voronoi-helpers.js
   32,
   { leading: true, trailing: false },
 );
@@ -45,11 +47,15 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
     ...base.defaultProps,
     voronoiDimension: "x",
     selectionDimension: "x",
+    // We're not attaching any labels onto tooltips, but yet it's required to have this
+    // to ensure that the tooltip is being rendered
     labels: () => "",
   }
   static defaultEvents = base.defaultEvents
 
+  // Overriding getLabelProps from VictoryVoronoiContainer: https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/victory-voronoi-container.js#L180-L206
   getLabelProps(props, points) {
+    // The original getLabelProps calls Helpers.evaulateProp, which costs a lot of time
     const { scale, labelComponent, theme, mousePosition } = props;
     const componentProps = labelComponent.props || {};
     const style = this.getStyle(props, points, "labels");
@@ -57,7 +63,9 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
       {
         x: scale.x(points[0].x),
         y: mousePosition.y,
-        active: !_.isNull(points[0].y),
+        // Don't show the tooltip when every points are having a value of null
+        active: !_.every(p => _.isNull(p.y), points),
+        // MultiPointFlyout doesn't care about datum, but is required in its base class
         datum: { x: 0, y: 0 },
         text: "",
         points,
@@ -66,11 +74,14 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
         theme,
       },
       componentProps,
+      // Gets originally included props by getLabelProps, such as childName
       this.getDefaultLabelProps(props, points),
     );
   }
 };
 
+
+// See https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/create-container.js
 export default combineContainerMixins([
   selectionContainerMixin,
   timeSeriesContainerMixin,
