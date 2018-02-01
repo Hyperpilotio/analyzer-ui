@@ -28,9 +28,15 @@ const buildEntryPoint = (...entries) => _.filter([
 
 module.exports = {
   entry: {
-    interference: buildEntryPoint("./interference-analysis/index.js", "./interference-analysis/styles/index.sass"),
+    interference: buildEntryPoint(
+      "./interference-analysis/index.js",
+      "./interference-analysis/styles/index.sass",
+    ),
     sizing: buildEntryPoint("./sizing-analysis/index.js"),
-    alpha: buildEntryPoint(IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js", "./alpha/scss/index.scss"),
+    alpha: buildEntryPoint(
+      IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js",
+      "./alpha/scss/index.scss",
+    ),
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -61,7 +67,11 @@ module.exports = {
       },
       {
         test: /\.s[ca]ss|css$/,
-        include: [path.resolve("interference-analysis", "styles"), path.resolve("commons", "styles"), path.resolve("alpha", "scss")],
+        include: [
+          path.resolve("interference-analysis", "styles"),
+          path.resolve("commons", "styles"),
+          path.resolve("alpha", "scss"),
+        ],
         use: extractSass.extract({
           fallback: "style-loader",
           use: [
@@ -84,7 +94,12 @@ module.exports = {
       },
       {
         test: /\.s[ca]ss|css$/,
-        exclude: ["interference-analysis/styles", "node_modules", "alpha/scss", "commons/styles"].map(dir => path.resolve(__dirname, dir)),
+        exclude: [
+          "interference-analysis/styles",
+          "node_modules",
+          "alpha/scss",
+          "commons/styles",
+        ].map(dir => path.resolve(__dirname, dir)),
         use: extractSass.extract({
           fallback: "style-loader",
           use: [
