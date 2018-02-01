@@ -1,0 +1,216 @@
+{
+    "name": "sizing-analysis",
+    "region": "us-west1-a",
+    "clusterType": "GCP",
+    "nodeMapping": [
+        {
+            "task": "mongo-serve",
+            "id": 1
+        },
+        {
+            "task": "analyzer",
+            "id": 1
+        },
+        {
+            "task": "analyzer-ui",
+            "id": 1
+        }
+    ],
+    "clusterDefinition": {
+        "nodes": [
+            {
+                "instanceType": "n1-standard-2",
+                "id": 1
+            }
+        ]
+    },
+    "kubernetes": {
+        "secrets": [
+            {
+                "apiVersion": "v1",
+                "kind": "Secret",
+                "metadata": {
+                    "name": "myregistrykey",
+                    "namespace": "hyperpilot"
+                },
+                "type": "kubernetes.io\/dockerconfigjson",
+                "data": {
+                    ".dockerconfigjson": "ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7CgkJCSJhdXRoIjogImFIbHdaWEp3YVd4dmRIVnpaWEk2YUhsd1pYSXhNak09IgoJCX0KCX0KfQ=="
+                }
+            }
+        ],
+        "taskDefinitions": [
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "mongo-serve"
+                        },
+                        "name": "mongo-serve",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "mongo-serve"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "mongo-serve"
+                                }
+                            },
+                            "spec": {
+                                "volumes": [
+                                    {
+                                        "hostPath": {
+                                            "path": "~/hyperpilot/mongo_data"
+                                        },
+                                        "name": "mongo-data"
+                                    }
+                                ],
+                                "containers": [
+                                    {
+                                        "volumeMounts": [
+                                            {
+                                                "mountPath": "\/data\/db",
+                                                "name": "mongo-data"
+                                            }
+                                        ],
+                                        "image": "mongo",
+                                        "name": "mongo-serve",
+                                        "ports": [
+                                            {
+                                                "containerPort": 27017,
+                                                "hostPort": 27017,
+                                                "protocol": "TCP"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "mongo-serve"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "analyzer"
+                        },
+                        "name": "analyzer",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "analyzer"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "analyzer"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "analyzer",
+                                "containers": [
+                                    {
+                                        "name": "analyzer",
+                                        "image": "hyperpilot\/analyzer:sizing",
+                                        "imagePullPolicy": "Always",
+                                        "ports": [
+                                            {
+                                                "containerPort": 5000,
+                                                "hostPort": 5000
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "myregistrykey"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "analyzer"
+            },
+            {
+                "deployment": {
+                    "apiVersion": "extensions\/v1beta1",
+                    "kind": "Deployment",
+                    "metadata": {
+                        "labels": {
+                            "app": "analyzer-ui"
+                        },
+                        "name": "analyzer-ui",
+                        "namespace": "hyperpilot"
+                    },
+                    "spec": {
+                        "replicas": 1,
+                        "selector": {
+                            "matchLabels": {
+                                "app": "analyzer-ui"
+                            }
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "analyzer-ui"
+                                }
+                            },
+                            "spec": {
+                                "hostname": "analyzer-ui",
+                                "containers": [
+                                    {
+                                        "name": "analyzer-ui",
+                                        "image": "hyperpilot\/analyzer-ui:alpha",
+                                        "imagePullPolicy": "Always",
+                                        "env": [
+                                            {
+                                                "name": "ANALYSIS_APP",
+                                                "value": "sizing-analysis"
+                                            },
+                                            {
+                                                "name": "ANALYZER_HOST",
+                                                "value": "analyzer"
+                                            },
+                                            {
+                                                "name": "ANALYZER_PORT",
+                                                "value": "5000"
+                                            },
+                                            {
+                                                "name": "MONGO_HOST",
+                                                "value": "mongo-serve"
+                                            }
+                                        ],
+                                        "ports": [
+                                            {
+                                                "containerPort": 3000,
+                                                "hostPort": 3000
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "family": "analyzer-ui"
+            }
+        ]
+    }
+}
