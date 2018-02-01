@@ -379,7 +379,7 @@ export default class Step3SLO extends React.Component {
                   <FormGroup>
                     <label htmlFor="slo-unit">Unit</label>
                     {slo.metric.type === "throughput"
-                      ? <Control.text id="slo-unit" className="form-control" model=".threshold.unit" />
+                      ? <Control.text id="slo-unit" className="form-control" model=".threshold.unit" parser={_.toInteger} />
                       : (
                         <Control.select className="form-control" model=".threshold.unit">
                           <option value="ms">ms</option>

@@ -41,7 +41,11 @@ module.exports = {
     ],
   },
   plugins: _.filter([
-    new webpack.BannerPlugin({ banner: "require('source-map-support').install();", raw: true, entryOnly: false }),
+    new webpack.BannerPlugin({
+      banner: "require('source-map-support').install();",
+      raw: true,
+      entryOnly: false,
+    }),
     new webpack.NamedModulesPlugin(),
     IS_PROD ? null : new webpack.HotModuleReplacementPlugin(),
   ]),

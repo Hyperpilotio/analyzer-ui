@@ -17,6 +17,8 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
     if (_.isEmpty(timeRange)) {
       influxFetch = createFetch("now() - 10m", "now()", { refreshInterval });
     } else if (_.every(timeRange, _.isNumber)) {
+      // If both elements of timeRange are numbers, then user is zooming into a specific range,
+      // which we don't and shouldn't refresh it for every certain interval
       influxFetch = createFetch(...timeRange.map(t => `${t}ms`), {});
     } else {
       influxFetch = createFetch(...timeRange, { refreshInterval });
@@ -25,16 +27,20 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
       influxFetch,
       influxFetchMeta: { value: { db, metric, tags, timeRange } },
     };
+    // The parent component can pass a customized withTimeRange function to achieve things like
+    // syncing multiple charts' domains, see containers/IncidentDiagnosis.js
     if (_.isEmpty(props.withTimeRange)) {
       wrappedProps.withTimeRange = ([newStart, newEnd]) => ({
         influxFetch: createFetch(
           _.isNumber(newStart) ? `${newStart}ms` : newStart,
           _.isNumber(newEnd) ? `${newEnd}ms` : newEnd,
+          // If the numbers of the range are not pure numbers, refresh it for every certain interval
           _.every([newStart, newEnd], _.isNumber) ?
             { force: true } :
             { refreshInterval, force: true },
         ),
         influxFetchMeta: {
+          // Pass the influx query building blocks as a static value
           value: { db, metric, tags, timeRange },
           force: true,
         },
@@ -52,6 +58,7 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
     constructor(props) {
       super(props);
       if (props.influxFetch.pending && _.isNull(props.influxFetch.value)) {
+        // Show no data when the fetch is pending, but only the "values" field is empty
         this.state = {
           influxData: _.assign(
             PromiseState.create(props.influxFetch.meta),
@@ -75,7 +82,8 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
         } else if (nextProps.influxFetch.fulfilled) {
           const data = nextProps.influxFetch.value;
           if (!_.isNull(data)) {
-            // Filter null values
+            // Filter null values, but leave the leading and trailing nulls to ensure the chart
+            // domain is the same
             const notNull = _.negate(_.matches({ 1: null }));
             const firstNotNullIndex = _.findIndex(data.values, notNull);
             const lastNotNullIndex = _.findLastIndex(data.values, notNull);
@@ -104,6 +112,7 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
 
     render() {
       const { timeRange } = this.props.influxFetchMeta.value;
+      // Only expose the "influxData" in the state to the wrapped component
       return (
         <WrappedComponent
           autoRefreshing={_.isUndefined(timeRange) || !_.every(timeRange, _.isNumber)}

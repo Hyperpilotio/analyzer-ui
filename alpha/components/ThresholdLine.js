@@ -20,8 +20,11 @@ const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft,
           scale={scale}
           data={
             scale.x.domain().map(limit => ({
+              // _x, _y, _y0 is what Area actually used, which can trace down to https://github.com/FormidableLabs/victory-core/blob/master/src/victory-primitives/helpers.js
               _x: limit,
               _y: threshold,
+              // If it's an upper bound, than the area above the threshold line should be filled
+              // with red, and if it's a lower bound, the area is below the threshold line
               _y0: type === "UB" ?
                 _.max([scale.y.domain()[1], threshold]) :
                 _.min([scale.y.domain()[0], threshold]),
