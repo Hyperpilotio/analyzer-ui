@@ -1,4 +1,10 @@
-const LocalStrategy = require("passport-local").Strategy;
+import _ from "lodash";
+// const LocalStrategy = require("passport-local").Strategy;
+const jwt = require("jsonwebtoken");
+const passportJWT = require("passport-jwt");
+
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
 
 const users = {
   zack: {
@@ -13,24 +19,48 @@ const users = {
   },
 };
 
-const withStrategy = (passport) => {
-  passport.use("local", new LocalStrategy({
-    usernameField: "username",
-    passwordField: "password",
-  }, (username, password, done) => {
-    const user = users[username];
+const jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = "HyperPilot";
 
+const withJWTStrategy = (passport) => {
+  passport.use(new JwtStrategy(jwtOptions, (jwtPayload, next) => {
+    console.log("payload received", jwtPayload);
+    // usually this would be a database call:
+    
+    const user = users[_.findIndex(users, { id: jwtPayload.id })];
+    
     if (user == null) {
-      return done(null, false, { message: "Invalid user" });
+      return next(null, false, { message: "Invalid user" });
     }
 
-    if (user.password !== password) {
-      return done(null, false, { message: "Invalid password" });
-    }
+    // if (user.password !== password) {
+    //   return next(null, false, { message: "Invalid password" });
+    // }
 
-    process.nextTick(() => done(null, user));
-  },
-  ));
+    return next(null, user);
+  }));
 };
 
-export default withStrategy;
+
+// const withLocalStrategy = (passport) => {
+//   passport.use("local", new LocalStrategy({
+//     usernameField: "username",
+//     passwordField: "password",
+//   }, (username, password, done) => {
+//     const user = users[username];
+
+//     if (user == null) {
+//       return done(null, false, { message: "Invalid user" });
+//     }
+
+//     if (user.password !== password) {
+//       return done(null, false, { message: "Invalid password" });
+//     }
+
+//     process.nextTick(() => done(null, user));
+//   },
+//   ));
+// };
+
+export default withJWTStrategy;

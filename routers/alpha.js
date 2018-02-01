@@ -3,7 +3,7 @@ import request from "request-promise-native";
 import { InfluxDB } from "influx";
 import _ from "lodash";
 import winston from "winston";
-import Passport from "passport";
+import passport from "passport";
 import config from "../config";
 
 const logger = winston.createLogger({
@@ -82,10 +82,30 @@ const makeRequest = async (method, service, path, params) => {
 
 // auth
 
-router.post("/api/login",
-  Passport.authenticate("local", { session: false }),
-  (req, res) => { res.send(`User ID ${req.user.id}`); },
+// router.post("/api/login",
+//   Passport.authenticate("local", { session: false }),
+//   (req, res) => { res.send(`User ID ${req.user.id}`); },
+// );
+
+
+router.post("/api/login", passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.send(req.user.profile);
+  },
 );
+
+router.get("/secret", passport.authenticate("jwt", { session: false }), (req, res) => {
+  res.json({ message: "Success! You can not see this without a token" });
+});
+
+router.get("/secretDebug",
+  (req, res, next) => {
+    console.log(req.get("Authorization"));
+    next();
+  }, (req, res) => {
+    res.json("debugging");
+  });
+
 
 router.get("/api/apps", async (req, res) => {
   const activeApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");

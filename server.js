@@ -5,14 +5,14 @@ import path from "path";
 import bodyParser from "body-parser";
 import passport from "passport";
 import webpackConfig from "./webpack.client.config";
-import withStrategy from "./conf/passport";
+import withJWTStrategy from "./conf/passport";
 
 const server = express();
 server.use(morgan("dev"));
 server.use(bodyParser.json());
 server.use(passport.initialize());
 server.use(passport.session());
-withStrategy(passport);
+withJWTStrategy(passport);
 
 const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";

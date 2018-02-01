@@ -16,6 +16,7 @@ const asyncActions = [
   ["UPDATE_MICROSERVICES", TRACKABLE],
   ["ACTIVATE_APP", TRACKABLE],
   ["REMOVE_APP", TRACKABLE],
+  ["LOGIN", SIMPLE],
 ];
 _.assign(exports,
   _.fromPairs(

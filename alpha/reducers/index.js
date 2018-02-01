@@ -3,6 +3,7 @@ import applications from "./applications";
 import createAppForm from "./createAppForm";
 import diagnosis from "./diagnosis";
 import modal from "./modal";
+import auth from "./auth";
 import ui from "./ui";
 
 const rootReducer = combineReducers({
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   applications,
   diagnosis,
   modal,
+  auth,
   ui,
 });
 
