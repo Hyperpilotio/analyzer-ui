@@ -58,6 +58,7 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
     constructor(props) {
       super(props);
       if (props.influxFetch.pending && _.isNull(props.influxFetch.value)) {
+        // Show no data when the fetch is pending, but only the "values" field is empty
         this.state = {
           influxData: _.assign(
             PromiseState.create(props.influxFetch.meta),
@@ -111,6 +112,7 @@ const withInfluxData = propsToQuery => (WrappedComponent) => {
 
     render() {
       const { timeRange } = this.props.influxFetchMeta.value;
+      // Only expose the "influxData" in the state to the wrapped component
       return (
         <WrappedComponent
           autoRefreshing={_.isUndefined(timeRange) || !_.every(timeRange, _.isNumber)}
