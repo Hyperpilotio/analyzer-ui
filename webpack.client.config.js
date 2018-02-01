@@ -29,10 +29,12 @@ const buildEntryPoint = (...entries) => _.filter([
 module.exports = {
   entry: {
     interference: buildEntryPoint(
-      "./interference-analysis/index.js",
+      IS_PROD ? "./interference-analysis/index.js" : "./interference-analysis/index.dev.js",
       "./interference-analysis/styles/index.sass",
     ),
-    sizing: buildEntryPoint("./sizing-analysis/index.js"),
+    sizing: buildEntryPoint(
+      IS_PROD ? "./sizing-analysis/index.js" : "./sizing-analysis/index.dev.js",
+    ),
     alpha: buildEntryPoint(
       IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js",
       "./alpha/scss/index.scss",
