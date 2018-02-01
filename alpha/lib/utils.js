@@ -1,5 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
+import PropTypes from "prop-types";
 
 export const getSLODisplay = ({ metric, threshold }) => (
   `${metric.type} ${threshold.type === "UB" ? "<" : ">"} ${threshold.value} ${threshold.unit}`
@@ -17,6 +18,7 @@ export const flattenResourcesData = resources => (
   ))
 );
 
+// eslint-disable-next-line camelcase
 export const appToForm = ({ app_id, name, type, slo, microservices, management_features }) => {
   const formData = { basicInfo: { app_id, name, type } };
   if (!_.isUndefined(microservices)) {
@@ -34,6 +36,7 @@ export const appToForm = ({ app_id, name, type, slo, microservices, management_f
   return formData;
 };
 
+// eslint-disable-next-line camelcase
 export const formToApp = ({ basicInfo, microservices, sloSource, slo, management_features }) => ({
   ...basicInfo,
   microservices,
@@ -62,14 +65,15 @@ export const ensureMultipleTimes = (func, n, maxWait) => {
     if (_.now() - firstCalled > maxWait) {
       firstCalled = _.now();
       nCalls = 1;
-      return;
+      return null;
     }
-    nCalls++;
+    nCalls += 1;
     if (nCalls >= n) {
       firstCalled = null;
       nCalls = 0;
       return func(...args);
     }
+    return null;
   };
 };
 
@@ -77,3 +81,8 @@ export const makeLoadingState = (array) => {
   const statusArr = ["pending", "refreshing", "fulfilled", "rejected", "settled"];
   return _.zipObject(statusArr, _.map(statusArr, d => _.includes(array, d)));
 };
+
+export const dispatcherProps = (...propNames) => _.zipObject(
+  propNames,
+  propNames.map(_.constant(PropTypes.func.isRequired)),
+);

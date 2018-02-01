@@ -8,6 +8,8 @@ import { Data } from "victory-core";
 import _ from "lodash";
 
 Data.getData = (props) => {
+  // Overriding https://github.com/FormidableLabs/victory-core/blob/964803118ff2fbbe3f64c49733e2a172fc0dd7d6/src/victory-util/data.js#L19-L31
+  // Avoid doing time-costy `formatData` within this function
   if (props.isData) {
     return props.data.map(({ x, y }, eventKey) => ({ eventKey, x, y, _x: x, _y: y }));
   }
@@ -15,6 +17,7 @@ Data.getData = (props) => {
 };
 
 VoronoiHelpers.onMouseMove = _.throttle(
+  // Overriding https://github.com/FormidableLabs/victory-chart/blob/138a974af346929b93201daaa049b10666ee1619/src/components/containers/voronoi-helpers.js#L146-L168
   _.wrap(
     VoronoiHelpers.onMouseMove,
     (onMouseMove, evt, targetProps) => {
@@ -66,7 +69,7 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
       this.getDefaultLabelProps(props, points),
     );
   }
-}
+};
 
 export default combineContainerMixins([
   selectionContainerMixin,

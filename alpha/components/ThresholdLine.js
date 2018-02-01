@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import _ from "lodash";
 import { Line, Area, VictoryLabel } from "victory-core";
+import { BaseProps } from "victory-chart/es/helpers/common-props";
 import { inRangeInclusive } from "../lib/utils";
 
 const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft, style }) => {
@@ -17,10 +19,12 @@ const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft,
           interpolation="linear"
           scale={scale}
           data={
-            [0, 1].map(i => ({
-              _x: scale.x.domain()[i],
+            scale.x.domain().map(limit => ({
+              _x: limit,
               _y: threshold,
-              _y0: type === "UB" ? _.max([scale.y.domain()[1], threshold]) : _.min([scale.y.domain()[0], threshold]),
+              _y0: type === "UB" ?
+                _.max([scale.y.domain()[1], threshold]) :
+                _.min([scale.y.domain()[0], threshold]),
             }))
           }
           style={{ stroke: "none", ...style.area }}
@@ -29,6 +33,14 @@ const ThresholdLine = ({ type, area, range, scale, threshold, label, marginLeft,
       <VictoryLabel style={style.label} text={label} x={x2 + marginLeft} y={yPos} />
     </g>
   );
+};
+
+ThresholdLine.propTypes = {
+  ...BaseProps,
+  type: PropTypes.oneOf(["UB", "LB"]),
+  area: PropTypes.bool,
+  label: PropTypes.string,
+  marginLeft: PropTypes.number,
 };
 
 ThresholdLine.defaultProps = {

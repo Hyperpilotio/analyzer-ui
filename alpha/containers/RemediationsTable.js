@@ -1,8 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Container, Row, Col, Table, Button } from "reactstrap";
 import { RemediationDescription } from "../components/TextDescriptions";
+import * as HPPropTypes from "../constants/propTypes";
 
-const RemediationsTable = ({ problem, remediations }) => (
+const RemediationsTable = ({ remediations }) => (
   <Container>
     <Row className="mb-2">
       <Col>
@@ -20,6 +22,7 @@ const RemediationsTable = ({ problem, remediations }) => (
           </thead>
           <tbody>
             {remediations.map((option, i) => (
+              // eslint-disable-next-line react/no-array-index-key
               <tr key={i}>
                 <td><RemediationDescription option={option} /></td>
                 <td><Button disabled>Execute</Button></td>
@@ -31,5 +34,9 @@ const RemediationsTable = ({ problem, remediations }) => (
     </Row>
   </Container>
 );
+
+RemediationsTable.propTypes = {
+  remediations: PropTypes.arrayOf(HPPropTypes.remediationOption).isRequired,
+};
 
 export default RemediationsTable;

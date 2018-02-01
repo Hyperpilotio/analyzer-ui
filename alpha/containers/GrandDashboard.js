@@ -4,7 +4,6 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { actions as formActions } from "react-redux-form";
-import ReactRouterPropTypes from "react-router-prop-types";
 import ReactTimeout from "react-timeout";
 import FaEdit from "react-icons/lib/fa/edit";
 import MdDelete from "react-icons/lib/md/delete";
@@ -13,7 +12,8 @@ import Spinner from "react-spinkit";
 import Linked from "~/commons/components/Linked";
 import AppStatusBadge from "../components/AppStatusBadge";
 import { fetchApps, fetchAppLatestIncident, removeApp } from "../actions";
-import { getSLODisplay } from "../lib/utils";
+import * as HPPropTypes from "../constants/propTypes";
+import { getSLODisplay, dispatcherProps } from "../lib/utils";
 import withModal from "../lib/withModal";
 import * as modalTypes from "../constants/modalTypes";
 import _s from "./style.scss";
@@ -49,11 +49,10 @@ const mapDispatchToProps = dispatch => ({
 @withModal
 export default class GrandDashboard extends React.Component {
   static propTypes = {
-    match: ReactRouterPropTypes.match.isRequired,
-    fetchApps: PropTypes.func.isRequired,
-    openModal: PropTypes.func.isRequired,
-    removeAppInModal: PropTypes.func.isRequired,
-    resetAppForm: PropTypes.func.isRequired,
+    ...withModal.propTypes,
+    ...ReactTimeout.propTypes,
+    ...dispatcherProps("fetchApps", "fetchLatestIncident", "removeAppInModal", "resetAppForm"),
+    applications: PropTypes.arrayOf(HPPropTypes.app).isRequired,
     refreshInterval: PropTypes.number,
   }
 
@@ -68,9 +67,9 @@ export default class GrandDashboard extends React.Component {
   async refetchApps() {
     await this.props.fetchApps();
     await Promise.all(this.props.applications.map(
-      ({ app_id }) => this.props.fetchLatestIncident(app_id),
+      ({ app_id }) => this.props.fetchLatestIncident(app_id), // eslint-disable-line camelcase
     ));
-    this.props.setTimeout(::this.refetchApps, this.props.refreshInterval)
+    this.props.setTimeout(::this.refetchApps, this.props.refreshInterval);
   }
 
   openRemoveModal(appId) {
@@ -85,7 +84,7 @@ export default class GrandDashboard extends React.Component {
   }
 
   render() {
-    const { match, loadingStates, applications, resetAppForm } = this.props;
+    const { loadingStates, applications, resetAppForm } = this.props;
 
     return (
       <Container>
@@ -123,11 +122,12 @@ export default class GrandDashboard extends React.Component {
                 </tr> :
                 applications.map((app) => {
                   const removeAppCellContent = (
-                    _.get(loadingStates.removeApp.map, [app.app_id, "pending"], false) ?
+                    _.get(loadingStates.removeApp.map, [app.app_id, "pending"], false) ? (
                       <div className={_s.loaderCon}>
                         <Spinner fadeIn="quarter" name="wave" />
                         <span>Deleting...</span>
-                      </div> :
+                      </div>
+                    ) : (
                       <div>
                         <Link
                           onClick={e => e.stopPropagation()}
@@ -144,6 +144,7 @@ export default class GrandDashboard extends React.Component {
                           }}
                         />
                       </div>
+                    )
                   );
                   switch (app.state) {
                   case "Registered":
@@ -182,7 +183,7 @@ export default class GrandDashboard extends React.Component {
           { _.isEmpty(applications) && loadingStates.fetchApps.fulfilled ?
             <div className={_s.noData}>
               <span>
-                No applications managed by HyperPilot, click on "Add" button to add them.
+                No applications managed by HyperPilot, click on &quot;Add&quot; button to add them.
               </span>
             </div>
             : null

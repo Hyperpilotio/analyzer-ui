@@ -4,6 +4,8 @@ import { Form, Control, Errors } from "react-redux-form";
 import { connect } from "react-redux";
 import _ from "lodash";
 import _s from "../style.scss";
+import * as HPPropTypes from "../../../constants/propTypes";
+import { dispatcherProps } from "../../../lib/utils";
 import { updateApp, createApp, resetLoadingState } from "../../../actions";
 import Button from "../../../components/Button";
 
@@ -31,12 +33,14 @@ const mapDispatchToProps = (dispatch, { stepNext, mode }) => ({
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Step1BasicInfo extends React.Component {
   static propTypes = {
-    resetCreateAppState: PropTypes.func.isRequired,
-    resetUpdateAppState: PropTypes.func.isRequired,
-    submitBasicInfo: PropTypes.func.isRequired,
-    cancelEdit: PropTypes.func.isRequired,
-    loadingState: PropTypes.object,
     appId: PropTypes.string,
+    loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
+    cancelEdit: PropTypes.func.isRequired,
+    ...dispatcherProps("resetCreateAppState", "resetUpdateAppState", "submitBasicInfo"),
+  }
+
+  static defaultProps = {
+    appId: null,
   }
 
   componentWillMount() {
@@ -90,4 +94,4 @@ export default class Step1BasicInfo extends React.Component {
       </Form>
     );
   }
-};
+}

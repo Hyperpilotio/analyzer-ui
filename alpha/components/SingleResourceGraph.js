@@ -2,12 +2,12 @@ import React from "react";
 import _ from "lodash";
 import { format } from "d3-format";
 import { VictoryArea } from "victory-chart";
-import { connect as connectRefetch } from "react-refetch";
 import TopRightLegend from "./TopRightLegend";
 import ThresholdLine from "./ThresholdLine";
 import GeneralTimeSeriesGraph from "./GeneralTimeSeriesGraph";
 import { tsToMoment } from "../lib/utils";
 import withInfluxData from "../lib/withInfluxData";
+import * as HPPropTypes from "../constants/propTypes";
 
 const f = format(".2f");
 
@@ -40,6 +40,12 @@ const SingleResourceGraph = ({ problem, metric, influxData, ...props }) => {
       )}
     </GeneralTimeSeriesGraph>
   );
+};
+
+SingleResourceGraph.propTypes = {
+  problem: HPPropTypes.problem.isRequired,
+  metric: HPPropTypes.problemMetric.isRequired,
+  influxData: HPPropTypes.refetch.isRequired,
 };
 
 export default withInfluxData(({ problem, metric, timeRange }) => ({

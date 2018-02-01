@@ -1,9 +1,10 @@
 import _ from "lodash";
 import * as actionTypes from "../actions/types";
-import { asyncActionTypes } from "../actions/types";
 import { makeLoadingState } from "../lib/utils";
 import { LOADING, SUCCESS, FAIL } from "../constants/apiActions";
 
+
+const { asyncActionTypes } = actionTypes;
 const initialLoadingState = makeLoadingState([]);
 const initialState = _.mapValues(
   actionTypes.actionTypeRegistry,
@@ -30,8 +31,8 @@ export default (state = initialState, action) => {
       _.clone,
     );
   }
-  
-  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type)); // i.e. FETCH_APPS
+
+  const actionName = _.findKey(actionTypes, types => _.includes(types, action.type));
 
   if (_.isUndefined(actionName)) {
     return state;
@@ -43,7 +44,7 @@ export default (state = initialState, action) => {
     [actionName];
   switch (actionTypes[actionName].indexOf(action.type)) {
   case LOADING:
-    
+
     if (_.get(state, [...loadingStatePath, "fulfilled"], false)) {
       // Refreshing with data existed
       loadingState = makeLoadingState(["refreshing", "fulfilled"]);

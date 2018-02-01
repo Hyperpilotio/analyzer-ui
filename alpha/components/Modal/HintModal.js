@@ -9,7 +9,11 @@ const HintModal = ({ title, message, messages, onClose, toggle }) => (
   <div>
     <ModalHeader>{title}</ModalHeader>
     <ModalBody>
-      { message ? <p>{ message }</p> : messages.map((m, i) => <p key={i}>{ m }</p>) }
+      { message ?
+        <p>{ message }</p> :
+        messages.map((m, i) => <p key={i}>{ m }</p>) // eslint-disable-line react/no-array-index-key
+        // There's nothing else we can use as keys other than index
+      }
     </ModalBody>
     <ModalFooter>
       <Button

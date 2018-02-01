@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   "env": {
     "browser": true,
@@ -44,7 +46,9 @@ module.exports = {
   },
   "settings": {
     "import/resolver": {
-      "webpack": "webpack.config.js"
+      "alias": [
+        ["~", path.resolve(__dirname)]
+      ]
     }
   }
 }

@@ -2,24 +2,58 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Card, CardBody, CardTitle, FormGroup, Input } from "reactstrap";
 import _ from "lodash";
+import { autobind } from "core-decorators";
 import { connect } from "react-redux";
 import { Form, actions as modelActions } from "react-redux-form";
+import * as HPPropTypes from "../../../constants/propTypes";
+import { dispatcherProps } from "../../../lib/utils";
 import { updateMicroservices, fetchAvailableServices } from "../../../actions";
 import MicroservicesTable from "../../../components/MicroservicesTable";
 import Button from "../../../components/Button";
 import _s from "../style.scss";
 
-class Step2Microservices extends React.Component {
+
+const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui }) => ({
+  microservices,
+  appId: basicInfo.app_id,
+  k8sMicroservices: forms.microservices.$form.options,
+  loadingState: {
+    fetchAvailableServices: ui.FETCH_AVAILABLE_SERVICES,
+    upadteMicroservices: ui.UPDATE_MICROSERVICES,
+    updateApp: ui.UPDATE_APP,
+  },
+});
+
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
+  removeMicroservice: ms => dispatch(modelActions.filter(
+    "createAppForm.microservices",
+    added => !_.isEqual(_.omit(added, "service_id"), ms),
+  )),
+  addMicroservice: ms => dispatch(
+    modelActions.push("createAppForm.microservices", ms),
+  ),
+  fetchMicroservices: () => dispatch(fetchAvailableServices()),
+  updateMicroservices: (microservices, appId) => dispatch(
+    updateMicroservices({ microservices, app_id: appId }, stepNext),
+  ),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class Step2Microservices extends React.Component {
   static propTypes = {
-    // cacheServices: PropTypes.func.isRequired,
-    microservices: PropTypes.array.isRequired,
-    k8sMicroservices: PropTypes.array,
-    fetchMicroservices: PropTypes.func.isRequired,
-    addMicroservice: PropTypes.func.isRequired,
-    removeMicroservice: PropTypes.func.isRequired,
+    appId: PropTypes.string,
+    microservices: PropTypes.arrayOf(HPPropTypes.microservice).isRequired,
+    k8sMicroservices: PropTypes.arrayOf(HPPropTypes.microservice),
+    loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
     stepBack: PropTypes.func.isRequired,
-    updateMicroservices: PropTypes.func.isRequired,
-    loadingState: PropTypes.object.isRequired,
+    ...dispatcherProps(
+      "fetchMicroservices", "addMicroservice", "removeMicroservice", "updateMicroservices",
+    ),
+  }
+
+  static defaultProps = {
+    appId: null,
+    k8sMicroservices: [],
   }
 
   state = {
@@ -51,25 +85,23 @@ class Step2Microservices extends React.Component {
     return _.uniq(_.map(this.props.k8sMicroservices, "namespace"));
   }
 
+  @autobind
   filterNamespace(event) {
     this.setState({ namespaceFilter: event.target.value });
   }
 
+  @autobind
   filterKind(event) {
     this.setState({ kindFilter: event.target.value });
   }
 
   render() {
-    const {
-      appId,
-      loadingState,
-      updateMicroservices,
-    } = this.props;
+    const { appId, loadingState } = this.props;
 
     return (
       <Form
         model="createAppForm.microservices"
-        onSubmit={microservices => updateMicroservices(microservices, appId)}
+        onSubmit={microservices => this.props.updateMicroservices(microservices, appId)}
       >
         {/* Selected Microservices */}
         <Card className={`${_s.selectedMicroservices} ${_s.card}`}>
@@ -85,7 +117,7 @@ class Step2Microservices extends React.Component {
             { this.props.microservices.length <= 0 ?
               <div className={`row ${_s.noData}`}>
                 <span>
-                  No microservice selected, click on  "Add" button to add them.
+                  No microservice selected, click on &quot;Add&quot; button to add them.
                 </span>
               </div> : null
             }
@@ -93,7 +125,7 @@ class Step2Microservices extends React.Component {
         </Card>
 
         {/* Detected Microservices */}
-        <Card className={`mt-5 mb-5 ${_s.detectedMicroservices} ${_s.card}`}>
+        <Card className={`mt-5 mb-5 ${_s.card}`}>
           <CardBody>
             <div>
               <CardTitle>Detected K8S Resources</CardTitle>
@@ -104,7 +136,7 @@ class Step2Microservices extends React.Component {
                   <Input
                     id="select-namespace"
                     type="select"
-                    onChange={::this.filterNamespace}
+                    onChange={this.filterNamespace}
                     value={this.state.namespaceFilter}
                   >
                     <option value="all">All</option>
@@ -121,7 +153,7 @@ class Step2Microservices extends React.Component {
                   <Input
                     id="select-kind"
                     type="select"
-                    onChange={::this.filterKind}
+                    onChange={this.filterKind}
                     value={this.state.kindFilter}
                   >
                     <option value="all">All</option>
@@ -152,34 +184,3 @@ class Step2Microservices extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({ createAppForm: { basicInfo, microservices, forms }, ui: { FETCH_AVAILABLE_SERVICES, UPDATE_MICROSERVICES, UPDATE_APP } }) => ({
-  microservices,
-  appId: basicInfo.app_id,
-  k8sMicroservices: forms.microservices.$form.options,
-  loadingState: {
-    fetchAvailableServices: FETCH_AVAILABLE_SERVICES,
-    upadteMicroservices: UPDATE_MICROSERVICES,
-    updateApp: UPDATE_APP,
-  },
-});
-
-const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  removeMicroservice: ms => dispatch(modelActions.filter(
-    "createAppForm.microservices",
-    added => !_.isEqual(_.omit(added, "service_id"), ms),
-  )),
-  addMicroservice: ms => dispatch(
-    modelActions.push("createAppForm.microservices", ms),
-  ),
-  fetchMicroservices: () => dispatch(fetchAvailableServices()),
-  updateMicroservices: (microservices, appId) => dispatch(
-    updateMicroservices({ microservices, app_id: appId }, stepNext),
-  ),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Step2Microservices);
-

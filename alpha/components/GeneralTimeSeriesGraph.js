@@ -7,11 +7,12 @@ import {
 import { VictoryLabel, Selection } from "victory-core";
 import _ from "lodash";
 import moment from "moment";
+import PropTypes from "prop-types";
 import { format } from "d3-format";
 import Wrapper from "victory-chart/es/helpers/wrapper";
 import MultiPointFlyout from "./MultiPointFlyout";
 import TimeSeriesSelectionContainer from "./TimeSeriesSelectionContainer";
-import DefaultDisabledTooltip from "./DefaultDisabledTooltip";
+import DefaultPreventedTooltip from "./DefaultPreventedTooltip";
 import { ensureMultipleTimes } from "../lib/utils";
 
 // Overriding Wrapper.getDomain, which is used by VictoryChart
@@ -51,7 +52,9 @@ SelectionHelpers.onMouseMove = _.throttle(
   { leading: true, trailing: false },
 );
 
-const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshing, withTimeRange }) => (
+const GeneralTimeSeriesGraph = ({
+  yLabel, width, height, children, autoRefreshing, withTimeRange,
+}) => (
   <VictoryChart
     width={width}
     height={height}
@@ -66,7 +69,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
       }}
       onSelectionCleared={
         ensureMultipleTimes(
-          ({ domain, scale, mousePosition }) => {
+          ({ domain }) => {
             const xDomain = _.map(domain.x, _.toNumber);
             const centerX = (xDomain[0] + xDomain[1]) / 2;
             const currentRange = xDomain[1] - xDomain[0];
@@ -80,7 +83,7 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
           400, // Make sure the two clicks happened in-between 400 milliseconds
         )
       }
-      labelComponent={<DefaultDisabledTooltip flyoutComponent={<MultiPointFlyout />} />}
+      labelComponent={<DefaultPreventedTooltip flyoutComponent={<MultiPointFlyout />} />}
     />}
   >
     <VictoryAxis
@@ -112,15 +115,26 @@ const GeneralTimeSeriesGraph = ({ yLabel, width, height, children, autoRefreshin
       y={30}
     />
     { _.isEmpty(React.Children.toArray(children).filter(child => child.props.isData)) ?
-      <VictoryLabel x={width / 2 - 60} y={height / 2} text="No data points found" /> : null
+      <VictoryLabel x={(width / 2) - 60} y={height / 2} text="No data points found" /> : null
     }
     { children }
   </VictoryChart>
 );
 
+GeneralTimeSeriesGraph.propTypes = {
+  yLabel: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  children: PropTypes.node.isRequired,
+  autoRefreshing: PropTypes.bool,
+  withTimeRange: PropTypes.func.isRequired,
+};
+
 GeneralTimeSeriesGraph.defaultProps = {
+  yLabel: "",
   width: 1400,
   height: 400,
+  autoRefreshing: false,
 };
 
 export default GeneralTimeSeriesGraph;

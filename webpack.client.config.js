@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 /* eslint-enable */
@@ -9,7 +8,6 @@ const path = require("path");
 const _ = require("lodash");
 
 const IS_PROD = process.env.NODE_ENV === "production";
-const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
 const extractSass = new ExtractTextPlugin({
   filename: "static/[name].bundle.css",
@@ -118,7 +116,6 @@ module.exports = {
     ],
   },
   plugins: _.filter([
-    new WebpackCleanupPlugin(),
     new webpack.ProgressPlugin({ profile: false }),
     new webpack.optimize.CommonsChunkPlugin({
       name: "commons",
@@ -158,16 +155,4 @@ module.exports = {
     IS_PROD ? null : new webpack.NoEmitOnErrorsPlugin(),
     !IS_PROD ? null : new webpack.optimize.UglifyJsPlugin({ comments: false }),
   ]),
-  devServer: {
-    hot: true,
-    historyApiFallback: {
-      index: `/${ANALYSIS_APP}.html`,
-      rewrites: [
-        { from: /favicon.ico/, to: "favicon.ico" },
-      ],
-    },
-    contentBase: "./dist/",
-    host: "localhost",
-    port: 3000,
-  },
 };

@@ -6,12 +6,13 @@ import FaCheckCircle from "react-icons/lib/fa/check-circle";
 import { Badge } from "reactstrap";
 import classnames from "classnames";
 import { connect } from "react-redux";
+import * as HPPropTypes from "../constants/propTypes";
 
 const AppStatusBadge = ({ className, incident, isLoading }) => {
   if (isLoading) {
     return <h6>Loading...</h6>;
   }
-  className = classnames("d-inline-flex", "align-items-center", className);
+  const combinedClassName = classnames("d-inline-flex", "align-items-center", className);
   let badgeProps = { color: "success" };
   let Icon = FaCheckCircle;
   let innerText = "Healthy";
@@ -21,7 +22,7 @@ const AppStatusBadge = ({ className, incident, isLoading }) => {
     innerText = incident.type;
   }
   return (
-    <Badge className={className} {...badgeProps}>
+    <Badge className={combinedClassName} {...badgeProps}>
       <Icon className="mr-1" />
       <h6 className="mb-0">{ innerText }</h6>
     </Badge>
@@ -30,11 +31,13 @@ const AppStatusBadge = ({ className, incident, isLoading }) => {
 
 AppStatusBadge.propTypes = {
   className: PropTypes.string,
+  incident: HPPropTypes.incident,
   isLoading: PropTypes.bool.isRequired,
 };
 
 AppStatusBadge.defaultProps = {
   className: "",
+  incident: null,
 };
 
 const mapStateToProps = ({ diagnosis: { incidents }, ui }, { appId }) => ({

@@ -5,12 +5,10 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { Container } from "reactstrap";
 import _ from "lodash";
-import { actions } from "react-redux-form";
 import Spinner from "react-spinkit";
 import ProgressBar from "~/commons/components/ProgressBar";
 import { prepareEditAppForm } from "../../actions";
 import { editStepNames } from "../../constants/models";
-import { app as AppPropType } from "../../constants/propTypes";
 import Step1BasicInfo from "./steps/Step1BasicInfo";
 import Step2Microservices from "./steps/Step2Microservices";
 import Step3SLO from "./steps/Step3SLO";
@@ -20,13 +18,27 @@ import * as modalTypes from "../../constants/modalTypes";
 import _s from "./style.scss";
 
 
-class SetupEdit extends React.Component {
+const mapStateToProps = ({ createAppForm: { basicInfo }, ui }) => ({
+  basicInfo,
+  isLoading: ui.FETCH_APPS.pending,
+});
+
+const mapDispatchToProps = dispatch => ({
+  prepareEditAppForm: appId => dispatch(prepareEditAppForm(appId)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+@withModal
+export default class SetupEdit extends React.Component {
   static propTypes = {
+    ...withModal.propTypes,
     match: ReactRouterPropTypes.match.isRequired,
     history: ReactRouterPropTypes.history.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    basicInfo: PropTypes.shape({
+      name: PropTypes.string,
+    }).isRequired,
     prepareEditAppForm: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool,
-    openModal: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -47,7 +59,7 @@ class SetupEdit extends React.Component {
   }
 
   render() {
-    const { createAppForm, isLoading, match, history } = this.props;
+    const { basicInfo, isLoading, match, history } = this.props;
     if (isLoading) {
       return (
         <Container className={_s.container}>
@@ -90,7 +102,7 @@ class SetupEdit extends React.Component {
       <Container className="mb-5">
         <div className="row mt-3">
           { match.path.startsWith("/apps/:appId/edit/") ?
-            <h1 className="title">Configuring { createAppForm.basicInfo.name }</h1> :
+            <h1 className="title">Configuring { basicInfo.name }</h1> :
             <h1 className="title">Setup a new app</h1>
           }
         </div>
@@ -102,17 +114,3 @@ class SetupEdit extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({ createAppForm, ui }) => ({
-  createAppForm,
-  isLoading: ui.FETCH_APPS.pending,
-});
-
-const mapDispatchToProps = dispatch => ({
-  prepareEditAppForm: appId => dispatch(prepareEditAppForm(appId)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withModal(SetupEdit));

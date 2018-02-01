@@ -8,6 +8,7 @@ import FaEdit from "react-icons/lib/fa/edit";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import * as HPPropTypes from "../../../constants/propTypes";
 import { updateApp, activateApp } from "../../../actions";
 import Button from "../../../components/Button";
 
@@ -23,7 +24,7 @@ const texts = {
 
 const Step4ManagementFeatures = ({
   appId,
-  management_features,
+  managementFeatures,
   stepBack,
   updateManagementFeatures,
   loadingState,
@@ -32,7 +33,7 @@ const Step4ManagementFeatures = ({
     model="createAppForm.management_features"
     onSubmit={data => updateManagementFeatures(data, appId)}
   >
-    { management_features.map(({ name, status, remediation_policy }, index) => (
+    { managementFeatures.map(({ name, status, remediation_policy: policies }, index) => (
       <Card key={name} className="mb-3">
         <CardBody>
           <Row>
@@ -58,9 +59,9 @@ const Step4ManagementFeatures = ({
                   </tr>
                 </thead>
                 <tbody>
-                  { remediation_policy.map(({ action_name, mode, constraints }, rpIndex) => (
-                    <tr key={action_name}>
-                      <td>{ texts[action_name] }</td>
+                  { policies.map(({ action_name: actionName }, rpIndex) => (
+                    <tr key={actionName}>
+                      <td>{ texts[actionName] }</td>
                       <td>
                         <Control.select
                           model={`.[${index}].remediation_policy[${rpIndex}].mode`}
@@ -72,7 +73,11 @@ const Step4ManagementFeatures = ({
                         </Control.select>
                       </td>
                       <td>
-                        <a href="#"><FaEdit className="mr-2" />Edit constraints</a>
+                        {/* This button is a placeholder and doesn't do anything for now */}
+                        <Button onClick={e => e.preventDefault()}>
+                          <FaEdit className="mr-2" />
+                          Edit constraints
+                        </Button>
                       </td>
                     </tr>
                   ))
@@ -102,15 +107,21 @@ const Step4ManagementFeatures = ({
 );
 
 Step4ManagementFeatures.propTypes = {
-  management_features: PropTypes.array.isRequired,
+  appId: PropTypes.string,
+  managementFeatures: PropTypes.arrayOf(HPPropTypes.managementFeature).isRequired,
+  loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
   stepBack: PropTypes.func.isRequired,
   updateManagementFeatures: PropTypes.func.isRequired,
-  loadingState: PropTypes.object.isRequired,
 };
 
+Step4ManagementFeatures.defaultProps = {
+  appId: null,
+};
+
+// eslint-disable-next-line camelcase
 const mapStateToProps = ({ createAppForm: { basicInfo, management_features }, ui }) => ({
   appId: basicInfo.app_id,
-  management_features,
+  managementFeatures: management_features,
   loadingState: {
     updateApp: ui.UPDATE_APP,
     activateApp: ui.ACTIVATE_APP,

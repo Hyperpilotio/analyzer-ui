@@ -3,6 +3,7 @@ import _ from "lodash";
 import { Container, Row, Col, Jumbotron } from "reactstrap";
 import AppStatusBadge from "./AppStatusBadge";
 import { getSLODisplay } from "../lib/utils";
+import * as HPPropTypes from "../constants/propTypes";
 
 const AppInfoJumbotron = ({ app }) => (
   <Jumbotron className="border border-right-0 border-left-0 bg-white" fluid>
@@ -53,5 +54,9 @@ const AppInfoJumbotron = ({ app }) => (
     </Container>
   </Jumbotron>
 );
+
+AppInfoJumbotron.propTypes = {
+  app: HPPropTypes.app.isRequired,
+};
 
 export default AppInfoJumbotron;

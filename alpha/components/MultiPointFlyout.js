@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import moment from "moment";
 import _ from "lodash";
+import { Flyout } from "victory-core";
 
 
 const styles = {
@@ -26,6 +28,15 @@ const styles = {
 };
 
 export default class MultiPointFlyout extends React.Component {
+  static propTypes = {
+    ...Flyout.propTypes,
+    style: PropTypes.arrayOf(Flyout.propTypes.style),
+  }
+
+  static defaultProps = {
+    style: null,
+  }
+
   constructor(props) {
     super(props);
     this.width = 280;
@@ -34,16 +45,21 @@ export default class MultiPointFlyout extends React.Component {
     this.shouldUpdateSize = true;
   }
 
-  componentWillReceiveProps() {
-    this.shouldUpdateSize = true;
-  }
-
   componentDidMount() {
     this.updateSize();
   }
 
+  componentWillReceiveProps() {
+    this.shouldUpdateSize = true;
+  }
+
   componentDidUpdate() {
     this.updateSize();
+  }
+
+  getPlacement() {
+    const { scale } = this.props;
+    return (this.props.x > scale.x.range()[1] - this.width) ? "left" : "right";
   }
 
   updateSize() {
@@ -54,11 +70,6 @@ export default class MultiPointFlyout extends React.Component {
       this.shouldUpdateSize = false;
       this.forceUpdate();
     }
-  }
-
-  getPlacement() {
-    const { scale } = this.props;
-    return (this.props.x > scale.x.range()[1] - this.width) ? "left" : "right";
   }
 
   render() {

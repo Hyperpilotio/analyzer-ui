@@ -3,47 +3,102 @@ import { Form, Control, actions as formActions } from "react-redux-form";
 import { Row, Col, FormGroup, Table } from "reactstrap";
 import { connect } from "react-redux";
 import _ from "lodash";
+import { autobind } from "core-decorators";
 import PropTypes from "prop-types";
 import FaClose from "react-icons/lib/fa/close";
 import FaPlus from "react-icons/lib/fa/plus";
 import FaLoadingCircle from "react-icons/lib/fa/circle-o-notch";
 import _s from "../style.scss";
-import { getKindDisplay } from "../../../lib/utils";
+import * as HPPropTypes from "../../../constants/propTypes";
+import { getKindDisplay, dispatcherProps } from "../../../lib/utils";
 import { updateApp, fetchMetrics, setSloConfigEditability, emptyMetricOptions } from "../../../actions";
 import Button from "../../../components/Button";
 import withModal from "../../../lib/withModal";
 import * as modalTypes from "../../../constants/modalTypes";
 
-class Step3SLO extends React.Component {
+const mapStateToProps = ({
+  createAppForm: { basicInfo, sloSource, slo, microservices, forms },
+  ui,
+  applications,
+}) => ({
+  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
+  appId: basicInfo.app_id,
+  sloFormDisabled: forms.slo.$form.isDisable,
+  metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
+  loadingState: {
+    fetchMetrics: ui.FETCH_METRICS,
+    updateApp: ui.UPDATE_APP,
+  },
+  slo,
+  sloSource,
+  microservices,
+});
+
+const mapDispatchToProps = (dispatch, { stepNext }) => ({
+  selectEndpointService: serializedValue => dispatch(formActions.merge(
+    "createAppForm.sloSource.service",
+    _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
+  )),
+  submitSloSource: sloSource => (dispatch(fetchMetrics(sloSource))),
+  updateThresholdType: metricType => dispatch(formActions.change(
+    "createAppForm.slo.threshold.type",
+    _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
+  )),
+  addTagsInput: () => {
+    dispatch(formActions.push(
+      "createAppForm.slo.metric.tags",
+      { key: "", value: "" },
+    ));
+  },
+  deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
+  updateSlo: (slo, sloSource, appId) => {
+    dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
+  },
+  setRightSideEditability: (isEditable) => {
+    dispatch(setSloConfigEditability(isEditable));
+    if (!isEditable) {
+      dispatch(emptyMetricOptions());
+    }
+  },
+  restoreSloSourceConfig: originalSloSource => dispatch(formActions.change(
+    "createAppForm.sloSource",
+    originalSloSource,
+  )),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
+@withModal
+export default class Step3SLO extends React.Component {
   static propTypes = {
-    submitSloSource: PropTypes.func.isRequired,
-    updateSlo: PropTypes.func.isRequired,
-    loadingState: PropTypes.object,
-    metricOptions: PropTypes.array,
-    microservices: PropTypes.array,
-    tags: PropTypes.array,
-    sloSource: PropTypes.object,
-    stepBack: PropTypes.func.isRequired,
-    addTagsInput: PropTypes.func.isRequired,
-    deleteTag: PropTypes.func.isRequired,
-    setRightSideEditability: PropTypes.func.isRequired,
-    openModal: PropTypes.func.isRequired,
+    ...withModal.propTypes,
+    appId: PropTypes.string,
+    savedApp: HPPropTypes.app,
+    sloFormDisabled: PropTypes.bool,
+    loadingState: PropTypes.objectOf(HPPropTypes.loadingState).isRequired,
+    metricOptions: PropTypes.arrayOf(HPPropTypes.metricOption).isRequired,
+    microservices: PropTypes.arrayOf(HPPropTypes.microservice).isRequired,
+    slo: PropTypes.shape({
+      metric: HPPropTypes.metric,
+      threshold: HPPropTypes.threshold,
+    }).isRequired,
+    sloSource: HPPropTypes.sloSource.isRequired,
+    ...dispatcherProps(
+      "selectEndpointService", "submitSloSource", "updateThresholdType", "addTagsInput",
+      "deleteTag", "updateSlo", "setRightSideEditability", "restoreSloSourceConfig",
+    ),
   };
 
-  state = {
-    isTagsEmpty: true,
+  static defaultProps = {
+    appId: null,
+    savedApp: null,
+    sloFormDisabled: false,
   }
 
-  determineRightSideEditability() {
-    // Hide SLO configuration when it's creating a new app and never saved SLO
-    if (_.isEmpty(_.get(this.props.savedApp, "slo.metric.name"))) {
-      this.props.setRightSideEditability(false);
-    } else {
-      this.props.setRightSideEditability(true);
-    }
+  constructor(props) {
+    super(props);
+    this.state = { isTagsEmpty: true };
+    this.shouldDetermineEditability = false;
   }
-
-  shouldDetermineEditability = false
 
   componentWillMount() {
     if (_.isNull(this.props.appId)) {
@@ -61,6 +116,7 @@ class Step3SLO extends React.Component {
   }
 
   // Stage 1 (Left Side)
+  @autobind
   async onSubmitConfirmingSource(sloSource) {
     const {
       submitSloSource,
@@ -68,7 +124,6 @@ class Step3SLO extends React.Component {
       openModal,
       restoreSloSourceConfig,
       savedApp,
-      appId,
     } = this.props;
 
     const res = await submitSloSource(sloSource);
@@ -101,6 +156,7 @@ class Step3SLO extends React.Component {
     }
   }
 
+  @autobind
   onChangeMetricName(e) {
     const selectedMetric = _.find(this.props.metricOptions, { name: e.target.value }) || {};
 
@@ -108,17 +164,25 @@ class Step3SLO extends React.Component {
       isTagsEmpty: _.isEmpty(selectedMetric.tags),
     });
 
-    _.forEach(this.props.slo.metric.tags, ({ key, value }, i) => {
+    _.forEach(this.props.slo.metric.tags, ({ key }, i) => {
       if (!_.includes(_.map(selectedMetric.tags, "key"), key)) {
         this.props.deleteTag(i);
       }
     });
   }
 
+  determineRightSideEditability() {
+    // Hide SLO configuration when it's creating a new app and never saved SLO
+    if (_.isEmpty(_.get(this.props.savedApp, "slo.metric.name"))) {
+      this.props.setRightSideEditability(false);
+    } else {
+      this.props.setRightSideEditability(true);
+    }
+  }
+
   render() {
     const {
       appId,
-      submitSloSource,
       selectEndpointService,
       updateSlo,
       microservices,
@@ -134,14 +198,17 @@ class Step3SLO extends React.Component {
     } = this.props;
 
     const selectedMetric = _.find(metricOptions, { name: slo.metric.name }) || {};
-    // The below line is a workaround for operator's bug described in https://github.com/Hyperpilotio/hyperpilot-operator/issues/35
-    selectedMetric.tags && (selectedMetric.tags = _.uniqBy(selectedMetric.tags, "key"));
+    // The following lines is a workaround for operator's bug described in
+    // https://github.com/Hyperpilotio/hyperpilot-operator/issues/35
+    if (selectedMetric.tags) {
+      selectedMetric.tags = _.uniqBy(selectedMetric.tags, "key");
+    }
 
     return (
       <Row>
         <Col sm={6}>
           <h3 className="mb-4">SLO Metrics Source</h3>
-          <Form onSubmit={::this.onSubmitConfirmingSource} model="createAppForm.sloSource">
+          <Form onSubmit={this.onSubmitConfirmingSource} model="createAppForm.sloSource">
             <FormGroup className="row w-100">
               <label htmlFor="slo-apm-type" className="col-4">APM type</label>
               <Control.select id="slo-apm-type" className="form-control col" model=".APM_type">
@@ -157,8 +224,9 @@ class Step3SLO extends React.Component {
                 value={`${sloSource.service.namespace}|${sloSource.service.kind}|${sloSource.service.name}`}
                 onChange={e => selectEndpointService(e.target.value)}
               >
-                {/* The default value would be "||" because that's the value the above expression in
-                  "value" prop of select would evaluate to if there's nothing in sloSource.service filled */}
+                {/* The default value would be "||" because that's the value the above
+                  expression in "value" prop of select would evaluate to if there's
+                  nothing in sloSource.service filled */}
                 <option value="||" disabled>Select a microservice</option>
                 {_.map(microservices, ms => (
                   <option
@@ -189,7 +257,7 @@ class Step3SLO extends React.Component {
         </Col>
         <Col style={sloFormDisabled ? { opacity: 0.3 } : null}>
           <h3 className="mb-4">SLO Configuration</h3>
-          <Form model="createAppForm.slo" onSubmit={slo => updateSlo(slo, sloSource, appId)}>
+          <Form model="createAppForm.slo" onSubmit={sloForm => updateSlo(sloForm, sloSource, appId)}>
             <fieldset disabled={sloFormDisabled}>
 
               {/* -------- Metric -------- */}
@@ -199,20 +267,17 @@ class Step3SLO extends React.Component {
                   id="slo-metric"
                   className="form-control col"
                   model=".metric.name"
-                  onChange={::this.onChangeMetricName}
+                  onChange={this.onChangeMetricName}
                 >
                   <option value={null} disabled>Select Metric</option>
-                  {
-                    !_.isEmpty(metricOptions)
-                      ? _.map(
-                          metricOptions,
-                          mt => <option key={mt.name} value={mt.name}>{mt.name}</option>
-                        )
-                      : (
-                        _.get(slo, "metric.name")
-                          ? <option value={slo.metric.name}>{slo.metric.name}</option>
-                          : null
-                      )
+                  { !_.isEmpty(metricOptions) ?
+                    _.map(
+                      metricOptions,
+                      mt => <option key={mt.name} value={mt.name}>{mt.name}</option>,
+                    ) : (
+                      _.get(slo, "metric.name") &&
+                      <option value={slo.metric.name}>{slo.metric.name}</option>
+                    )
                   }
                 </Control.select>
               </FormGroup>
@@ -256,7 +321,7 @@ class Step3SLO extends React.Component {
                           { !_.isEmpty(metricOptions) ?
                             _.map(
                               selectedMetric.tags,
-                              ({ key }) => <option key={key} value={key}>{key}</option>
+                              ({ key }) => <option key={key} value={key}>{key}</option>,
                             ) :
                             <option value={tag.key}>{tag.key}</option>
                           }
@@ -279,7 +344,11 @@ class Step3SLO extends React.Component {
                         </Control.select>
                       </td>
                       <td>
-                        <FaClose onClick={() => sloFormDisabled ? null : deleteTag(i)} />
+                        <FaClose
+                          // Eslint says it's confusing, but I don't think so
+                          // eslint-disable-next-line no-confusing-arrow
+                          onClick={() => sloFormDisabled ? null : deleteTag(i)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -335,54 +404,3 @@ class Step3SLO extends React.Component {
     );
   }
 }
-
-const mapStateToProps = ({ createAppForm: { basicInfo, sloSource, slo, microservices, forms }, ui, applications }) => ({
-  savedApp: _.find(applications, { app_id: basicInfo.app_id }),
-  appId: basicInfo.app_id,
-  sloFormDisabled: forms.slo.$form.isDisable,
-  metricOptions: _.sortBy(forms.slo.$form.metricOptions, "name"),
-  loadingState: {
-    fetchMetrics: ui.FETCH_METRICS,
-    updateApp: ui.UPDATE_APP,
-  },
-  sloSource,
-  microservices,
-  slo,
-});
-
-const mapDispatchToProps = (dispatch, { stepNext }) => ({
-  selectEndpointService: serializedValue => dispatch(formActions.merge(
-    "createAppForm.sloSource.service",
-    _.fromPairs(_.zip(["namespace", "kind", "name"], _.split(serializedValue, "|", 3))),
-  )),
-  submitSloSource: sloSource => (dispatch(fetchMetrics(sloSource))),
-  updateThresholdType: metricType => dispatch(formActions.change(
-    "createAppForm.slo.threshold.type",
-    _.get({ latency: "UB", execute_time: "UB", throughput: "LB" }, metricType),
-  )),
-  addTagsInput: () => {
-    dispatch(formActions.push(
-      "createAppForm.slo.metric.tags",
-      { key: "", value: "" },
-    ));
-  },
-  deleteTag: index => dispatch(formActions.remove("createAppForm.slo.metric.tags", index)),
-  updateSlo: (slo, sloSource, appId) => {
-    dispatch(updateApp({ app_id: appId, slo: { ...slo, source: sloSource } }, stepNext));
-  },
-  setRightSideEditability: (isEditable) => {
-    dispatch(setSloConfigEditability(isEditable));
-    if (!isEditable) {
-      dispatch(emptyMetricOptions());
-    }
-  },
-  restoreSloSourceConfig: originalSloSource => dispatch(formActions.change(
-    "createAppForm.sloSource",
-    originalSloSource,
-  )),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withModal(Step3SLO));
