@@ -64,7 +64,7 @@ export const timeSeriesContainerMixin = base => class VictoryTimeSeriesContainer
         x: scale.x(points[0].x),
         y: mousePosition.y,
         // Don't show the tooltip when every points are having a value of null
-        active: !_.every(p => _.isNull(p.y), points),
+        active: !_.every(points, p => _.isNull(p.y)),
         // MultiPointFlyout doesn't care about datum, but is required in its base class
         datum: { x: 0, y: 0 },
         text: "",
