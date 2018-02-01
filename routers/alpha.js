@@ -3,6 +3,7 @@ import request from "request-promise-native";
 import { InfluxDB } from "influx";
 import _ from "lodash";
 import winston from "winston";
+import Passport from "passport";
 import config from "../config";
 
 const logger = winston.createLogger({
@@ -78,6 +79,13 @@ const makeRequest = async (method, service, path, params) => {
   }
 };
 
+
+// auth
+
+router.post("/api/login",
+  Passport.authenticate("local", { session: false }),
+  (req, res) => { res.send(`User ID ${req.user.id}`); },
+);
 
 router.get("/api/apps", async (req, res) => {
   const activeApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");

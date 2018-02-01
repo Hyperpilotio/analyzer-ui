@@ -1,4 +1,3 @@
-const Passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const users = {
@@ -14,22 +13,24 @@ const users = {
   },
 };
 
+const withStrategy = (passport) => {
+  passport.use("local", new LocalStrategy({
+    usernameField: "username",
+    passwordField: "password",
+  }, (username, password, done) => {
+    const user = users[username];
 
-const localStrategy = new LocalStrategy({
-  usernameField: "username",
-  passwordField: "password",
-}, (username, password, done) => {
-  const user = users[username];
+    if (user == null) {
+      return done(null, false, { message: "Invalid user" });
+    }
 
-  if (user == null) {
-    return done(null, false, { message: "Invalid user" });
-  }
+    if (user.password !== password) {
+      return done(null, false, { message: "Invalid password" });
+    }
 
-  if (user.password !== password) {
-    return done(null, false, { message: "Invalid password" });
-  }
+    process.nextTick(() => done(null, user));
+  },
+  ));
+};
 
-  done(null, user);
-});
-
-Passport.use("local", localStrategy);
+export default withStrategy;
