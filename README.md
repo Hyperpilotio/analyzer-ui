@@ -66,7 +66,7 @@ This repository consists of three JavaScript apps:
 - `alpha/` The app for Alpha 2 UI
 - `sizing-analysis/`: The app for sizing analysis UI
 - `interference-analysis/`: The app for interference analysis UI
-- `commons/`: Shared components across different apps
+- `commons/`: Shared components and stylesheets across different apps
 - `assets/`: App's static assets such as images and fonts
 
 ### Stylesheet / Styleguide
