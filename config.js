@@ -1,4 +1,4 @@
-let config = {
+const config = {
   analyzer: {
     host: process.env.ANALYZER_HOST || "localhost",
     port: process.env.ANALYZER_PORT || 5000,
@@ -26,6 +26,7 @@ let config = {
     username: process.env.INFLUXDB_USERNAME || "root",
     password: process.env.INFLUXDB_PASSWORD || "root",
   },
+  jwtSecret: "hyperpilot",
 };
 
 config.analyzer.url = `http://${config.analyzer.host}:${config.analyzer.port}`;

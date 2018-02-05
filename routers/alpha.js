@@ -80,32 +80,32 @@ const makeRequest = async (method, service, path, params) => {
 };
 
 
-// auth
+// ---- Authentication ---- //
+router.post("/api/manualLogin", async (req, res) => (
+  passport.authenticate("local-login", (err, token, userData) => {
+    if (err) {
+      if (err.name === "IncorrectCredentialsError") {
+        return res.status(400).json({
+          success: false,
+          message: err.message,
+        });
+      }
 
-// router.post("/api/login",
-//   Passport.authenticate("local", { session: false }),
-//   (req, res) => { res.send(`User ID ${req.user.id}`); },
-// );
+      return res.status(400).json({
+        success: false,
+        message: "Could not process the form.",
+      });
+    }
 
-
-router.post("/api/login", passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send(req.user.profile);
-  },
-);
-
-router.get("/secret", passport.authenticate("jwt", { session: false }), (req, res) => {
-  res.json({ message: "Success! You can not see this without a token" });
-});
-
-router.get("/secretDebug",
-  (req, res, next) => {
-    console.log(req.get("Authorization"));
-    next();
-  }, (req, res) => {
-    res.json("debugging");
-  });
-
+    return res.json({
+      success: true,
+      message: "You have successfully logged in!",
+      token,
+      user: userData,
+    });
+  })(req, res)
+));
+// ---------------------------------------------------- //
 
 router.get("/api/apps", async (req, res) => {
   const activeApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");

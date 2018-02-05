@@ -39,3 +39,9 @@ $primary-color: $color-primary;
   display: block;
   position: absolute;
 }
+
+
+// All html
+html, body, #app, #app>div, #react-root, [data-reactroot] {
+  height: 100%
+}

@@ -5,14 +5,18 @@ import path from "path";
 import bodyParser from "body-parser";
 import passport from "passport";
 import webpackConfig from "./webpack.client.config";
-import withJWTStrategy from "./conf/passport";
+import localLoginStrategy from "./passport/local-login";
+import authCheckMiddleware from "./middleware/auth-check";
 
 const server = express();
 server.use(morgan("dev"));
 server.use(bodyParser.json());
+
+// ---- authentication ---- //
 server.use(passport.initialize());
-server.use(passport.session());
-withJWTStrategy(passport);
+passport.use("local-login", localLoginStrategy);
+// server.use("/api", authCheckMiddleware);
+// ------------------------ //
 
 const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";

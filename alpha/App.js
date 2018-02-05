@@ -11,6 +11,7 @@ import GrandDashboard from "./containers/GrandDashboard";
 import SetupEdit from "./containers/appSetup/SetupEdit";
 import SetupDone from "./containers/appSetup/SetupDone";
 import CommonModal from "./components/CommonModal";
+import Login from "./containers/Login";
 
 const store = createStore(
   rootReducer,
@@ -36,6 +37,7 @@ export default () => (
           </div>
         </div>
         <Switch>
+          <Route path="/login" component={Login} />
           <Route path="/dashboard/:appId" component={AppDashboard} />
           <Route path="/dashboard" component={GrandDashboard} />
           <Route path="/apps/new" component={SetupEdit} />

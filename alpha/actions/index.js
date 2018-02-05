@@ -3,6 +3,7 @@ import _ from "lodash";
 import { actions as formActions } from "react-redux-form";
 import * as types from "./types";
 import { appToForm } from "../lib/utils";
+import { authenticateUser } from "../lib/auth";
 import * as modalTypes from "../constants/modalTypes";
 
 
@@ -316,3 +317,32 @@ export const setSloConfigEditability = isEditable => ({
   isEditable,
 });
 
+// ---- Member ---- //
+export const manualLogin = (formData, history) => async (dispatch) => {
+  const response = await dispatch({
+    [RSAA]: {
+      endpoint: "/api/manualLogin",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...formData }),
+      types: types.MANUAL_LOGIN,
+    },
+  });
+
+  // Open error modal
+  if (!response.payload.success) {
+    dispatch(openModal(
+      modalTypes.HINT_MODAL,
+      {
+        title: "Login fail",
+        message: response.payload.message,
+      },
+    ));
+  }
+
+  // Login Success
+  authenticateUser(response.payload.token);
+  history.push("/dashboard");
+};
