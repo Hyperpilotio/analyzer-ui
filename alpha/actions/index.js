@@ -317,6 +317,12 @@ export const setSloConfigEditability = isEditable => ({
   isEditable,
 });
 
+export const setLogin = isLogin => ({
+  type: types.SET_LOGIN,
+  isLogin,
+});
+
+
 // ---- Member ---- //
 export const manualLogin = (formData, history) => async (dispatch) => {
   const response = await dispatch({
@@ -340,9 +346,10 @@ export const manualLogin = (formData, history) => async (dispatch) => {
         message: response.payload.message,
       },
     ));
+  } else {
+    // Login Success
+    authenticateUser(response.payload.token);
+    dispatch(setLogin(true));
+    history.push("/dashboard");
   }
-
-  // Login Success
-  authenticateUser(response.payload.token);
-  history.push("/dashboard");
 };

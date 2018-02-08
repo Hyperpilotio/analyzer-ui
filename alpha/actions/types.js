@@ -36,5 +36,6 @@ const pureActions = [
   "EMPTY_METRIC_OPTIONS",
   "SET_SLO_CONFIG_EDITABILITY",
   "RESET_LOADING_STATE",
+  "SET_LOGIN",
 ];
 _.assign(exports, _.zipObject(pureActions, pureActions));

@@ -19,6 +19,7 @@ const config = {
     configdbName: process.env.CONFIGDB_NAME || "configdb",
     metricdbName: process.env.METRICDB_NAME || "metricdb",
     mockdbName: process.env.CONFIGDB_NAME || "mockdb",
+    authdbName: process.env.AUTHDB_NAME || "authdb",
   },
   influx: {
     host: process.env.INFLUXDB_HOST || "localhost",

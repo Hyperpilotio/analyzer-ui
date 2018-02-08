@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   applications,
   diagnosis,
   modal,
-  // auth,
+  auth,
   ui,
 });
 

@@ -20,10 +20,12 @@ import _s from "./style.scss";
 
 
 const mapStateToProps = ({
+  auth,
   ui,
   applications,
   diagnosis: { incidents },
 }) => ({
+  isLogin: auth.isLogin,
   applications: _.reject(applications, { state: "Unregistered" }),
   incidents,
   loadingStates: {
@@ -58,6 +60,14 @@ export default class GrandDashboard extends React.Component {
 
   static defaultProps = {
     refreshInterval: 30 * 1000,
+  }
+
+  componentWillMount() {
+    
+    if (this.props.isLogin === false) {
+      console.log("redirect");
+      this.props.history.push("/login");
+    }
   }
 
   componentDidMount() {

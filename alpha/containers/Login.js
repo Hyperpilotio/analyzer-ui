@@ -4,7 +4,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { Row, Col, Button } from "reactstrap";
 import ReactRouterPropTypes from "react-router-prop-types";
-import { Form, Control, Errors } from "react-redux-form";
+import { actions as formActions, Form, Control, Errors } from "react-redux-form";
 import _s from "./style.scss";
 import withModal from "../lib/withModal";
 import { manualLogin } from "../actions/index";
@@ -16,6 +16,17 @@ class Login extends React.Component {
     login: PropTypes.func.isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     loadingState: PropTypes.bool.isRequired,
+  }
+
+  componentWillMount() {
+    const {
+      isLogin,
+      history,
+    } = this.props;
+    if (isLogin) {
+      history.push("/");
+    }
+    this.props.resetForm();
   }
 
   submitLoginForm = (formData) => {
@@ -48,7 +59,7 @@ class Login extends React.Component {
                   <div className={`form-group ${_s.formGroup}`}>
                     <label htmlFor="auth-username">Username</label>
                     <Control.text
-                      model=".username"
+                      model=".email"
                       id="auth-username"
                       className="form-control"
                       placeholder="Enter username"
@@ -57,7 +68,7 @@ class Login extends React.Component {
                     <div className={_s.errorHint}>
                       <Errors
                         wrapper={props => (<div className={_s.errorMessage}>{props.children}</div>)}
-                        model=".username"
+                        model=".email"
                         show={field => field.touched && !field.focus}
                         messages={{
                           required: "Please type username",
@@ -74,6 +85,7 @@ class Login extends React.Component {
                     <Control.text
                       model=".password"
                       id="auth-passpord"
+                      type="password"
                       className="form-control"
                       placeholder="Enter password"
                       validators={{ required: val => val && val.length }}
@@ -108,7 +120,8 @@ class Login extends React.Component {
 }
 
 
-const mapStateToProps = ({ ui: { CREATE_APP } }) => ({
+const mapStateToProps = ({ ui: { CREATE_APP }, auth }) => ({
+  isLogin: auth.isLogin,
   loadingState: {
     createApp: CREATE_APP,
   },
@@ -116,6 +129,7 @@ const mapStateToProps = ({ ui: { CREATE_APP } }) => ({
 
 const mapDispatchToProps = dispatch => ({
   login: (formData, history) => dispatch(manualLogin(formData, history)),
+  resetForm: () => dispatch(formActions.reset("authForm.login")),
 });
 
 export default compose(

@@ -79,21 +79,26 @@ const makeRequest = async (method, service, path, params) => {
   }
 };
 
-
 // ---- Authentication ---- //
 router.post("/api/manualLogin", async (req, res) => (
+
   passport.authenticate("local-login", (err, token, userData) => {
     if (err) {
       if (err.name === "IncorrectCredentialsError") {
         return res.status(400).json({
           success: false,
-          message: err.message,
+          message: "Incorrect email or password",
         });
       }
 
       return res.status(400).json({
         success: false,
         message: "Could not process the form.",
+      });
+    } else if (token === false) {
+      return res.json({
+        success: false,
+        message: "User not found.",
       });
     }
 

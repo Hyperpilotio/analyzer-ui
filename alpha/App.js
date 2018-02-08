@@ -5,13 +5,16 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { apiMiddleware } from "redux-api-middleware";
 import { navLogo } from "~/assets";
+import FaSignOut from "react-icons/lib/fa/sign-out";
 import rootReducer from "./reducers";
 import AppDashboard from "./containers/AppDashboard";
 import GrandDashboard from "./containers/GrandDashboard";
 import SetupEdit from "./containers/appSetup/SetupEdit";
 import SetupDone from "./containers/appSetup/SetupDone";
 import CommonModal from "./components/CommonModal";
+import Header from "./containers/Header";
 import Login from "./containers/Login";
+import { isUserAuthenticated, deauthenticateUser } from "./lib/auth";
 
 const store = createStore(
   rootReducer,
@@ -29,13 +32,9 @@ export default () => (
   <Provider store={store}>
     <Router>
       <div>
-        <div className="navbar navbar-light bg-light">
-          <div className="container">
-            <Link to="/">
-              <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
-            </Link>
-          </div>
-        </div>
+        {/* header */}
+        <Header />
+       
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/dashboard/:appId" component={AppDashboard} />

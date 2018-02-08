@@ -1,22 +1,19 @@
-// import * as types from "../actions/types";
-// import { SUCCESS } from "../constants/apiActions";
+import * as types from "../actions/types";
+import { SUCCESS } from "../constants/apiActions";
 
-// const InitialState = {
-//   userInfo: {},
-// };
+const InitialState = {
+  isLogin: false,
+  userInfo: {},
+};
 
-// export default (state = InitialState, action) => {
-//   switch (action.type) {
-//   case types.LOGIN[SUCCESS]:
-//     return {
-//       ...state,
-//       userInfo: {
-//         userInfo: {
-//           login: true,
-//         },
-//       },
-//     };
-//   default:
-//     return state;
-//   }
-// };
+export default (state = InitialState, action) => {
+  switch (action.type) {
+  case types.SET_LOGIN:
+    return {
+      ...state,
+      isLogin: action.isLogin,
+    };
+  default:
+    return state;
+  }
+};

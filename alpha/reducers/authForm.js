@@ -8,7 +8,7 @@ import { SUCCESS } from "../constants/apiActions";
 export default reduceReducers(
   combineForms({
     login: {
-      username: null,
+      email: null,
       password: null,
     },
   }, "authForm"),
