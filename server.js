@@ -6,8 +6,6 @@ import bodyParser from "body-parser";
 import passport from "passport";
 import webpackConfig from "./webpack.client.config";
 import localLoginStrategy from "./passport/local-login";
-import authCheckMiddleware from "./middleware/auth-check";
-import config from "./config";
 
 const server = express();
 server.use(morgan("dev"));
@@ -21,12 +19,11 @@ mongoose.connect("mongodb://127.0.0.1:27017/authdb");
 // ---- authentication ---- //
 server.use(passport.initialize());
 passport.use("local-login", localLoginStrategy);
-// server.use("/api", authCheckMiddleware);
+
 // ------------------------ //
 
 const isDev = process.env.NODE_ENV !== "production";
 const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
-
 
 let routersRequireContext = require.context("./routers/"); // Using require.context for HMR's need
 server.use(routersRequireContext(`./${ANALYSIS_APP}`).default);

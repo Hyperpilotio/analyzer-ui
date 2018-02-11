@@ -317,9 +317,13 @@ export const setSloConfigEditability = isEditable => ({
   isEditable,
 });
 
-export const setLogin = isLogin => ({
-  type: types.SET_LOGIN,
-  isLogin,
+export const setUserInfo = userInfo => ({
+  type: types.SET_USER_INFO,
+  userInfo,
+});
+
+export const logout = () => ({
+  type: types.LOGOUT,
 });
 
 
@@ -349,7 +353,7 @@ export const manualLogin = (formData, history) => async (dispatch) => {
   } else {
     // Login Success
     authenticateUser(response.payload.token);
-    dispatch(setLogin(true));
+    dispatch(setUserInfo(response.payload.user));
     history.push("/dashboard");
   }
 };

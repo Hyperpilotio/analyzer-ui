@@ -6,11 +6,11 @@ import { connect as connectRefetch, PromiseState } from "react-refetch";
 
 const withInfluxData = propsToQuery => (WrappedComponent) => {
   @connectRefetch((props) => {
-    const { db, metric, tags, timeRange, refreshInterval = 5 * 1000 } = propsToQuery(props);
+    const { db, metric, tags, timeRange, refreshInterval = 5 * 1000, clusterId } = propsToQuery(props);
     const createFetch = (start, end, options) => ({
       url: "/api/influx-data",
       method: "POST",
-      body: JSON.stringify({ db, metric, tags, start, end }),
+      body: JSON.stringify({ db, metric, tags, start, end, clusterId }),
       ...options,
     });
     let influxFetch;

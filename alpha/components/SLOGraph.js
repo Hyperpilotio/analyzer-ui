@@ -50,10 +50,11 @@ SLOGraph.propTypes = {
   influxData: HPPropTypes.refetch.isRequired,
 };
 
-export default withInfluxData(({ slo, timeRange, refreshInterval }) => ({
+export default withInfluxData(({ slo, timeRange, refreshInterval, clusterId }) => ({
   db: "snap",
   metric: slo.metric.name,
   tags: slo.metric.tags,
   timeRange,
   refreshInterval,
+  clusterId,
 }))(SLOGraph);

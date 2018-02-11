@@ -8,10 +8,17 @@ const InitialState = {
 
 export default (state = InitialState, action) => {
   switch (action.type) {
-  case types.SET_LOGIN:
+  case types.SET_USER_INFO:
     return {
       ...state,
-      isLogin: action.isLogin,
+      isLogin: true,
+      userInfo: action.userInfo,
+    };
+  case types.LOGOUT:
+    return {
+      ...state,
+      isLogin: false,
+      userInfo: {},
     };
   default:
     return state;

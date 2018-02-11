@@ -4,6 +4,7 @@ import { InfluxDB } from "influx";
 import _ from "lodash";
 import winston from "winston";
 import passport from "passport";
+import authCheck from "../middleware/auth-check";
 import config from "../config";
 
 const logger = winston.createLogger({
@@ -19,7 +20,7 @@ const logger = winston.createLogger({
 
 const router = express();
 
-const influxClient = new InfluxDB(config.influx);
+// const influxClient = new InfluxDB(config.influx);
 
 const asyncMiddleware = fn => async (req, res, next) => {
   try {
@@ -110,12 +111,14 @@ router.post("/api/manualLogin", async (req, res) => (
     });
   })(req, res)
 ));
+
+router.get("/api/checkAuth", authCheck);
+
 // ---------------------------------------------------- //
 
 router.get("/api/apps", async (req, res) => {
   const activeApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Active");
   const registeredApps = await makeRequest("get", "analyzer", "/api/v1/apps?state=Registered");
-
   res.json({ success: true, data: [...activeApps.data, ...registeredApps.data] });
 });
 
@@ -224,6 +227,15 @@ router.post("/api/get-metrics", async (req, res) => {
 });
 
 router.post("/api/influx-data", async (req, res) => {
+  // new a influxDb client connection dynamic by the request
+  const influxClient = new InfluxDB({
+    host: `influxsrv.${req.body.clusterId}` || "localhost",
+    port: 8086,
+    username: "root",
+    password: "root",
+  });
+
+
   const tagsFilter = _.map(req.body.tags, ({ key, value }) => `AND "${key}" = '${value}' `).join(" ");
   const query = `
     SELECT mean(value) AS value FROM "${req.body.metric}"

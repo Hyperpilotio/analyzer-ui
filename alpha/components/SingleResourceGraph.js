@@ -48,7 +48,7 @@ SingleResourceGraph.propTypes = {
   influxData: HPPropTypes.refetch.isRequired,
 };
 
-export default withInfluxData(({ problem, metric, timeRange }) => ({
+export default withInfluxData(({ problem, metric, timeRange, clusterId }) => ({
   db: "snapaverage",
   metric: metric.source,
   tags: _.filter([
@@ -59,4 +59,5 @@ export default withInfluxData(({ problem, metric, timeRange }) => ({
     tsToMoment(problem.timestamp).subtract(5, "m").valueOf(),
     tsToMoment(problem.timestamp).add(5, "m").valueOf(),
   ],
+  clusterId,
 }))(SingleResourceGraph);

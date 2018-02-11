@@ -33,7 +33,8 @@ module.exports = new PassportLocalStrategy({
     // create a token string
     const token = jwt.sign(payload, config.jwtSecret);
     const data = {
-      name: user.username,
+      name: user.email,
+      orgId: user.orgId,
     };
 
     return done(null, token, data);
