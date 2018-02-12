@@ -1,0 +1,77 @@
+@import "commons/styles/variables";
+
+.comp {
+	width: 170px;
+  background-color: $color-pure-grey;
+  color: $color-dark-grey;
+	overflow: hidden;
+}
+
+.container {
+  // margin-left: 20px;
+  // margin-top: 20px;
+  margin-bottom:0px;
+  padding-left: 0px;
+}
+
+.iconContainer {
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 30px;
+}
+
+.navLi {
+  height: 60px;
+  border: 1px solid $color-border;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  a {
+    color: $color-light-grey;
+  }
+
+  &:hover {
+    a{
+      text-decoration: none;
+      color: $color-dark-grey;
+    }
+  }
+
+
+}
+
+
+.side-nav-li-title{
+
+  font-size: 18px;
+  color:#4A4A4A;
+  line-height:30px;
+  cursor:pointer !important;
+
+}
+
+.side-nav-li-info{
+
+  font-size: 14px;
+  padding-left:20px;
+  color:#9B9B9B;
+  cursor:pointer !important;
+  line-height:20px;
+  margin-bottom: .5rem;
+  display: block;
+  
+  &:hover{
+    text-decoration:underline;
+  }
+}
+
+.active{
+  color:#e5798b;
+}
