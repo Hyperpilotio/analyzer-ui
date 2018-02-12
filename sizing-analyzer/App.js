@@ -1,13 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from "react-router-dom";
-import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { createStore, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
 import { apiMiddleware } from "redux-api-middleware";
-import { navLogo } from "~/assets";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 import GrandDashboard from "./containers/GrandDashboard";
-import _s from "./style.scss";
+import EntryPage from "./containers/EntryPage";
 // import CommonModal from "./components/CommonModal";
 
 const store = createStore(
@@ -25,20 +24,13 @@ const store = createStore(
 export default () => (
   <Provider store={store}>
     <Router>
-      <div>
-        <div className={`navbar navbar-light bg-light ${_s.navBar}`}>
-          <Link to="/">
-            <img alt="HyperPilot Inc." src={navLogo} className="navbar-brand" />
-            <span className={_s.navTitle}>HyperPilot Sizing Analyzer</span>
-          </Link>
-        </div>
-
+      <GrandDashboard>
         <Switch>
-          <Route path="/dashboard" component={GrandDashboard} />
+          <Route path="/dashboard" component={EntryPage} />
+          <Route path="/result/:type" />
           <Redirect from="/" to="/dashboard" />
         </Switch>
-        {/* <CommonModal /> */}
-      </div>
+      </GrandDashboard>
     </Router>
   </Provider>
 );
