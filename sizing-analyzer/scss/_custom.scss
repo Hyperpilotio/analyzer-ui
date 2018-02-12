@@ -1,0 +1,45 @@
+/*
+ * _custom.scss is imported before libraries, used for making custom configs for
+ * bootstrap, loaders.css or any other CSS libraries
+ */
+@import "commons/styles/variables";
+
+$theme-colors: (
+  "primary": $color-primary,
+  "light": $color-light,
+  "dark": $color-dark,
+  "success": $color-success,
+  "info": #78c1f9,
+  "danger": $color-danger,
+  "warning": $color-warning,
+);
+
+// Setting $primary-color for loaders.css
+$primary-color: $color-primary;
+
+// table
+.table th, .table td {
+  &:first-child {
+    padding-left: 2em;
+  }
+  &:last-child {
+    padding-right: 2em;
+  }
+}
+
+.table.no-padding-adjust {
+  th, td {
+    &:first-child {
+      padding-left: 1em;
+    }
+    &:last-child {
+      padding-right: 1em;
+    }
+  }
+}
+
+// dropdown
+.show > .dropdown-menu {
+  display: block;
+  position: absolute;
+}

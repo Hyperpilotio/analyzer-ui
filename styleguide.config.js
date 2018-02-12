@@ -1,3 +1,3 @@
 module.exports = {
-  components: 'commons/components/**/*.js'
+  components: "commons/components/**/*.js",
 };

@@ -1,0 +1,13 @@
+/*
+ * _extend.scss is loaded after libraries, used for extending libraries
+ */
+
+.card {
+  @include effect-fade-in;
+}
+
+@each $color, $value in $theme-colors {
+  .badge-#{$color} ,.btn-#{$color}{
+    color: white;
+  }
+}

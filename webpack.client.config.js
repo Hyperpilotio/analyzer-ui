@@ -35,6 +35,10 @@ module.exports = {
     sizing: buildEntryPoint(
       IS_PROD ? "./sizing-analysis/index.js" : "./sizing-analysis/index.dev.js",
     ),
+    analyzer: buildEntryPoint(
+      IS_PROD ? "./sizing-analyzer/index.js" : "./sizing-analyzer/index.dev.js",
+      "./sizing-analyzer/scss/index.scss",
+    ),
     alpha: buildEntryPoint(
       IS_PROD ? "./alpha/index.js" : "./alpha/index.dev.js",
       "./alpha/scss/index.scss",
@@ -71,6 +75,7 @@ module.exports = {
         test: /\.s[ca]ss|css$/,
         include: [
           path.resolve("interference-analysis", "styles"),
+          path.resolve("sizing-analyzer", "scss"),
           path.resolve("commons", "styles"),
           path.resolve("alpha", "scss"),
         ],
@@ -100,6 +105,7 @@ module.exports = {
           "interference-analysis/styles",
           "node_modules",
           "alpha/scss",
+          "sizing-analyzer/scss",
           "commons/styles",
         ].map(dir => path.resolve(__dirname, dir)),
         use: extractSass.extract({
@@ -149,6 +155,13 @@ module.exports = {
       chunks: ["commons", "sizing"],
       template: "sizing-analysis/index.html",
       filename: "sizing-analysis.html",
+      favicon: "assets/images/favicon.ico",
+      hash: true,
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["commons", "analyzer"],
+      template: "sizing-analyzer/index.html",
+      filename: "sizing-analyzer.html",
       favicon: "assets/images/favicon.ico",
       hash: true,
     }),

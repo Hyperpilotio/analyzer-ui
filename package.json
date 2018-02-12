@@ -7,15 +7,18 @@
     "build-server": "NODE_ENV=production webpack --progress --config webpack.server.config.js",
     "dev-interference": "ANALYSIS_APP=interference-analysis node dist/server.bundle.js",
     "dev-sizing": "ANALYSIS_APP=sizing-analysis node dist/server.bundle.js",
+    "dev-sizing-analyzer": "ANALYSIS_APP=sizing-analyzer node dist/server.bundle.js",
     "dev": "node dist/server.bundle.js",
     "serve-interference": "NODE_ENV=production ANALYSIS_APP=interference-analysis node dist/server.bundle.js",
     "serve-sizing": "NODE_ENV=production ANALYSIS_APP=sizing-analysis node dist/server.bundle.js",
+    "serve-sizing-analyzer": "NODE_ENV=production ANALYSIS_APP=sizing-analyzer node dist/server.bundle.js",
     "serve": "NODE_ENV=production node dist/server.bundle.js",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
     "lint": "eslint sizing-analysis commons alpha webpack.client.config.js webpack.server.config.js server.js routers",
     "server-dev-interference": "ANALYSIS_APP=interference-analysis webpack --config webpack.server.config.js --watch",
     "server-dev-sizing": "ANALYSIS_APP=sizing-analysis webpack --config webpack.server.config.js --watch",
+    "server-dev-sizing-analyzer": "ANALYSIS_APP=sizing-analyzer webpack --config webpack.server.config.js --watch",
     "server-dev": "webpack --config webpack.server.config.js --watch"
   },
   "devDependencies": {
