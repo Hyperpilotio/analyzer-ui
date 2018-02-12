@@ -1,0 +1,17 @@
+@import "./scss/custom.scss";
+
+.navBar { 
+  height: 64px;
+  border-bottom: 3px solid $color-blue;
+  padding-left: 50px;
+}
+
+.navTitle {
+  font-size: 18px;
+	font-weight: 500;
+  letter-spacing: 0.4px;
+  color: $color-dark-grey;
+  &:hover {
+    text-decoration: none;
+  }
+}
