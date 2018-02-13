@@ -42,7 +42,7 @@ class GrandDashboard extends React.Component {
             <SideNav navData={navData} />
           </Col>
           
-          <Col className="col-3">
+          <Col className="col-9">
              {this.props.children}
           </Col>
           

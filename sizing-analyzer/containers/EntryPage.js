@@ -6,14 +6,6 @@ import { Link } from "react-router-dom";
 import { entryList } from "../constants/tempData";
 import _s from "./style.scss";
 
-const mapStateToProps = ({
-  
-});
-
-const mapDispatchToProps = dispatch => ({
-  
-});
-
 /* eslint-disable */
 // @connect(mapStateToProps, mapDispatchToProps)
 /* eslint-enable */
@@ -27,7 +19,7 @@ export default class EntryPage extends React.Component {
       <div>
         {
           entryList.map( d => (
-            <button className={_s.linkBtn} style={{ width: `${d.width}px`}}>
+            <button key={d.key} className={_s.linkBtn} style={{ width: `${d.width}px`}}>
               <Link to={d.link}>{d.text}</Link>
             </button>
           ))

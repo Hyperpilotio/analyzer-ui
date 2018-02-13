@@ -27,9 +27,9 @@ export default () => (
   <Provider store={store}>
     <Router>
       <GrandDashboard>
-        <Route exact path="/" component={EntryPage} />
         <Route exact path="/result/:scale/:type" component={ResultPage} />
         <Route exact path="/result/:scale" component={ResultPage} />
+        <Route exact path="/" component={EntryPage} />
       </GrandDashboard>
     </Router>
   </Provider>

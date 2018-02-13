@@ -1,5 +1,6 @@
 @import "../scss/custom.scss";
 
+// Navbar -----------------------------
 .navBar { 
   height: 64px;
   border-bottom: 3px solid $color-blue;
@@ -63,4 +64,25 @@
     transform: translateY(2px);
   }
 
+}
+
+
+
+// TAB -----------------------------
+
+.tab {
+  width: 118px;
+  height: 38px;
+  color: $color-dark-grey;
+  background-color: $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+ 
+  &:hover {
+    text-decoration: none;
+    color: $color-dark-grey;
+  }
+  
 }

@@ -1,10 +1,12 @@
-import qrCode from "react-icons/lib/fa/qrcode";
 import icon from "~/assets/images/sizing-analyzer/icon.png";
+import iconContainer from "~/assets/images/sizing-analyzer/icon_container.svg";
+import iconNode from "~/assets/images/sizing-analyzer/icon_node.svg";
+import iconPool from "~/assets/images/sizing-analyzer/icon_pool.svg";
 
 export const navData = [
   {
     key: 1,
-    icon: icon,
+    icon: iconContainer,
     type: "title",
     text: "Container",
     active: false,
@@ -13,7 +15,7 @@ export const navData = [
     url: "/result/container",
   }, {
     key: 2,
-    icon: icon,
+    icon: iconNode,
     type: "title",
     text: "Node",
     active: false,
@@ -22,7 +24,7 @@ export const navData = [
     url: "/result/node",
   }, {
     key: 3,
-    icon: icon,
+    icon: iconPool,
     type: "title",
     text: "Pool",
     active: false,
@@ -31,6 +33,26 @@ export const navData = [
     url: "/result/pool",
   },
 ];
+
+export const entryList = [
+  {
+    key: 1,
+    width: 228,
+    link: "result/container",
+    text: "Select my own tuples",
+  }, {
+    key: 2,
+    width: 287,
+    link: "result/ranking",
+    text: "Top 5 most wasteful resources",
+  }, {
+    key: 3,
+    width: 287,
+    link: "result/ranking",
+    text: "Top 5 top performing resources",
+  },
+];
+
 
 export const entryButtons = [
   {
@@ -63,21 +85,8 @@ export const entryButtons = [
   },
 ];
 
-export const entryList = [
-  {
-    key: 1,
-    width: 228,
-    link: "result/container",
-    text: "Select my own tuples",
-  }, {
-    key: 2,
-    width: 287,
-    link: "result/ranking",
-    text: "Top 5 most wasteful resources",
-  }, {
-    key: 3,
-    width: 287,
-    link: "result/ranking",
-    text: "Top 5 top performing resources",
-  },
+
+export const resultPageHeader = [
+  "App label", "Image label", "Current Request", "Suggested Request",
+  "Current Limit", "Suggested Limit",
 ];
