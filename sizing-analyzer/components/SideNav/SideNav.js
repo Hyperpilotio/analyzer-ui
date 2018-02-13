@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactRouterPropTypes from "react-router-prop-types";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import _s from "./style.scss";
 import * as HPPropTypes from "../../constants/propTypes";
 
@@ -18,23 +18,24 @@ class SideNav extends Component {
       navData,
       match,
     } = this.props;
+
     return (
       <div className={_s.comp}>
         <ul className={_s.container}>
           {
             navData.map(d => (
               d.isLink ?
-                <li key={d.key} className={_s.navLi}>
+                <NavLink
+                  to={d.url}
+                  key={d.key}
+                  activeClassName={_s.active}
+                  className={_s.navLi}
+                >
                   <div className={_s.iconContainer}>
                     <img className={_s.icon} alt="" src={d.icon} />
                   </div>
-                  <Link
-                    to={d.url}
-                    className={`side-nav-li-${d.type} ${match.url === d.url ? "active" : ""}`}
-                  >
-                    {d.text}
-                  </Link>
-                </li>
+                  {d.text}
+                </NavLink>
                 :
                 <li key={d.key} className={_s.navLi}>
                   <h5
@@ -53,4 +54,4 @@ class SideNav extends Component {
 
 /* eslint-disable */
 
-export default withRouter(SideNav);
+export default SideNav;
