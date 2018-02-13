@@ -10,7 +10,7 @@ export const navData = [
     active: false,
     select: -1,
     isLink: true,
-    url: "/",
+    url: "/result/container",
   }, {
     key: 2,
     icon: icon,
@@ -19,7 +19,7 @@ export const navData = [
     active: false,
     select: -1,
     isLink: true,
-    url: "/",
+    url: "/result/node",
   }, {
     key: 3,
     icon: icon,
@@ -28,7 +28,7 @@ export const navData = [
     active: false,
     select: -1,
     isLink: true,
-    url: "/",
+    url: "/result/pool",
   },
 ];
 
@@ -66,14 +66,17 @@ export const entryButtons = [
 export const entryList = [
   {
     key: 1,
+    width: 228,
     link: "result/container",
-    text: "Select my own tuples  +",
+    text: "Select my own tuples",
   }, {
     key: 2,
+    width: 287,
     link: "result/ranking",
     text: "Top 5 most wasteful resources",
   }, {
     key: 3,
+    width: 287,
     link: "result/ranking",
     text: "Top 5 top performing resources",
   },

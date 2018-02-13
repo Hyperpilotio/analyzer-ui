@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router";
 import { createStore, applyMiddleware, compose } from "redux";
 import { apiMiddleware } from "redux-api-middleware";
 import { Provider } from "react-redux";
@@ -7,6 +8,7 @@ import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 import GrandDashboard from "./containers/GrandDashboard";
 import EntryPage from "./containers/EntryPage";
+import ResultPage from "./containers/ResultPage";
 // import CommonModal from "./components/CommonModal";
 
 const store = createStore(
@@ -25,11 +27,9 @@ export default () => (
   <Provider store={store}>
     <Router>
       <GrandDashboard>
-        <Switch>
-          <Route path="/dashboard" component={EntryPage} />
-          <Route path="/result/:type" />
-          <Redirect from="/" to="/dashboard" />
-        </Switch>
+        <Route exact path="/" component={EntryPage} />
+        <Route exact path="/result/:scale/:type" component={ResultPage} />
+        <Route exact path="/result/:scale" component={ResultPage} />
       </GrandDashboard>
     </Router>
   </Provider>

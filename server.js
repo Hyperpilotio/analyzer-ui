@@ -14,7 +14,6 @@ const ANALYSIS_APP = process.env.ANALYSIS_APP || "alpha";
 
 let routersRequireContext = require.context("./routers/"); // Using require.context for HMR's need
 
-console.log("before", ANALYSIS_APP);
 server.use(routersRequireContext(`./${ANALYSIS_APP}`).default);
 
 if (isDev && module.hot) {

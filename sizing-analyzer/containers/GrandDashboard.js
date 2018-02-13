@@ -1,24 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Row, Col } from "reactstrap";
 import { navLogo } from "~/assets";
 import { navData } from "../constants/tempData";
 import SideNav from "../components/SideNav";
 import _s from "./style.scss";
+import { Switch, Route, Redirect } from "react-router";
 
-const mapStateToProps = ({
-  
-});
+// import { BrowserRouter as Router } from "react-router-dom";
 
-const mapDispatchToProps = dispatch => ({
-  
-});
 
 /* eslint-disable */
 // @connect(mapStateToProps, mapDispatchToProps)
 
 
-export default class GrandDashboard extends React.Component {
+class GrandDashboard extends React.Component {
   static propTypes = {
     // ...withModal.propTypes,
     // ...ReactTimeout.propTypes,
@@ -29,7 +25,10 @@ export default class GrandDashboard extends React.Component {
 
   render() {
     // const { loadingStates, applications, resetAppForm } = this.props;
+    console.log("this.props.match",this.props.match);
+    const { match } = this.props;
     return (
+      <Switch>
       <div>
         <div className={`navbar navbar-light bg-light ${_s.navBar}`}>
           <Link to="/">
@@ -39,16 +38,31 @@ export default class GrandDashboard extends React.Component {
         </div>
 
         <Row className={_s.routerContainer}>
-          <Col>
+          <Col className="col-2">
             <SideNav navData={navData} />
           </Col>
-          <Col>
-            {this.props.children}
+          
+          <Col className="col-3">
+             {this.props.children}
           </Col>
+          
         </Row>
         {/* <CommonModal /> */}
+        
       </div>
+      </Switch>
     );
   }
 }
+
+const mapStateToProps = ({
+  
+});
+
+const mapDispatchToProps = dispatch => ({
+  
+});
+
+
+export default withRouter(GrandDashboard);
 /* eslint-enable */

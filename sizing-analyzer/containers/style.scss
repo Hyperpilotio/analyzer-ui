@@ -3,7 +3,13 @@
 .navBar { 
   height: 64px;
   border-bottom: 3px solid $color-blue;
-  padding-left: 50px;
+  padding-left: 45px !important;
+
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .navTitle {
@@ -24,5 +30,37 @@
 
 
 .linkBtn {
+  width: 287px;
   border: 2px solid $color-border-btn;
+  background-color: transparent;
+  color: $color-border-btn;
+  border-radius: 0px;
+  margin-bottom: 25px;
+  font-size: 16px;
+  text-align: left;
+  padding-top: 5px; 
+  padding-bottom: 4px;
+
+  &:nth-child(1) {
+    &:after {
+      content: "+";
+      position: absolute;
+      left: 220px;
+    }
+  }
+  
+  
+
+  &:hover {
+    background-color: transparent;
+    color: $color-border-btn;
+    a {
+      text-decoration: none;
+    }
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+
 }
