@@ -4,23 +4,36 @@ import { connect } from "react-redux";
 // import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { Row, Table } from "reactstrap";
+import _ from "lodash";
+import SizingGraph from "../components/SizingGraph";
 import _s from "./style.scss";
-import { resultPageHeader } from "../constants/tempData";
+import ChartGroup from "../components/ChartGroup/ChartGroup";
 
-/* eslint-disable */
+const slo = {
+  threshold: {
+    type: "UB",
+    value: 0,
+    unit: "ms",
+  },
+  metric: {
+    name: "",
+    type: "latency",
+    tags: [],
+  },
+};
 class EntryPage extends React.Component {
   static propTypes = {
   }
-
+  componentWillMount() {
+  }
   render() {
     const { currData } = this.props;
-    console.log("currData", currData);
     return (
       <div>
         {/* TAB */}
         <Row>
-          <NavLink to="/result/container/cpu" activeClassName={_s.active} className={_s.tab} >CPU</NavLink>
-          <NavLink to="/result/container/memory" activeClassName={_s.active} className={_s.tab} >Memory</NavLink>
+          <NavLink to="/result/container/cpu" activeClassName={_s.tabActive} className={_s.tab} >CPU</NavLink>
+          <NavLink to="/result/container/memory" activeClassName={_s.tabActive} className={_s.tab} >Memory</NavLink>
         </Row>
         {/* TABLE */}
         <Row>
@@ -39,7 +52,7 @@ class EntryPage extends React.Component {
             <tbody>
 
               {
-                currData.results.map( d => (
+                currData.results.map(d => (
                   <tr>
                     <td>Otto</td>
                     <td>Otto</td>
@@ -56,7 +69,14 @@ class EntryPage extends React.Component {
         </Row>
 
         {/* CHART */}
-
+        <Row>
+          <ChartGroup>
+            <h5 className="text-left mb-3">
+              {_.words(currData.resource).map(_.capitalize).join(" ")}
+            </h5>
+            <SizingGraph slo={slo} />
+          </ChartGroup>
+        </Row>
 
 
       </div>
@@ -70,6 +90,5 @@ const mapStateToProps = ({ result }) => ({
 
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
 )(EntryPage);
-/* eslint-enable */

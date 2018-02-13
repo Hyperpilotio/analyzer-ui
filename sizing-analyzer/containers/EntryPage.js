@@ -16,7 +16,7 @@ export default class EntryPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={_s.entryListCon}>
         {
           entryList.map( d => (
             <button key={d.key} className={_s.linkBtn} style={{ width: `${d.width}px`}}>

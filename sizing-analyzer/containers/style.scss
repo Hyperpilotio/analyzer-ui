@@ -68,6 +68,11 @@
 
 
 
+.entryListCon {
+  width: 400px;
+}
+
+
 // TAB -----------------------------
 
 .tab {
@@ -85,4 +90,12 @@
     color: $color-dark-grey;
   }
   
+}
+
+.tabActive {
+  background-color: $color-border-btn;
+  color: $color-white;
+  &:hover {
+    color: #fff;
+  }
 }

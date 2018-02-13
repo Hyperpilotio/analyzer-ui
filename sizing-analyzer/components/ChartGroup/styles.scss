@@ -1,0 +1,14 @@
+@import "commons/styles/variables";
+
+// Need to use global keyword to avoid bootstrap overriding here
+.ChartGroup:global(.card) {
+  background: $color-card-background;
+  border: 1px solid $color-card-border;
+  width: 100%;
+  border-radius: 0px;
+
+  :global(.card-body) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
