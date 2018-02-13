@@ -3,11 +3,11 @@ import { combineReducers } from "redux";
 // import createAppForm from "./createAppForm";
 // import diagnosis from "./diagnosis";
 // import modal from "./modal";
-// import result from "./result";
+import result from "./result";
 import ui from "./ui";
 
 const rootReducer = combineReducers({
-  // result,
+  result,
   // createAppForm,
   // applications,
   // diagnosis,

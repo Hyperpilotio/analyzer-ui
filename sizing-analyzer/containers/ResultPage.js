@@ -8,14 +8,13 @@ import _s from "./style.scss";
 import { resultPageHeader } from "../constants/tempData";
 
 /* eslint-disable */
-// @connect(mapStateToProps, mapDispatchToProps)
-/* eslint-enable */
-/* eslint-disable */
-export default class EntryPage extends React.Component {
+class EntryPage extends React.Component {
   static propTypes = {
   }
 
   render() {
+    const { currData } = this.props;
+    console.log("currData", currData);
     return (
       <div>
         {/* TAB */}
@@ -38,29 +37,39 @@ export default class EntryPage extends React.Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
-              <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-              </tr>
+
+              {
+                currData.results.map( d => (
+                  <tr>
+                    <td>Otto</td>
+                    <td>Otto</td>
+                    <td>Otto</td>
+                    <td>Otto</td>
+                    <td>Otto</td>
+                    <td>{d.current_settings.size}</td>
+                    <td>{d.recommended_settings.size}</td>
+                  </tr>
+                ))
+              }
             </tbody>
           </Table>
         </Row>
+
+        {/* CHART */}
+
+
+
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ result }) => ({
+  currData: result.currData,
+});
+
+
+export default connect(
+  mapStateToProps
+)(EntryPage);
 /* eslint-enable */
