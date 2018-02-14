@@ -3,7 +3,47 @@ import { SUCCESS } from "../constants/apiActions";
 import * as types from "../actions/types";
 
 const initialState = {
-  currData: {
+  currContainer: {
+    object_type: "container",
+    resource: "cpu",
+    unit: "cores",
+    end_time: 1517016459493000000,
+    duration_days: 7,
+    labels: ["app", "image"],
+    results: [
+      {
+        label_values: {
+          app: "action",
+          image: "action-scale",
+        },
+        summary_stats: {},
+        current_settings: {
+          requests: 2,
+          limits: 2,
+        },
+        recommended_settings: {
+          requests: 1,
+          limits: 1.25,
+        },
+      },
+      {
+        label_values: {
+          app: "nginx",
+          image: "nginx",
+        },
+        summary_stats: {},
+        current_settings: {
+          requests: 0.5,
+          limits: 1,
+        },
+        recommended_settings: {
+          requests: 0.4,
+          limits: 0.5,
+        },
+      },
+    ],
+  },
+  currNode: {
     object_type: "node",
     resource: "cpu",
     unit: "cores",
@@ -39,8 +79,8 @@ const initialState = {
           cpu_usage: {
             mean: 0.32,
             p90: 0.79,
-            ninety_five_p: 1.93,
-            ninety_nine_p: 2.5,
+            p95: 1.93,
+            p99: 2.5,
             max: 0.71,
           },
         },

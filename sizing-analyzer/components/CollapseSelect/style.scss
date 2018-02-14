@@ -1,0 +1,22 @@
+@import "commons/styles/variables";
+
+.collapseBtn {
+  color: $color-border-btn;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+.option {
+  list-style: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $color-border-btn;
+  }
+}

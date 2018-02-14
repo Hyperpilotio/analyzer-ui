@@ -1,0 +1,37 @@
+@import "commons/styles/variables";
+
+.sideBar { 
+  position: absolute;
+  right: -144px;
+  top: -40px;
+  width: 438px;
+  height: 130%;
+  padding-left: 27px;
+  padding-top: 24px;
+  background-color: $color-white;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.21);
+  border: solid 1px #3778fa;
+  z-index: 10;
+  transition: all .4s ease-in-out;
+
+  h3 {
+    color: $color-dark-grey;
+    font-size: 16px;
+  }
+ 
+}
+
+.cancel {
+  position: absolute;
+  right: 0px;
+  color: $color-cancel-btn;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+  }
+
+}

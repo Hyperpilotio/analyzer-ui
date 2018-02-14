@@ -8,6 +8,7 @@ import _ from "lodash";
 import SizingGraph from "../components/SizingGraph";
 import _s from "./style.scss";
 import ChartGroup from "../components/ChartGroup/ChartGroup";
+import SideBar from "../components/SideBar";
 
 const slo = {
   threshold: {
@@ -27,9 +28,10 @@ class EntryPage extends React.Component {
   componentWillMount() {
   }
   render() {
-    const { currData } = this.props;
+    const { currContainer } = this.props;
     return (
       <div>
+        <SideBar />
         {/* TAB */}
         <Row>
           <NavLink to="/result/container/cpu" activeClassName={_s.tabActive} className={_s.tab} >CPU</NavLink>
@@ -52,7 +54,7 @@ class EntryPage extends React.Component {
             <tbody>
 
               {
-                currData.results.map(d => (
+                currContainer.results.map(d => (
                   <tr>
                     <td>Otto</td>
                     <td>Otto</td>
@@ -72,12 +74,12 @@ class EntryPage extends React.Component {
         <Row>
           <ChartGroup>
             <h5 className="text-left mb-3">
-              {_.words(currData.resource).map(_.capitalize).join(" ")}
+              CPU
+              {/* {_.words(currData.resource).map(_.capitalize).join(" ")} */}
             </h5>
             <SizingGraph slo={slo} />
           </ChartGroup>
         </Row>
-
 
       </div>
     );
@@ -85,7 +87,7 @@ class EntryPage extends React.Component {
 }
 
 const mapStateToProps = ({ result }) => ({
-  currData: result.currData,
+  currContainer: result.currContainer,
 });
 
 
