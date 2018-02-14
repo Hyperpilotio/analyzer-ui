@@ -2,21 +2,40 @@
 
 .collapseBtn {
   color: $color-border-btn;
+  letter-spacing: 0.4px;
+  font-weight: 500;
   background-color: transparent;
   border: none;
   outline: none;
   cursor: pointer;
-  
+
   &:focus {
     outline: none;
   }
 }
 
+.card {
+  width: 90%;
+  border: solid 1px #e5e6e8;
+  background-color: $color-light;
+}
+.cardBody {
+  padding-left: 0px;
+  padding-right: 0px;
+
+  ul {
+    padding-left: 0px;
+  }
+}
+
 .option {
+  padding-left: 23px;
   list-style: none;
   cursor: pointer;
 
   &:hover {
     background-color: $color-border-btn;
+    color: $color-white;
+    padding-left: 23px;
   }
 }

@@ -5,9 +5,6 @@ import {
 } from "reactstrap";
 import _s from "./style.scss";
 
-
-
-
 class CollapseSelect extends Component {
   state = {
     collapse: true,
@@ -24,11 +21,10 @@ class CollapseSelect extends Component {
     } = this.props;
     return (
       <div className={_s.collapseSelect} >
-        <h3>Select existing labels</h3>
-        <button className={_s.collapseBtn} onClick={this.toggle}>{`${title}(${list.length})`}</button>
+        <button className={_s.collapseBtn} onClick={this.toggle}>{`+ ${title} (${list.length})`}</button>
         <Collapse isOpen={this.state.collapse}>
-          <Card>
-            <CardBody>
+          <Card className={_s.card}>
+            <CardBody className={_s.cardBody}>
               <ul>
                 {list.map(d => (
                   <li className={_s.option}>{d}</li>

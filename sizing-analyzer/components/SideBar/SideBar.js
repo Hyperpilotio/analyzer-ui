@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import { compose } from "redux";
+import { connect } from "react-redux";
 import CollapseSelect from "../CollapseSelect";
+import bindActionCreatorHoc from "../../lib/bindActionCreatorHoc";
 import _s from "./style.scss";
 
 const collapses = {
@@ -15,27 +18,43 @@ const collapses = {
   ],
 };
 
+/* eslint-disable */
 class SideBar extends Component {
-  state = {
-    isOpen: true,
+
+  toggleSideBar = () => {
+    this.props.compsAction.toggleSideBar();
   }
+
   render() {
+    const {
+      isOpen,
+      compsAction,
+    } = this.props;
     return (
       <div
         className={_s.sideBar}
-        style={{ transform: `translateX(${this.state.isOpen ? 0 : 450}px)` }}
+        style={{ transform: `translateX(${isOpen ? 0 : 450}px)` }}
       >
         <button
           className={_s.cancel}
-          onClick={() => { this.setState({ isOpen: false }); }}
+          onClick={this.toggleSideBar}
         >cancel</button>
         <h3>Search Label</h3>
         <input />
+        <h3>Select existing labels</h3>
         <CollapseSelect title="App" list={collapses.App} />
         <CollapseSelect title="Image" list={collapses.Image} />
       </div>
     );
   }
 }
+/* eslint-enable */
 
-export default SideBar;
+const mapStateToProps = ({ comps }) => ({
+  isOpen: comps.sideBar.isOpen,
+});
+
+export default compose(
+  connect(mapStateToProps),
+  bindActionCreatorHoc,
+)(SideBar);
