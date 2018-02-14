@@ -6563,6 +6563,12 @@ react-icons@^2.2.5, react-icons@^2.2.7:
   dependencies:
     react-icon-base "2.1.0"
 
+react-number-format@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-3.1.5.tgz#babe212be0209782d107fcf57b5f041d06d65294"
+  dependencies:
+    prop-types "^15.6.0"
+
 react-popper@^0.7.2:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-0.7.5.tgz#71c25946f291db381231281f6b95729e8b801596"

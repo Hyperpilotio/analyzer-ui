@@ -73,6 +73,36 @@
 }
 
 
+// Table -----------------------------
+
+.table {
+
+  tr {
+
+    th {
+      color: $color-light-grey;
+      &:nth-child(4), &:nth-child(6) {
+        background-color: rgba(237, 241, 255, 0.3);
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        color: $color-dark-grey;
+        letter-spacing:0.4px;
+        font-weight: 600;
+        
+        &:nth-child(4), &:nth-child(6) {
+          background-color: rgba(237, 241, 255, 0.3);
+        }
+      }
+    }
+  }
+}
+
+
 // TAB -----------------------------
 
 .tab {
@@ -97,5 +127,19 @@
   color: $color-white;
   &:hover {
     color: #fff;
+  }
+}
+
+.addBtn {
+  height: 30px;
+  margin-left: auto;
+  color: $color-border-btn;
+  background-color: transparent;
+  border: 1px solid $color-border-btn;
+  outline: none;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
   }
 }

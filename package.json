@@ -85,6 +85,7 @@
     "react-dom": "^15.6.2",
     "react-hot-loader": "next",
     "react-icons": "^2.2.5",
+    "react-number-format": "^3.1.5",
     "react-powerplug": "^0.1.2",
     "react-redux": "^5.0.5",
     "react-redux-form": "^1.15.0",

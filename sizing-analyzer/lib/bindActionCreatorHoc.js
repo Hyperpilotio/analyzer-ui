@@ -2,16 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-// import * as Common from "../actions/common";
+import * as Comps from "../actions/comps";
 
 export default function bindActionCreatorHoc(WrappedComponent) {
-  // const Wrapper = () => (<WrappedComponent {...this.props} />);
+  /* eslint-disable */
   class Wrapper extends React.Component {
     render = () => (<WrappedComponent {...this.props} />);
   }
-
+  /* eslint-enable */
   const mapDispatchToProps = dispatch => ({
-    // adminAction: bindActionCreators(Admin, dispatch),
+    compsAction: bindActionCreators(Comps, dispatch),
   });
   return connect(null, mapDispatchToProps)(Wrapper);
 }
