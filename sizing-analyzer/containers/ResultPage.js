@@ -56,13 +56,13 @@ class EntryPage extends React.Component {
               {
                 currContainer.results.map(d => (
                   <tr>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                    <td>{d.current_settings.size}</td>
-                    <td>{d.recommended_settings.size}</td>
+                    <td>{d.label_values.app}</td>
+                    <td>{d.label_values.image}</td>
+                    <td>Toby</td>
+                    <td>{d.current_settings.requests}</td>
+                    <td>{d.recommended_settings.requests}</td>
+                    <td>{d.current_settings.limits}</td>
+                    <td>{d.recommended_settings.limits}</td>
                   </tr>
                 ))
               }
